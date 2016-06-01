@@ -1,0 +1,57 @@
+{
+    "name": "ttek/tk2base",
+    "type": "project",
+    "description": "A Tk Ver 2 base MVC framework project",
+    "keywords":  [
+        "tropotek"
+    ],
+    "time": "2015-05-01",
+    "license": "MIT",
+    "version": "master",
+    "minimum-stability": "dev",
+    "authors":  [
+         {
+            "name": "Michael Mifsud",
+            "email": "info@tropotek.com.au",
+            "homepage": "http://www.tropotek.com/"
+        }
+    ],
+    "autoload":  {
+        "psr-0":  {
+            "": "src/"
+        },
+        "files":  [
+            "src/App/Bootstrap.php"
+        ]
+    },
+    "scripts":  {
+        "post-install-cmd":  [
+            "Tk\\Composer\\Script\\Event\\InitProject::postInstall"
+        ],
+        "post-update-cmd":  [
+            "Tk\\Composer\\Script\\Event\\InitProject::postUpdate"
+        ]
+    },
+    "extra":  {
+        "branch-alias":  {
+            "dev-master": "1.0.x-dev"
+        }
+    },
+    "require":  {
+        "php": ">=5.3.3",
+        "ttek/tk-installers": "~2.0",
+        "ttek/tk-framework": "~2.0",
+        "ttek/tk-http": "~2.0",
+        "ttek/tk-routing": "~2.0",
+        "ttek/tk-auth": "~2.0",
+        "ttek/tk-database": "~2.0",
+        "ttek/tk-mvc": "~2.0",
+        "ttek/tk-domtemplate": "~2.0",
+        "ttek/tk-form": "~2.0",
+        "ttek/tk-table": "~2.0",
+        "monolog/monolog": "^1.13@dev"
+    },
+    "require-dev":  {
+        "ttek/tk-debug": "~2.0"
+    }
+}

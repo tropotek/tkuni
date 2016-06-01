@@ -1,0 +1,66 @@
+
+.nopadding {
+  padding: 0;
+}
+
+
+/*************************************/
+/**  \Tk\Table\Renderer\Dom\Table   **/
+
+.tk-table th {
+  white-space: nowrap;
+}
+.tk-table .key {
+  width: 100%;
+}
+.tk-table td {
+  white-space: nowrap;
+}
+
+.tk-table .orderAsc a {
+  text-decoration: underline;
+  color: darkviolet;
+}
+.tk-table .orderDesc a {
+  text-decoration: underline;
+  color: darkgreen;
+}
+
+.tk-table .tk-actions {
+  margin: 5px 0px;
+}
+.tk-table .btn {
+  margin-right: 5px;
+}
+
+.tk-table .pagination {
+  margin: 0;
+}
+
+
+
+
+/*********************************/
+/** \Tk\Form\Renderer\Dom\Form  **/
+
+.tk-form .tk-form-events .btn {
+  margin-right: 5px;
+}
+
+.tk-form.form-inline .tk-form-fields,
+.tk-form.form-inline .tk-form-events {
+  display: inline-block;
+}
+
+.tk-form.form-inline .tk-form-fields .form-group {
+  margin-right: 5px;
+}
+
+.tk-form .tab-pane {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+
+
+

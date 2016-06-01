@@ -1,0 +1,48 @@
+<div>
+
+  <div class="section">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-5">
+          <div class="basic-login">
+
+            <div class="alert alert-danger" role="alert" choice="error"><strong>Error!</strong> <span var="errMsg">Invalid login credentials</span></div>
+
+            <form role="form" id="loginForm" method="post">
+              <input type="hidden" name="act" value="login" />
+
+              <div class="form-group" var="username-group">
+                <label for="login-username"><i class="icon-user"></i> <b>Username or Email</b></label>
+                <input class="form-control" name="username" id="login-username" type="text" placeholder="" />
+              </div>
+              <div class="form-group" var="password-group">
+                <label for="login-password"><i class="icon-lock"></i> <b>Password</b></label>
+                <input class="form-control" name="password" id="login-password" type="password" placeholder="" />
+              </div>
+              <div class="form-group">
+                <!-- label class="checkbox" for="login-remember">
+                  <input type="checkbox" name="remember" value="remember" id="login-remember" /> Remember me
+                </label -->
+                <a href="#" class="forgot-password">Forgot password?</a>
+                <button type="submit" name="login" class="btn pull-right">Login</button>
+                <div class="clearfix"></div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-sm-7 social-login">
+          <p>Or login with your Facebook or Twitter</p>
+          <div class="social-login-buttons">
+            <a href="#" class="btn-facebook-login">Login with Facebook</a>
+            <a href="#" class="btn-twitter-login">Login with Twitter</a>
+          </div>
+          <div class="clearfix"></div>
+          <div class="not-member">
+            <p>Not a member? <a href="#">Register here</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

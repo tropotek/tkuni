@@ -1,0 +1,46 @@
+<?php
+/**
+ * Created by PhpStorm.
+ *
+ * @date 16-05-2016
+ * @author Michael Mifsud <info@tropotek.com>
+ * @link http://www.tropotek.com/
+ * @license Copyright 2016 Michael Mifsud
+ */
+/* 
+ * NOTE: Be sure to add routes in correct order as the first match will win
+ * 
+ * Route Structure
+ * $route = new Route(
+ *     '/archive/{month}',              // path
+ *     '\Namespace\Class::method',      // Callable or class::method string
+ *     array('month' => 'Jan'),         // Params and defaults to path params... all will be sent to the request object.
+ *     array('GET', 'POST', 'HEAD')     // methods
+ * );
+ */
+
+$config = \Tk\Config::getInstance();
+
+$routes = new \Tk\Routing\RouteCollection();
+$config['site.routes'] = $routes;
+
+// Default Home catchall
+$routes->add('home', new \Tk\Routing\Route('/index.html', 'App\Controller\Index::doDefault'));
+$routes->add('home-base', new \Tk\Routing\Route('/', 'App\Controller\Index::doDefault'));
+$routes->add('contact', new \Tk\Routing\Route('/contact.html', 'App\Controller\Contact::doDefault'));
+
+$routes->add('login', new \Tk\Routing\Route('/login.html', 'App\Controller\Login::doDefault'));
+$routes->add('logout', new \Tk\Routing\Route('/logout.html', 'App\Controller\Logout::doDefault'));
+
+// Admin Pages
+$params = array('test' => 'admin');
+$routes->add('admin-home', new \Tk\Routing\Route('/admin/index.html', 'App\Controller\Admin\Index::doDefault', $params));
+$routes->add('admin-home-base', new \Tk\Routing\Route('/admin/', 'App\Controller\Admin\Index::doDefault', $params));
+
+$routes->add('admin-user-manager', new \Tk\Routing\Route('/admin/userManager.html', 'App\Controller\Admin\User\Manager::doDefault', $params));
+$routes->add('admin-user-edit', new \Tk\Routing\Route('/admin/userEdit.html', 'App\Controller\Admin\User\Edit::doDefault', $params));
+$routes->add('admin-user-profile', new \Tk\Routing\Route('/admin/profile.html', 'App\Controller\Admin\User\Edit::doDefault', $params));
+
+
+
+
