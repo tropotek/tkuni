@@ -14,12 +14,3 @@ $kernel = new \App\FrontController(\App\Factory::getEventDispatcher(), \App\Fact
 $response = $kernel->handle($config->getRequest())->send();
 $kernel->terminate($config->getRequest(), $response);
 
-//$kernel->terminate($config->getRequest(), new Response());
-
-/**
-// Enable Cache
-$kernel = new HttpCache($kernel, new Store($config->getCachePath()));
-$kernel->handle($config->getRequest())->send();
-$kernel->terminate($config->getRequest(), new Response());
-*/
-
