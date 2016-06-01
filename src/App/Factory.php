@@ -13,8 +13,6 @@ class Factory
 {
     
     /**
-     * Get Config object or array
-     * 
      * @param string $sitePath
      * @param string $siteUrl
      * @return \Tk\Config
@@ -24,6 +22,49 @@ class Factory
         return \Tk\Config::getInstance($sitePath, $siteUrl);
     }
 
+    /**
+     * @return \Tk\Request
+     */
+    public static function getRequest()
+    {
+        if (!self::getConfig()->getRequest()) {
+            $obj = \Tk\Request::create();
+            $obj->setAttribute('config', self::getConfig());;
+            self::getConfig()->setRequest($obj);
+        }
+        return self::getConfig()->getRequest();
+    }
+
+    /**
+     * @return \Tk\Cookie
+     */
+    public static function getCookie()
+    {
+        if (!self::getConfig()->getCookie()) {
+            $obj = new \Tk\Cookie(self::getConfig()->getSiteUrl());
+            self::getConfig()->setCookie($obj);
+        }
+        return self::getConfig()->getCookie();
+    }
+
+    /**
+     * @return \Tk\Session
+     */
+    public static function getSession()
+    {
+        if (!self::getConfig()->getSession()) {
+            $obj = new \Tk\Session(self::getConfig(), self::getRequest(), self::getCookie());
+            //$obj->start(new \Tk\Session\Adapter\Database( self::getDb() ));
+            $obj->start();
+            self::getConfig()->setSession($obj);
+        }
+        return self::getConfig()->getSession();
+    }
+    
+    
+    
+    
+    
     /**
      * getDb
      * Ways to get the db after calling this method
@@ -93,10 +134,20 @@ class Factory
         return self::getConfig()->getDomLoader();
     }
 
+    /**
+     * @return \App\FrontController
+     */
+    public static function getFrontController()
+    {
+        if (!self::getConfig()->getFrontController()) {
+            $obj = new \App\FrontController(self::getEventDispatcher(), self::getControllerResolver(), self::getConfig());
+            self::getConfig()->setFrontController($obj);
+        }
+        return self::getConfig()->getFrontController();
+    }
+
 
     /**
-     * get
-     *
      * @return \Tk\EventDispatcher\EventDispatcher
      */
     public static function getEventDispatcher()
@@ -109,8 +160,6 @@ class Factory
     }
 
     /**
-     * get
-     *
      * @return \Tk\Controller\ControllerResolver
      */
     public static function getControllerResolver()
@@ -124,8 +173,6 @@ class Factory
     
     
     /**
-     * get
-     *
      * @return \Tk\Auth
      */
     public static function getAuth()
@@ -140,7 +187,6 @@ class Factory
 
     /**
      * A factory method to create an instances of an Auth adapters
-     *
      *
      * @param string $class
      * @param array $submittedData
@@ -173,4 +219,39 @@ class Factory
         $adapter->replace($submittedData);
         return $adapter;
     }
+
+    /**
+     * Create a new user
+     *
+     * @param string $username
+     * @param string $email
+     * @param array $roles
+     * @param string $password
+     * @param string $name
+     * @param string $uid
+     * @param bool $active
+     * @return Db\User
+     * @todo Save any extra required data, IE: `auedupersonid` (Student/Staff Number)
+     */
+    static function createNewUser($username, $email, $roles = array('user'), $password = '', $name = '', $uid = '', $active = true)
+    {
+        $user = new \App\Db\User();
+        $user->uid = $uid;
+        $user->username = $username;
+        $user->name = $name;
+        $user->email = $email;
+        $user->setPassword($password);
+        $user->active = $active;
+        $user->save();
+
+        foreach ($roles as $name) {
+            $role = \App\Db\Role::getMapper()->findByName($name);
+            if ($role) {
+                \App\Db\Role::getMapper()->addUserRole($role->id, $user->id);
+            }
+        }
+        
+        return $user;
+    }
+    
 }

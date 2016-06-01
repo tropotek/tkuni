@@ -45,13 +45,7 @@ class FrontController extends \Tk\Kernel\HttpKernel
     {
         $logger = $this->config->getLog();
         
-        // Register Error handlers
-//        ErrorHandler::register();
-//        ExceptionHandler::register($this->config->isDebug());
-//        if ($this->config->isDebug()) {
-//            Debug::enable();
-//        }
-
+        
         // (kernel.init)
         $this->dispatcher->addSubscriber(new Listener\BootstrapHandler($this->config));
         
@@ -60,34 +54,30 @@ class FrontController extends \Tk\Kernel\HttpKernel
         $matcher = new \Tk\Routing\UrlMatcher($this->config['site.routes']);
         $this->dispatcher->addSubscriber(new \Tk\Listener\RouteListener($matcher));
         $this->dispatcher->addSubscriber(new Listener\StartupHandler($logger));
-
+        
         
         // Auth events
         $this->dispatcher->addSubscriber(new \App\Listener\AuthHandler());
         
+        
         // (kernel.controller)
 //        $this->dispatcher->addSubscriber(new \Tk\Lti\Listener\LtiHandler());
 //        $this->dispatcher->addSubscriber(new \App\Listener\AuthHandler());
-
-
+        
+        
         // (kernel.view)
-//        $this->dispatcher->addSubscriber(new DomModifierHandler($this->config->getDomModifier()));
-//        $this->dispatcher->addSubscriber(new StringResponseHandler());
-//        $this->dispatcher->addSubscriber(new DomTemplateResponseHandler());
-
-
+        
+        
         // (kernel.response)
         $this->dispatcher->addSubscriber(new Listener\ResponseHandler(Factory::getDomModifier()));
-//        $this->dispatcher->addSubscriber(new HttpKernel\EventListener\ResponseListener('UTF-8'));
-//        $this->dispatcher->addSubscriber(new HttpKernel\EventListener\StreamedResponseListener());
-
+        
 
         // (kernel.finish_request)
         
         
         // (kernel.exception)
         $this->dispatcher->addSubscriber(new \Tk\Listener\ExceptionListener($logger));
-
+        
         
         // (kernel.terminate)
         $this->dispatcher->addSubscriber(new Listener\ShutdownHandler($logger));

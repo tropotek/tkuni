@@ -1,7 +1,9 @@
 <?php
 namespace App\Db;
 
-use Tk\Db\Map\Model;
+use Tk\Auth;
+use Tk\Auth\Exception;
+use Tk\Config;
 
 /**
  * Class User
@@ -10,8 +12,18 @@ use Tk\Db\Map\Model;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class User extends Model
+class User extends \Tk\Db\Map\Model
 {
+    static $hashFunction = 'md5';
+
+    const ROLE_ADMIN = 'admin';
+    const ROLE_COORD = 'coordinator';
+    const ROLE_STAFF = 'staff';
+    const ROLE_STUDENT = 'student';
+    const ROLE_USER = 'user';
+    
+    
+    
     /**
      * @var int
      */
@@ -20,12 +32,7 @@ class User extends Model
     /**
      * @var string
      */
-    public $name = '';
-
-    /**
-     * @var string
-     */
-    public $email = '';
+    public $uid = '';
 
     /**
      * @var string
@@ -40,7 +47,12 @@ class User extends Model
     /**
      * @var string
      */
-    public $role = '';
+    public $name = '';
+
+    /**
+     * @var string
+     */
+    public $email = '';
 
     /**
      * @var bool
@@ -51,6 +63,16 @@ class User extends Model
      * @var string
      */
     public $hash = '';
+
+    /**
+     * @var string
+     */
+    public $notes = '';
+
+    /**
+     * @var \DateTime
+     */
+    public $lastLogin = null;
 
     /**
      * @var \DateTime
@@ -64,8 +86,7 @@ class User extends Model
 
 
     /**
-     * User constructor.
-     * 
+     *
      */
     public function __construct()
     {
@@ -73,17 +94,17 @@ class User extends Model
         $this->created = new \DateTime();
     }
 
-
     /**
-     * @param $role
-     * @return bool
+     * 
+     * @throws \Tk\Exception
      */
-    public function hasRole($role)
+    public function save()
     {
-        if (preg_match('/'.preg_quote($role).'/', $this->role) || $role = $this->role) {
-            return true;
+        $this->getHash();
+        if (!$this->uid) {
+            $this->uid = hash(Config::getInstance()->getHashFunction(), $this->username . $this->created->format(\Tk\Date::ISO_DATE));
         }
-        return false;
+        parent::save();
     }
 
     /**
@@ -105,16 +126,102 @@ class User extends Model
     }
 
     /**
+     * Get the user hash or generate one if needed
+     *
+     * @return string
+     * @throws \Tk\Exception
+     */
+    public function getHash()
+    {
+        if (!$this->username)
+            throw new \Tk\Exception('The username must be set before calling getHash()');
+
+        if (!$this->hash) {
+            $this->hash = $this->generateHash();
+        }
+        return $this->hash;
+    }
+
+    /**
      * Helper method to generate user hash
      * 
      * @return string
      */
     public function generateHash() 
     {
-        return hash('md5', sprintf('%s:%s:%s', $this->getVolatileId(), $this->username, $this->email));
+        return hash(self::$hashFunction, sprintf('%s', $this->username));
+    }
+
+    public function delete()
+    {
+        \App\Db\Role::getMapper()->deleteAllUserRoles($this->id);
+        return parent::delete();
+    }
+
+    /**
+     * Set the password from a plain string
+     *
+     * @param $str
+     * @throws Exception
+     */
+    public function setPassword($str = '')
+    {
+        if (!$str) {
+            $str = self::createPassword(10);
+        }
+        $this->password = hash(self::$hashFunction, $str . $this->getHash());
+    }
+
+    /**
+     * Redirect the user to their correct homepage
+     *
+     * @throws \Exception
+     */
+    public function redirectHome()
+    {
+        if ($this->hasRole(array(self::ROLE_ADMIN, self::ROLE_COORD, self::ROLE_STAFF, self::ROLE_STUDENT)))
+            \Tk\Uri::create('/admin/index.html')->redirect();
+    }
+
+    /**
+     * @return array
+     */
+    public function getRoles()
+    {
+        $roles = \App\Db\Role::getMapper()->findByUserId($this->id);
+        $arr = array();
+        foreach ($roles as $role) {
+            $arr[] = $role->name;
+        }
+        return $arr;
+    }
+
+    /**
+     * Check if this user has the required permission
+     *
+     * @param string|Role $role
+     * @return boolean
+     */
+    public function hasRole($role)
+    {
+        if (!is_array($role)) $role = array($role);
+        
+        foreach ($role as $r) {
+            if (!$r instanceof Role) {
+                $r = \App\Db\Role::getMapper()->findByName($r);
+            }
+            if ($r) {
+                $obj = \App\Db\Role::getMapper()->findRole($r->id, $this->id);
+                if ($obj) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }
+
 
 class UserValidator extends \App\Helper\Validator
 {

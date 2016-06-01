@@ -77,7 +77,6 @@ class Bootstrap
             $config['log'] = $logger;
         }
         
-        
         // * Logger [use error_log()]
         \Tk\ErrorHandler::getInstance($config->getLog());
         
@@ -89,23 +88,11 @@ class Bootstrap
         // --- HTTP only bootstrapping from here ---
         
         // * Request
-        $request = \Tk\Request::create();
-        $request->setAttribute('config', $config);
-        $config->setRequest($request);
-        
-        
+        Factory::getRequest();
         // * Cookie
-        $cookie = new \Tk\Cookie($config->getSiteUrl());
-        $request->setAttribute('cookie', $cookie);
-        $config->setCookie($cookie);
-        
-        // * Session
-        $session = new \Tk\Session($config, $request, $cookie);
-        //$session->start(new \Tk\Session\Adapter\Database( \Factory::getDb() ));
-        $session->start();
-        $request->setAttribute('session', $session);
-        $config->setSession($session);
-        
+        Factory::getCookie();
+        // * Session    
+        Factory::getSession();
         
         return $config;
     }

@@ -8,9 +8,9 @@
 $appPath = __DIR__;
 include($appPath . '/vendor/autoload.php');
 
-$config = \Tk\Config::getInstance();
+$request = \App\Factory::getRequest();
+$kernel = \App\Factory::getFrontController();
 
-$kernel = new \App\FrontController(\App\Factory::getEventDispatcher(), \App\Factory::getControllerResolver(), $config);
-$response = $kernel->handle($config->getRequest())->send();
-$kernel->terminate($config->getRequest(), $response);
+$response = $kernel->handle($request)->send();
+$kernel->terminate($request, $response);
 
