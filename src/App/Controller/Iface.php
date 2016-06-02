@@ -138,26 +138,4 @@ abstract class Iface extends \Dom\Renderer\Renderer
         return false;
     }
 
-    /**
-     * Call this to check the current logged in user has access to this page.
-     *
-     */
-    public function checkAccess()
-    {
-        if (empty($this->access)) return;
-        /** @var \App\Db\User $user **/
-        $user = $this->getUser();
-        if (!$user) {
-            return true;
-            //\Tk\Uri::create('/login.html')->redirect();
-        } else if (!$this->hasAccess($user)) {
-            // Could redirect to a authentication error page...
-            // Could cause a loop if the permissions are stuffed
-            //\App\Alert::getInstance()->addWarning('You do not have access to the requested page.');
-            //\Tk\Uri::create('/'.$this->access.'/index.html')->redirect();
-        }
-        return false;
-    }
-
-
 }
