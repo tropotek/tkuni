@@ -5,6 +5,7 @@
  * @license Copyright 2007 Michael Mifsud
  */
 namespace App;
+use Tk\Form\Renderer\Dom;
 
 /**
  * A class to add and render Bootstrap alert boxes
@@ -129,7 +130,7 @@ class Alert extends \Dom\Renderer\Renderer
     /**
      * show
      *
-     * @return string
+     * @return string|\Dom\Template
      */
     public function show()
     {

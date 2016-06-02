@@ -37,6 +37,12 @@ $params = array('test' => 'admin');
 $routes->add('admin-home', new \Tk\Routing\Route('/admin/index.html', 'App\Controller\Admin\Index::doDefault', $params));
 $routes->add('admin-home-base', new \Tk\Routing\Route('/admin/', 'App\Controller\Admin\Index::doDefault', $params));
 
+$routes->add('admin-institution-manager', new \Tk\Routing\Route('/admin/institutionManager.html', 'App\Controller\Admin\Institution\Manager::doDefault', $params));
+$routes->add('admin-institution-edit', new \Tk\Routing\Route('/admin/institutionEdit.html', 'App\Controller\Admin\Institution\Edit::doDefault', $params));
+
+$routes->add('admin-course-manager', new \Tk\Routing\Route('/admin/courseManager.html', 'App\Controller\Admin\Course\Manager::doDefault', $params));
+$routes->add('admin-course-edit', new \Tk\Routing\Route('/admin/courseEdit.html', 'App\Controller\Admin\Course\Edit::doDefault', $params));
+
 $routes->add('admin-user-manager', new \Tk\Routing\Route('/admin/userManager.html', 'App\Controller\Admin\User\Manager::doDefault', $params));
 $routes->add('admin-user-edit', new \Tk\Routing\Route('/admin/userEdit.html', 'App\Controller\Admin\User\Edit::doDefault', $params));
 $routes->add('admin-user-profile', new \Tk\Routing\Route('/admin/profile.html', 'App\Controller\Admin\User\Edit::doDefault', $params));

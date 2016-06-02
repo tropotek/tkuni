@@ -33,7 +33,7 @@ class Manager extends Iface
     /**
      *
      * @param Request $request
-     * @return \App\Page\AdminPage|Template|string
+     * @return \App\Page\Iface|Template|string
      */
     public function doDefault(Request $request)
     {
@@ -68,7 +68,7 @@ class Manager extends Iface
     }
 
     /**
-     * @return \App\Page\AdminPage
+     * @return \App\Page\Iface
      */
     public function show()
     {

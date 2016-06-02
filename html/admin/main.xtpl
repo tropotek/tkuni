@@ -281,6 +281,7 @@
           </li>
           <li><a href="/admin/index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
           <li><a href="/admin/userManager.html"><i class="fa fa-users fa-fw"></i> Users</a></li>
+          <li><a href="/admin/courseManager.html"><i class="fa fa-university fa-fw"></i> Courses</a></li>
           <!-- li><a href="/admin/supervisorManager.html"><i class="fa fa-users fa-fw"></i> Supervisors</a></li -->
           <li>
             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
