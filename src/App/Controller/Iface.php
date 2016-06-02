@@ -6,9 +6,9 @@ abstract class Iface extends \Dom\Renderer\Renderer
 {
     
     /**
-     * @var array
+     * @var string|array
      */
-    protected $access = array();
+    protected $access = null;
 
     /**
      * @var string
@@ -28,9 +28,9 @@ abstract class Iface extends \Dom\Renderer\Renderer
 
     /**
      * @param string $pageTitle
-     * @param string $access
+     * @param string|array $access
      */
-    public function __construct($pageTitle = '', $access = '')
+    public function __construct($pageTitle = '', $access = null)
     {
         $this->setAccess($access);
         $this->setPageTitle($pageTitle);
@@ -101,17 +101,27 @@ abstract class Iface extends \Dom\Renderer\Renderer
     {
         return $this->getConfig()->getUser();
     }
-    
+
     /**
      * Add a role that can access this page
      *
-     * @param $role
+     * @param string|array $role
      * @return $this
      */
     public function setAccess($role)
     {
         $this->access = $role;
         return $this;
+    }
+
+    /**
+     * Get the controllers roles
+     *
+     * @return string|array
+     */
+    public function getAccess()
+    {
+        return $this->access;
     }
 
     /**
@@ -122,7 +132,7 @@ abstract class Iface extends \Dom\Renderer\Renderer
      */
     public function hasAccess($user)
     {
-        if (!$this->access) return true;
+        if (empty($this->access)) return true;
         if (!$user) return false;
         if ($user->hasRole($this->access)) return true;
         return false;
@@ -134,17 +144,19 @@ abstract class Iface extends \Dom\Renderer\Renderer
      */
     public function checkAccess()
     {
-        if (!$this->access) return;
+        if (empty($this->access)) return;
         /** @var \App\Db\User $user **/
         $user = $this->getUser();
         if (!$user) {
-            \Tk\Uri::create('/login.html')->redirect();
+            return true;
+            //\Tk\Uri::create('/login.html')->redirect();
         } else if (!$this->hasAccess($user)) {
             // Could redirect to a authentication error page...
             // Could cause a loop if the permissions are stuffed
-            \App\Alert::getInstance()->addWarning('You do not have access to the requested page.');
-            \Tk\Uri::create('/'.$this->access.'/index.html')->redirect();
+            //\App\Alert::getInstance()->addWarning('You do not have access to the requested page.');
+            //\Tk\Uri::create('/'.$this->access.'/index.html')->redirect();
         }
+        return false;
     }
 
 

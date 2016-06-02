@@ -64,9 +64,23 @@ class AuthHandler implements SubscriberInterface
      */
     public function onControllerAccess(ControllerEvent $event)
     {
+        $config = \Tk\Config::getInstance();
+        
         $controller = current($event->getController());
         if ($controller instanceof \App\Controller\Iface) {
-            $controller->checkAccess();
+            //$controller->checkAccess();
+            if (empty($controller->getAccess())) return;    // must be a public page if no access defined
+            $user = $config->getUser();
+            if (!$user) {
+                \Tk\Uri::create('/login.html')->redirect();
+            }
+            if (!$controller->hasAccess($user)) {
+                \App\Alert::getInstance()->addWarning('You do not have access to the requested page.');
+                if ($event->getRequest()->checkReferer() && $event->getRequest()->getReferer()->getBasename() != 'login.html') {
+                    $event->getRequest()->getReferer()->redirect();     // try to redirect to the lat page they had access to 
+                }
+                \Tk\Uri::create('/index.html')->redirect();
+            }
         }
     }
 

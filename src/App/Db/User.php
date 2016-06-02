@@ -198,8 +198,11 @@ class User extends \Tk\Db\Map\Model
 
     /**
      * Check if this user has the required permission
-     *
-     * @param string|Role $role
+     * 
+     * This method can check for a Role name  
+     * or an object as a singular or as an array.
+     * 
+     * @param string|Role|array $role
      * @return boolean
      */
     public function hasRole($role)
@@ -208,10 +211,10 @@ class User extends \Tk\Db\Map\Model
         
         foreach ($role as $r) {
             if (!$r instanceof Role) {
-                $r = \App\Db\Role::getMapper()->findByName($r);
+                $r = Role::getMapper()->findByName($r);
             }
             if ($r) {
-                $obj = \App\Db\Role::getMapper()->findRole($r->id, $this->id);
+                $obj = Role::getMapper()->findRole($r->id, $this->id);
                 if ($obj) {
                     return true;
                 }
