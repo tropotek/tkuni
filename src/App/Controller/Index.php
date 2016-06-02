@@ -40,9 +40,10 @@ class Index extends Iface
 
     public function show()
     {
-        $page = new \App\Page\PublicPage($this);
         $template = $this->getTemplate();
-        return $page->setPageContent($template);
+        
+        
+        return $this->getPage()->setPageContent($template);
     }
 
 

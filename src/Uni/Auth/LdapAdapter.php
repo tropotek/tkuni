@@ -1,5 +1,5 @@
 <?php
-namespace App\Auth;
+namespace Uni\Auth;
 
 use Tk\Auth\Result;
 
@@ -13,7 +13,7 @@ use Tk\Auth\Result;
  *
  *
  */
-class UnimelbLdapAdapter extends \Tk\Auth\Adapter\Ldap
+class LdapAdapter extends \Tk\Auth\Adapter\Ldap
 {
 
     /**
@@ -45,8 +45,7 @@ class UnimelbLdapAdapter extends \Tk\Auth\Adapter\Ldap
         /** @var \Tk\Auth\Result $r */
         $r = parent::authenticate();
         $ldapData = $r->getParam('ldap');
-        if (!$ldapData) return;
-
+        if (!$ldapData) return new Result(Result::FAILURE_CREDENTIAL_INVALID, $username, 'Error Connecting to LDAP Server.');;
 
         // Update the user record with ldap data
         $user = \App\Db\User::getMapper()->findByUsername($r->getIdentity());
@@ -60,7 +59,6 @@ class UnimelbLdapAdapter extends \Tk\Auth\Adapter\Ldap
             // TODO: Save any extra required data, IE: `auedupersonid` (Student/Staff number)
             $roles = array('user');
             // role: 'staff', 'student' 'others'
-            //vd($ldapData[0]['auedupersontype'][0]);
             switch ($ldapData[0]['auedupersontype'][0]) {
                 case 'staff':
                     $roles[] = 'staff';

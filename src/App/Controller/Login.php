@@ -67,16 +67,14 @@ class Login extends Iface
      */
     public function show()
     {
-        $page = new \App\Page\PublicPage($this);
         $template = $this->getTemplate();
 
         // Render the form
         $ren = new \Tk\Form\Renderer\DomStatic($this->form, $template);
         $ren->show();
         
-        return $page->setPageContent($template);
+        return $this->getPage()->setPageContent($template);
     }
-
 
     /**
      * doLogin()
@@ -100,25 +98,22 @@ class Login extends Iface
             return;
         }
 
-        // Fire the login event to allow developing of misc auth plugins
-        $event = new \App\Event\AuthEvent($auth, $form->getValues());
-        $this->getConfig()->getEventDispatcher()->dispatch('auth.onLogin', $event);
-        
-        // Use the event to process the login like below....
-        $result = $event->getResult();
-        if (!$result) {
-            $form->addError('No valid authentication result received.');
-            return;
+        try {
+            // Fire the login event to allow developing of misc auth plugins
+            $event = new \App\Event\AuthEvent($auth, $form->getValues());
+            $this->getConfig()->getEventDispatcher()->dispatch('auth.onLogin', $event);
+            
+            $result = $event->getResult();
+            if (!$result) {
+                $form->addError('Invalid Username or password.');
+                return;
+            }
+            $form->addError( implode("<br/>\n", $result->getMessages()) );
+        } catch (\Exception $e) {
+            $form->addError($e->getMessage());
         }
-        if ($result->getCode() == Result::SUCCESS) {
-            // Redirect based on role
-            \Tk\Uri::create('/admin/index.html')->redirect(307);
-        }
-        $form->addError( implode("<br/>\n", $result->getMessages()) );
-        return;
     }
-
-
+    
     /**
      * DomTemplate magic method
      *

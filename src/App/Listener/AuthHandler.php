@@ -30,10 +30,21 @@ class AuthHandler implements SubscriberInterface
         foreach($adapterList as $name => $class) {
             $adapter = \App\Factory::getAuthAdapter($class, $event->all());
             $result = $event->getAuth()->authenticate($adapter);
+            $event->setResult($result);
             if ($result && $result->getCode() == \Tk\Auth\Result::SUCCESS) {
-                $event->setResult($result);
-                return;
+                break;
             }
+        }
+        
+        if ($result->isValid()) {
+            /** @var \App\Db\User $user */
+            $user = \App\Db\User::getMapper()->findByUsername($result->getIdentity());
+            if (!$user) {
+                throw new \Tk\Auth\Exception('User not found: Contact Your Administrator.');
+            }
+            $user->lastLogin = new \DateTime();
+            $user->save();
+            $user->redirectHome();
         }
     }
 

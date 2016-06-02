@@ -14,7 +14,7 @@ use Tk\Config;
  */
 class User extends \Tk\Db\Map\Model
 {
-    static $hashFunction = 'md5';
+    static $HASH_FUNCTION = 'md5';
 
     const ROLE_ADMIN = 'admin';
     const ROLE_COORD = 'coordinator';
@@ -102,7 +102,7 @@ class User extends \Tk\Db\Map\Model
     {
         $this->getHash();
         if (!$this->uid) {
-            $this->uid = hash(Config::getInstance()->getHashFunction(), $this->username . $this->created->format(\Tk\Date::ISO_DATE));
+            $this->uid = hash(self::$HASH_FUNCTION, $this->username . $this->created->format(\Tk\Date::ISO_DATE));
         }
         parent::save();
     }
@@ -149,7 +149,7 @@ class User extends \Tk\Db\Map\Model
      */
     public function generateHash() 
     {
-        return hash(self::$hashFunction, sprintf('%s', $this->username));
+        return hash(self::$HASH_FUNCTION, sprintf('%s', $this->username));
     }
 
     public function delete()
@@ -169,7 +169,7 @@ class User extends \Tk\Db\Map\Model
         if (!$str) {
             $str = self::createPassword(10);
         }
-        $this->password = hash(self::$hashFunction, $str . $this->getHash());
+        $this->password = hash(self::$HASH_FUNCTION, $str . $this->getHash());
     }
 
     /**
@@ -223,7 +223,7 @@ class User extends \Tk\Db\Map\Model
 }
 
 
-class UserValidator extends \App\Helper\Validator
+class UserValidator extends \Tk\Db\Map\Validator
 {
 
     /**

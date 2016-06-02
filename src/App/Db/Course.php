@@ -109,7 +109,7 @@ class Course extends \Tk\Db\Map\Model
     
 }
 
-class CourseValidator extends \App\Helper\Validator
+class CourseValidator extends \Tk\Db\Map\Validator
 {
 
     /**

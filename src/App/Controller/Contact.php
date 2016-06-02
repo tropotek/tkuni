@@ -66,14 +66,13 @@ class Contact extends Iface
      */
     public function show()
     {
-        $page = new \App\Page\PublicPage($this);
         $template = $this->getTemplate();
 
         // Render the form
         $ren = new \Tk\Form\Renderer\DomStatic($this->form, $template);
         $ren->show();
 
-        return $page->setPageContent($template);
+        return $this->getPage()->setPageContent($template);
     }
 
     /**

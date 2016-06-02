@@ -58,6 +58,8 @@ class Bootstrap
         
         \Tk\Uri::$BASE_URL_PATH = $config->getSiteUrl();
         
+        \App\Db\User::$HASH_FUNCTION = $config['hash.function'];
+        
         /**
          * This makes our life easier when dealing with paths. Everything is relative
          * to the application root now.
@@ -84,7 +86,15 @@ class Bootstrap
         if ($config->isCli()) {
             return $config;
         }
-
+        
+        if ($config->isDebug()) {
+            error_reporting(-1);
+            //error_reporting(E_ALL | E_STRICT);
+            ini_set('display_errors', 'Off');       // Only log errors?????
+        } else {
+            error_reporting(0);
+            ini_set('display_errors', 'Off');
+        }
         // --- HTTP only bootstrapping from here ---
         
         // * Request

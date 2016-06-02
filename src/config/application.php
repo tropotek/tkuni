@@ -24,6 +24,10 @@ $config['template.public.path'] = '/html/purpose';
 
 // -- AUTH CONFIG --
 
+// Hash function to use for authentication 
+// Warning: do not change after install, or else 
+//   ALL existing passwords will be invalid and need to be reset.
+$config['hash.function'] = 'md5';
 
 // DbTable
 $config['system.auth.dbtable.tableName'] = 'user';
@@ -40,7 +44,7 @@ $config['system.auth.ldap.baseDn'] = 'ou=people,o=unimelb';
 $config['system.auth.ldap.filter'] = 'uid={username}';
 
 $config['system.auth.adapters'] = array(
-    'LDAP' => '\App\Auth\UnimelbLdapAdapter',  
+    'LDAP' => '\Uni\Auth\LdapAdapter',  
     'DbTable' => '\Tk\Auth\Adapter\DbTable'
     //'LDAP' => '\Tk\Auth\Adapter\Ldap',
     //'Trap' => '\Tk\Auth\Adapter\Trapdoor'

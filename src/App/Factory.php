@@ -183,10 +183,10 @@ class Factory
         }
         return self::getConfig()->getAuth();
     }
-
-
+    
     /**
-     * A factory method to create an instances of an Auth adapters
+     * A helper method to create an instance of an Auth adapter
+     *
      *
      * @param string $class
      * @param array $submittedData
@@ -196,30 +196,54 @@ class Factory
     static function getAuthAdapter($class, $submittedData = [])
     {
         $config = self::getConfig();
+        
         /** @var \Tk\Auth\Adapter\Iface $adapter */
         $adapter = null;
-        switch($class) {
+        switch ($class) {
             case '\Tk\Auth\Adapter\Config':
-                $adapter = new $class($config['system.auth.username'], $config['system.auth.password']);
+                $adapter = new \Tk\Auth\Adapter\Config(
+                    $config['system.auth.config.username'],
+                    $config['system.auth.config.password']);
                 break;
             case '\Tk\Auth\Adapter\Ldap':
-                $adapter = new $class($config['system.auth.ldap.host'], $config['system.auth.ldap.baseDn'], $config['system.auth.ldap.filter'],
-                    $config['system.auth.ldap.port'], $config['system.auth.ldap.tls']);
+                $adapter = new \Tk\Auth\Adapter\Ldap(
+                    $config['system.auth.ldap.host'],
+                    $config['system.auth.ldap.baseDn'],
+                    $config['system.auth.ldap.filter'],
+                    $config['system.auth.ldap.port'],
+                    $config['system.auth.ldap.tls']);
+                break;
+            case '\Uni\Auth\LdapAdapter':
+                $adapter = new \Uni\Auth\LdapAdapter(
+                    $config['system.auth.ldap.host'],
+                    $config['system.auth.ldap.baseDn'],
+                    $config['system.auth.ldap.filter'],
+                    $config['system.auth.ldap.port'],
+                    $config['system.auth.ldap.tls']);
                 break;
             case '\Tk\Auth\Adapter\DbTable':
-                $adapter = new $class($config['db'], $config['system.auth.dbtable.tableName'],
-                    $config['system.auth.dbtable.usernameColumn'], $config['system.auth.dbtable.passwordColumn']);
+                $adapter = new \Tk\Auth\Adapter\DbTable(
+                    $config->getDb(),
+                    $config['system.auth.dbtable.tableName'],
+                    $config['system.auth.dbtable.usernameColumn'],
+                    $config['system.auth.dbtable.passwordColumn'],
+                    $config['system.auth.dbtable.saltColumn'],
+                    $config['system.auth.dbtable.activeColumn']);
+                $adapter->setHashFunction($config['hash.function']);
                 break;
             case '\Tk\Auth\Adapter\Trapdoor':
-                $adapter = new $class();
+                $adapter = new \Tk\Auth\Adapter\Trapdoor();
                 break;
             default:
-                throw new \Tk\Auth\Exception('Cannot locate adapter class: ' . $class);
+                $adapter = new $class();
+        }
+        if (!$adapter) {
+            throw new \Tk\Auth\Exception('Cannot locate adapter class: ' . $class);
         }
         $adapter->replace($submittedData);
         return $adapter;
     }
-
+    
     /**
      * Create a new user
      *

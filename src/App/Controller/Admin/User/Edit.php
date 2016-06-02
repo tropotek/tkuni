@@ -7,6 +7,7 @@ use Tk\Form;
 use Tk\Form\Field;
 use Tk\Form\Event;
 use App\Controller\Admin\Iface;
+use Tk\Form\Field\Option\ArrayObjectIterator;
 
 /**
  *
@@ -67,8 +68,11 @@ class Edit extends Iface
 
         $this->form->addField(new Field\Input('name'))->setRequired(true)->setTabGroup('Details');
         $emailF = $this->form->addField(new Field\Input('email'))->setRequired(true)->setTabGroup('Details');
-        if (!$this->isProfile())
+        if ($this->isProfile()) {
+            $emailF->setAttr('readonly', 'readonly');
+        } else {
             $this->form->addField(new Field\Checkbox('active'))->setTabGroup('Details');
+        }   
         
         $this->form->setAttr('autocomplete', 'off');
         $f = $this->form->addField(new Field\Password('newPassword'))->setAttr('placeholder', 'Click to edit')->setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setTabGroup('Password');
@@ -79,22 +83,20 @@ class Edit extends Iface
             $f->setRequired(true);
 
         
-//        if (!$this->isProfile()) {
-//            $roles = \App\Db\Role::getMapper()->findAll(\Tk\Db\Tool::create('a.id'))->toArray();
-//            $list = new ArrayObjectIterator($roles);
-//            $this->form->addField(new Field\CheckboxGroup('role', $list))->setNotes('Select the access level for this user')->setRequired(true)->setTabGroup('Roles')->setRequired(true);
-//        }
+        if (!$this->isProfile()) {
+            $roles = \App\Db\Role::getMapper()->findAll(\Tk\Db\Tool::create('a.id'))->toArray();
+            $list = new ArrayObjectIterator($roles);
+            $this->form->addField(new Field\CheckboxGroup('role', $list))->setNotes('Select the access level for this user')->setRequired(true)->setTabGroup('Roles')->setRequired(true);
+        }
 
         $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
         $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
         $this->form->addField(new Event\Link('cancel', \Tk\Uri::create('/admin/userManager.html')));
-
         
         $this->form->load(\App\Db\UserMap::unmapForm($this->user));
         
         $this->form->execute();
-
-
+        
         return $this->show();
     }
 
@@ -122,6 +124,15 @@ class Edit extends Iface
 
         $this->user->save();
 
+        if (!$this->isProfile()) {
+            // Update user role list
+            \App\Db\Role::getMapper()->deleteAllUserRoles($this->user->id);
+            foreach ($form->getFieldValue('role') as $roleId) {
+                \App\Db\Role::getMapper()->addUserRole($roleId, $this->user->id);
+            }
+        }
+
+        \App\Alert::addSuccess('User record saved!');
         //\App\Alert::addSuccess('User record saved!');
         if ($form->getTriggeredEvent()->getName() == 'update') {
             if ($this->isProfile()) {
@@ -137,7 +148,6 @@ class Edit extends Iface
      */
     public function show()
     {
-        $page = new \App\Page\AdminPage($this);
         $template = $this->getTemplate();
         
         if ($this->user->id)
@@ -149,7 +159,7 @@ class Edit extends Iface
         $fren = new \Tk\Form\Renderer\Dom($this->form);
         $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());
 
-        return $page->setPageContent($this->getTemplate());
+        return $this->getPage()->setPageContent($this->getTemplate());
     }
 
 

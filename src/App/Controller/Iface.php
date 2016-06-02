@@ -19,6 +19,11 @@ abstract class Iface extends \Dom\Renderer\Renderer
      * @var string
      */
     protected $templatePath = '';
+    
+    /**
+     * @var \App\Page\Iface
+     */
+    protected $page = null;
 
 
     /**
@@ -30,6 +35,19 @@ abstract class Iface extends \Dom\Renderer\Renderer
         $this->setAccess($access);
         $this->setPageTitle($pageTitle);
         $this->templatePath = $this->getConfig()->getSitePath() . $this->getConfig()->get('template.public.path');
+    }
+
+    /**
+     * Get a new instance of the page to display the content in.
+     *
+     * @return \App\Page\Iface
+     */
+    public function getPage()
+    {
+        if (!$this->page) {
+            $this->page = new \App\Page\PublicPage($this);
+        }
+        return $this->page;
     }
 
     /**
