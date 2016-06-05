@@ -88,10 +88,7 @@ abstract class Iface extends \Dom\Renderer\Renderer
     {
         return \Tk\Config::getInstance();
     }
-
     
-    
-
     /**
      * Get the currently logged in user
      *
