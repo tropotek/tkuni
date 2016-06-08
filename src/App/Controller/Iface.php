@@ -100,7 +100,7 @@ abstract class Iface extends \Dom\Renderer\Renderer
     }
 
     /**
-     * Add a role that can access this page
+     * Add a role(s) that can access this page
      *
      * @param string|array $role
      * @return $this

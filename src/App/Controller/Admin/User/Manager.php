@@ -56,8 +56,10 @@ class Manager extends Iface
         $this->table->addAction(\Tk\Table\Action\Button::getInstance('New User', 'fa fa-plus', \Tk\Uri::create('admin/userEdit.html')));
         $this->table->addAction(new \Tk\Table\Action\Delete());
         $this->table->addAction(new \Tk\Table\Action\Csv($this->getConfig()->getDb()));
-
-        $users = \App\Db\User::getMapper()->findFiltered($this->table->getFilterValues(), $this->table->makeDbTool('a.name'));
+        
+        $filter = $this->table->getFilterValues();
+        $filter['institutionId'] = 0;
+        $users = \App\Db\User::getMapper()->findFiltered($filter, $this->table->makeDbTool('a.name'));
         $this->table->setList($users);
 
         return $this->show();

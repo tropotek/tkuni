@@ -18,16 +18,21 @@ class User extends \Tk\Db\Map\Model
 
     const ROLE_ADMIN = 'admin';
     const ROLE_COORD = 'coordinator';
-    const ROLE_STAFF = 'staff';
+    const ROLE_LECTURER = 'lecturer';
     const ROLE_STUDENT = 'student';
     const ROLE_USER = 'user';
-    
-    
-    
+
+
+
     /**
      * @var int
      */
     public $id = 0;
+
+    /**
+     * @var int
+     */
+    public $institutionId = 0;
 
     /**
      * @var string
@@ -173,14 +178,24 @@ class User extends \Tk\Db\Map\Model
     }
 
     /**
-     * Redirect the user to their correct homepage
+     * Return the users home|dashboard relative url
      *
+     * @return string
      * @throws \Exception
      */
-    public function redirectHome()
+    public function getHomeUrl()
     {
-        if ($this->hasRole(array(self::ROLE_ADMIN, self::ROLE_COORD, self::ROLE_STAFF, self::ROLE_STUDENT)))
-            \Tk\Uri::create('/admin/index.html')->redirect();
+        if ($this->hasRole(self::ROLE_ADMIN))
+            return '/admin/index.html';
+        if ($this->hasRole(array(self::ROLE_COORD, self::ROLE_LECTURER)))
+            return '/staff/index.html';
+        if ($this->hasRole(self::ROLE_STUDENT))
+            return '/student/index.html';
+        if ($this->hasRole(self::ROLE_USER))
+            return '/user/index.html';
+        return '/index.html';   // Should not get here unless their is no roles
+        //maybe we should throw an exception instead??
+        //throw new \Tk\Exception('No suitable roles found please contact your administrator.'); 
     }
 
     /**

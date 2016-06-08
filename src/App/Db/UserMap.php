@@ -81,11 +81,14 @@ class UserMap extends Mapper
         );
         return $arr;
     }
+    
+    
 
     public function map($row)
     {
         $obj = new User();
         $obj->id = $row['id'];
+        $obj->institutionId = $row['institution_id'];
         $obj->uid = $row['uid'];
         $obj->username = $row['username'];
         $obj->password = $row['password'];
@@ -107,6 +110,7 @@ class UserMap extends Mapper
         $arr = array(
             'id' => $obj->id,
             'uid' => $obj->uid,
+            'institution_id' => $obj->institutionId,
             'username' => $obj->username,
             'password' => $obj->password,
             'name' => $obj->name,
@@ -119,8 +123,6 @@ class UserMap extends Mapper
         if ($obj->lastLogin) {
             $arr['last_login'] = $obj->lastLogin->format(\Tk\Date::ISO_DATE);
         }
-        
-        
         
         return $arr;
     }
@@ -174,12 +176,12 @@ class UserMap extends Mapper
                 $where .= '(' . substr($w, 0, -3) . ') AND ';
             }
         }
+
+        if (isset($filter['institutionId'])) {
+            $where .= sprintf('a.institution_id = %s AND ', (int)$filter['institutionId']);
+        }
+
         
-//        if (!empty($filter['lti_context_id'])) {
-//            $where .= sprintf('a.lti_context_id = %s AND ', $this->getDb()->quote($filter['lti_context_id']));
-//        }
-
-
         if ($where) {
             $where = substr($where, 0, -4);
         }
