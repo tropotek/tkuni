@@ -45,7 +45,7 @@ class ResponseHandler implements SubscriberInterface
         
         /* @var $template \Dom\Template */
         $result = $event->getControllerResult();
-        if ($result instanceof \Dom\Renderer\Iface) {
+        if ($result instanceof \Dom\Renderer\RendererInterface) {
             $result = $result->getTemplate()->getDocument();
         }
         if ($result instanceof \Dom\Template) {
@@ -73,7 +73,7 @@ class ResponseHandler implements SubscriberInterface
         
         if ($result instanceof \Dom\Template) {
             $event->setResponse(new Response($result->toString()));
-        } else if ($result instanceof \Dom\Renderer\Iface) {
+        } else if ($result instanceof \Dom\Renderer\RendererInterface) {
             $event->setResponse(new Response($result->getTemplate()->toString()));
         } else if (is_string($result)) {
             $event->setResponse(new Response($result));

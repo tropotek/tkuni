@@ -3,7 +3,7 @@ namespace App\Db;
 
 use Tk\Auth;
 use Tk\Auth\Exception;
-
+use App\Auth\Access;
 
 
 /**
@@ -22,9 +22,7 @@ class User extends \Tk\Db\Map\Model
     const ROLE_LECTURER = 'lecturer';
     const ROLE_STUDENT = 'student';
     const ROLE_USER = 'user';
-
-
-
+    
     /**
      * @var int
      */
@@ -100,10 +98,6 @@ class User extends \Tk\Db\Map\Model
         $this->created = new \DateTime();
     }
 
-    /**
-     * 
-     * @throws \Tk\Exception
-     */
     public function save()
     {
         $this->getHash();
@@ -113,6 +107,14 @@ class User extends \Tk\Db\Map\Model
         parent::save();
     }
 
+    public function delete()
+    {
+        \App\Db\Role::getMapper()->deleteAllUserRoles($this->id);
+        return parent::delete();
+    }
+
+    
+    
     /**
      * Create a random password
      *
@@ -158,12 +160,6 @@ class User extends \Tk\Db\Map\Model
         return hash(self::$HASH_FUNCTION, sprintf('%s', $this->username));
     }
 
-    public function delete()
-    {
-        \App\Db\Role::getMapper()->deleteAllUserRoles($this->id);
-        return parent::delete();
-    }
-
     /**
      * Set the password from a plain string
      *
@@ -186,13 +182,15 @@ class User extends \Tk\Db\Map\Model
      */
     public function getHomeUrl()
     {
-        if ($this->hasRole(self::ROLE_ADMIN))
+        $access = Access::create($this);
+        
+        if ($access->hasRole(self::ROLE_ADMIN))
             return '/admin/index.html';
-        if ($this->hasRole(array(self::ROLE_COORD, self::ROLE_LECTURER)))
+        if ($access->hasRole(array(self::ROLE_COORD, self::ROLE_LECTURER)))
             return '/staff/index.html';
-        if ($this->hasRole(self::ROLE_STUDENT))
+        if ($access->hasRole(self::ROLE_STUDENT))
             return '/student/index.html';
-        if ($this->hasRole(self::ROLE_USER))
+        if ($access->hasRole(self::ROLE_USER))
             return '/user/index.html';
         return '/index.html';   // Should not get here unless their is no roles
         //maybe we should throw an exception instead??
@@ -210,33 +208,6 @@ class User extends \Tk\Db\Map\Model
             $arr[] = $role->name;
         }
         return $arr;
-    }
-
-    /**
-     * Check if this user has the required permission
-     * 
-     * This method can check for a Role name  
-     * or an object as a singular or as an array.
-     * 
-     * @param string|Role|array $role
-     * @return boolean
-     */
-    public function hasRole($role)
-    {
-        if (!is_array($role)) $role = array($role);
-        
-        foreach ($role as $r) {
-            if (!$r instanceof Role) {
-                $r = Role::getMapper()->findByName($r);
-            }
-            if ($r) {
-                $obj = Role::getMapper()->findRole($r->id, $this->id);
-                if ($obj) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
 }

@@ -44,7 +44,8 @@ class AuthHandler implements SubscriberInterface
             }
             $user->lastLogin = new \DateTime();
             $user->save();
-            $user->redirectHome();
+            //$user->redirectHome();
+            \Tk\Uri::create($user->getHomeUrl())->redirect();
         }
     }
 
@@ -64,22 +65,21 @@ class AuthHandler implements SubscriberInterface
      */
     public function onControllerAccess(ControllerEvent $event)
     {
-        $config = \Tk\Config::getInstance();
-        
+        /** @var \App\Controller\Iface $controller */
         $controller = current($event->getController());
+        $user = $controller->getUser();
         if ($controller instanceof \App\Controller\Iface) {
-            //$controller->checkAccess();
-            if (empty($controller->getAccess())) return;    // must be a public page if no access defined
-            $user = $config->getUser();
-            if (!$user) {
-                \Tk\Uri::create('/login.html')->redirect();
-            }
-            if (!$controller->hasAccess($user)) {
+            // TODO: This would be a good place for an ACL or RBAC in the future
+            $access = $event->getRequest()->getAttribute('access');
+
+            // Check the user has access to the controller in question
+            if (empty($access)) return;
+            if (!$user) \Tk\Uri::create('/login.html')->redirect();
+            if (!\App\Auth\Access::create($user)->hasRole($access)) {
+                // Could redirect to a authentication error page...
+                // Could cause a loop if the permissions are stuffed
                 \App\Alert::getInstance()->addWarning('You do not have access to the requested page.');
-                if ($event->getRequest()->checkReferer() && $event->getRequest()->getReferer()->getBasename() != 'login.html') {
-                    $event->getRequest()->getReferer()->redirect();     // try to redirect to the lat page they had access to 
-                }
-                \Tk\Uri::create('/index.html')->redirect();
+                \Tk\Uri::create($user->getHomeUrl())->redirect();
             }
         }
     }

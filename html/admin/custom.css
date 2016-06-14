@@ -46,6 +46,11 @@
 .tk-form .tk-form-events .btn {
   margin-right: 5px;
 }
+.tk-form .form-group .checkbox,
+.tk-form .form-group.tk-checkbox .controls {
+  display: inline-block;
+  margin-left: 10px;
+}
 
 .tk-form.form-inline .tk-form-fields,
 .tk-form.form-inline .tk-form-events {

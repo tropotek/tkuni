@@ -227,9 +227,8 @@ class Factory
                     $config['system.auth.dbtable.tableName'],
                     $config['system.auth.dbtable.usernameColumn'],
                     $config['system.auth.dbtable.passwordColumn'],
-                    $config['system.auth.dbtable.saltColumn'],
                     $config['system.auth.dbtable.activeColumn']);
-                $adapter->setHashFunction($config['hash.function']);
+                //$adapter->setHashFunction($config['hash.function']);
                 break;
             case '\Tk\Auth\Adapter\Trapdoor':
                 $adapter = new \Tk\Auth\Adapter\Trapdoor();

@@ -1,5 +1,5 @@
 <?php
-namespace App\Controller\Priv\Course;
+namespace App\Controller\Admin\Course;
 
 use Dom\Template;
 use Tk\Form\Field;
