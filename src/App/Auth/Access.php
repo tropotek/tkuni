@@ -1,6 +1,7 @@
 <?php
 namespace App\Auth;
 
+use \App\Db\Role;
 
 /**
  * Class RoleAccess

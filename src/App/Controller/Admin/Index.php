@@ -42,7 +42,7 @@ class Index extends Iface
     public function show()
     {
         $template = $this->getTemplate();
-
+        
         return $this->getPage()->setPageContent($template);
     }
 
