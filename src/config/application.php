@@ -24,11 +24,6 @@ $config['template.public.path'] = '/html/purpose';
 
 // -- AUTH CONFIG --
 
-// Hash function to use for authentication 
-// Warning: do not change after install, or else 
-//   ALL existing passwords will be invalid and need to be reset.
-$config['hash.function'] = 'md5';
-
 // DbTable
 $config['system.auth.dbtable.tableName'] = 'user';
 $config['system.auth.dbtable.usernameColumn'] = 'username';

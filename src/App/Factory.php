@@ -53,17 +53,14 @@ class Factory
     public static function getSession()
     {
         if (!self::getConfig()->getSession()) {
-            $obj = new \Tk\Session(self::getConfig(), self::getRequest(), self::getCookie());
-            //$obj->start(new \Tk\Session\Adapter\Database( self::getDb() ));
-            $obj->start();
+            $adapter = null;
+            //$adapter = new \Tk\Session\Adapter\Database( self::getDb(), 'session', new \Tk\Encrypt());
+            $obj = new \Tk\Session($adapter, self::getConfig(), self::getRequest(), self::getCookie());
             self::getConfig()->setSession($obj);
         }
         return self::getConfig()->getSession();
     }
-    
-    
-    
-    
+
     
     /**
      * getDb
@@ -229,6 +226,7 @@ class Factory
                     $config['system.auth.dbtable.passwordColumn'],
                     $config['system.auth.dbtable.activeColumn']);
                 //$adapter->setHashFunction($config['hash.function']);
+                $adapter->setHashCallback(array(__CLASS__, 'hashPassword'));
                 break;
             case '\Tk\Auth\Adapter\Trapdoor':
                 $adapter = new \Tk\Auth\Adapter\Trapdoor();
@@ -241,6 +239,16 @@ class Factory
         }
         $adapter->replace($submittedData);
         return $adapter;
+    }
+
+    /**
+     * @param $pwd
+     * @param $user (optional)
+     * @return string
+     */
+    static public function hashPassword($pwd, $user = null)
+    {
+        return hash('md5', $pwd);
     }
     
     /**
