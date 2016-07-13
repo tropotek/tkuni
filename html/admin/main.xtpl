@@ -49,7 +49,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/admin/index.html">TkLib v2.0 Template</a>
+      <a class="navbar-brand" href="/admin/index.html" var="siteTitle">TkLib v2.0 Template</a>
     </div>
     <!-- /.navbar-header -->
 

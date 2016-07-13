@@ -98,7 +98,7 @@ class RoleMap extends Mapper
     /**
      * @param $roleId
      * @param $userId
-     * @return \App\Db\Role
+     * @return Role
      */
     public function findRole($roleId, $userId)
     {
@@ -106,6 +106,20 @@ class RoleMap extends Mapper
         $where = sprintf('a.id = %d AND a.id = b.role_id AND b.user_id = %d', (int)$roleId, (int)$userId);
         return $this->selectFrom($from, $where)->current();
     }
+
+    /**
+     * @param $userId
+     * @param $courseId
+     * @return Role
+     */
+    public function findCourseRole($userId, $courseId)
+    {
+        $from = sprintf('%s a, user_course_role b', $this->getDb()->quoteParameter($this->getTable()));
+        $where = sprintf('a.id = b.role_id AND b.user_id = %d AND b.course_id = %d ', (int)$userId, (int)$courseId);
+        return $this->selectFrom($from, $where)->current();
+    }
+
+
 
 
     /**

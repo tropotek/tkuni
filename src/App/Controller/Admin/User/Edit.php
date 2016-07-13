@@ -91,7 +91,7 @@ class Edit extends Iface
 
         $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
         $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
-        $this->form->addField(new Event\Link('cancel', \Tk\Uri::create('/admin/userManager.html')));
+        $this->form->addField(new Event\Link('cancel', \Tk\Uri::create('/recover.html')));
         
         $this->form->load(\App\Db\UserMap::unmapForm($this->user));
         

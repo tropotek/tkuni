@@ -1,18 +1,18 @@
 -- ---------------------------------
--- Install SQL
+-- Install LTI SQL
 -- 
 -- Author: Michael Mifsud <info@tropotek.com>
 -- ---------------------------------
 
-DROP TABLE IF EXISTS institution_lti;
-DROP TABLE IF EXISTS course_lti;
-DROP TABLE IF EXISTS user_lti;
-
-DROP TABLE IF EXISTS lti_consumer CASCADE;
-DROP TABLE IF EXISTS lti_context CASCADE;
-DROP TABLE IF EXISTS lti_user;
-DROP TABLE IF EXISTS lti_nonce;
-DROP TABLE IF EXISTS lti_share_key;
+-- DROP TABLE IF EXISTS institution_lti;
+-- DROP TABLE IF EXISTS course_lti;
+-- DROP TABLE IF EXISTS user_lti;
+--
+-- DROP TABLE IF EXISTS lti_consumer CASCADE;
+-- DROP TABLE IF EXISTS lti_context CASCADE;
+-- DROP TABLE IF EXISTS lti_user;
+-- DROP TABLE IF EXISTS lti_nonce;
+-- DROP TABLE IF EXISTS lti_share_key;
 
 
 -- -------------------------------------------------

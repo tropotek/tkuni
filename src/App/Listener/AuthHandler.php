@@ -42,7 +42,7 @@ class AuthHandler implements SubscriberInterface
             if (!$user) {
                 throw new \Tk\Auth\Exception('User not found: Contact Your Administrator.');
             }
-            $user->lastLogin = new \DateTime();
+            $user->lastLogin = \Tk\Date::create();
             $user->save();
             //$user->redirectHome();
             \Tk\Uri::create($user->getHomeUrl())->redirect();

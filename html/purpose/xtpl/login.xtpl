@@ -4,7 +4,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-5">
-          <div class="basic-login">
+          <div class="basic-login" var="loginForm">
 
             <div class="alert alert-danger" role="alert" choice="error"><strong>Error!</strong> <span var="errMsg">Invalid login credentials</span></div>
 

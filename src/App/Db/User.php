@@ -18,10 +18,10 @@ class User extends \Tk\Db\Map\Model
     static $HASH_FUNCTION = 'md5';
 
     const ROLE_ADMIN = 'admin';
-    const ROLE_COORD = 'coordinator';
-    const ROLE_LECTURER = 'lecturer';
-    const ROLE_STUDENT = 'student';
-    const ROLE_USER = 'user';
+    const ROLE_CLIENT= 'client';
+    const ROLE_EDUSER = 'eduser';
+    const ROLE_COURSE_STAFF = 'staff';
+    const ROLE_COURSE_STUDENT = 'student';
     
     /**
      * @var int
@@ -94,8 +94,8 @@ class User extends \Tk\Db\Map\Model
      */
     public function __construct()
     {
-        $this->modified = new \DateTime();
-        $this->created = new \DateTime();
+        $this->modified = \Tk\Date::create();
+        $this->created = \Tk\Date::create();
     }
 
     public function save()
@@ -186,15 +186,14 @@ class User extends \Tk\Db\Map\Model
         
         if ($access->hasRole(self::ROLE_ADMIN))
             return '/admin/index.html';
-        if ($access->hasRole(array(self::ROLE_COORD, self::ROLE_LECTURER)))
-            return '/staff/index.html';
-        if ($access->hasRole(self::ROLE_STUDENT))
+        if ($access->hasRole(self::ROLE_CLIENT))
+            return '/client/index.html';
+        if ($access->hasRole(self::ROLE_EDUSER)) {
+            // TODO how do we determine the user type
+            //return '/staff/index.html';
             return '/student/index.html';
-        if ($access->hasRole(self::ROLE_USER))
-            return '/user/index.html';
+        }
         return '/index.html';   // Should not get here unless their is no roles
-        //maybe we should throw an exception instead??
-        //throw new \Tk\Exception('No suitable roles found please contact your administrator.'); 
     }
 
     /**

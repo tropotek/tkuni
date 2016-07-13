@@ -30,24 +30,18 @@ class CourseMap extends Mapper
             $obj = new Course();
         }
         //$obj->id = $row['id'];
-        if (isset($row['institutionId']))
-            $obj->institutionId = $row['institutionId'];
         if (isset($row['name']))
             $obj->name = $row['name'];
-        if (isset($row['code']))
-            $obj->code = $row['code'];
         if (isset($row['email']))
             $obj->email = $row['email'];
         if (isset($row['description']))
             $obj->description = $row['description'];
-
-        if (isset($row['start']))
-            $obj->start = \Tk\Date::create($row['start']);
-        if (isset($row['finish']))
-            $obj->finish = \Tk\Date::create($row['finish']);
-        
+        if (isset($row['logo']))
+            $obj->logo = $row['logo'];
         if (isset($row['active']))
             $obj->active = ($row['active'] == 'active');
+        if (isset($row['hash']))
+            $obj->hash = $row['hash'];
 
         if (isset($row['modified']))
             $obj->modified = \Tk\Date::create($row['modified']);
@@ -69,29 +63,18 @@ class CourseMap extends Mapper
         $finish = null;
         $dateFormat = 'd/m/Y';
 
-        if ($obj->start) {
-            $start = $obj->start->format($dateFormat);
-        }
-        if ($obj->finish) {
-            $finish = $obj->finish->format($dateFormat);
-        }
-        
         $arr = array(
             'id' => $obj->id,
-            'institutionId' => $obj->institutionId,
             'name' => $obj->name,
-            'code' => $obj->code,
             'email' => $obj->email,
             'description' => $obj->description,
-            'start' => $start,
-            'finish' => $finish,
+            'logo' => $obj->logo,
             'active' => (int)$obj->active,
+            'hash' => $obj->hash,
             'modified' => $obj->modified->format($dateFormat),
             'created' => $obj->created->format($dateFormat)
         );
-        
-        
-        
+
         return $arr;
     }
 
@@ -99,16 +82,12 @@ class CourseMap extends Mapper
     {
         $obj = new Course();
         $obj->id = $row['id'];
-        $obj->institutionId = $row['institution_id'];
         $obj->name = $row['name'];
-        $obj->code = $row['code'];
         $obj->email = $row['email'];
         $obj->description = $row['description'];
-        if ($row['start'])
-            $obj->start = \Tk\Date::create($row['start']);
-        if ($row['finish'])
-            $obj->finish = \Tk\Date::create($row['finish']);
+        $obj->logo = $row['logo'];
         $obj->active = ($row['active'] == 1);
+        $obj->hash = $row['hash'];
         if ($row['modified'])
             $obj->modified = \Tk\Date::create($row['modified']);
         if ($row['created'])
@@ -120,14 +99,12 @@ class CourseMap extends Mapper
     {
         $arr = array(
             'id' => $obj->id,
-            'institution_id' => $obj->institutionId,
             'name' => $obj->name,
-            'code' => $obj->code,
             'email' => $obj->email,
             'description' => $obj->description,
-            'start' => $obj->start->format(\Tk\Date::ISO_DATE),
-            'finish' => $obj->finish->format(\Tk\Date::ISO_DATE),
+            'logo' => $obj->logo,
             'active' => (int)$obj->active,
+            'hash' => $obj->hash,
             'modified' => $obj->modified->format(\Tk\Date::ISO_DATE),
             'created' => $obj->created->format(\Tk\Date::ISO_DATE)
         );
@@ -184,9 +161,12 @@ class CourseMap extends Mapper
             }
         }
 
+        if (!empty($filter['lti_consumer_key'])) {
+            $where .= sprintf('a.lti_consumer_key = %s AND ', $this->getDb()->quote($filter['lti_consumer_key']));
+        }
 
-        if (!empty($filter['code'])) {
-            $where .= sprintf('a.code = %s AND ', $this->getDb()->quote($filter['code']));
+        if (!empty($filter['lti_context_id'])) {
+            $where .= sprintf('a.lti_context_id = %s AND ', $this->getDb()->quote($filter['lti_context_id']));
         }
 
         if (!empty($filter['email'])) {
@@ -207,52 +187,4 @@ class CourseMap extends Mapper
 
     
     
-    
-    
-    
-    /**
-     * @param $userId
-     * @return \Tk\Db\PDOStatement
-     */
-    public function deleteAllUserCourses($userId)
-    {
-        $query = sprintf('DELETE FROM user_course_role WHERE user_id = %d ', (int)$userId);
-        return $this->getDb()->exec($query);
-    }
-
-    /**
-     * @param $courseId
-     * @param $userId
-     * @return \Tk\Db\PDOStatement
-     */
-    public function deleteUserCourse($courseId, $userId)
-    {
-        $query = sprintf('DELETE FROM user_course_role WHERE user_id = %d AND course_id = %d', (int)$userId, (int)$courseId);
-        return $this->getDb()->exec($query);
-    }
-
-    /**
-     * @param $courseId
-     * @param $userId
-     * @return \Tk\Db\PDOStatement
-     */
-    public function addUserCourse($courseId, $userId)
-    {
-        $query = sprintf('INSERT INTO user_course_role (user_id, course_id)  VALUES (%d, %d) ', (int)$userId, (int)$courseId);
-        return $this->getDb()->exec($query);
-    }
-
-    /**
-     * @param $courseId
-     * @param $userId
-     * @return boolean
-     */
-    public function inCourse($courseId, $userId)
-    {
-        $from = sprintf('%s a, user_course_role b', $this->getDb()->quoteParameter($this->getTable()));
-        $where = sprintf('a.id = %d AND a.id = b.course_id AND b.user_id = %d', (int)$courseId, (int)$userId);
-        return ($this->selectFrom($from, $where)->current() != null);
-    }
-    
-
 }

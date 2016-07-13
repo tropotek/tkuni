@@ -30,7 +30,9 @@ $routes->add('home-base', new \Tk\Routing\Route('/', 'App\Controller\Index::doDe
 $routes->add('contact', new \Tk\Routing\Route('/contact.html', 'App\Controller\Contact::doDefault'));
 
 $routes->add('login', new \Tk\Routing\Route('/login.html', 'App\Controller\Login::doDefault'));
-$routes->add('logout', new \Tk\Routing\Route('/logout.html', 'App\Controller\Logout::doDefault'));
+$routes->add('staff-login', new \Tk\Routing\Route('/staff/login.html', 'App\Controller\Login::doStaffLogin'));
+$routes->add('student-login', new \Tk\Routing\Route('/student/login.html', 'App\Controller\Login::doStudentLogin'));
+$routes->add('recover', new \Tk\Routing\Route('/recover.html', 'App\Controller\Recover::doDefault'));
 
 // Admin Pages
 $params = array('test' => 'admin');
