@@ -30,6 +30,7 @@ $routes->add('home-base', new \Tk\Routing\Route('/', 'App\Controller\Index::doDe
 $routes->add('contact', new \Tk\Routing\Route('/contact.html', 'App\Controller\Contact::doDefault'));
 
 $routes->add('login', new \Tk\Routing\Route('/login.html', 'App\Controller\Login::doDefault'));
+$routes->add('logout', new \Tk\Routing\Route('/logout.html', 'App\Controller\Logout::doDefault'));
 $routes->add('staff-login', new \Tk\Routing\Route('/staff/login.html', 'App\Controller\Login::doStaffLogin'));
 $routes->add('student-login', new \Tk\Routing\Route('/student/login.html', 'App\Controller\Login::doStudentLogin'));
 $routes->add('recover', new \Tk\Routing\Route('/recover.html', 'App\Controller\Recover::doDefault'));
@@ -48,6 +49,12 @@ $routes->add('admin-course-edit', new \Tk\Routing\Route('/admin/courseEdit.html'
 $routes->add('admin-user-manager', new \Tk\Routing\Route('/admin/userManager.html', 'App\Controller\Admin\User\Manager::doDefault', $params));
 $routes->add('admin-user-edit', new \Tk\Routing\Route('/admin/userEdit.html', 'App\Controller\Admin\User\Edit::doDefault', $params));
 $routes->add('admin-user-profile', new \Tk\Routing\Route('/admin/profile.html', 'App\Controller\Admin\User\Edit::doDefault', $params));
+
+
+// Client Pages
+$routes->add('client-home', new \Tk\Routing\Route('/client/index.html', 'App\Controller\Client\Index::doDefault', $params));
+
+
 
 
 

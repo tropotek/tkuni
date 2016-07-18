@@ -78,12 +78,14 @@ class Login extends Iface
     {
         $this->form = new Form('loginForm');
 
-        $institutions = array('-- Select --' => '', 'The University Of Melbourne' => 1, 'Jame Cook University' => 2);
+        //$institutions = array('-- Select --' => '', 'The University Of Melbourne' => 1, 'Jame Cook University' => 2);
+        $institutions = new \Tk\Form\Field\Option\ArrayObjectIterator( \App\Db\Institution::getMapper()->findFiltered(array('active' => 1))->toArray() );
+        //$this->form->addField(new Field\Select('institutionId', $institutions))->prependOption('-- Select --', '0');
         $this->form->addField(new Field\Select('institutionId', $institutions));
 
         $this->init();
 
-        $this->form->addField(new Field\Hidden('institutionType', 'staff'));
+        $this->form->addField(new Field\Hidden('userType', 'staff'));
 
         // Find and Fire submit event
         $this->form->execute();
@@ -100,12 +102,14 @@ class Login extends Iface
     {
         $this->form = new Form('loginForm');
 
-        $institutions = array('-- Select --' => '', 'The University Of Melbourne' => 1, 'Jame Cook University' => 2);
+        //$institutions = array('-- Select --' => '', 'The University Of Melbourne' => 1, 'Jame Cook University' => 2);
+        $institutions = new \Tk\Form\Field\Option\ArrayObjectIterator( \App\Db\Institution::getMapper()->findFiltered(array('active' => 1))->toArray() );
+        //$this->form->addField(new Field\Select('institutionId', $institutions))->prependOption('-- Select --', '0');
         $this->form->addField(new Field\Select('institutionId', $institutions));
 
         $this->init();
 
-        $this->form->addField(new Field\Hidden('institutionType', 'student'));
+        $this->form->addField(new Field\Hidden('userType', 'student'));
 
         // Find and Fire submit event
         $this->form->execute();
@@ -146,7 +150,7 @@ class Login extends Iface
         /** @var Auth $auth */
         $auth = \App\Factory::getAuth();
 
-        if (!$form->getFieldValue('institutionId')) {
+        if ($form->getField('institutionId') && !$form->getFieldValue('institutionId')) {
             $form->addFieldError('institutionId', 'Please enter a valid institution ID');
         }
 
@@ -168,7 +172,7 @@ class Login extends Iface
             
             $result = $event->getResult();
             if (!$result) {
-                $form->addError('Invalid Username or password.');
+                $form->addError('Error 1001: Invalid Username or password.');
                 return;
             }
             $form->addError( implode("<br/>\n", $result->getMessages()) );

@@ -10,6 +10,8 @@ namespace App\Db;
  */
 class Course extends \Tk\Db\Map\Model
 {
+    const ROLE_STAFF = 'staff';
+    const ROLE_STUDENT = 'student';
     
     /**
      * @var int
@@ -17,14 +19,9 @@ class Course extends \Tk\Db\Map\Model
     public $id = 0;
 
     /**
-     * @var string
+     * @var int
      */
-    public $lti_consumer_key = '';
-
-    /**
-     * @var string
-     */
-    public $lti_context_id = '';
+    public $institutionId = 0;
 
     /**
      * @var string
@@ -121,6 +118,9 @@ class CourseValidator extends \Tk\Db\Map\Validator
         /** @var Course $obj */
         $obj = $this->getObject();
 
+        if ((int)$obj->institutionId <= 0) {
+            $this->addError('institutionId', 'Invalid field value.');
+        }
         if (!$obj->name) {
             $this->addError('name', 'Invalid field value.');
         }

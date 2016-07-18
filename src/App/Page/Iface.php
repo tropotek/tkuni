@@ -25,9 +25,7 @@ abstract class Iface extends \Dom\Renderer\Renderer
     public function __construct(\App\Controller\Iface $controller)
     {
         $this->controller = $controller;
-        $this->setPageHeading($this->getController()->getPageTitle());
-
-        // TODO: Check this call should be here, or called externally????
+        
         // It could lead to possible rendering issues....
         $this->show();
     }
@@ -42,30 +40,56 @@ abstract class Iface extends \Dom\Renderer\Renderer
     }
 
     /**
-     *
-     */
-    public function showAlerts()
-    {
-        // Alert boxes
-        $noticeTpl = $notice = \App\Alert::getInstance()->show()->getTemplate();
-        $this->getTemplate()->insertTemplate('alerts', $noticeTpl);
-    }
-
-    /**
      * Set the page heading, should be set from main controller
      *
-     * @param $heading
      * @return $this
      * @throws \Dom\Exception
      */
-    public function setPageHeading($heading)
+    protected function initPage()
     {
-        if (!$heading) return $this;
         /** @var \Dom\Template $template */
         $template = $this->getTemplate();
-        $template->setTitleText($heading . ' - ' . $template->getTitleText());
-        $template->insertText('pageHeading', $heading);
-        $template->setChoice('pageHeading');
+
+
+        if ($this->getConfig()->get('site.title')) {
+            $template->setAttr('siteName', 'title', $this->getConfig()->get('site.title'));
+            $template->setTitleText(trim($template->getTitleText() . ' - ' . $this->getConfig()->get('site.title'), '- '));
+        }
+        if ($this->getController()->getPageTitle()) {
+            $template->setTitleText(trim($this->getController()->getPageTitle() . ' - ' . $template->getTitleText(), '- '));
+            $template->insertText('pageHeading', $this->getController()->getPageTitle());
+            $template->setChoice('pageHeading');
+        }
+        if ($this->getConfig()->isDebug()) {
+            $template->setTitleText(trim('DEBUG: ' . $template->getTitleText(), '- '));
+        }
+
+        if ($this->controller->getUser()) {
+            $template->setChoice('logout');
+        } else {
+            $template->setChoice('login');
+        }
+
+        if (\App\Alert::hasMessages()) {
+            $noticeTpl = \App\Alert::getInstance()->show()->getTemplate();
+            $template->replaceTemplate('alerts', $noticeTpl)->setChoice('alerts');
+            $template->setChoice('alerts');
+        }
+
+        $siteUrl = $this->getConfig()->getSiteUrl();
+        $dataUrl = $this->getConfig()->getDataUrl();
+
+        $js = <<<JS
+
+var config = {
+  siteUrl : '$siteUrl',
+  dataUrl : '$dataUrl',
+  themeUrl: '' 
+};
+JS;
+        $template->appendJs($js, ['data-jsl-priority' => -1000]);
+
+
         return $this;
     }
 

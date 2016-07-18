@@ -14,7 +14,7 @@ use Tk\Db\Map\ArrayObject;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class CourseMap extends Mapper
+class InstitutionMap extends Mapper
 {
 
     /**
@@ -159,14 +159,6 @@ class CourseMap extends Mapper
             if ($w) {
                 $where .= '(' . substr($w, 0, -3) . ') AND ';
             }
-        }
-
-        if (!empty($filter['lti_consumer_key'])) {
-            $where .= sprintf('a.lti_consumer_key = %s AND ', $this->getDb()->quote($filter['lti_consumer_key']));
-        }
-
-        if (!empty($filter['lti_context_id'])) {
-            $where .= sprintf('a.lti_context_id = %s AND ', $this->getDb()->quote($filter['lti_context_id']));
         }
 
         if (!empty($filter['email'])) {

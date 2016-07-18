@@ -20,8 +20,6 @@ class User extends \Tk\Db\Map\Model
     const ROLE_ADMIN = 'admin';
     const ROLE_CLIENT= 'client';
     const ROLE_EDUSER = 'eduser';
-    const ROLE_COURSE_STAFF = 'staff';
-    const ROLE_COURSE_STUDENT = 'student';
     
     /**
      * @var int
@@ -182,6 +180,14 @@ class User extends \Tk\Db\Map\Model
      */
     public function getHomeUrl()
     {
+
+        // AFTER THINKING: I think we should only have 4 user roles (admin, client, staff, student)
+        //
+        // For the base site this will be plenty, we can review this if an app comes
+        // along that needs more complex permissions, JOB FOR TOMORROW!!!!!!!!!!!!!!!!!!!!!!!!
+        //
+
+
         $access = Access::create($this);
         
         if ($access->hasRole(self::ROLE_ADMIN))

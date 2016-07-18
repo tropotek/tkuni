@@ -57,8 +57,9 @@ class Bootstrap
         include($config->getSrcPath() . '/config/config.php');
         
         \Tk\Uri::$BASE_URL_PATH = $config->getSiteUrl();
-        
-        \App\Db\User::$HASH_FUNCTION = $config['hash.function'];
+
+        if (isset($config['hash.function']))
+            \App\Db\User::$HASH_FUNCTION = $config['hash.function'];
         
         /**
          * This makes our life easier when dealing with paths. Everything is relative

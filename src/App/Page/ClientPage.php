@@ -10,7 +10,7 @@ use Tk\Request;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class AdminPage extends Iface
+class ClientPage extends Iface
 {
     
     /**

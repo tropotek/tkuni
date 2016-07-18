@@ -44,8 +44,13 @@ class LdapAdapter extends \Tk\Auth\Adapter\Ldap
         
         /** @var \Tk\Auth\Result $r */
         $r = parent::authenticate();
-        $ldapData = $r->getParam('ldap');
-        if (!$ldapData) return new Result(Result::FAILURE_CREDENTIAL_INVALID, $username, 'Error Connecting to LDAP Server.');;
+        $ldapData = $r->get('ldap');
+        if (!$ldapData) return new Result(Result::FAILURE_CREDENTIAL_INVALID, $username, 'Error Connecting to LDAP Server.');
+
+
+        if ($ldapData[0]['auedupersontype'][0] != $this->get('userType')) {
+            return new Result(Result::FAILURE_CREDENTIAL_INVALID, $username, 'Invalid user');
+        }
 
         // Update the user record with ldap data
         $user = \App\Db\User::getMapper()->findByUsername($r->getIdentity());
@@ -57,16 +62,16 @@ class LdapAdapter extends \Tk\Auth\Adapter\Ldap
         // Create the user record if none exists....
         if (!$user) {
             // TODO: Save any extra required data, IE: `auedupersonid` (Student/Staff number)
-            $roles = array('user');
+            $roles = array(\App\Db\User::ROLE_EDUSER);
             // role: 'staff', 'student' 'others'
-            switch ($ldapData[0]['auedupersontype'][0]) {
+            /*switch ($ldapData[0]['auedupersontype'][0]) {
                 case 'staff':
                     $roles[] = 'staff';
                     break;
                 case 'student':
                     $roles[] = 'student';
                     break;
-            }
+            }*/
             // Create new user
             \App\Factory::createNewUser(
                 $username,
@@ -81,7 +86,7 @@ class LdapAdapter extends \Tk\Auth\Adapter\Ldap
             $user->username = $username;
             if (!empty($ldapData[0]['mail'][0]))
                 $user->email = $ldapData[0]['mail'][0];
-            $user->setPassword($password);
+            $user->password = \App\Factory::hashPassword($password, $user);
             if (!empty($ldapData[0]['auedupersonid'][0]))
                 $user->uid = $ldapData[0]['auedupersonid'][0];
             $user->save();

@@ -71,7 +71,7 @@ class Institution extends \Tk\Db\Map\Model
     
 }
 
-class CourseValidator extends \Tk\Db\Map\Validator
+class InstitutionValidator extends \Tk\Db\Map\Validator
 {
 
     /**

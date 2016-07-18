@@ -326,6 +326,13 @@
       </div>
     </div>
 
+
+    <div class="row" choice="alerts">
+      <div class="col-md-12">
+        <div var="alerts"></div>
+      </div>
+    </div>
+
     <div var="content"></div>
 
   </div>

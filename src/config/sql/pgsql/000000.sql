@@ -27,9 +27,9 @@ CREATE TABLE IF NOT EXISTS institution (
   logo VARCHAR(255),
 -- TODO: location information?
 -- TODO: Contact information?
-  active BOOLEAN,
+  active NUMERIC(1) NOT NULL DEFAULT 1,
   hash VARCHAR(255),
-  del BOOLEAN DEFAULT FALSE,
+  del NUMERIC(1) NOT NULL DEFAULT 0,
   modified TIMESTAMP DEFAULT NOW(),
   created TIMESTAMP DEFAULT NOW()
 );
@@ -45,11 +45,11 @@ CREATE TABLE IF NOT EXISTS "user" (
   password VARCHAR(64),
   name VARCHAR(255),
   email VARCHAR(255),
-  active BOOLEAN,
+  active NUMERIC(1) NOT NULL DEFAULT 1,
   hash VARCHAR(255),
   notes TEXT,
   last_login TIMESTAMP DEFAULT NULL,
-  del BOOLEAN DEFAULT FALSE,
+  del NUMERIC(1) NOT NULL DEFAULT 0,
   modified TIMESTAMP DEFAULT NOW(),
   created TIMESTAMP DEFAULT NOW(),
   -- Cannot have a foreign key as it does not allow for a 0|null value which is required for local site users....
@@ -61,6 +61,16 @@ CREATE TABLE IF NOT EXISTS "user" (
 );
 
 -- ----------------------------
+--  user_owns_institution
+-- ----------------------------
+CREATE TABLE IF NOT EXISTS user_owns_institution (
+	user_id INTEGER NOT NULL,
+	institution_id INTEGER NOT NULL,
+	FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE,
+	FOREIGN KEY (institution_id) REFERENCES institution(id)  ON DELETE CASCADE
+);
+
+-- ----------------------------
 --  role
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS role (
@@ -68,7 +78,7 @@ CREATE TABLE IF NOT EXISTS role (
   name VARCHAR(50) NOT NULL,
   category VARCHAR(128) NOT NULL,
 	description VARCHAR(255) NOT NULL,
-  del BOOLEAN DEFAULT FALSE,
+  del NUMERIC(1) NOT NULL DEFAULT 0,
 	CONSTRAINT name UNIQUE (name)
 );
 
@@ -94,8 +104,8 @@ CREATE TABLE IF NOT EXISTS course (
   description TEXT,
   start TIMESTAMP DEFAULT NOW(),
   finish TIMESTAMP DEFAULT NOW(),
-  active BOOLEAN,
-  del BOOLEAN DEFAULT FALSE,
+  active NUMERIC(1) NOT NULL DEFAULT 1,
+  del NUMERIC(1) NOT NULL DEFAULT 0,
   modified TIMESTAMP DEFAULT NOW(),
   created TIMESTAMP DEFAULT NOW(),
   CONSTRAINT code_institution UNIQUE (code, institution_id)
@@ -120,14 +130,14 @@ CREATE TABLE IF NOT EXISTS user_course_role (
 -- ----------------------------
 
 INSERT INTO institution (name, email, description, logo, active, hash, modified, created)
-VALUES ('The University Of Melbourne', 'admin@unimelb.edu.au', 'This is a test institution for this app', '', TRUE, MD5(CONCAT('admin@unimelb.edu.au', date_trunc('seconds', NOW()))), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW()));
+VALUES ('The University Of Melbourne', 'admin@unimelb.edu.au', 'This is a test institution for this app', '', 1, MD5(CONCAT('admin@unimelb.edu.au', date_trunc('seconds', NOW()))), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW()));
 
 INSERT INTO "user" (institution_id, uid, username, password ,name, email, active, hash, modified, created)
 VALUES
-  (0, MD5(CONCAT('admin', NOW())), 'admin', MD5(CONCAT('password', MD5('admin'))), 'Administrator', 'admin@example.com', TRUE, MD5('0admin'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW()) ),
-  (1, MD5(CONCAT('unimelb', NOW())), 'unimelb', MD5(CONCAT('password', MD5('unimelb'))), 'Unimelb Client', 'fvas@unimelb.edu.au', TRUE, MD5('1unimelb'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW())  ),
-  (1, MD5(CONCAT('staff', NOW())), 'staff', MD5(CONCAT('password', MD5('staff'))), 'Unimelb Staff', 'staff@unimelb.edu.au', TRUE, MD5('1staff'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW())  ),
-  (1, MD5(CONCAT('student', NOW())), 'student', MD5(CONCAT('password', MD5('student'))), 'Unimelb Student', 'student@unimelb.edu.au', TRUE, MD5('1student'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW())  )
+  (0, MD5(CONCAT('admin', NOW())), 'admin', MD5(CONCAT('password', MD5('0admin'))), 'Administrator', 'admin@example.com', 1, MD5('0admin'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW()) ),
+  (0, MD5(CONCAT('unimelb', NOW())), 'unimelb', MD5(CONCAT('password', MD5('0unimelb'))), 'Unimelb Client', 'fvas@unimelb.edu.au', 1, MD5('0unimelb'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW())  ),
+  (1, MD5(CONCAT('staff', NOW())), 'staff', MD5(CONCAT('password', MD5('1staff'))), 'Unimelb Staff', 'staff@unimelb.edu.au', 1, MD5('1staff'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW())  ),
+  (1, MD5(CONCAT('student', NOW())), 'student', MD5(CONCAT('password', MD5('1student'))), 'Unimelb Student', 'student@unimelb.edu.au', 1, MD5('1student'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW())  )
 ;
 
 INSERT INTO role (name, category, description)
@@ -153,7 +163,7 @@ VALUES
 ;
 
 INSERT INTO course (institution_id, name, code, email, description, start, finish, active, modified, created)
-    VALUES (1, 'Poultry Industry Field Work', 'VETS50001_2014_SM1', 'course@unimelb.edu.au', '',  date_trunc('seconds', NOW()), date_trunc('seconds', (CURRENT_TIMESTAMP + (190 * interval '1 day')) ), true, date_trunc('seconds', NOW()) , date_trunc('seconds', NOW()) )
+    VALUES (1, 'Poultry Industry Field Work', 'VETS50001_2014_SM1', 'course@unimelb.edu.au', '',  date_trunc('seconds', NOW()), date_trunc('seconds', (CURRENT_TIMESTAMP + (190 * interval '1 day')) ), 1, date_trunc('seconds', NOW()) , date_trunc('seconds', NOW()) )
 ;
 
 INSERT INTO user_course_role (user_id, course_id, role_id)
@@ -164,4 +174,7 @@ VALUES
   (4, 1, 5)
 ;
 
-
+INSERT INTO user_owns_institution (user_id, institution_id)
+VALUES
+  (2, 1)
+;

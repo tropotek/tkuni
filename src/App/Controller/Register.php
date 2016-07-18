@@ -117,10 +117,9 @@ class Register extends Iface
         }
 
         // Create a user and make a temp hash until the user activates the account
-        $hash = $this->user->generateHash(true);
-        $this->user->hash = $hash;
+        $this->user->hash = $this->user->generateHash();
         $this->user->active = false;
-        $this->user->password = \App\Factory::hashPassword($this->user->password, $user);
+        $this->user->password = \App\Factory::hashPassword($this->user->password, $this->user);
         
         $this->user->save();
 
@@ -135,7 +134,7 @@ class Register extends Iface
         
         // Redirect with message to check their email
         \App\Alert::addSuccess('Your New Account Has Been Created.');
-        \Tk\Config::getInstance()->getSession()->set('h', $this->user->hash);
+        \Tk\Config::getInstance()->getSession()->set('h', $this->user->getHash());
         \Tk\Uri::create()->redirect();
     }
 

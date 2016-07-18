@@ -108,6 +108,7 @@ class Factory
             $dm = new \Dom\Modifier\Modifier();
             $dm->add(new \Dom\Modifier\Filter\UrlPath(self::getConfig()->getSiteUrl()));
             $dm->add(new \Dom\Modifier\Filter\JsLast());
+            $dm->add(new \Dom\Modifier\Filter\Less(self::getConfig()));
             self::getConfig()->setDomModifier($dm);
         }
         return self::getConfig()->getDomModifier();
@@ -190,7 +191,7 @@ class Factory
      * @return \Tk\Auth\Adapter\Iface
      * @throws \Tk\Auth\Exception
      */
-    static function getAuthAdapter($class, $submittedData = [])
+    static function getAuthAdapter($class, $submittedData = array())
     {
         $config = self::getConfig();
         
@@ -211,6 +212,8 @@ class Factory
                     $config['system.auth.ldap.tls']);
                 break;
             case '\Uni\Auth\LdapAdapter':
+                if (!isset($submittedData['institutionId'])) return null;
+                // TODO: we need to get the LDAP settings from the institution config table
                 $adapter = new \Uni\Auth\LdapAdapter(
                     $config['system.auth.ldap.host'],
                     $config['system.auth.ldap.baseDn'],
@@ -232,7 +235,8 @@ class Factory
                 $adapter = new \Tk\Auth\Adapter\Trapdoor();
                 break;
             default:
-                $adapter = new $class();
+                if (class_exists($class))
+                    $adapter = new $class();
         }
         if (!$adapter) {
             throw new \Tk\Auth\Exception('Cannot locate adapter class: ' . $class);
@@ -243,11 +247,17 @@ class Factory
 
     /**
      * @param $pwd
-     * @param $user (optional)
+     * @param \App\Db\User $user (optional)
      * @return string
      */
     static public function hashPassword($pwd, $user = null)
     {
+        if ($user) {    // Use salted password
+            if (method_exists($user, 'getHash'))
+                $pwd = $pwd . $user->getHash();
+            else if ($user->hash)
+                $pwd = $pwd . $user->hash;
+        }
         return hash('md5', $pwd);
     }
     

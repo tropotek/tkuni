@@ -29,11 +29,15 @@ class AuthHandler implements SubscriberInterface
         $adapterList = $config->get('system.auth.adapters');
         foreach($adapterList as $name => $class) {
             $adapter = \App\Factory::getAuthAdapter($class, $event->all());
+            if (!$adapter) continue;
             $result = $event->getAuth()->authenticate($adapter);
             $event->setResult($result);
             if ($result && $result->getCode() == \Tk\Auth\Result::SUCCESS) {
                 break;
             }
+        }
+        if (!$result) {
+            throw new \Tk\Auth\Exception('Unknown Error: Contact Your Administrator.');
         }
         
         if ($result->isValid()) {
@@ -70,7 +74,8 @@ class AuthHandler implements SubscriberInterface
         $user = $controller->getUser();
         if ($controller instanceof \App\Controller\Iface) {
             // TODO: This would be a good place for an ACL or RBAC in the future
-            $access = $event->getRequest()->getAttribute('access');
+            //$access = $event->getRequest()->getAttribute('access');
+            $access = $controller->getAccess();
 
             // Check the user has access to the controller in question
             if (empty($access)) return;

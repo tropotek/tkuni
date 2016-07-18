@@ -58,7 +58,7 @@ class Manager extends Iface
         $this->table->addAction(new \Tk\Table\Action\Csv($this->getConfig()->getDb()));
         
         $filter = $this->table->getFilterValues();
-        $filter['institutionId'] = 0;
+        $filter['institutionId'] = 0;   // 0 = only show site users admins and clients
         $users = \App\Db\User::getMapper()->findFiltered($filter, $this->table->makeDbTool('a.name'));
         $this->table->setList($users);
 
