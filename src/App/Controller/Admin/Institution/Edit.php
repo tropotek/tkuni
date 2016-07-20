@@ -60,8 +60,13 @@ class Edit extends Iface
         $this->form->addField(new Field\Input('name'))->setRequired(true);
         $this->form->addField(new Field\Input('email'))->setRequired(true);
         $this->form->addField(new Field\File('logo', $request, $this->getConfig()->getDataPath()))->setAttr('accept', '.png,.jpg,.jpeg,.gif');
-        $this->form->addField(new Field\Checkbox('active'));
+
+        // TODO: Implement LTI tables for LMS access
+        $this->form->addField(new Field\Input('ltiKey'));
+        $this->form->addField(new Field\Input('ltiSecret'));
+
         $this->form->addField(new Field\Textarea('description'));
+        $this->form->addField(new Field\Checkbox('active'));
 
         $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
         $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
