@@ -27,7 +27,7 @@ class InstitutionMap extends Mapper
     static function mapForm($row, $obj = null)
     {
         if (!$obj) {
-            $obj = new Course();
+            $obj = new Institution();
         }
         //$obj->id = $row['id'];
         if (isset($row['name']))
@@ -80,7 +80,7 @@ class InstitutionMap extends Mapper
 
     public function map($row)
     {
-        $obj = new Course();
+        $obj = new Institution();
         $obj->id = $row['id'];
         $obj->name = $row['name'];
         $obj->email = $row['email'];
@@ -128,7 +128,7 @@ class InstitutionMap extends Mapper
      */
     public function findByUserId($courseId, $tool = null)
     {
-        $from = sprintf('%s a, user_course_role b', $this->getDb()->quoteParameter($this->getTable()));
+        $from = sprintf('%s a, user_course b', $this->getDb()->quoteParameter($this->getTable()));
         $where = sprintf('a.id = b.course_id AND b.user_id = %d', (int)$courseId);
         return $this->selectFrom($from, $where, $tool);
     }

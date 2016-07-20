@@ -65,7 +65,13 @@
   padding-top: 10px;
   padding-bottom: 10px;
 }
+.tk-form textarea.form-control {
+  min-height: 120px;
+}
 
-
-
+.tk-form .required label:before {
+  content:"* ";
+  color: #e70000;
+  font-weight: bold;
+}
 

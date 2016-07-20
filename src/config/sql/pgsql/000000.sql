@@ -5,17 +5,6 @@
 -- ---------------------------------
 
 
--- DROP TABLE IF EXISTS institution CASCADE;
--- DROP TABLE IF EXISTS course CASCADE;
--- DROP TABLE IF EXISTS user_course;
---
--- DROP TABLE IF EXISTS "user" CASCADE;
--- DROP TABLE IF EXISTS role CASCADE;
--- DROP TABLE IF EXISTS user_role;
-
-
-
-
 -- ----------------------------
 --  institution
 -- ----------------------------
@@ -39,10 +28,12 @@ CREATE TABLE IF NOT EXISTS institution (
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS "user" (
   id SERIAL PRIMARY KEY,
-  institution_id INTEGER NOT NULL DEFAULT 0,    -- 0 = site user not belonging to any institution....
+  institution_id INTEGER NULL DEFAULT NULL,    -- 0 = site user not belonging to any institution....
   uid VARCHAR(64),
   username VARCHAR(64),
   password VARCHAR(64),
+  -- ROLES: 'admin', 'client', 'staff', 'student
+  role VARCHAR(64),
   name VARCHAR(255),
   email VARCHAR(255),
   active NUMERIC(1) NOT NULL DEFAULT 1,
@@ -52,7 +43,7 @@ CREATE TABLE IF NOT EXISTS "user" (
   del NUMERIC(1) NOT NULL DEFAULT 0,
   modified TIMESTAMP DEFAULT NOW(),
   created TIMESTAMP DEFAULT NOW(),
-  -- Cannot have a foreign key as it does not allow for a 0|null value which is required for local site users....
+  -- NOTE Cannot have a foreign key as it does not allow for a 0|null value which is required for local site users....
 	-- FOREIGN KEY (institution_id) REFERENCES institution(id) ON DELETE CASCADE,
   CONSTRAINT uid UNIQUE (institution_id, uid),
   CONSTRAINT username UNIQUE (institution_id, username),
@@ -68,28 +59,6 @@ CREATE TABLE IF NOT EXISTS user_owns_institution (
 	institution_id INTEGER NOT NULL,
 	FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE,
 	FOREIGN KEY (institution_id) REFERENCES institution(id)  ON DELETE CASCADE
-);
-
--- ----------------------------
---  role
--- ----------------------------
-CREATE TABLE IF NOT EXISTS role (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(50) NOT NULL,
-  category VARCHAR(128) NOT NULL,
-	description VARCHAR(255) NOT NULL,
-  del NUMERIC(1) NOT NULL DEFAULT 0,
-	CONSTRAINT name UNIQUE (name)
-);
-
--- ----------------------------
---  user_role
--- ----------------------------
-CREATE TABLE IF NOT EXISTS user_role (
-	user_id INTEGER NOT NULL,
-	role_id INTEGER NOT NULL,
-	FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE,
-	FOREIGN KEY (role_id) REFERENCES role(id)  ON DELETE CASCADE
 );
 
 -- ----------------------------
@@ -114,14 +83,12 @@ CREATE TABLE IF NOT EXISTS course (
 -- ----------------------------
 -- For now we will assume that one user has one role in a course, ie: coordinator, lecturer, student
 -- ----------------------------
-CREATE TABLE IF NOT EXISTS user_course_role (
+CREATE TABLE IF NOT EXISTS user_course (
   user_id INTEGER NOT NULL,
   course_id INTEGER NOT NULL,
-	role_id INTEGER NOT NULL,
-  CONSTRAINT user_course_role_key UNIQUE (user_id, course_id),
+  CONSTRAINT user_course_key UNIQUE (user_id, course_id),
   FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE,
-  FOREIGN KEY (course_id) REFERENCES course(id) ON DELETE CASCADE,
-	FOREIGN KEY (role_id) REFERENCES role(id)  ON DELETE CASCADE
+  FOREIGN KEY (course_id) REFERENCES course(id) ON DELETE CASCADE
 );
 
 
@@ -130,51 +97,28 @@ CREATE TABLE IF NOT EXISTS user_course_role (
 -- ----------------------------
 
 INSERT INTO institution (name, email, description, logo, active, hash, modified, created)
-VALUES ('The University Of Melbourne', 'admin@unimelb.edu.au', 'This is a test institution for this app', '', 1, MD5(CONCAT('admin@unimelb.edu.au', date_trunc('seconds', NOW()))), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW()));
+  VALUES ('The University Of Melbourne', 'admin@unimelb.edu.au', 'This is a test institution for this app', '', 1, MD5(CONCAT('admin@unimelb.edu.au', date_trunc('seconds', NOW()))), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW()));
 
-INSERT INTO "user" (institution_id, uid, username, password ,name, email, active, hash, modified, created)
+INSERT INTO "user" (institution_id, uid, username, password ,role ,name, email, active, hash, modified, created)
 VALUES
-  (0, MD5(CONCAT('admin', NOW())), 'admin', MD5(CONCAT('password', MD5('0admin'))), 'Administrator', 'admin@example.com', 1, MD5('0admin'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW()) ),
-  (0, MD5(CONCAT('unimelb', NOW())), 'unimelb', MD5(CONCAT('password', MD5('0unimelb'))), 'Unimelb Client', 'fvas@unimelb.edu.au', 1, MD5('0unimelb'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW())  ),
-  (1, MD5(CONCAT('staff', NOW())), 'staff', MD5(CONCAT('password', MD5('1staff'))), 'Unimelb Staff', 'staff@unimelb.edu.au', 1, MD5('1staff'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW())  ),
-  (1, MD5(CONCAT('student', NOW())), 'student', MD5(CONCAT('password', MD5('1student'))), 'Unimelb Student', 'student@unimelb.edu.au', 1, MD5('1student'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW())  )
-;
-
-INSERT INTO role (name, category, description)
-VALUES
-  ('admin', 'site', 'System Administration Role'),
-  ('client', 'site', 'Client role for institution client accounts'),
-  ('eduser', 'site', 'Standard Education role, see course roles for more info.'),
-  -- course roles, used in conjunction with the `eduser` role and user_course_role table to determine the user course permissions
-  ('staff', 'course', 'Staff/Coordinator Role'),
-  ('student', 'course', 'Student Role')
-;
-
-INSERT INTO user_role (user_id, role_id)
-VALUES
-  -- Site Admin
-  (1, 1),
-  -- Unimelb Client user
-  (2, 2),
-  -- Unimelb Staff
-  (3, 3),
-  -- Unimelb student
-  (4, 3)
+  (0, MD5(CONCAT('admin', NOW())), 'admin', MD5(CONCAT('password', MD5('0admin'))), 'admin', 'Administrator', 'admin@example.com', 1, MD5('0admin'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW()) ),
+  (0, MD5(CONCAT('unimelb', NOW())), 'unimelb', MD5(CONCAT('password', MD5('0unimelb'))), 'client', 'Unimelb Client', 'fvas@unimelb.edu.au', 1, MD5('0unimelb'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW())  ),
+  (1, MD5(CONCAT('staff', NOW())), 'staff', MD5(CONCAT('password', MD5('1staff'))), 'staff', 'Unimelb Staff', 'staff@unimelb.edu.au', 1, MD5('1staff'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW())  ),
+  (1, MD5(CONCAT('student', NOW())), 'student', MD5(CONCAT('password', MD5('1student'))), 'student', 'Unimelb Student', 'student@unimelb.edu.au', 1, MD5('1student'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW())  )
 ;
 
 INSERT INTO course (institution_id, name, code, email, description, start, finish, active, modified, created)
     VALUES (1, 'Poultry Industry Field Work', 'VETS50001_2014_SM1', 'course@unimelb.edu.au', '',  date_trunc('seconds', NOW()), date_trunc('seconds', (CURRENT_TIMESTAMP + (190 * interval '1 day')) ), 1, date_trunc('seconds', NOW()) , date_trunc('seconds', NOW()) )
 ;
 
-INSERT INTO user_course_role (user_id, course_id, role_id)
+INSERT INTO user_course (user_id, course_id)
 VALUES
-  -- Unimelb Staff
-  (3, 1, 4),
-  -- Unimelb student
-  (4, 1, 5)
+  (4, 1)
 ;
 
 INSERT INTO user_owns_institution (user_id, institution_id)
 VALUES
   (2, 1)
 ;
+
+

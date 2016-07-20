@@ -39,7 +39,7 @@ class Edit extends Iface
      */
     public function __construct()
     {
-        parent::__construct('Course Edit', array('admin', 'coordinator', 'staff'));
+        parent::__construct('Course Edit');
     }
 
     /**

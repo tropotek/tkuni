@@ -67,7 +67,16 @@ class Institution extends \Tk\Db\Map\Model
         $this->created = \Tk\Date::create();
     }
 
-    
+    /**
+     * Returns null if no logo available
+     *
+     * @return \Tk\Uri|null
+     */
+    public function getLogoUrl()
+    {
+        if ($this->logo)
+            return \Tk\Uri::create(\App\Factory::getConfig()->getDataUrl().$this->logo);
+    }
     
 }
 

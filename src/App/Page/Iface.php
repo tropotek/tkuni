@@ -79,12 +79,13 @@ abstract class Iface extends \Dom\Renderer\Renderer
         $siteUrl = $this->getConfig()->getSiteUrl();
         $dataUrl = $this->getConfig()->getDataUrl();
 
+
         $js = <<<JS
 
 var config = {
   siteUrl : '$siteUrl',
   dataUrl : '$dataUrl',
-  themeUrl: '' 
+  themeUrl: ''
 };
 JS;
         $template->appendJs($js, ['data-jsl-priority' => -1000]);
@@ -97,7 +98,7 @@ JS;
      * Set the page Content
      *
      * @param string|\Dom\Template|\Dom\Renderer\Iface|\DOMDocument $content
-     * @return PublicPage
+     * @return Iface
      */
     public function setPageContent($content)
     {

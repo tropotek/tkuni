@@ -21,8 +21,8 @@ class CourseMap extends Mapper
      * Map the form fields data to the object
      *
      * @param array $row
-     * @param Role $obj
-     * @return Role
+     * @param Course $obj
+     * @return Course
      */
     static function mapForm($row, $obj = null)
     {
@@ -60,7 +60,7 @@ class CourseMap extends Mapper
     /**
      * Unmap the object to an array for the form fields
      *
-     * @param $obj
+     * @param Course|\stdClass $obj
      * @return array
      */
     static function unmapForm($obj)
@@ -89,9 +89,7 @@ class CourseMap extends Mapper
             'modified' => $obj->modified->format($dateFormat),
             'created' => $obj->created->format($dateFormat)
         );
-        
-        
-        
+
         return $arr;
     }
 
@@ -151,7 +149,7 @@ class CourseMap extends Mapper
      */
     public function findByUserId($courseId, $tool = null)
     {
-        $from = sprintf('%s a, user_course_role b', $this->getDb()->quoteParameter($this->getTable()));
+        $from = sprintf('%s a, user_course b', $this->getDb()->quoteParameter($this->getTable()));
         $where = sprintf('a.id = b.course_id AND b.user_id = %d', (int)$courseId);
         return $this->selectFrom($from, $where, $tool);
     }
@@ -193,6 +191,10 @@ class CourseMap extends Mapper
             $where .= sprintf('a.email = %s AND ', $this->getDb()->quote($filter['email']));
         }
 
+        if (!empty($filter['institutionId'])) {
+            $where .= sprintf('a.institution_id = %s AND ', (int)$filter['institutionId']);
+        }
+
         if (!empty($filter['active'])) {
             $where .= sprintf('a.active = %s AND ', (int)$filter['active']);
         }
@@ -216,7 +218,7 @@ class CourseMap extends Mapper
      */
     public function deleteAllUserCourses($userId)
     {
-        $query = sprintf('DELETE FROM user_course_role WHERE user_id = %d ', (int)$userId);
+        $query = sprintf('DELETE FROM user_course WHERE user_id = %d ', (int)$userId);
         return $this->getDb()->exec($query);
     }
 
@@ -227,7 +229,7 @@ class CourseMap extends Mapper
      */
     public function deleteUserCourse($courseId, $userId)
     {
-        $query = sprintf('DELETE FROM user_course_role WHERE user_id = %d AND course_id = %d', (int)$userId, (int)$courseId);
+        $query = sprintf('DELETE FROM user_course WHERE user_id = %d AND course_id = %d', (int)$userId, (int)$courseId);
         return $this->getDb()->exec($query);
     }
 
@@ -238,7 +240,7 @@ class CourseMap extends Mapper
      */
     public function addUserCourse($courseId, $userId)
     {
-        $query = sprintf('INSERT INTO user_course_role (user_id, course_id)  VALUES (%d, %d) ', (int)$userId, (int)$courseId);
+        $query = sprintf('INSERT INTO user_course (user_id, course_id)  VALUES (%d, %d) ', (int)$userId, (int)$courseId);
         return $this->getDb()->exec($query);
     }
 
@@ -249,7 +251,7 @@ class CourseMap extends Mapper
      */
     public function inCourse($courseId, $userId)
     {
-        $from = sprintf('%s a, user_course_role b', $this->getDb()->quoteParameter($this->getTable()));
+        $from = sprintf('%s a, user_course b', $this->getDb()->quoteParameter($this->getTable()));
         $where = sprintf('a.id = %d AND a.id = b.course_id AND b.user_id = %d', (int)$courseId, (int)$userId);
         return ($this->selectFrom($from, $where)->current() != null);
     }

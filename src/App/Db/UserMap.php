@@ -38,6 +38,8 @@ class UserMap extends Mapper
             $obj->password = $row['password'];
         if (isset($row['name']))
             $obj->name = $row['name'];
+        if (isset($row['role']))
+            $obj->role = $row['role'];
         if (isset($row['email']))
             $obj->email = $row['email'];
         if (isset($row['active']))
@@ -60,30 +62,25 @@ class UserMap extends Mapper
      */
     static function unmapForm($obj)
     {
-        // Get the roles
-        $roles = Role::getMapper()->findByUserId($obj->id);
-        $l = array();
-        foreach ($roles as $i => $o) {
-            $l[$i] = $o->id;
-        }
-
         $arr = array(
             'id' => $obj->id,
             'uid' => $obj->uid,
             'username' => $obj->username,
             'password' => $obj->password,
             'name' => $obj->name,
+            'role' => $obj->role,
             'email' => $obj->email,
-            'role' => $l,
             'active' => (int)$obj->active,
             'modified' => $obj->modified->format(\Tk\Date::ISO_DATE),
             'created' => $obj->created->format(\Tk\Date::ISO_DATE)
         );
         return $arr;
     }
-    
-    
 
+    /**
+     * @param array|\stdClass|Model $row
+     * @return User
+     */
     public function map($row)
     {
         $obj = new User();
@@ -93,6 +90,7 @@ class UserMap extends Mapper
         $obj->username = $row['username'];
         $obj->password = $row['password'];
         $obj->name = $row['name'];
+        $obj->role = $row['role'];
         $obj->email = $row['email'];
         $obj->active = ($row['active'] == 1);
         $obj->hash = $row['hash'];
@@ -114,6 +112,7 @@ class UserMap extends Mapper
             'username' => $obj->username,
             'password' => $obj->password,
             'name' => $obj->name,
+            'role' => $obj->role,
             'email' => $obj->email,
             'hash' => $obj->hash,
             'active' => (int)$obj->active,
@@ -149,7 +148,6 @@ class UserMap extends Mapper
         return $this->selectFrom($from, $where, $tool);
     }
 
-
     /**
      * Find filtered records
      *
@@ -177,11 +175,21 @@ class UserMap extends Mapper
             }
         }
 
-        if (isset($filter['institutionId'])) {
+
+        if (!empty($filter['institutionId'])) {
             $where .= sprintf('a.institution_id = %s AND ', (int)$filter['institutionId']);
         }
 
-        
+        if (!empty($filter['role'])) {
+            $where .= sprintf('a.role = %s AND ', $this->getDb()->quote($filter['role']));
+        }
+
+
+//        if (array_key_exists('institutionId', $filter)) {
+//            if ($filter['institutionId'] !== null)
+//            $where .= sprintf('a.institution_id = %s AND ', (int)$filter['institutionId']);
+//        }
+
         if ($where) {
             $where = substr($where, 0, -4);
         }

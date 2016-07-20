@@ -4,7 +4,7 @@ namespace App\Controller;
 
 abstract class Iface extends \Dom\Renderer\Renderer
 {
-    
+
     /**
      * @var string|array
      */
@@ -131,7 +131,7 @@ abstract class Iface extends \Dom\Renderer\Renderer
     {
         if (empty($this->access)) return true;
         if (!$user) return false;
-        if ($user->hasRole($this->access)) return true;
+        if ($user->getAccess()->hasRole($this->access)) return true;
         return false;
     }
 

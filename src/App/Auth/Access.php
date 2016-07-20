@@ -12,10 +12,11 @@ use \App\Db\Role;
  */
 class Access 
 {
-    
     const ROLE_ADMIN = 'admin';
-    const ROLE_USER = 'user';
-    
+    const ROLE_CLIENT= 'client';
+    const ROLE_STAFF = 'staff';
+    const ROLE_STUDENT = 'student';
+
     
     /**
      * @var \App\Db\User
@@ -46,7 +47,6 @@ class Access
         return $obj;
     }
 
-
     /**
      * @param string|array $role
      * @return boolean
@@ -54,19 +54,27 @@ class Access
     public function hasRole($role) 
     {
         if (!is_array($role)) $role = array($role);
-
         foreach ($role as $r) {
-            if (!$r instanceof Role) {
-                $r = Role::getMapper()->findByName($r);
-            }
-            if ($r) {
-                $obj = Role::getMapper()->findRole($r->id, $this->user->id);
-                if ($obj && $obj->id = $r->id) {
-                    return true;
-                }
+            if ($r == $this->user->role || preg_match('/'.preg_quote($r).'/', $this->user->role)) {
+                return true;
             }
         }
         return false;
+
+//        if (!is_array($role)) $role = array($role);
+//
+//        foreach ($role as $r) {
+//            if (!$r instanceof Role) {
+//                $r = Role::getMapper()->findByName($r);
+//            }
+//            if ($r) {
+//                $obj = Role::getMapper()->findRole($r->id, $this->user->id);
+//                if ($obj && $obj->id = $r->id) {
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
     }
 
     /**
@@ -82,9 +90,27 @@ class Access
      *
      * @return boolean
      */
-    public function isUser()
+    public function isClient()
     {
-        return $this->hasRole(self::ROLE_USER);
+        return $this->hasRole(self::ROLE_CLIENT);
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function isStaff()
+    {
+        return $this->hasRole(self::ROLE_STAFF);
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function isStudent()
+    {
+        return $this->hasRole(self::ROLE_STUDENT);
     }
     
     

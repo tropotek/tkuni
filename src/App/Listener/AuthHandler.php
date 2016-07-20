@@ -49,6 +49,7 @@ class AuthHandler implements SubscriberInterface
             $user->lastLogin = \Tk\Date::create();
             $user->save();
             //$user->redirectHome();
+
             \Tk\Uri::create($user->getHomeUrl())->redirect();
         }
     }
@@ -75,12 +76,12 @@ class AuthHandler implements SubscriberInterface
         if ($controller instanceof \App\Controller\Iface) {
             // TODO: This would be a good place for an ACL or RBAC in the future
             //$access = $event->getRequest()->getAttribute('access');
-            $access = $controller->getAccess();
+            $role = $controller->getAccess();
 
             // Check the user has access to the controller in question
-            if (empty($access)) return;
+            if (empty($role)) return;
             if (!$user) \Tk\Uri::create('/login.html')->redirect();
-            if (!\App\Auth\Access::create($user)->hasRole($access)) {
+            if (!$user->getAccess()->hasRole($role)) {
                 // Could redirect to a authentication error page...
                 // Could cause a loop if the permissions are stuffed
                 \App\Alert::getInstance()->addWarning('You do not have access to the requested page.');

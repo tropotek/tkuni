@@ -43,6 +43,7 @@ class Manager extends Iface
         $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCellCss('key')->setUrl(\Tk\Uri::create('admin/userEdit.html'));
         $this->table->addCell(new \Tk\Table\Cell\Text('username'));
         $this->table->addCell(new \Tk\Table\Cell\Text('email'));
+        $this->table->addCell(new \Tk\Table\Cell\Text('role'));
         $this->table->addCell(new \Tk\Table\Cell\Text('uid'))->setLabel('UID');
         $this->table->addCell(new \Tk\Table\Cell\Boolean('active'));
         //$this->table->addCell(new \Tk\Table\Cell\Date('created'))->setFormat(\Tk\Table\Cell\Date::FORMAT_RELATIVE);
@@ -50,12 +51,11 @@ class Manager extends Iface
 
         // Filters
         $this->table->addFilter(new Field\Input('keywords'))->setLabel('')->setAttr('placeholder', 'Keywords');
-        
 
         // Actions
         $this->table->addAction(\Tk\Table\Action\Button::getInstance('New User', 'fa fa-plus', \Tk\Uri::create('admin/userEdit.html')));
-        $this->table->addAction(new \Tk\Table\Action\Delete());
-        $this->table->addAction(new \Tk\Table\Action\Csv($this->getConfig()->getDb()));
+        $this->table->addAction(\Tk\Table\Action\Delete::getInstance());
+        $this->table->addAction(\Tk\Table\Action\Csv::getInstance($this->getConfig()->getDb()));
         
         $filter = $this->table->getFilterValues();
         $filter['institutionId'] = 0;   // 0 = only show site users admins and clients

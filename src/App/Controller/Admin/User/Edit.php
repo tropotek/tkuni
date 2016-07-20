@@ -66,11 +66,15 @@ class Edit extends Iface
 
         $this->form = new Form('formEdit');
 
+        $this->form->addField(new Field\Input('username'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\Input('name'))->setRequired(true)->setTabGroup('Details');
         $emailF = $this->form->addField(new Field\Input('email'))->setRequired(true)->setTabGroup('Details');
         if ($this->isProfile()) {
             $emailF->setAttr('readonly', 'readonly');
         } else {
+            //$list = array('-- Select --' => '', 'Admin' => \App\Auth\Access::ROLE_ADMIN, 'Client' => \App\Auth\Access::ROLE_CLIENT, 'Staff' => \App\Auth\Access::ROLE_STAFF, 'Student' => \App\Auth\Access::ROLE_STUDENT);
+            $list = array('-- Select --' => '', 'Admin' => \App\Auth\Access::ROLE_ADMIN, 'Client' => \App\Auth\Access::ROLE_CLIENT);
+            $this->form->addField(new Field\Select('role', $list))->setNotes('Select the access level for this user')->setRequired(true)->setTabGroup('Details')->setRequired(true);
             $this->form->addField(new Field\Checkbox('active'))->setTabGroup('Details');
         }   
         
@@ -82,16 +86,9 @@ class Edit extends Iface
         if (!$this->user->getId())
             $f->setRequired(true);
 
-        
-        if (!$this->isProfile()) {
-            $roles = \App\Db\Role::getMapper()->findAll(\Tk\Db\Tool::create('a.id'))->toArray();
-            $list = new ArrayObjectIterator($roles);
-            $this->form->addField(new Field\CheckboxGroup('role', $list))->setNotes('Select the access level for this user')->setRequired(true)->setTabGroup('Roles')->setRequired(true);
-        }
-
         $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
         $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
-        $this->form->addField(new Event\Link('cancel', \Tk\Uri::create('/recover.html')));
+        $this->form->addField(new Event\Link('cancel', \Tk\Uri::create('/admin/userManager.html')));
         
         $this->form->load(\App\Db\UserMap::unmapForm($this->user));
         
@@ -108,6 +105,7 @@ class Edit extends Iface
         // Load the object with data from the form using a helper object
         //\App\Form\ModelLoader::loadObject($form, $this->user);
         \App\Db\UserMap::mapForm($form->getValues(), $this->user);
+
         // Password validation needs to be here
         if ($this->form->getFieldValue('newPassword')) {
             if ($this->form->getFieldValue('newPassword') != $this->form->getFieldValue('confPassword')) {
@@ -115,22 +113,21 @@ class Edit extends Iface
                 $form->addFieldError('confPassword');
             }
         }
+        if (!$this->user->id && !$this->form->getFieldValue('newPassword')) {
+            $form->addFieldError('newPassword', 'Please enter a new password.');
+        }
+
         $form->addFieldErrors(\App\Db\UserValidator::create($this->user)->getErrors());
-        
 
         if ($form->hasErrors()) {
             return;
         }
+        // Hash the password correctly
+        if ($this->form->getFieldValue('newPassword')) {
+            $this->user->password = \App\Factory::hashPassword($this->form->getFieldValue('newPassword'), $this->user);
+        }
 
         $this->user->save();
-
-        if (!$this->isProfile()) {
-            // Update user role list
-            \App\Db\Role::getMapper()->deleteAllUserRoles($this->user->id);
-            foreach ($form->getFieldValue('role') as $roleId) {
-                \App\Db\Role::getMapper()->addUserRole($roleId, $this->user->id);
-            }
-        }
 
         \App\Alert::addSuccess('User record saved!');
         //\App\Alert::addSuccess('User record saved!');
@@ -140,7 +137,7 @@ class Edit extends Iface
             }
             \Tk\Uri::create('/admin/userManager.html')->redirect();
         }
-        \Tk\Uri::create()->redirect();
+        \Tk\Uri::create()->set('userId', $this->user->id)->redirect();
     }
 
     /**
@@ -157,7 +154,7 @@ class Edit extends Iface
         
         // Render the form
         $fren = new \Tk\Form\Renderer\Dom($this->form);
-        $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());
+        $template->appendTemplate($this->form->getId(), $fren->show()->getTemplate());
 
         return $this->getPage()->setPageContent($this->getTemplate());
     }
@@ -179,19 +176,14 @@ class Edit extends Iface
         <i class="fa fa-user fa-fw"></i>
         <span var="username"></span>
       </div>
-      <!-- /.panel-heading -->
+      
       <div class="panel-body ">
         <div class="row">
-          <div class="col-lg-12">
-
-            <div var="formEdit"></div>
-
+          <div class="col-lg-12" var="formEdit">
           </div>
         </div>
       </div>
-      <!-- /.panel-body -->
     </div>
-    <!-- /.panel -->
   </div>
 </div>
 XHTML;

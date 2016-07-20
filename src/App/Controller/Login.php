@@ -55,7 +55,7 @@ class Login extends Iface
     /**
      *
      * @param Request $request
-     * @return Template
+     * @return mixed
      */
     public function doDefault(Request $request)
     {
@@ -69,53 +69,6 @@ class Login extends Iface
         return $this->show();
     }
 
-    /**
-     *
-     * @param Request $request
-     * @return Template
-     */
-    public function doStaffLogin(Request $request)
-    {
-        $this->form = new Form('loginForm');
-
-        //$institutions = array('-- Select --' => '', 'The University Of Melbourne' => 1, 'Jame Cook University' => 2);
-        $institutions = new \Tk\Form\Field\Option\ArrayObjectIterator( \App\Db\Institution::getMapper()->findFiltered(array('active' => 1))->toArray() );
-        //$this->form->addField(new Field\Select('institutionId', $institutions))->prependOption('-- Select --', '0');
-        $this->form->addField(new Field\Select('institutionId', $institutions));
-
-        $this->init();
-
-        $this->form->addField(new Field\Hidden('userType', 'staff'));
-
-        // Find and Fire submit event
-        $this->form->execute();
-
-        return $this->show();
-    }
-
-    /**
-     *
-     * @param Request $request
-     * @return Template
-     */
-    public function doStudentLogin(Request $request)
-    {
-        $this->form = new Form('loginForm');
-
-        //$institutions = array('-- Select --' => '', 'The University Of Melbourne' => 1, 'Jame Cook University' => 2);
-        $institutions = new \Tk\Form\Field\Option\ArrayObjectIterator( \App\Db\Institution::getMapper()->findFiltered(array('active' => 1))->toArray() );
-        //$this->form->addField(new Field\Select('institutionId', $institutions))->prependOption('-- Select --', '0');
-        $this->form->addField(new Field\Select('institutionId', $institutions));
-
-        $this->init();
-
-        $this->form->addField(new Field\Hidden('userType', 'student'));
-
-        // Find and Fire submit event
-        $this->form->execute();
-
-        return $this->show();
-    }
 
 
 
@@ -127,10 +80,6 @@ class Login extends Iface
     public function show()
     {
         $template = $this->getTemplate();
-
-        // Render the form
-//        $ren = new \Tk\Form\Renderer\DomStatic($this->form, $template);
-//        $ren->show();
 
         // Render the form
         $fren = new \Tk\Form\Renderer\Dom($this->form);

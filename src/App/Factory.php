@@ -266,7 +266,7 @@ class Factory
      *
      * @param string $username
      * @param string $email
-     * @param array $roles
+     * @param array $role
      * @param string $password
      * @param string $name
      * @param string $uid
@@ -274,24 +274,18 @@ class Factory
      * @return Db\User
      * @todo Save any extra required data, IE: `auedupersonid` (Student/Staff Number)
      */
-    static function createNewUser($username, $email, $roles = array('user'), $password = '', $name = '', $uid = '', $active = true)
+    static function createNewUser($username, $email, $role, $password, $name = '', $uid = '', $active = true)
     {
         $user = new \App\Db\User();
         $user->uid = $uid;
         $user->username = $username;
         $user->name = $name;
         $user->email = $email;
+        $user->role = $role;
         $user->setPassword($password);
         $user->active = $active;
         $user->save();
 
-        foreach ($roles as $name) {
-            $role = \App\Db\Role::getMapper()->findByName($name);
-            if ($role) {
-                \App\Db\Role::getMapper()->addUserRole($role->id, $user->id);
-            }
-        }
-        
         return $user;
     }
     

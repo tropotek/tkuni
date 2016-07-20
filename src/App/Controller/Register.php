@@ -63,7 +63,7 @@ class Register extends Iface
         }
 
         $this->user = new \App\Db\User();
-        $this->user->role = \App\Auth\Access::ROLE_USER;
+        $this->user->role = \App\Auth\Access::ROLE_CLIENT;
         
         
         $this->form = new Form('registerForm', $request);

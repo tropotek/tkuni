@@ -10,8 +10,6 @@ namespace App\Db;
  */
 class Course extends \Tk\Db\Map\Model
 {
-    const ROLE_STAFF = 'staff';
-    const ROLE_STUDENT = 'student';
     
     /**
      * @var int
