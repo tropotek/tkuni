@@ -43,7 +43,7 @@
           </div>
           <div class="clearfix"></div>
           <div class="not-member">
-            <p>Not a member? <a href="#">Register here</a></p>
+            <p>Not a member? <a href="/register.html">Register here</a></p>
           </div>
         </div>
       </div>

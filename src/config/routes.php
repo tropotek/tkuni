@@ -35,6 +35,7 @@ $routes->add('login', new \Tk\Routing\Route('/login.html', 'App\Controller\Login
 $routes->add('institution-login', new \Tk\Routing\Route('/inst/{institutionId}/login.html', 'App\Controller\Login::doDefault', array('institutionId' => 1)));
 $routes->add('logout', new \Tk\Routing\Route('/logout.html', 'App\Controller\Logout::doDefault', $params));
 $routes->add('recover', new \Tk\Routing\Route('/recover.html', 'App\Controller\Recover::doDefault', $params));
+$routes->add('register', new \Tk\Routing\Route('/register.html', 'App\Controller\Register::doDefault'));
 
 
 // Admin Pages

@@ -61,7 +61,7 @@ class Login extends Iface
     {
         $this->init();
 
-        $this->form->addField(new Event\Link('forgotPassword', \Tk\Uri::create('/admin/userManager.html')));
+        $this->form->addField(new Event\Link('forgotPassword', \Tk\Uri::create('/recover.html')));
 
         // Find and Fire submit event
         $this->form->execute();
@@ -97,9 +97,9 @@ class Login extends Iface
         $auth = \App\Factory::getAuth();
 
         if ($form->getField('institutionId') && !$form->getFieldValue('institutionId')) {
-            $form->addFieldError('institutionId', 'Please enter a valid institution ID');
+            //$form->addFieldError('institutionId', 'Please enter a valid institution ID');
         }
-
+        vd($form->getValues());
         if (!$form->getFieldValue('username') || !preg_match('/[a-z0-9_ -]{4,32}/i', $form->getFieldValue('username'))) {
             $form->addFieldError('username', 'Please enter a valid username');
         }

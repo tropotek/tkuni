@@ -44,7 +44,7 @@ class Register extends Iface
         parent::__construct('Create New Account');
         $this->dispatcher = $this->getConfig()->getEventDispatcher();
 
-        throw new \Tk\Exception('Not Implemented Yet');
+        //throw new \Tk\Exception('Not Implemented Yet');
         
     }
 

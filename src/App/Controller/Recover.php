@@ -38,7 +38,7 @@ class Recover extends Iface
         parent::__construct('Recover Password');
         $this->dispatcher = $this->getConfig()->getEventDispatcher();
 
-        throw new \Tk\Exception('Not Implemented Yet');
+        //throw new \Tk\Exception('Not Implemented Yet');
     }
 
     /**
