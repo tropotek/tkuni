@@ -31,3 +31,4 @@ Next check the /src/App/sql folder for any .sql files you need to install to you
 
 
 
+ Proposed new admin tempalte: https://almsaeedstudio.com
