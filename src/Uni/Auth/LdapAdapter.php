@@ -17,19 +17,22 @@ class LdapAdapter extends \Tk\Auth\Adapter\Ldap
 {
 
     /**
+     * @var \App\Db\Institution
+     */
+    protected $institution = null;
+
+
+    /**
      * Constructor
      *
-     * @param string $host
-     * @param string $baseDn
-     * @param string $filter
-     * @param int $port
-     * @param bool $tls
+     * @param \App\Db\Institution $institution
      */
-    public function __construct($host, $baseDn, $filter, $port = 389, $tls = false)
+    public function __construct($institution)
     {
-        parent::__construct($host, $baseDn, $filter, $port, $tls);
+        $this->institution = $institution;
+        $data = $this->institution->getData();
+        parent::__construct($data->get('ldapHost'), $data->get('ldapBaseDn'), $data->get('ldapFilter'), $data->get('ldapPort'), $data->get('ldapTls'));
     }
-
 
     /**
      * Authenticate the user
@@ -53,6 +56,7 @@ class LdapAdapter extends \Tk\Auth\Adapter\Ldap
         }
 
         // Update the user record with ldap data
+        /** @var \App\Db\User $user */
         $user = \App\Db\User::getMapper()->findByUsername($r->getIdentity());
         if (!$user && isset($ldapData[0]['mail'][0])) {
             // Check if there is one by email
@@ -62,21 +66,21 @@ class LdapAdapter extends \Tk\Auth\Adapter\Ldap
         // Create the user record if none exists....
         if (!$user) {
             // TODO: Save any extra required data, IE: `auedupersonid` (Student/Staff number)
-            $roles = array(\App\Db\User::ROLE_EDUSER);
-            // role: 'staff', 'student' 'others'
-            /*switch ($ldapData[0]['auedupersontype'][0]) {
+            $role = 'student';
+            // role: 'staff', 'student'
+            switch ($ldapData[0]['auedupersontype'][0]) {
                 case 'staff':
-                    $roles[] = 'staff';
+                    $role = 'staff';
                     break;
                 case 'student':
-                    $roles[] = 'student';
+                    $role = 'student';
                     break;
-            }*/
+            }
             // Create new user
             \App\Factory::createNewUser(
                 $username,
                 $ldapData[0]['mail'][0],
-                $roles,
+                $role,
                 $password,
                 $ldapData[0]['displayname'][0],
                 $ldapData[0]['auedupersonid'][0]
@@ -86,9 +90,10 @@ class LdapAdapter extends \Tk\Auth\Adapter\Ldap
             $user->username = $username;
             if (!empty($ldapData[0]['mail'][0]))
                 $user->email = $ldapData[0]['mail'][0];
-            $user->password = \App\Factory::hashPassword($password, $user);
-            if (!empty($ldapData[0]['auedupersonid'][0]))
-                $user->uid = $ldapData[0]['auedupersonid'][0];
+            $user->setPassword($password);
+
+//            if (!empty($ldapData[0]['auedupersonid'][0]))
+//                $user->uid = $ldapData[0]['auedupersonid'][0];
             $user->save();
         }
         return $r;

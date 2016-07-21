@@ -10,11 +10,16 @@ namespace App\Db;
  */
 class Institution extends \Tk\Db\Map\Model
 {
-    
+
     /**
      * @var int
      */
     public $id = 0;
+
+    /**
+     * @var int
+     */
+    public $ownerId = 0;
 
     /**
      * @var string
@@ -55,6 +60,17 @@ class Institution extends \Tk\Db\Map\Model
      * @var \DateTime
      */
     public $created = null;
+
+
+    /**
+     * @var User
+     */
+    private $owner = null;
+
+    /**
+     * @var Data
+     */
+    private $data = null;
     
     
 
@@ -68,6 +84,18 @@ class Institution extends \Tk\Db\Map\Model
     }
 
     /**
+     * Get the institution data object
+     *
+     * @return Data
+     */
+    public function getData()
+    {
+        if (!$this->data)
+            $this->data = Data::create($this->id, get_class($this));
+        return $this->data;
+    }
+
+    /**
      * Returns null if no logo available
      *
      * @return \Tk\Uri|null
@@ -77,7 +105,21 @@ class Institution extends \Tk\Db\Map\Model
         if ($this->logo)
             return \Tk\Uri::create(\App\Factory::getConfig()->getDataUrl().$this->logo);
     }
-    
+
+    /**
+     * Find this institutions owner user
+     *
+     * @return User
+     */
+    public function getOwner()
+    {
+        if (!$this->owner)
+            $this->owner = \App\Db\User::getMapper()->find($this->ownerId);
+        return $this->owner;
+    }
+
+
+
 }
 
 class InstitutionValidator extends \Tk\Db\Map\Validator
@@ -100,7 +142,6 @@ class InstitutionValidator extends \Tk\Db\Map\Validator
         }
         
         // TODO: Validate start and end dates
-        
-        
+
     }
 }

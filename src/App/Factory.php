@@ -214,12 +214,15 @@ class Factory
             case '\Uni\Auth\LdapAdapter':
                 if (!isset($submittedData['institutionId'])) return null;
                 // TODO: we need to get the LDAP settings from the institution config table
-                $adapter = new \Uni\Auth\LdapAdapter(
-                    $config['system.auth.ldap.host'],
-                    $config['system.auth.ldap.baseDn'],
-                    $config['system.auth.ldap.filter'],
-                    $config['system.auth.ldap.port'],
-                    $config['system.auth.ldap.tls']);
+//                $adapter = new \Uni\Auth\LdapAdapter(
+//                    $config['system.auth.ldap.host'],
+//                    $config['system.auth.ldap.baseDn'],
+//                    $config['system.auth.ldap.filter'],
+//                    $config['system.auth.ldap.port'],
+//                    $config['system.auth.ldap.tls']);
+                $institution = \App\Db\Institution::getMapper()->find($submittedData['institutionId']);
+                if (!$institution || !$institution->getData()->get('ldapHost')) return null;
+                $adapter = new \Uni\Auth\LdapAdapter($institution);
                 break;
             case '\Tk\Auth\Adapter\DbTable':
                 $adapter = new \Tk\Auth\Adapter\DbTable(
@@ -266,7 +269,7 @@ class Factory
      *
      * @param string $username
      * @param string $email
-     * @param array $role
+     * @param string $role
      * @param string $password
      * @param string $name
      * @param string $uid

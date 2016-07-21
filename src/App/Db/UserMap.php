@@ -30,8 +30,6 @@ class UserMap extends Mapper
             $obj = new User();
         }
         //$obj->id = $row['id'];
-        if (isset($row['uid']))
-            $obj->uid = $row['uid'];
         if (isset($row['username']))
             $obj->username = $row['username'];
         if (isset($row['password']))
@@ -45,11 +43,10 @@ class UserMap extends Mapper
         if (isset($row['active']))
             $obj->active = ($row['active'] == 'active');
 
-        // TODO: This has to be tested, should parse date string using config['system.date.format.php']
         if (isset($row['modified']))
-            $obj->modified = \Tk\Date::create($row['modified']);
+            $obj->modified = \Tk\Date::createFormDate($row['modified']);
         if (isset($row['created']))
-            $obj->created = \Tk\Date::create($row['created']);
+            $obj->created = \Tk\Date::createFormDate($row['created']);
 
         return $obj;
     }
@@ -64,29 +61,22 @@ class UserMap extends Mapper
     {
         $arr = array(
             'id' => $obj->id,
-            'uid' => $obj->uid,
             'username' => $obj->username,
             'password' => $obj->password,
             'name' => $obj->name,
             'role' => $obj->role,
             'email' => $obj->email,
             'active' => (int)$obj->active,
-            'modified' => $obj->modified->format(\Tk\Date::ISO_DATE),
-            'created' => $obj->created->format(\Tk\Date::ISO_DATE)
+            'modified' => $obj->modified->format(\Tk\Date::$formFormat),
+            'created' => $obj->created->format(\Tk\Date::$formFormat)
         );
         return $arr;
     }
 
-    /**
-     * @param array|\stdClass|Model $row
-     * @return User
-     */
     public function map($row)
     {
         $obj = new User();
         $obj->id = $row['id'];
-        $obj->institutionId = $row['institution_id'];
-        $obj->uid = $row['uid'];
         $obj->username = $row['username'];
         $obj->password = $row['password'];
         $obj->name = $row['name'];
@@ -107,8 +97,6 @@ class UserMap extends Mapper
     {
         $arr = array(
             'id' => $obj->id,
-            'uid' => $obj->uid,
-            'institution_id' => $obj->institutionId,
             'username' => $obj->username,
             'password' => $obj->password,
             'name' => $obj->name,
@@ -126,25 +114,134 @@ class UserMap extends Mapper
         return $arr;
     }
 
-    public function findByUsername($username)
+
+    /**
+     *
+     * @param $username
+     * @param string|array $role
+     * @param int $institutionId
+     * @return Model
+     */
+    public function findByUsername($username, $role = null, $institutionId = 0)
     {
-        return $this->select('username = ' . $this->getDb()->quote($username))->current();
+        $from = sprintf('%s a', $this->getDb()->quoteParameter($this->getTable()));
+        $where = sprintf('a.username = %s', $this->getDb()->quote($username));
+
+        if ($role) {
+            if (!is_array($role)) $role = array($role);
+            $w = '';
+            foreach ($role as $r) {
+                $w .= sprintf('a.role = %s OR ', $this->getDb()->quote($r));
+            }
+            if ($w)
+                $where .= ' AND (' . rtrim($w, ' OR ') . ')';
+        }
+
+        if ($institutionId > 0) {
+            $from .= sprintf(', %s b ', $this->getDb()->quoteParameter('user_institution'));
+            $where .= sprintf(' AND b.institution_id = %d', (int)$institutionId);
+        }
+
+        $res = $this->selectFrom($from, $where)->current();
+        return $res;
     }
 
-    public function findByUid($uid)
+    /**
+     *
+     * @param string $email
+     * @param string|array $role
+     * @param int $institutionId
+     * @return Model
+     */
+    public function findByEmail($email, $role = null, $institutionId = 0)
     {
-        return $this->select('uid = ' . $this->getDb()->quote($uid))->current();
+        $from = sprintf('%s a', $this->getDb()->quoteParameter($this->getTable()));
+        $where = sprintf('a.email = %s', $this->getDb()->quote($email));
+
+        if ($role) {
+            if (!is_array($role)) $role = array($role);
+            $w = '';
+            foreach ($role as $r) {
+                $w .= sprintf('a.role = %s OR ', $this->getDb()->quote($r));
+            }
+            if ($w)
+                $where .= ' AND (' . rtrim($w, ' OR ') . ')';
+        }
+
+        if ($institutionId > 0) {
+            $from .= sprintf(', %s b ', $this->getDb()->quoteParameter('user_institution'));
+            $where .= sprintf(' AND b.institution_id = %d', (int)$institutionId);
+        }
+
+        $res = $this->selectFrom($from, $where)->current();
+        return $res;
     }
 
-    public function findByEmail($email)
+    /**
+     *
+     * @param $role
+     * @param null $tool
+     * @return Model
+     */
+    public function findByRole($role, $tool = null)
     {
-        return $this->select('email = ' . $this->getDb()->quote($email))->current();
+        if (!is_array($role)) $role = array($role);
+
+        $from = sprintf('%s a', $this->getDb()->quoteParameter($this->getTable()));
+        $where = '';
+        foreach ($role as $r) {
+            $where .= sprintf('a.role = %s OR ', $this->getDb()->quote($r));
+        }
+        $where = rtrim($where, ' OR ');
+
+        $res = $this->selectFrom($from, $where, $tool);
+        return $res;
     }
 
-    public function findByCourseId($courseId, $tool = null)
+    /**
+     *
+     * @param $courseId
+     * @param string|array $role
+     * @param \Tk\Db\Tool|null $tool
+     * @return ArrayObject
+     */
+    public function findByCourseId($courseId, $role = null, $tool = null)
     {
         $from = sprintf('%s a, user_course b', $this->getDb()->quoteParameter($this->getTable()));
         $where = sprintf('a.id = b.user_id AND b.course_id = %d', (int)$courseId);
+
+        if ($role) {
+            if (!is_array($role)) $role = array($role);
+            $w = '';
+            foreach ($role as $r) {
+                $w .= sprintf('a.role = %s OR ', $this->getDb()->quote($r));
+            }
+            if ($w)
+                $where .= ' AND (' . rtrim($w, ' OR ') . ')';
+        }
+        return $this->selectFrom($from, $where, $tool);
+    }
+
+    /**
+     *
+     * @param int $institutionId
+     * @param string|array $role
+     * @param \Tk\Db\Tool|null $tool
+     * @return ArrayObject
+     */
+    public function findByInstitutionId($institutionId, $role = null, $tool = null)
+    {
+        $from = sprintf('%s a, user_institution b', $this->getDb()->quoteParameter($this->getTable()));
+        $where = sprintf('a.id = b.user_id AND b.institution_id = %d', (int)$institutionId);
+        if ($role) {
+            if (!is_array($role)) $role = array($role);
+            $w = '';
+            foreach ($role as $r) {
+                $w .= sprintf('a.role = %s OR ', $this->getDb()->quote($r));
+            }
+            if ($w)
+                $where .= ' AND (' . rtrim($w, ' OR ') . ')';
+        }
         return $this->selectFrom($from, $where, $tool);
     }
 
@@ -176,19 +273,26 @@ class UserMap extends Mapper
         }
 
 
-        if (!empty($filter['institutionId'])) {
-            $where .= sprintf('a.institution_id = %s AND ', (int)$filter['institutionId']);
+        if (isset($filter['institutionId'])) {
+            $from .= sprintf(', user_institution b');
+            $where .= sprintf('a.id = b.user_id AND b.institution_id = %d AND ', (int)$filter['institutionId']);
+        }
+
+        if (isset($filter['courseId'])) {
+            $from .= sprintf(', user_course c');
+            $where .= sprintf('a.id = c.user_id AND c.course_id = %d AND ', (int)$filter['courseId']);
         }
 
         if (!empty($filter['role'])) {
-            $where .= sprintf('a.role = %s AND ', $this->getDb()->quote($filter['role']));
+            if (!is_array($filter['role'])) $filter['role'] = array($filter['role']);
+            $w = '';
+            foreach ($filter['role'] as $r) {
+                $w .= sprintf('a.role = %s OR ', $this->getDb()->quote($r));
+            }
+            if ($w) {
+                $where .= '('. rtrim($w, ' OR ') . ') AND ';
+            }
         }
-
-
-//        if (array_key_exists('institutionId', $filter)) {
-//            if ($filter['institutionId'] !== null)
-//            $where .= sprintf('a.institution_id = %s AND ', (int)$filter['institutionId']);
-//        }
 
         if ($where) {
             $where = substr($where, 0, -4);
@@ -197,5 +301,9 @@ class UserMap extends Mapper
         $res = $this->selectFrom($from, $where, $tool);
         return $res;
     }
+
+
+
+
 
 }

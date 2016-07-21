@@ -69,9 +69,6 @@ class Login extends Iface
         return $this->show();
     }
 
-
-
-
     /**
      * show()
      *

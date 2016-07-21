@@ -65,11 +65,10 @@ class Course extends \Tk\Db\Map\Model
      * @var \DateTime
      */
     public $created = null;
-    
-    
+
 
     /**
-     *
+     * Course constructor.
      */
     public function __construct()
     {
@@ -126,7 +125,7 @@ class CourseValidator extends \Tk\Db\Map\Validator
             $this->addError('code', 'Invalid field value.');
         } else {
             // Look for existing courses with same code
-            $c = \App\Db\Course::getMapper()->findByCode($obj->code);
+            $c = \App\Db\Course::getMapper()->findByCode($obj->code, $obj->institutionId);
             if ($c && $c->id != $obj->id) {
                 $this->addError('code', 'Code already exists.');
             }
@@ -137,7 +136,6 @@ class CourseValidator extends \Tk\Db\Map\Validator
         }
         
         // TODO: Validate start and end dates
-        
         
     }
 }

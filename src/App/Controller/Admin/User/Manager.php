@@ -58,7 +58,8 @@ class Manager extends Iface
         $this->table->addAction(\Tk\Table\Action\Csv::getInstance($this->getConfig()->getDb()));
         
         $filter = $this->table->getFilterValues();
-        $filter['institutionId'] = 0;   // 0 = only show site users admins and clients
+        //$filter['institutionId'] = 0;   // 0 = only show site users admins and clients
+        $filter['role'] = array(\App\Auth\Access::ROLE_ADMIN, \App\Auth\Access::ROLE_CLIENT);
         $users = \App\Db\User::getMapper()->findFiltered($filter, $this->table->makeDbTool('a.name'));
         $this->table->setList($users);
 
@@ -86,23 +87,16 @@ class Manager extends Iface
     {
         $xhtml = <<<XHTML
 <div class="row">
-
   <div class="col-lg-12">
     <div class="panel panel-default">
       <div class="panel-heading">
         <i class="fa fa-users fa-fw"></i> Users
       </div>
-      <!-- /.panel-heading -->
-      <div class="panel-body ">
-
+      <div class="panel-body">
         <div var="table"></div>
-
       </div>
-      <!-- /.panel-body -->
     </div>
-    <!-- /.panel -->
   </div>
-
 </div>
 XHTML;
 

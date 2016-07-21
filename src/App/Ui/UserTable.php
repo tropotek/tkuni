@@ -14,7 +14,7 @@ use Tk\Request;
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  */
-class StaffTable extends \Dom\Renderer\Renderer
+class UserTable extends \Dom\Renderer\Renderer
 {
 
     /**
@@ -27,13 +27,28 @@ class StaffTable extends \Dom\Renderer\Renderer
      */
     protected $institutionId = 0;
 
+    /**
+     * @var null|array|string
+     */
+    protected $role = null;
+
+    /**
+     * @var null|\Tk\Uri
+     */
+    protected $editUrl = null;
+
 
     /**
      * CourseTable constructor.
+     * @param int $institutionId
+     * @param null|array|string $role
+     * @param null|\Tk\Uri $editUrl
      */
-    public function __construct($institutionId = 0)
+    public function __construct($institutionId = 0, $role = null, $editUrl = null)
     {
         $this->institutionId = $institutionId;
+        $this->role = $role;
+        $this->editUrl = $editUrl;
         $this->doDefault();
     }
 
@@ -48,9 +63,9 @@ class StaffTable extends \Dom\Renderer\Renderer
         $this->table = new \Tk\Table('StaffList');
         $this->table->setParam('renderer', \Tk\Table\Renderer\Dom\Table::create($this->table));
 
+        $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCellCss('key')->setUrl($this->editUrl);
 
-        $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCellCss('key');
-        //$this->table->addCell(new \Tk\Table\Cell\Text('username'));
+        $this->table->addCell(new CourseCell('course', $this->institutionId));
         $this->table->addCell(new \Tk\Table\Cell\Text('email'));
         //$this->table->addCell(new \Tk\Table\Cell\Text('role'));
         //$this->table->addCell(new \Tk\Table\Cell\Text('uid'))->setLabel('UID');
@@ -66,9 +81,9 @@ class StaffTable extends \Dom\Renderer\Renderer
 
         // Set list
         $filter = $this->table->getFilterValues();
-        if ($this->institutionId)
-            $filter['institutionId'] = $this->institutionId;
-        $filter['role'] = \App\Auth\Access::ROLE_STAFF;
+        $filter['institutionId'] = $this->institutionId;
+        $filter['role'] = $this->role;
+
         $users = \App\Db\User::getMapper()->findFiltered($filter, $this->table->makeDbTool('a.name'));
         $this->table->setList($users);
 
@@ -84,4 +99,49 @@ class StaffTable extends \Dom\Renderer\Renderer
         return $this->table->getParam('renderer')->getTemplate();
     }
 
+}
+
+class CourseCell extends \Tk\Table\Cell\Text
+{
+
+    protected $institutionId = 0;
+
+
+    public function __construct($property, $institutionId = 0)
+    {
+        parent::__construct($property);
+        $this->institutionId = $institutionId;
+        $this->setOrderProperty('');
+        $this->setCharacterLimit(120);
+    }
+
+    /**
+     * @param \App\Db\User $obj
+     * @param string $property
+     * @return mixed
+     */
+    public function getPropertyValue($obj, $property)
+    {
+        //$val =  parent::getPropertyValue($obj, $property);
+        $courseList = \App\Db\Course::getMapper()->findByUserId($obj->id, $this->institutionId, \Tk\Db\Tool::create('a.name'));
+        $val =  '';
+        foreach ($courseList as $course) {
+            $val .= $course->code. ', ';
+        }
+        $val = rtrim($val, ', ');
+
+        return $val;
+    }
+
+
+    /**
+     * @param mixed $obj
+     * @return string
+     */
+    public function getCellHtml($obj)
+    {
+        $propValue = parent::getCellHtml($obj);
+        $str = '<small>' . $propValue . '</small>';
+        return $str;
+    }
 }

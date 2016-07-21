@@ -51,6 +51,19 @@ abstract class Iface extends \Dom\Renderer\Renderer
         $template = $this->getTemplate();
 
 
+
+        if ($this->getConfig()->get('site.meta.keywords')) {
+            $template->appendMetaTag('keywords', array('content', $this->getConfig()->get('site.meta.keywords')));
+        }
+        if ($this->getConfig()->get('site.meta.description')) {
+            $template->appendMetaTag('description', array('content', $this->getConfig()->get('site.meta.description')));
+        }
+
+        $template->appendMetaTag('tk-author', 'http://www.tropotek.com/, http://www.phpdomtemplate.com/', $template->getTitleElement());
+        $template->appendMetaTag('tk-project', 'tk2uni', $template->getTitleElement());
+        $template->appendMetaTag('tk-version', '1.0', $template->getTitleElement());
+
+
         if ($this->getConfig()->get('site.title')) {
             $template->setAttr('siteName', 'title', $this->getConfig()->get('site.title'));
             $template->setTitleText(trim($template->getTitleText() . ' - ' . $this->getConfig()->get('site.title'), '- '));
@@ -89,6 +102,13 @@ var config = {
 };
 JS;
         $template->appendJs($js, ['data-jsl-priority' => -1000]);
+
+        if ($this->getConfig()->get('site.global.js')) {
+            $template->appendJs($this->getConfig()->get('site.global.js'));
+        }
+        if ($this->getConfig()->get('site.global.css')) {
+            $template->appendCss($this->getConfig()->get('site.global.css'));
+        }
 
 
         return $this;

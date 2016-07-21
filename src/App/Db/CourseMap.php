@@ -42,17 +42,17 @@ class CourseMap extends Mapper
             $obj->description = $row['description'];
 
         if (isset($row['start']))
-            $obj->start = \Tk\Date::create($row['start']);
+            $obj->start = \Tk\Date::createFormDate($row['start']);
         if (isset($row['finish']))
-            $obj->finish = \Tk\Date::create($row['finish']);
+            $obj->finish = \Tk\Date::createFormDate($row['finish']);
         
         if (isset($row['active']))
             $obj->active = ($row['active'] == 'active');
 
         if (isset($row['modified']))
-            $obj->modified = \Tk\Date::create($row['modified']);
+            $obj->modified = \Tk\Date::createFormDate($row['modified']);
         if (isset($row['created']))
-            $obj->created = \Tk\Date::create($row['created']);
+            $obj->created = \Tk\Date::createFormDate($row['created']);
         
         return $obj;
     }
@@ -67,13 +67,12 @@ class CourseMap extends Mapper
     {
         $start = null;
         $finish = null;
-        $dateFormat = 'd/m/Y';
 
         if ($obj->start) {
-            $start = $obj->start->format($dateFormat);
+            $start = $obj->start->format(\Tk\Date::$formFormat);
         }
         if ($obj->finish) {
-            $finish = $obj->finish->format($dateFormat);
+            $finish = $obj->finish->format(\Tk\Date::$formFormat);
         }
         
         $arr = array(
@@ -86,8 +85,8 @@ class CourseMap extends Mapper
             'start' => $start,
             'finish' => $finish,
             'active' => (int)$obj->active,
-            'modified' => $obj->modified->format($dateFormat),
-            'created' => $obj->created->format($dateFormat)
+            'modified' => $obj->modified->format(\Tk\Date::$formFormat),
+            'created' => $obj->created->format(\Tk\Date::$formFormat)
         );
 
         return $arr;
@@ -132,25 +131,34 @@ class CourseMap extends Mapper
         return $arr;
     }
 
+
+
     /**
+     *
      * @param string $code
+     * @param int $institutionId
      * @return Model
      */
-    public function findByCode($code)
+    public function findByCode($code, $institutionId)
     {
-        return $this->select('code = ' . $this->getDb()->quote($code))->current();
+        $where = sprintf('code = %s AND  institution_id = %d', $this->getDb()->quote($code), (int)$institutionId);
+        return $this->select($where)->current();
     }
-    
+
     /**
-     * 
-     * @param int $courseId
+     *
+     * @param int $userId
+     * @param int $institutionId
      * @param Tool $tool
      * @return ArrayObject
      */
-    public function findByUserId($courseId, $tool = null)
+    public function findByUserId($userId, $institutionId = 0, $tool = null)
     {
         $from = sprintf('%s a, user_course b', $this->getDb()->quoteParameter($this->getTable()));
-        $where = sprintf('a.id = b.course_id AND b.user_id = %d', (int)$courseId);
+        $where = sprintf('a.id = b.course_id AND b.user_id = %d', (int)$userId);
+        if ($institutionId) {
+            $where .= sprintf(' AND a.institution_id = %d', (int)$institutionId);
+        }
         return $this->selectFrom($from, $where, $tool);
     }
 
@@ -182,7 +190,6 @@ class CourseMap extends Mapper
             }
         }
 
-
         if (!empty($filter['code'])) {
             $where .= sprintf('a.code = %s AND ', $this->getDb()->quote($filter['code']));
         }
@@ -208,18 +215,16 @@ class CourseMap extends Mapper
     }
 
     
-    
-    
-    
-    
+
     /**
+     * @param $courseId
      * @param $userId
-     * @return \Tk\Db\PDOStatement
+     * @return boolean
      */
-    public function deleteAllUserCourses($userId)
+    public function hasUser($courseId, $userId)
     {
-        $query = sprintf('DELETE FROM user_course WHERE user_id = %d ', (int)$userId);
-        return $this->getDb()->exec($query);
+        $sql = sprintf('SELECT * FROM user_course WHERE course_id = %d AND user_id = %d', (int)$courseId, (int)$userId);
+        return ($this->getDb()->query($sql)->rowCount() > 0);
     }
 
     /**
@@ -227,7 +232,7 @@ class CourseMap extends Mapper
      * @param $userId
      * @return \Tk\Db\PDOStatement
      */
-    public function deleteUserCourse($courseId, $userId)
+    public function deleteUser($courseId, $userId)
     {
         $query = sprintf('DELETE FROM user_course WHERE user_id = %d AND course_id = %d', (int)$userId, (int)$courseId);
         return $this->getDb()->exec($query);
@@ -238,22 +243,20 @@ class CourseMap extends Mapper
      * @param $userId
      * @return \Tk\Db\PDOStatement
      */
-    public function addUserCourse($courseId, $userId)
+    public function addUser($courseId, $userId)
     {
         $query = sprintf('INSERT INTO user_course (user_id, course_id)  VALUES (%d, %d) ', (int)$userId, (int)$courseId);
         return $this->getDb()->exec($query);
     }
 
     /**
-     * @param $courseId
-     * @param $userId
-     * @return boolean
+     * @param int $courseId
+     * @return \Tk\Db\PDOStatement
      */
-    public function inCourse($courseId, $userId)
+    public function deleteAllUsers($courseId)
     {
-        $from = sprintf('%s a, user_course b', $this->getDb()->quoteParameter($this->getTable()));
-        $where = sprintf('a.id = %d AND a.id = b.course_id AND b.user_id = %d', (int)$courseId, (int)$userId);
-        return ($this->selectFrom($from, $where)->current() != null);
+        $query = sprintf('DELETE FROM user_course WHERE course_id = %d ', (int)$courseId);
+        return $this->getDb()->exec($query);
     }
     
 

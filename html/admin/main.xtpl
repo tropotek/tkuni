@@ -4,13 +4,14 @@
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="description" content=""/>
-  <meta name="author" content=""/>
 
   <title>SB Admin 2 - Bootstrap Admin Theme</title>
 
   <!-- Bootstrap Core CSS -->
   <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
+  <!-- Jquery UI -->
+  <link href="js/jquery-ui-1.12.0/jquery-ui.min.css" rel="stylesheet"/>
 
   <!-- MetisMenu CSS -->
   <link href="bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet"/>
@@ -251,7 +252,7 @@
         </a>
         <ul class="dropdown-menu dropdown-user">
           <li><a href="/admin/profile.html"><i class="fa fa-user fa-fw"></i> User Profile</a></li>
-          <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a></li>
+          <li><a href="/admin/settings.html"><i class="fa fa-gear fa-fw"></i> Settings</a></li>
           <li class="divider"></li>
           <li><a href="/logout.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
         </ul>
@@ -282,32 +283,9 @@
           </li>
           <li><a href="/admin/index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
           <li><a href="/admin/userManager.html"><i class="fa fa-users fa-fw"></i> Users</a></li>
-          <li><a href="/admin/institutionManager.html"><i class="fa fa-university fa-fw"></i> Institution</a></li>
-          <li><a href="/admin/courseManager.html"><i class="fa fa-university fa-fw"></i> Courses</a></li>
+          <li><a href="/admin/institutionManager.html"><i class="fa fa-university fa-fw"></i> Institutions</a></li>
+          <li><a href="/admin/courseManager.html"><i class="fa fa-cogs fa-fw"></i> Settings</a></li>
 
-
-          <li>
-            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
-            <ul class="nav nav-second-level">
-              <li><a href="/admin/flot.html">Flot Charts</a></li>
-              <li><a href="/admin/morris.html">Morris.js Charts</a></li>
-            </ul>
-            <!-- /.nav-second-level -->
-          </li>
-          <li><a href="/admin/tables.html"><i class="fa fa-table fa-fw"></i> Tables</a></li>
-          <li><a href="/admin/forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a></li>
-          <li>
-            <a href="#"><i class="fa fa-wrench fa-fw"></i> UI Elements<span class="fa arrow"></span></a>
-            <ul class="nav nav-second-level">
-              <li><a href="/admin/panels-wells.html">Panels and Wells</a></li>
-              <li><a href="/admin/buttons.html">Buttons</a></li>
-              <li><a href="/admin/notifications.html">Notifications</a></li>
-              <li><a href="/admin/typography.html">Typography</a></li>
-              <li><a href="/admin/icons.html"> Icons</a></li>
-              <li><a href="/admin/grid.html">Grid</a></li>
-            </ul>
-            <!-- /.nav-second-level -->
-          </li>
         </ul>
       </div>
       <!-- /.sidebar-collapse -->
@@ -347,6 +325,7 @@
 
 <!-- jQuery -->
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="js/jquery-ui-1.12.0/jquery-ui.min.js"></script>
 <!-- Bootstrap Core JavaScript -->
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <!-- Metis Menu Plugin JavaScript -->

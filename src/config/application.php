@@ -32,11 +32,11 @@ $config['system.auth.dbtable.saltColumn'] = 'hash';
 $config['system.auth.dbtable.activeColumn'] = 'active';
 
 // LDAPs
-$config['system.auth.ldap.host']    = 'centaur.unimelb.edu.au';
-$config['system.auth.ldap.tls']    = true;
-$config['system.auth.ldap.port']   = 389;
-$config['system.auth.ldap.baseDn'] = 'ou=people,o=unimelb';
-$config['system.auth.ldap.filter'] = 'uid={username}';
+//$config['system.auth.ldap.host']    = 'centaur.unimelb.edu.au';
+//$config['system.auth.ldap.tls']    = true;
+//$config['system.auth.ldap.port']   = 389;
+//$config['system.auth.ldap.baseDn'] = 'ou=people,o=unimelb';
+//$config['system.auth.ldap.filter'] = 'uid={username}';
 
 $config['system.auth.adapters'] = array(
     'LDAP' => '\Uni\Auth\LdapAdapter',  

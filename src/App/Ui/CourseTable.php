@@ -27,30 +27,37 @@ class CourseTable extends \Dom\Renderer\Renderer
      */
     protected $institutionId = 0;
 
+    /**
+     * @var \Tk\Url
+     */
+    protected $editUrl = null;
+
 
     /**
      * CourseTable constructor.
+     *
+     * @param int $institutionId
+     * @param \Tk\Uri|null $editUrl
      */
-    public function __construct($institutionId = 0)
+    public function __construct($institutionId = 0, $editUrl = null)
     {
         $this->institutionId = $institutionId;
+        $this->editUrl = $editUrl;
         $this->doDefault();
     }
 
 
     /**
      *
-     * @param Request $request
      * @return \App\Page\Iface|Template|string
      */
     public function doDefault()
     {
-
         $this->table = new \Tk\Table('CourseList');
         $this->table->setParam('renderer', \Tk\Table\Renderer\Dom\Table::create($this->table));
 
         //$this->table->addCell(new \Tk\Table\Cell\Checkbox('id'));
-        $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCellCss('key');
+        $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCellCss('key')->setUrl($this->editUrl);
         $this->table->addCell(new \Tk\Table\Cell\Text('code'));
         //$this->table->addCell(new \Tk\Table\Cell\Text('email'));
         //$this->table->addCell(new \Tk\Table\Cell\Date('start'));

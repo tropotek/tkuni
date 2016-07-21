@@ -21,8 +21,8 @@ class InstitutionMap extends Mapper
      * Map the form fields data to the object
      *
      * @param array $row
-     * @param Role $obj
-     * @return Role
+     * @param Institution $obj
+     * @return Institution
      */
     static function mapForm($row, $obj = null)
     {
@@ -30,6 +30,8 @@ class InstitutionMap extends Mapper
             $obj = new Institution();
         }
         //$obj->id = $row['id'];
+        if (isset($row['ownerId']))
+            $obj->ownerId = $row['ownerId'];
         if (isset($row['name']))
             $obj->name = $row['name'];
         if (isset($row['email']))
@@ -44,9 +46,9 @@ class InstitutionMap extends Mapper
             $obj->hash = $row['hash'];
 
         if (isset($row['modified']))
-            $obj->modified = \Tk\Date::create($row['modified']);
+            $obj->modified = \Tk\Date::createFormDate($row['modified']);
         if (isset($row['created']))
-            $obj->created = \Tk\Date::create($row['created']);
+            $obj->created = \Tk\Date::createFormDate($row['created']);
         
         return $obj;
     }
@@ -59,20 +61,17 @@ class InstitutionMap extends Mapper
      */
     static function unmapForm($obj)
     {
-        $start = null;
-        $finish = null;
-        $dateFormat = 'd/m/Y';
-
         $arr = array(
             'id' => $obj->id,
+            'ownerId' => $obj->ownerId,
             'name' => $obj->name,
             'email' => $obj->email,
             'description' => $obj->description,
             'logo' => $obj->logo,
-            'active' => (int)$obj->active,
+            'active' => $obj->active ? 'active' : '',
             'hash' => $obj->hash,
-            'modified' => $obj->modified->format($dateFormat),
-            'created' => $obj->created->format($dateFormat)
+            'modified' => $obj->modified->format(\Tk\Date::$formFormat),
+            'created' => $obj->created->format(\Tk\Date::$formFormat)
         );
 
         return $arr;
@@ -82,6 +81,7 @@ class InstitutionMap extends Mapper
     {
         $obj = new Institution();
         $obj->id = $row['id'];
+        $obj->ownerId = $row['owner_id'];
         $obj->name = $row['name'];
         $obj->email = $row['email'];
         $obj->description = $row['description'];
@@ -99,6 +99,7 @@ class InstitutionMap extends Mapper
     {
         $arr = array(
             'id' => $obj->id,
+            'owner_id' => $obj->ownerId,
             'name' => $obj->name,
             'email' => $obj->email,
             'description' => $obj->description,
@@ -111,14 +112,6 @@ class InstitutionMap extends Mapper
         return $arr;
     }
 
-    /**
-     * @param string $code
-     * @return Model
-     */
-    public function findByCode($code)
-    {
-        return $this->select('code = ' . $this->getDb()->quote($code))->current();
-    }
     
     /**
      * 
@@ -177,6 +170,51 @@ class InstitutionMap extends Mapper
         return $res;
     }
 
-    
-    
+
+
+
+
+    /**
+     * @param $courseId
+     * @param $userId
+     * @return boolean
+     */
+    public function hasUser($courseId, $userId)
+    {
+        $sql = sprintf('SELECT * FROM user_institution WHERE course_id = %d AND user_id = %d', (int)$courseId, (int)$userId);
+        return ($this->getDb()->query($sql)->rowCount() > 0);
+    }
+
+    /**
+     * @param $courseId
+     * @param $userId
+     * @return \Tk\Db\PDOStatement
+     */
+    public function deleteUser($courseId, $userId)
+    {
+        $query = sprintf('DELETE FROM user_institution WHERE user_id = %d AND course_id = %d', (int)$userId, (int)$courseId);
+        return $this->getDb()->exec($query);
+    }
+
+    /**
+     * @param $courseId
+     * @param $userId
+     * @return \Tk\Db\PDOStatement
+     */
+    public function addUser($courseId, $userId)
+    {
+        $query = sprintf('INSERT INTO user_institution (user_id, course_id)  VALUES (%d, %d) ', (int)$userId, (int)$courseId);
+        return $this->getDb()->exec($query);
+    }
+
+    /**
+     * @param int $courseId
+     * @return \Tk\Db\PDOStatement
+     */
+    public function deleteAllUsers($courseId)
+    {
+        $query = sprintf('DELETE FROM user_institution WHERE course_id = %d ', (int)$courseId);
+        return $this->getDb()->exec($query);
+    }
+
 }

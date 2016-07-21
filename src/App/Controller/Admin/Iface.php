@@ -4,12 +4,12 @@ namespace App\Controller\Admin;
 
 abstract class Iface extends \App\Controller\Iface
 {
-    
+
     /**
      * @param string $pageTitle
-     * @param string $access
+     * @param array|null|string $access
      */
-    public function __construct($pageTitle = '', $access = 'admin')
+    public function __construct($pageTitle = '', $access = \App\Auth\Access::ROLE_ADMIN)
     {
         parent::__construct($pageTitle, $access);
         $this->templatePath = $this->getConfig()->getSitePath() . $this->getConfig()->get('template.admin.path');

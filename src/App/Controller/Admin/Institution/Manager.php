@@ -44,11 +44,10 @@ class Manager extends Iface
 
         $this->table->addCell(new \Tk\Table\Cell\Checkbox('id'));
         $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCellCss('key')->setUrl(\Tk\Uri::create('admin/institutionEdit.html'));
+        $this->table->addCell(new OwnerCell('owner'));
         $this->table->addCell(new \Tk\Table\Cell\Text('email'));
         $this->table->addCell(new \Tk\Table\Cell\Text('description'))->setCharacterLimit(64);
         $this->table->addCell(new \Tk\Table\Cell\Boolean('active'));
-
-        //$this->table->addCell(new \Tk\Table\Cell\Date('created'))->setFormat(\Tk\Table\Cell\Date::FORMAT_RELATIVE);
         $this->table->addCell(new \Tk\Table\Cell\Date('created'));
 
         // Filters
@@ -105,3 +104,33 @@ XHTML;
 
 
 }
+
+
+class OwnerCell extends \Tk\Table\Cell\Text
+{
+
+    public function __construct($property, $label = null)
+    {
+        parent::__construct($property, $label);
+        $this->setOrderProperty('');
+    }
+
+    /**
+     * @param \App\Db\Institution $obj
+     * @param string $property
+     * @return mixed
+     */
+    public function getPropertyValue($obj, $property)
+    {
+        //$val =  parent::getPropertyValue($obj, $property);
+        $val =  '';
+        $owner = $obj->getOwner();
+        if ($owner) {
+            $val = $owner->name;
+        }
+        return $val;
+    }
+
+}
+
+

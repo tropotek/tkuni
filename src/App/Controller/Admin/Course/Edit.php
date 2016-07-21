@@ -29,6 +29,11 @@ class Edit extends Iface
     private $course = null;
 
     /**
+     * @var \App\Db\Institution
+     */
+    private $institution = null;
+
+    /**
      * @var \Tk\Table
      */
     protected $table = null;
@@ -50,13 +55,17 @@ class Edit extends Iface
     public function doDefault(Request $request)
     {
         $this->course = new \App\Db\Course();
+        $this->course = (int)$request->get('institutionId');
 
         if ($request->get('courseId')) {
             $this->course = \App\Db\Course::getMapper()->find($request->get('courseId'));
         }
+        $this->institution = \App\Db\Institution::getMapper()->find($this->course->institutionId);
+
 
         $this->form = new Form('formEdit');
 
+        $this->form->addField(new Field\Input('institutionId'))->setRequired(true);
         $this->form->addField(new Field\Input('name'))->setRequired(true);
         $this->form->addField(new Field\Input('code'))->setRequired(true);
         $this->form->addField(new Field\Input('email'))->setRequired(true);
@@ -67,40 +76,42 @@ class Edit extends Iface
 
         $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
         $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
-        //$this->form->addField(new Event\Link('cancel', \Tk\Uri::create($this->getBreadcrumbs()->getBackUrl())));
-        $this->form->addField(new Event\Link('cancel', \Tk\Uri::create('admin/courseManager.html')));
+        $url = \Tk\Uri::create('/admin/courseManager.html');
+        if ($this->getConfig()->getRequest()->has('institutionId'))
+            $url = \Tk\Uri::create('/admin/institutionEdit.html')->set('institutionId', $this->getConfig()->getRequest()->get('institutionId'));
+        $this->form->addField(new Event\Link('cancel', $url));
 
         $this->form->load(\App\Db\CourseMap::unmapForm($this->course));
         $this->form->execute();
 
 
-        // Table of enrolled users
-        $this->table = new \Tk\Table('table');
-        $this->table->setParam('renderer', \Tk\Table\Renderer\Dom\Table::create($this->table));
+        if ($this->course->id) {
+            // Table of enrolled users
+            $this->table = new \Tk\Table('table');
+            $this->table->setParam('renderer', \Tk\Table\Renderer\Dom\Table::create($this->table));
 
-        //$this->table->addCell(new \Tk\Table\Cell\Checkbox('id'));
-        $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCellCss('key');
-        //$this->table->addCell(new \Tk\Table\Cell\Text('username'));
-        $this->table->addCell(new \Tk\Table\Cell\Text('email'));
-        //$this->table->addCell(new \Tk\Table\Cell\Text('uid'))->setLabel('UID');
-        //$this->table->addCell(new \Tk\Table\Cell\Boolean('active'));
-        //$this->table->addCell(new \Tk\Table\Cell\Date('created'))->setFormat(\Tk\Table\Cell\Date::FORMAT_RELATIVE);
-        $this->table->addCell(new \Tk\Table\Cell\Date('lastLogin'));
+            //$this->table->addCell(new \Tk\Table\Cell\Checkbox('id'));
+            $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCellCss('key');
+            //$this->table->addCell(new \Tk\Table\Cell\Text('username'));
+            $this->table->addCell(new \Tk\Table\Cell\Text('email'));
+            $this->table->addCell(new \Tk\Table\Cell\Text('role'));
+            //$this->table->addCell(new \Tk\Table\Cell\Text('uid'))->setLabel('UID');
+            //$this->table->addCell(new \Tk\Table\Cell\Boolean('active'));
+            //$this->table->addCell(new \Tk\Table\Cell\Date('created'))->setFormat(\Tk\Table\Cell\Date::FORMAT_RELATIVE);
+            $this->table->addCell(new \Tk\Table\Cell\Date('lastLogin'));
 
-        // Filters
-        //$this->table->addFilter(new Field\Input('keywords'))->setLabel('')->setAttr('placeholder', 'Keywords');
+            // Filters
+            //$this->table->addFilter(new Field\Input('keywords'))->setLabel('')->setAttr('placeholder', 'Keywords');
 
-        // Actions
-        //$this->table->addAction(\Tk\Table\Action\Button::getInstance('New User', 'fa fa-plus', \Tk\Uri::create('admin/userEdit.html')));
-        //$this->table->addAction(\Tk\Table\Action\Delete::getInstance()->setExcludeList(array(1)));
-        //$this->table->addAction(\Tk\Table\Action\Csv::getInstance());
+            // Actions
+            //$this->table->addAction(\Tk\Table\Action\Button::getInstance('New User', 'fa fa-plus', \Tk\Uri::create('admin/userEdit.html')));
+            //$this->table->addAction(\Tk\Table\Action\Delete::getInstance()->setExcludeList(array(1)));
+            //$this->table->addAction(\Tk\Table\Action\Csv::getInstance());
 
-        $users = \App\Db\User::getMapper()->findByCourseId($this->course->id, $this->table->makeDbTool('a.id'));
-        $this->table->setList($users);
-        
-        
-        
-        
+            $users = \App\Db\User::getMapper()->findByCourseId($this->course->id, null, $this->table->makeDbTool('a.id'));
+            $this->table->setList($users);
+        }
+
         return $this->show();
     }
 
@@ -131,7 +142,6 @@ class Edit extends Iface
 
         $form->addFieldErrors(\App\Db\CourseValidator::create($this->course)->getErrors());
 
-
         if ($form->hasErrors()) {
             return;
         }
@@ -139,9 +149,14 @@ class Edit extends Iface
         $this->course->save();
 
         \App\Alert::addSuccess('Record saved!');
-        if ($form->getTriggeredEvent()->getName() == 'update')
+        if ($form->getTriggeredEvent()->getName() == 'update') {
+            if ($this->getConfig()->getRequest()->has('institutionId')) {
+                \Tk\Uri::create('admin/institutionEdit.html')->set('institutionId', $this->getConfig()->getRequest()->get('institutionId'))->redirect();
+            }
             \Tk\Uri::create('admin/courseManager.html')->redirect();
-            //\Tk\Uri::create($this->getBreadcrumbs()->getBackUrl())->redirect();
+        }
+
+        \Tk\Uri::create()->set('courseId', $this->course->id)->redirect();
     }
 
     /**
@@ -161,22 +176,14 @@ class Edit extends Iface
         <i class="fa fa-university fa-fw"></i>
         Course Edit
       </div>
-      <!-- /.panel-heading -->
       <div class="panel-body ">
-
         <div class="row">
           <div class="col-lg-12">
-
             <div var="formEdit"></div>
-
           </div>
-
         </div>
-
       </div>
-      <!-- /.panel-body -->
     </div>
-    <!-- /.panel -->
   </div>
 
   <div class="col-lg-12">
@@ -185,23 +192,14 @@ class Edit extends Iface
         <i class="fa fa-users fa-fw"></i>
         Course Enrollments
       </div>
-      <!-- /.panel-heading -->
       <div class="panel-body ">
-
         <div class="row">
           <div class="col-lg-12">
-
-            
             <div var="table"></div>
-
           </div>
-
         </div>
-
       </div>
-      <!-- /.panel-body -->
     </div>
-    <!-- /.panel -->
   </div>
 
 </div>

@@ -56,24 +56,45 @@ class Edit extends Iface
         }
 
         $this->form = new Form('formEdit');
+//        $iid = 0;
+//        if ($this->institution) {
+//            $iid = $this->institution->id;
+//        }
+        $clients = new \Tk\Form\Field\Option\ArrayObjectIterator(\App\Db\User::getMapper()->findByRole(\App\Auth\Access::ROLE_CLIENT)->toArray());
+        $this->form->addField(new Field\Select('ownerId', $clients))->prependOption('-- Select --', '')->setRequired(true)->setTabGroup('Details');
 
-        $this->form->addField(new Field\Input('name'))->setRequired(true);
-        $this->form->addField(new Field\Input('email'))->setRequired(true);
-        $this->form->addField(new Field\File('logo', $request, $this->getConfig()->getDataPath()))->setAttr('accept', '.png,.jpg,.jpeg,.gif');
+        $this->form->addField(new Field\Input('name'))->setRequired(true)->setTabGroup('Details');
+        $this->form->addField(new Field\Input('email'))->setRequired(true)->setTabGroup('Details');
+        $this->form->addField(new Field\File('logo', $request, $this->getConfig()->getDataPath()))->setAttr('accept', '.png,.jpg,.jpeg,.gif')->setTabGroup('Details');
+        $this->form->addField(new Field\Textarea('description'))->setTabGroup('Details');
+        $this->form->addField(new Field\Checkbox('active'))->setTabGroup('Details');
 
         // TODO: Implement LTI tables for LMS access
-        $this->form->addField(new Field\Input('ltiKey'));
-        $this->form->addField(new Field\Input('ltiSecret'));
+        $this->form->addField(new Field\Input('ltiKey'))->setTabGroup('LTI');
+        $this->form->addField(new Field\Input('ltiSecret'))->setTabGroup('LTI');
 
-        $this->form->addField(new Field\Textarea('description'));
-        $this->form->addField(new Field\Checkbox('active'));
+        $this->form->addField(new Field\Input('ldapHost'))->setTabGroup('LDAP');
+        $this->form->addField(new Field\Input('ldapPort'))->setTabGroup('LDAP');
+        $this->form->addField(new Field\Input('ldapBaseDn'))->setTabGroup('LDAP');
+        $this->form->addField(new Field\Input('ldapFilter'))->setTabGroup('LDAP');
+        $this->form->addField(new Field\Checkbox('ldapTls'))->setTabGroup('LDAP');
+
 
         $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
         $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
         $this->form->addField(new Event\Link('cancel', \Tk\Uri::create('/admin/institutionManager.html')));
 
 
+
+        // CHECKBOX not working FIX IT!!!!!!!!!!!
+
+vd(\App\Db\InstitutionMap::unmapForm($this->institution), $this->institution->getData()->all(), $request->all());
         $this->form->load(\App\Db\InstitutionMap::unmapForm($this->institution));
+        $this->form->load($this->institution->getData()->all());
+
+        if ($this->institution->id && $this->institution->getOwner()) {
+            $this->form->setFieldValue('ownerId', $this->institution->getOwner()->id);
+        }
         $this->form->execute();
 
         return $this->show();
@@ -87,22 +108,20 @@ class Edit extends Iface
         $template = $this->getTemplate();
 
         if ($this->institution->id) {
-            $courseTable = new \App\Ui\CourseTable($this->institution->id);
+            $courseTable = new \App\Ui\CourseTable($this->institution->id, \Tk\Uri::create('/admin/courseEdit.html')->set('institutionId', $this->institution->id));
             $template->insertTemplate('courseTable', $courseTable->show());
 
-            $staffTable = new \App\Ui\StaffTable($this->institution->id);
+            $staffTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Access::ROLE_STAFF, \Tk\Uri::create('/admin/userEdit.html')->set('institutionId', $this->institution->id));
             $template->insertTemplate('staffTable', $staffTable->show());
 
-            $studentTable = new \App\Ui\StudentTable($this->institution->id);
+            $studentTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Access::ROLE_STUDENT, \Tk\Uri::create('/admin/userEdit.html')->set('institutionId', $this->institution->id));
             $template->insertTemplate('studentTable', $studentTable->show());
 
-            $template->addClass('editPanel', 'col-md-3');
+            $template->addClass('editPanel', 'col-md-4');
             $template->setChoice('showInfo');
         } else {
             $template->addClass('editPanel', 'col-md-12');
         }
-
-
 
         // Render the form
         $fren = new \Tk\Form\Renderer\Dom($this->form);
@@ -135,6 +154,11 @@ class Edit extends Iface
 
         $this->institution->save();
 
+        $data = $this->institution->getData();
+        $data->replace($form->getValues('/^ldap/'));
+        $data->replace($form->getValues('/^lti/'));
+        $data->save();
+
         \App\Alert::addSuccess('Record saved!');
         if ($form->getTriggeredEvent()->getName() == 'update')
             \Tk\Uri::create('admin/institutionManager.html')->redirect();
@@ -165,7 +189,7 @@ class Edit extends Iface
     </div>
   </div>
   
-  <div class="col-lg-9" choice="showInfo">
+  <div class="col-lg-8" choice="showInfo">
     <div class="panel panel-default">
       <div class="panel-heading">
         <i class="fa fa-university fa-fw"></i> Institution

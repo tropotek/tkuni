@@ -74,6 +74,9 @@ class Edit extends Iface
         } else {
             //$list = array('-- Select --' => '', 'Admin' => \App\Auth\Access::ROLE_ADMIN, 'Client' => \App\Auth\Access::ROLE_CLIENT, 'Staff' => \App\Auth\Access::ROLE_STAFF, 'Student' => \App\Auth\Access::ROLE_STUDENT);
             $list = array('-- Select --' => '', 'Admin' => \App\Auth\Access::ROLE_ADMIN, 'Client' => \App\Auth\Access::ROLE_CLIENT);
+            if (!in_array($this->user->role, $list)) {
+                $list = array('-- Select --' => '', 'Staff' => \App\Auth\Access::ROLE_STAFF, 'Student' => \App\Auth\Access::ROLE_STUDENT);
+            }
             $this->form->addField(new Field\Select('role', $list))->setNotes('Select the access level for this user')->setRequired(true)->setTabGroup('Details')->setRequired(true);
             $this->form->addField(new Field\Checkbox('active'))->setTabGroup('Details');
         }   
@@ -88,7 +91,11 @@ class Edit extends Iface
 
         $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
         $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
-        $this->form->addField(new Event\Link('cancel', \Tk\Uri::create('/admin/userManager.html')));
+        $url = \Tk\Uri::create('/admin/userManager.html');
+        if ($this->getConfig()->getRequest()->has('institutionId'))
+            $url = \Tk\Uri::create('/admin/institutionEdit.html')->set('institutionId', $this->getConfig()->getRequest()->get('institutionId'));
+
+        $this->form->addField(new Event\Link('cancel', $url));
         
         $this->form->load(\App\Db\UserMap::unmapForm($this->user));
         
@@ -135,6 +142,8 @@ class Edit extends Iface
             if ($this->isProfile()) {
                 \Tk\Uri::create('/admin/index.html')->redirect();
             }
+            if ($this->getConfig()->getRequest()->has('institutionId'))
+                \Tk\Uri::create('/admin/institutionEdit.html')->set('institutionId', $this->getConfig()->getRequest()->get('institutionId'))->redirect();
             \Tk\Uri::create('/admin/userManager.html')->redirect();
         }
         \Tk\Uri::create()->set('userId', $this->user->id)->redirect();

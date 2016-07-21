@@ -24,16 +24,6 @@ class User extends \Tk\Db\Map\Model
     public $id = 0;
 
     /**
-     * @var int
-     */
-    public $institutionId = 0;
-
-    /**
-     * @var string
-     */
-    public $uid = '';
-
-    /**
      * @var string
      */
     public $username = '';
@@ -103,12 +93,12 @@ class User extends \Tk\Db\Map\Model
         $this->created = \Tk\Date::create();
     }
 
+    /**
+     * 
+     */
     public function save()
     {
         $this->getHash();
-        if (!$this->uid) {
-            $this->uid = hash(self::$HASH_FUNCTION, $this->username . $this->created->format(\Tk\Date::ISO_DATE));
-        }
         parent::save();
     }
 
@@ -145,13 +135,9 @@ class User extends \Tk\Db\Map\Model
      * Get the user hash or generate one if needed
      *
      * @return string
-     * @throws \Tk\Exception
      */
     public function getHash()
     {
-        if (!$this->username)
-            throw new \Tk\Exception('The username must be set before calling getHash()');
-
         if (!$this->hash) {
             $this->hash = $this->generateHash();
         }
@@ -162,24 +148,28 @@ class User extends \Tk\Db\Map\Model
      * Helper method to generate user hash
      * 
      * @return string
+     * @throws \Tk\Exception
      */
     public function generateHash() 
     {
-        return hash(self::$HASH_FUNCTION, sprintf('%s', $this->username));
+        if (!$this->username || !$this->role || !$this->email) {
+            throw new \Tk\Exception('The username, role and email must be set before generating a valid hash');
+        }
+        return hash(self::$HASH_FUNCTION, sprintf('%s', $this->username, $this->role, $this->email));
     }
 
     /**
      * Set the password from a plain string
      *
-     * @param $str
+     * @param string $pwd
      * @throws Exception
      */
-    public function setPassword($str = '')
+    public function setPassword($pwd = '')
     {
-        if (!$str) {
-            $str = self::createPassword(10);
+        if (!$pwd) {
+            $pwd = self::createPassword(10);
         }
-        $this->password = hash(self::$HASH_FUNCTION, $str . $this->getHash());
+        $this->password = \App\Factory::hashPassword($pwd, $this);
     }
 
     /**
@@ -200,6 +190,7 @@ class User extends \Tk\Db\Map\Model
             return '/student/index.html';
         return '/index.html';   // Should not get here unless their is no roles
     }
+
 
 }
 
