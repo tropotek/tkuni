@@ -64,8 +64,12 @@ class Edit extends Iface
 
 
         $this->form = new Form('formEdit');
-
-        $this->form->addField(new Field\Input('institutionId'))->setRequired(true);
+        
+        if (!$request->get('institutionId')) {
+            $list = \Tk\Form\Field\Option\ArrayObjectIterator::create(\App\Db\Institution::getMapper()->findActive(\Tk\Db\Tool::create())->toArray());
+            $this->form->addField(new Field\Select('institutionId', $list))->setRequired(true)->prependOption('-- Select --', '');
+        }
+        
         $this->form->addField(new Field\Input('name'))->setRequired(true);
         $this->form->addField(new Field\Input('code'))->setRequired(true);
         $this->form->addField(new Field\Input('email'))->setRequired(true);

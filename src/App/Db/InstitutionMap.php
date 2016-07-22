@@ -112,6 +112,15 @@ class InstitutionMap extends Mapper
         return $arr;
     }
 
+    /**
+     * @param null|\Tk\Db\Tool $tool
+     * @return ArrayObject
+     */
+    public function findActive($tool = null)
+    {
+        $where = sprintf('active = 1');
+        return $this->select($where, $tool);
+    }
     
     /**
      * 

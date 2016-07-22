@@ -84,11 +84,6 @@ class Edit extends Iface
         $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
         $this->form->addField(new Event\Link('cancel', \Tk\Uri::create('/admin/institutionManager.html')));
 
-
-
-        // CHECKBOX not working FIX IT!!!!!!!!!!!
-
-vd(\App\Db\InstitutionMap::unmapForm($this->institution), $this->institution->getData()->all(), $request->all());
         $this->form->load(\App\Db\InstitutionMap::unmapForm($this->institution));
         $this->form->load($this->institution->getData()->all());
 
