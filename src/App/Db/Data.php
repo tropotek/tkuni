@@ -130,12 +130,12 @@ class Data extends \Tk\Collection
             return $this;
         }
         if ($this->dbHas($key)) {
-            $sql = sprintf('UPDATE %s SET value = %s WHERE key = %s AND foreign_id = %d AND foreign_key = %s ', 
-                $this->getTable(), $this->db->quote($value), $this->db->quote($key), 
+            $sql = sprintf('UPDATE %s SET value = %s WHERE %s = %s AND foreign_id = %d AND foreign_key = %s ',
+                $this->getTable(), $this->db->quoteParameter('key'), $this->db->quote($value), $this->db->quote($key),
                 (int)$this->foreignId, $this->db->quote($this->foreignKey) );
         } else {
-            $sql = sprintf('INSERT INTO %s (foreign_id, foreign_key, key, value) VALUES (%d, %s, %s, %s)', 
-                $this->getTable(), (int)$this->foreignId, $this->db->quote($this->foreignKey),
+            $sql = sprintf('INSERT INTO %s (foreign_id, foreign_key, %s, value) VALUES (%d, %s, %s, %s) ',
+                $this->getTable(), $this->db->quoteParameter('key'), (int)$this->foreignId, $this->db->quote($this->foreignKey),
                 $this->db->quote($key), $this->db->quote($value));
         }
         $this->db->exec($sql);
@@ -150,7 +150,7 @@ class Data extends \Tk\Collection
      */
     protected function dbGet($key)
     {
-        $sql = sprintf('SELECT * FROM %s WHERE key = %s AND foreign_id = %d AND foreign_key = %s ', $this->getTable(),  
+        $sql = sprintf('SELECT * FROM %s WHERE %s = %s AND foreign_id = %d AND foreign_key = %s ', $this->getTable(),   $this->db->quoteParameter('key'),
             $this->db->quote($key), (int)$this->foreignId, $this->db->quote($this->foreignKey));
         $row = $this->db->query($sql)->fetchObject();
         if ($row) {
@@ -167,7 +167,7 @@ class Data extends \Tk\Collection
      */
     protected function dbHas($key)
     {
-        $sql = sprintf('SELECT * FROM %s WHERE key = %s AND foreign_id = %d AND foreign_key = %s ', $this->getTable(),
+        $sql = sprintf('SELECT * FROM %s WHERE %s = %s AND foreign_id = %d AND foreign_key = %s ', $this->getTable(), $this->db->quoteParameter('key'),
             $this->db->quote($key), (int)$this->foreignId, $this->db->quote($this->foreignKey));
         $res = $this->db->query($sql);
         if ($res && $res->rowCount()) return true;
@@ -182,7 +182,7 @@ class Data extends \Tk\Collection
      */
     protected function dbDelete($key)
     {
-        $sql = sprintf('DELETE FROM %s WHERE key = %s AND foreign_id = %d AND foreign_key = %s  ', $this->getTable(), 
+        $sql = sprintf('DELETE FROM %s WHERE %s = %s AND foreign_id = %d AND foreign_key = %s ', $this->getTable(),  $this->db->quoteParameter('key'),
             $this->db->quote($key), (int)$this->foreignId, $this->db->quote($this->foreignKey));
         $this->db->exec($sql);
         return $this;

@@ -10,22 +10,22 @@
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS "user" (
   id SERIAL PRIMARY KEY,
-  username VARCHAR(64),
-  password VARCHAR(64),
+  username VARCHAR(64) NOT NULL DEFAULT '',
+  password VARCHAR(64) NOT NULL DEFAULT '',
   -- ROLES: 'admin', 'client', 'staff', 'student
-  role VARCHAR(64),
-  name VARCHAR(255),
-  email VARCHAR(255),
+  role VARCHAR(64) NOT NULL DEFAULT '',
+  name VARCHAR(255) NOT NULL DEFAULT '',
+  email VARCHAR(255) NOT NULL DEFAULT '',
   active NUMERIC(1) NOT NULL DEFAULT 1,
-  hash VARCHAR(255),
+  hash VARCHAR(255) NOT NULL DEFAULT '',
   notes TEXT,
   last_login TIMESTAMP DEFAULT NULL,
   del NUMERIC(1) NOT NULL DEFAULT 0,
   modified TIMESTAMP DEFAULT NOW(),
   created TIMESTAMP DEFAULT NOW(),
 
-  CONSTRAINT username UNIQUE (username, role, email),
-  CONSTRAINT hash UNIQUE (hash)
+  CONSTRAINT user_username UNIQUE (username, role, email),
+  CONSTRAINT user_hash UNIQUE (hash)
 );
 
 -- ----------------------------
@@ -34,18 +34,21 @@ CREATE TABLE IF NOT EXISTS "user" (
 CREATE TABLE IF NOT EXISTS institution (
   id SERIAL PRIMARY KEY,
   owner_id INTEGER NOT NULL DEFAULT 0,
-  name VARCHAR(255),
-  email VARCHAR(255),
+  name VARCHAR(255) NOT NULL DEFAULT '',
+  email VARCHAR(255) NOT NULL DEFAULT '',
+  domain VARCHAR(255) NOT NULL DEFAULT '',
   description TEXT,
-  logo VARCHAR(255),
+  logo VARCHAR(255) NOT NULL DEFAULT '',
 -- TODO: location information?
 -- TODO: Contact information?
   active NUMERIC(1) NOT NULL DEFAULT 1,
-  hash VARCHAR(255),
+  hash VARCHAR(255) NOT NULL DEFAULT '',
   del NUMERIC(1) NOT NULL DEFAULT 0,
   modified TIMESTAMP DEFAULT NOW(),
   created TIMESTAMP DEFAULT NOW(),
-  FOREIGN KEY (owner_id) REFERENCES "user"(id) ON DELETE CASCADE
+  FOREIGN KEY (owner_id) REFERENCES "user"(id) ON DELETE CASCADE,
+  CONSTRAINT inst_domain UNIQUE (domain),
+  CONSTRAINT inst_hash UNIQUE (hash)
 );
 
 -- ----------------------------
@@ -55,7 +58,9 @@ CREATE TABLE IF NOT EXISTS institution (
 CREATE TABLE IF NOT EXISTS user_institution (
 	user_id INTEGER NOT NULL,
 	institution_id INTEGER NOT NULL,
+  -- TODO: Look into the best place for this info, as it has to do with LMS access more precisly, maybe the data table instead...
   uid VARCHAR(128) NOT NULL DEFAULT '',    -- A unique identifier for a specific institution (IE: staffId, studentId, etc...)
+
 	FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE,
 	FOREIGN KEY (institution_id) REFERENCES institution(id)  ON DELETE CASCADE
 );
@@ -66,9 +71,9 @@ CREATE TABLE IF NOT EXISTS user_institution (
 CREATE TABLE IF NOT EXISTS course (
   id SERIAL PRIMARY KEY,
   institution_id INTEGER NOT NULL DEFAULT 0,
-  name VARCHAR(255),
-  code VARCHAR(64),
-  email VARCHAR(255),
+  name VARCHAR(255) NOT NULL DEFAULT '',
+  code VARCHAR(64) NOT NULL DEFAULT '',
+  email VARCHAR(255) NOT NULL DEFAULT '',
   description TEXT,
   start TIMESTAMP DEFAULT NOW(),
   finish TIMESTAMP DEFAULT NOW(),
@@ -76,7 +81,7 @@ CREATE TABLE IF NOT EXISTS course (
   del NUMERIC(1) NOT NULL DEFAULT 0,
   modified TIMESTAMP DEFAULT NOW(),
   created TIMESTAMP DEFAULT NOW(),
-  CONSTRAINT code_institution UNIQUE (code, institution_id)
+  CONSTRAINT course_code_institution UNIQUE (code, institution_id)
 );
 
 -- ----------------------------
@@ -104,14 +109,8 @@ CREATE TABLE IF NOT EXISTS data (
   foreign_key VARCHAR(128) NOT NULL DEFAULT '',
   key VARCHAR(255),
   value TEXT,
-  CONSTRAINT foreign_fields UNIQUE (foreign_id, foreign_key, key)
+  CONSTRAINT data_foreign_fields UNIQUE (foreign_id, foreign_key, key)
 );
-
-
-
-
-
-
 
 
 
@@ -128,9 +127,8 @@ VALUES
 
 INSERT INTO institution (owner_id, name, email, description, logo, active, hash, modified, created)
   VALUES
-    (2, 'The University Of Melbourne', 'admin@unimelb.edu.au', 'This is a test institution for this app', '', 1, MD5(CONCAT('admin@unimelb.edu.au', date_trunc('seconds', NOW()))), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW()))
+    (2, 'The University Of Melbourne', 'admin@unimelb.edu.au', 'This is a test institution for this app', '', 1, MD5('1'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW()))
 ;
-
 
 INSERT INTO course (institution_id, name, code, email, description, start, finish, active, modified, created)
     VALUES (1, 'Poultry Industry Field Work', 'VETS50001_2014_SM1', 'course@unimelb.edu.au', '',  date_trunc('seconds', NOW()), date_trunc('seconds', (CURRENT_TIMESTAMP + (190 * interval '1 day')) ), 1, date_trunc('seconds', NOW()) , date_trunc('seconds', NOW()) )
@@ -158,3 +156,5 @@ INSERT INTO data (foreign_id, foreign_key, key, value) VALUES
   (0, 'system', 'site.client.registration', 'site.client.registration'),
   (0, 'system', 'site.client.activation', 'site.client.activation')
 ;
+
+

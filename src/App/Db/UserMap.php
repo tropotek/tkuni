@@ -273,12 +273,12 @@ class UserMap extends Mapper
         }
 
 
-        if (isset($filter['institutionId'])) {
+        if (!empty($filter['institutionId'])) {
             $from .= sprintf(', user_institution b');
             $where .= sprintf('a.id = b.user_id AND b.institution_id = %d AND ', (int)$filter['institutionId']);
         }
 
-        if (isset($filter['courseId'])) {
+        if (!empty($filter['courseId'])) {
             $from .= sprintf(', user_course c');
             $where .= sprintf('a.id = c.user_id AND c.course_id = %d AND ', (int)$filter['courseId']);
         }

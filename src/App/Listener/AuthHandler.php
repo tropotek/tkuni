@@ -27,6 +27,7 @@ class AuthHandler implements SubscriberInterface
         $config = \App\Factory::getConfig();
         $result = null;
         $adapterList = $config->get('system.auth.adapters');
+
         foreach($adapterList as $name => $class) {
             $adapter = \App\Factory::getAuthAdapter($class, $event->all());
             if (!$adapter) continue;
@@ -37,7 +38,8 @@ class AuthHandler implements SubscriberInterface
             }
         }
         if (!$result) {
-            throw new \Tk\Auth\Exception('Unknown Error: Contact Your Administrator.');
+            //throw new \Tk\Auth\Exception('Unknown Error: Contact Your Administrator.');
+            throw new \Tk\Auth\Exception('Invalid login credentials');
         }
         
         if ($result->isValid()) {

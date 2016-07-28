@@ -3,7 +3,10 @@
 /*
  * It must contain only alphanumeric characters and underscores. At least one letter must be present.
  */
-$config['session.name'] = 'sn_' . substr(md5(dirname(__FILE__)), 0, 16);
+//$config['session.name'] = 'sn_' . substr(md5(dirname(__FILE__)), 0, 16);
+
+
+$config['session.name'] = 'sn_' . substr(md5(\Tk\Uri::create('/')), 0, 16);
 
 /*
  * Enable or disable session encryption.

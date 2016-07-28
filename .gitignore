@@ -3,6 +3,7 @@
 .directory
 *.swp
 *.bak
+*.iml
 /_notes
 /data
 /assets

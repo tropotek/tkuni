@@ -22,7 +22,6 @@ class StaffPage extends Iface
     {
         if (!$controller->getUser()) {
             \Tk\Uri::create('/login.html')->redirect();
-            //throw new UnauthorizedHttpException('You do not have permission to access this resource.');
         }
         parent::__construct($controller);
     }
@@ -31,9 +30,11 @@ class StaffPage extends Iface
     public function show()
     {
         $this->initPage();
+
         /** @var \Dom\Template $template */
         $template = $this->getTemplate();
 
+        $template->replaceTemplate('nav', \App\Ui\StaffMenu::create()->show());
 
         return $template;
     }

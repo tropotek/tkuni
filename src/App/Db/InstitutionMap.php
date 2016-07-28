@@ -34,6 +34,8 @@ class InstitutionMap extends Mapper
             $obj->ownerId = $row['ownerId'];
         if (isset($row['name']))
             $obj->name = $row['name'];
+        if (isset($row['domain']))
+            $obj->domain = $row['domain'];
         if (isset($row['email']))
             $obj->email = $row['email'];
         if (isset($row['description']))
@@ -65,6 +67,7 @@ class InstitutionMap extends Mapper
             'id' => $obj->id,
             'ownerId' => $obj->ownerId,
             'name' => $obj->name,
+            'domain' => $obj->domain,
             'email' => $obj->email,
             'description' => $obj->description,
             'logo' => $obj->logo,
@@ -83,6 +86,7 @@ class InstitutionMap extends Mapper
         $obj->id = $row['id'];
         $obj->ownerId = $row['owner_id'];
         $obj->name = $row['name'];
+        $obj->domain = $row['domain'];
         $obj->email = $row['email'];
         $obj->description = $row['description'];
         $obj->logo = $row['logo'];
@@ -101,6 +105,7 @@ class InstitutionMap extends Mapper
             'id' => $obj->id,
             'owner_id' => $obj->ownerId,
             'name' => $obj->name,
+            'domain' => $obj->domain,
             'email' => $obj->email,
             'description' => $obj->description,
             'logo' => $obj->logo,
@@ -113,6 +118,7 @@ class InstitutionMap extends Mapper
     }
 
     /**
+     *
      * @param null|\Tk\Db\Tool $tool
      * @return ArrayObject
      */
@@ -120,6 +126,29 @@ class InstitutionMap extends Mapper
     {
         $where = sprintf('active = 1');
         return $this->select($where, $tool);
+    }
+
+    /**
+     *
+     * @param $hash
+     * @param int $active
+     * @return Institution|null
+     */
+    public function findByhash($hash, $active = 1)
+    {
+        $where = sprintf('hash = %s AND active = %s', $this->getDb()->quote($hash), (int)$active);
+        return $this->select($where)->current();
+    }
+
+    /**
+     *
+     * @param $domain
+     * @return Institution|null
+     */
+    public function findByDomain($domain)
+    {
+        $where = sprintf('domain = %s', $this->getDb()->quote($domain));
+        return $this->select($where)->current();
     }
     
     /**
@@ -178,9 +207,6 @@ class InstitutionMap extends Mapper
         $res = $this->selectFrom($from, $where, $tool);
         return $res;
     }
-
-
-
 
 
     /**

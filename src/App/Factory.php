@@ -198,19 +198,19 @@ class Factory
         /** @var \Tk\Auth\Adapter\Iface $adapter */
         $adapter = null;
         switch ($class) {
-            case '\Tk\Auth\Adapter\Config':
-                $adapter = new \Tk\Auth\Adapter\Config(
-                    $config['system.auth.config.username'],
-                    $config['system.auth.config.password']);
-                break;
-            case '\Tk\Auth\Adapter\Ldap':
-                $adapter = new \Tk\Auth\Adapter\Ldap(
-                    $config['system.auth.ldap.host'],
-                    $config['system.auth.ldap.baseDn'],
-                    $config['system.auth.ldap.filter'],
-                    $config['system.auth.ldap.port'],
-                    $config['system.auth.ldap.tls']);
-                break;
+//            case '\Tk\Auth\Adapter\Config':
+//                $adapter = new \Tk\Auth\Adapter\Config(
+//                    $config['system.auth.config.username'],
+//                    $config['system.auth.config.password']);
+//                break;
+//            case '\Tk\Auth\Adapter\Ldap':
+//                $adapter = new \Tk\Auth\Adapter\Ldap(
+//                    $config['system.auth.ldap.host'],
+//                    $config['system.auth.ldap.baseDn'],
+//                    $config['system.auth.ldap.filter'],
+//                    $config['system.auth.ldap.port'],
+//                    $config['system.auth.ldap.tls']);
+//                break;
             case '\Uni\Auth\LdapAdapter':
                 if (!isset($submittedData['institutionId'])) return null;
                 // TODO: we need to get the LDAP settings from the institution config table
@@ -225,6 +225,7 @@ class Factory
                 $adapter = new \Uni\Auth\LdapAdapter($institution);
                 break;
             case '\Tk\Auth\Adapter\DbTable':
+                //if (isset($submittedData['institutionId'])) return null;
                 $adapter = new \Tk\Auth\Adapter\DbTable(
                     $config->getDb(),
                     $config['system.auth.dbtable.tableName'],
@@ -234,9 +235,9 @@ class Factory
                 //$adapter->setHashFunction($config['hash.function']);
                 $adapter->setHashCallback(array(__CLASS__, 'hashPassword'));
                 break;
-            case '\Tk\Auth\Adapter\Trapdoor':
-                $adapter = new \Tk\Auth\Adapter\Trapdoor();
-                break;
+//            case '\Tk\Auth\Adapter\Trapdoor':
+//                $adapter = new \Tk\Auth\Adapter\Trapdoor();
+//                break;
             default:
                 if (class_exists($class))
                     $adapter = new $class();

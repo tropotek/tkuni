@@ -4,6 +4,12 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-5">
+          <div choice="inst" class="institution row " style="margin-bottom: 10px;">
+            <img src="#" choice="instLogo" var="instLogo" class="col-sm-2" />
+            <h3 var="instName" class="col-sm-10"></h3>
+          </div>
+
+
           <div class="basic-login" var="loginForm">
 
             <div class="alert alert-danger" role="alert" choice="error"><strong>Error!</strong> <span var="errMsg">Invalid login credentials</span></div>
@@ -29,6 +35,9 @@
               </div>
             </form>
           </div>
+
+
+
         </div>
         <div class="col-sm-7 social-login2 text-center">
           <!-- p>Or login with your Facebook or Twitter</p -->

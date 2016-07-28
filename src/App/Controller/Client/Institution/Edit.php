@@ -1,12 +1,12 @@
 <?php
-namespace App\Controller\Admin\Institution;
+namespace App\Controller\Client\Institution;
 
 use Dom\Template;
 use Tk\Form;
 use Tk\Form\Event;
 use Tk\Form\Field;
 use Tk\Request;
-use \App\Controller\Admin\Iface;
+use \App\Controller\Client\Iface;
 
 /**
  *
@@ -50,18 +50,17 @@ class Edit extends Iface
     public function doDefault(Request $request)
     {
         $this->institution = new \App\Db\Institution();
-
+        if ($this->getUser()->getAccess()->hasRole(\App\Auth\Access::ROLE_CLIENT)) {
+            $this->institution->ownerId = $this->getUser()->id;
+            $this->institution->getHash();
+        }
         if ($request->get('institutionId')) {
             $this->institution = \App\Db\Institution::getMapper()->find($request->get('institutionId'));
         }
 
         $this->form = new Form('formEdit');
-//        $iid = 0;
-//        if ($this->institution) {
-//            $iid = $this->institution->id;
-//        }
-        $clients = new \Tk\Form\Field\Option\ArrayObjectIterator(\App\Db\User::getMapper()->findByRole(\App\Auth\Access::ROLE_CLIENT)->toArray());
-        $this->form->addField(new Field\Select('ownerId', $clients))->prependOption('-- Select --', '')->setRequired(true)->setTabGroup('Details');
+//        $clients = new \Tk\Form\Field\Option\ArrayObjectIterator(\App\Db\User::getMapper()->findByRole(\App\Auth\Access::ROLE_CLIENT)->toArray());
+//        $this->form->addField(new Field\Select('ownerId', $clients))->prependOption('-- Select --', '')->setRequired(true)->setTabGroup('Details');
 
         $this->form->addField(new Field\Input('name'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\Input('email'))->setRequired(true)->setTabGroup('Details');
@@ -72,6 +71,8 @@ class Edit extends Iface
         $this->form->addField(new Field\Checkbox('active'))->setTabGroup('Details');
 
         // TODO: Implement LTI tables for LMS access
+        $lurl = \Tk\Uri::create('/lti/'.$this->institution->getHash().'/launch.html')->toString();
+        $this->form->addField(new Field\Html('ltiUrl', $lurl))->setLabel('Launch Url')->setTabGroup('LTI');
         $this->form->addField(new Field\Input('ltiKey'))->setTabGroup('LTI');
         $this->form->addField(new Field\Input('ltiSecret'))->setTabGroup('LTI');
 
@@ -84,14 +85,14 @@ class Edit extends Iface
 
         $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
         $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
-        $this->form->addField(new Event\Link('cancel', \Tk\Uri::create('/admin/institutionManager.html')));
+        $this->form->addField(new Event\Link('cancel', \Tk\Uri::create('/client/institutionManager.html')));
 
         $this->form->load(\App\Db\InstitutionMap::unmapForm($this->institution));
         $this->form->load($this->institution->getData()->all());
 
-        if ($this->institution->id && $this->institution->getOwner()) {
-            $this->form->setFieldValue('ownerId', $this->institution->getOwner()->id);
-        }
+//        if ($this->institution->id && $this->institution->getOwner()) {
+//            $this->form->setFieldValue('ownerId', $this->institution->getOwner()->id);
+//        }
         $this->form->execute();
 
         return $this->show();
@@ -105,13 +106,13 @@ class Edit extends Iface
         $template = $this->getTemplate();
 
         if ($this->institution->id) {
-            $courseTable = new \App\Ui\CourseTable($this->institution->id, \Tk\Uri::create('/admin/courseEdit.html')->set('institutionId', $this->institution->id));
+            $courseTable = new \App\Ui\CourseTable($this->institution->id);
             $template->insertTemplate('courseTable', $courseTable->show());
 
-            $staffTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Access::ROLE_STAFF, 0, \Tk\Uri::create('/admin/userEdit.html')->set('institutionId', $this->institution->id));
+            $staffTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Access::ROLE_STAFF);
             $template->insertTemplate('staffTable', $staffTable->show());
 
-            $studentTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Access::ROLE_STUDENT, 0, \Tk\Uri::create('/admin/userEdit.html')->set('institutionId', $this->institution->id));
+            $studentTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Access::ROLE_STUDENT);
             $template->insertTemplate('studentTable', $studentTable->show());
 
             $template->addClass('editPanel', 'col-md-4');
@@ -158,7 +159,7 @@ class Edit extends Iface
 
         \App\Alert::addSuccess('Record saved!');
         if ($form->getTriggeredEvent()->getName() == 'update')
-            \Tk\Uri::create('admin/institutionManager.html')->redirect();
+            \Tk\Uri::create('/client/institutionManager.html')->redirect();
         \Tk\Uri::create()->set('institutionId', $this->institution->id)->redirect();
     }
 

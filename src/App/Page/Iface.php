@@ -50,8 +50,6 @@ abstract class Iface extends \Dom\Renderer\Renderer
         /** @var \Dom\Template $template */
         $template = $this->getTemplate();
 
-
-
         if ($this->getConfig()->get('site.meta.keywords')) {
             $template->appendMetaTag('keywords', array('content', $this->getConfig()->get('site.meta.keywords')));
         }
@@ -101,7 +99,7 @@ var config = {
   themeUrl: ''
 };
 JS;
-        $template->appendJs($js, ['data-jsl-priority' => -1000]);
+        $template->appendJs($js, array('data-jsl-priority' => -1000));
 
         if ($this->getConfig()->get('site.global.js')) {
             $template->appendJs($this->getConfig()->get('site.global.js'));

@@ -88,34 +88,6 @@ class Edit extends Iface
         $this->form->load(\App\Db\CourseMap::unmapForm($this->course));
         $this->form->execute();
 
-
-        if ($this->course->id) {
-            // Table of enrolled users
-            $this->table = new \Tk\Table('table');
-            $this->table->setParam('renderer', \Tk\Table\Renderer\Dom\Table::create($this->table));
-
-            //$this->table->addCell(new \Tk\Table\Cell\Checkbox('id'));
-            $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCellCss('key');
-            //$this->table->addCell(new \Tk\Table\Cell\Text('username'));
-            $this->table->addCell(new \Tk\Table\Cell\Text('email'));
-            $this->table->addCell(new \Tk\Table\Cell\Text('role'));
-            //$this->table->addCell(new \Tk\Table\Cell\Text('uid'))->setLabel('UID');
-            //$this->table->addCell(new \Tk\Table\Cell\Boolean('active'));
-            //$this->table->addCell(new \Tk\Table\Cell\Date('created'))->setFormat(\Tk\Table\Cell\Date::FORMAT_RELATIVE);
-            $this->table->addCell(new \Tk\Table\Cell\Date('lastLogin'));
-
-            // Filters
-            //$this->table->addFilter(new Field\Input('keywords'))->setLabel('')->setAttr('placeholder', 'Keywords');
-
-            // Actions
-            //$this->table->addAction(\Tk\Table\Action\Button::getInstance('New User', 'fa fa-plus', \Tk\Uri::create('admin/userEdit.html')));
-            //$this->table->addAction(\Tk\Table\Action\Delete::getInstance()->setExcludeList(array(1)));
-            //$this->table->addAction(\Tk\Table\Action\Csv::getInstance());
-
-            $users = \App\Db\User::getMapper()->findByCourseId($this->course->id, null, $this->table->makeDbTool('a.id'));
-            $this->table->setList($users);
-        }
-
         return $this->show();
     }
 
@@ -126,11 +98,16 @@ class Edit extends Iface
     {
         $template = $this->getTemplate();
 
+        if ($this->course->id) {
+            $staffTable = new \App\Ui\UserTable(0, null, $this->course->id);
+            $template->insertTemplate('table', $staffTable->show());
+        }
+
         // Render the form
         $fren = new \Tk\Form\Renderer\Dom($this->form);
         $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());
 
-        $this->getTemplate()->replaceTemplate('table', $this->table->getParam('renderer')->show());
+        //$this->getTemplate()->replaceTemplate('table', $this->table->getParam('renderer')->show());
         
         return $this->getPage()->setPageContent($template);
     }

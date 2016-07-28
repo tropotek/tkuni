@@ -29,6 +29,11 @@ class Institution extends \Tk\Db\Map\Model
     /**
      * @var string
      */
+    public $domain = '';
+
+    /**
+     * @var string
+     */
     public $email = '';
 
     /**
@@ -81,6 +86,39 @@ class Institution extends \Tk\Db\Map\Model
     {
         $this->modified = \Tk\Date::create();
         $this->created = \Tk\Date::create();
+    }
+
+    /**
+     *
+     */
+    public function save()
+    {
+        $this->getHash();
+        parent::save();
+    }
+
+    /**
+     * Get the user hash or generate one if needed
+     *
+     * @return string
+     */
+    public function getHash()
+    {
+        if (!$this->hash) {
+            $this->hash = $this->generateHash();
+        }
+        return $this->hash;
+    }
+
+    /**
+     * Helper method to generate user hash
+     *
+     * @return string
+     * @throws \Tk\Exception
+     */
+    public function generateHash()
+    {
+        return hash('md5', sprintf('%s', $this->getVolatileId()));
     }
 
     /**

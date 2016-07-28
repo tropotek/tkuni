@@ -2,12 +2,10 @@
 namespace App\Controller;
 
 use Tk\Request;
-use Dom\Template;
 use Tk\Form;
 use Tk\Form\Field;
 use Tk\Form\Event;
 use Tk\Auth;
-use Tk\Auth\Result;
 
 
 /**
@@ -24,6 +22,11 @@ class Login extends Iface
      * @var Form
      */
     protected $form = null;
+
+    /**
+     * @var \App\Db\Institution
+     */
+    protected $institution = null;
     
 
     /**
@@ -59,8 +62,34 @@ class Login extends Iface
      */
     public function doDefault(Request $request)
     {
+        $this->institution = \App\Db\Institution::getMapper()->findByDomain($request->getUri()->getHost());
+        if ($this->institution) {
+            return $this->doInsLogin($request, $this->institution->getHash());
+        }
         $this->init();
+        $this->form->addField(new Event\Link('forgotPassword', \Tk\Uri::create('/recover.html')));
 
+        // Find and Fire submit event
+        $this->form->execute();
+
+        return $this->show();
+    }
+
+    /**
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function doInsLogin(Request $request, $institutionId)
+    {
+        if (!$this->institution)
+            $this->institution = \App\Db\Institution::getMapper()->findByHash($institutionId);
+        if (!$this->institution->active) {
+            throw new \Tk\NotFoundHttpException('Institution page not found.');
+        }
+
+        $this->init();
+        $this->form->addField(new Field\Hidden('institutionId', (int)$institutionId));
         $this->form->addField(new Event\Link('forgotPassword', \Tk\Uri::create('/recover.html')));
 
         // Find and Fire submit event
@@ -81,7 +110,17 @@ class Login extends Iface
         // Render the form
         $fren = new \Tk\Form\Renderer\Dom($this->form);
         $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());
-        
+
+        if ($this->institution) {
+            if ($this->institution->getLogoUrl()) {
+                $template->setChoice('instLogo');
+                $template->setAttr('instLogo', 'src', $this->institution->getLogoUrl()->toString());
+            }
+            $template->insertText('instName', $this->institution->name);
+            $template->setChoice('inst');
+        }
+
+
         return $this->getPage()->setPageContent($template);
     }
 
@@ -96,10 +135,6 @@ class Login extends Iface
         /** @var Auth $auth */
         $auth = \App\Factory::getAuth();
 
-        if ($form->getField('institutionId') && !$form->getFieldValue('institutionId')) {
-            //$form->addFieldError('institutionId', 'Please enter a valid institution ID');
-        }
-        vd($form->getValues());
         if (!$form->getFieldValue('username') || !preg_match('/[a-z0-9_ -]{4,32}/i', $form->getFieldValue('username'))) {
             $form->addFieldError('username', 'Please enter a valid username');
         }

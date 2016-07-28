@@ -28,6 +28,11 @@ class UserTable extends \Dom\Renderer\Renderer
     protected $institutionId = 0;
 
     /**
+     * @var int
+     */
+    protected $courseId = 0;
+
+    /**
      * @var null|array|string
      */
     protected $role = null;
@@ -44,10 +49,11 @@ class UserTable extends \Dom\Renderer\Renderer
      * @param null|array|string $role
      * @param null|\Tk\Uri $editUrl
      */
-    public function __construct($institutionId = 0, $role = null, $editUrl = null)
+    public function __construct($institutionId = 0, $role = null, $courseId = 0, $editUrl = null)
     {
         $this->institutionId = $institutionId;
         $this->role = $role;
+        $this->courseId = $courseId;
         $this->editUrl = $editUrl;
         $this->doDefault();
     }
@@ -65,12 +71,15 @@ class UserTable extends \Dom\Renderer\Renderer
 
         $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCellCss('key')->setUrl($this->editUrl);
 
-        $this->table->addCell(new CourseCell('course', $this->institutionId));
+        if ($this->institutionId)
+            $this->table->addCell(new CourseCell('course', $this->institutionId));
+
         $this->table->addCell(new \Tk\Table\Cell\Text('email'));
-        //$this->table->addCell(new \Tk\Table\Cell\Text('role'));
-        //$this->table->addCell(new \Tk\Table\Cell\Text('uid'))->setLabel('UID');
+
+        if (!$this->role)
+            $this->table->addCell(new \Tk\Table\Cell\Text('role'));
+
         $this->table->addCell(new \Tk\Table\Cell\Boolean('active'));
-        //$this->table->addCell(new \Tk\Table\Cell\Date('created'))->setFormat(\Tk\Table\Cell\Date::FORMAT_RELATIVE);
         $this->table->addCell(new \Tk\Table\Cell\Date('created'));
 
         // Filters
@@ -82,6 +91,7 @@ class UserTable extends \Dom\Renderer\Renderer
         // Set list
         $filter = $this->table->getFilterValues();
         $filter['institutionId'] = $this->institutionId;
+        $filter['courseId'] = $this->courseId;
         $filter['role'] = $this->role;
 
         $users = \App\Db\User::getMapper()->findFiltered($filter, $this->table->makeDbTool('a.name'));

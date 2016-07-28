@@ -32,10 +32,11 @@ $routes->add('home-base', new \Tk\Routing\Route('/', 'App\Controller\Index::doDe
 $routes->add('contact', new \Tk\Routing\Route('/contact.html', 'App\Controller\Contact::doDefault', $params));
 
 $routes->add('login', new \Tk\Routing\Route('/login.html', 'App\Controller\Login::doDefault', $params));
-$routes->add('institution-login', new \Tk\Routing\Route('/inst/{institutionId}/login.html', 'App\Controller\Login::doDefault', array('institutionId' => 1)));
+$routes->add('institution-login', new \Tk\Routing\Route('/inst/{institutionId}/login.html', 'App\Controller\Login::doInsLogin', $params));
 $routes->add('logout', new \Tk\Routing\Route('/logout.html', 'App\Controller\Logout::doDefault', $params));
 $routes->add('recover', new \Tk\Routing\Route('/recover.html', 'App\Controller\Recover::doDefault', $params));
 $routes->add('register', new \Tk\Routing\Route('/register.html', 'App\Controller\Register::doDefault'));
+
 
 
 // Admin Pages
@@ -62,10 +63,26 @@ $routes->add('client-home', new \Tk\Routing\Route('/client/index.html', 'App\Con
 $routes->add('client-home-base', new \Tk\Routing\Route('/client/', 'App\Controller\Client\Index::doDefault', $params));
 
 
+$routes->add('client-institution-manager', new \Tk\Routing\Route('/client/institutionManager.html', 'App\Controller\Client\Institution\Manager::doDefault', $params));
+$routes->add('client-institution-edit', new \Tk\Routing\Route('/client/institutionEdit.html', 'App\Controller\Client\Institution\Edit::doDefault', $params));
+
+$routes->add('client-course-manager', new \Tk\Routing\Route('/client/courseManager.html', 'App\Controller\Client\Course\Manager::doDefault', $params));
+$routes->add('client-course-edit', new \Tk\Routing\Route('/client/courseEdit.html', 'App\Controller\Client\Course\Edit::doDefault', $params));
+
+$routes->add('client-user-manager', new \Tk\Routing\Route('/client/userManager.html', 'App\Controller\Client\User\Manager::doDefault', $params));
+$routes->add('client-user-edit', new \Tk\Routing\Route('/client/userEdit.html', 'App\Controller\Client\User\Edit::doDefault', $params));
+$routes->add('client-user-profile', new \Tk\Routing\Route('/client/profile.html', 'App\Controller\Client\User\Edit::doDefault', $params));
+
+
+
+
 
 // Staff Pages
 $routes->add('staff-home', new \Tk\Routing\Route('/staff/index.html', 'App\Controller\Staff\Index::doDefault', $params));
 $routes->add('staff-home-base', new \Tk\Routing\Route('/staff/', 'App\Controller\Staff\Index::doDefault', $params));
+
+
+
 
 
 
