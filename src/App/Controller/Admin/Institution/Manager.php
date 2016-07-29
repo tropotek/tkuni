@@ -4,7 +4,7 @@ namespace App\Controller\Admin\Institution;
 use Dom\Template;
 use Tk\Form\Field;
 use Tk\Request;
-use \App\Controller\Admin\Iface;
+use \App\Controller\Iface;
 
 /**
  *

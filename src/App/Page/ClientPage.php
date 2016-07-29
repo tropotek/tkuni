@@ -23,6 +23,8 @@ class ClientPage extends Iface
         if (!$controller->getUser()) {
             \Tk\Uri::create('/login.html')->redirect();
         }
+
+        $this->templatePath = $this->getConfig()->getSitePath() . $this->getConfig()->get('template.admin.path');
         parent::__construct($controller);
     }
 

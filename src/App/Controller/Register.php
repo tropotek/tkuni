@@ -63,7 +63,7 @@ class Register extends Iface
         }
 
         $this->user = new \App\Db\User();
-        $this->user->role = \App\Auth\Access::ROLE_CLIENT;
+        $this->user->role = \App\Auth\Acl::ROLE_CLIENT;
         
         
         $this->form = new Form('registerForm', $request);
@@ -196,7 +196,7 @@ class Register extends Iface
      */
     public function __makeTemplate()
     {
-        $tplFile = $this->getTemplatePath().'/xtpl/register.xtpl';
+        $tplFile = $this->getPage()->getTemplatePath().'/xtpl/register.xtpl';
         return \Dom\Loader::loadFile($tplFile);
     }
 

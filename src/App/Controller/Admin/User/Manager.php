@@ -4,7 +4,7 @@ namespace App\Controller\Admin\User;
 use Tk\Request;
 use Dom\Template;
 use Tk\Form\Field;
-use App\Controller\Admin\Iface;
+use \App\Controller\Iface;
 
 /**
  *
@@ -52,7 +52,7 @@ class Manager extends Iface
         // Filters
         $this->table->addFilter(new Field\Input('keywords'))->setLabel('')->setAttr('placeholder', 'Keywords');
 
-        $list = array('-- Role --' => '', 'Admin' => \App\Auth\Access::ROLE_ADMIN, 'Client' => \App\Auth\Access::ROLE_CLIENT);
+        $list = array('-- Role --' => '', 'Admin' => \App\Auth\Acl::ROLE_ADMIN, 'Client' => \App\Auth\Acl::ROLE_CLIENT);
         $this->table->addFilter(new Field\Select('role', $list))->setLabel('');
 
         // Actions
@@ -62,7 +62,7 @@ class Manager extends Iface
 
         $filter = $this->table->getFilterValues();
         if (empty($filter['role']))
-            $filter['role'] = array(\App\Auth\Access::ROLE_ADMIN, \App\Auth\Access::ROLE_CLIENT);
+            $filter['role'] = array(\App\Auth\Acl::ROLE_ADMIN, \App\Auth\Acl::ROLE_CLIENT);
 
         $users = \App\Db\User::getMapper()->findFiltered($filter, $this->table->makeDbTool('a.name'));
         $this->table->setList($users);

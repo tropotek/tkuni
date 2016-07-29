@@ -3,6 +3,7 @@ namespace App\Controller\Admin;
 
 use Tk\Request;
 use Dom\Template;
+use \App\Controller\Iface;
 
 /**
  *
@@ -53,7 +54,7 @@ class Index extends Iface
      */
     public function __makeTemplate()
     {
-        $tplFile =  $this->getTemplatePath() . '/xtpl/index.xtpl';
+        $tplFile =  $this->getPage()->getTemplatePath() . '/xtpl/index.xtpl';
         return \Dom\Loader::loadFile($tplFile);
     }
 

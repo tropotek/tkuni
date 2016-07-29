@@ -15,6 +15,11 @@ abstract class Iface extends \Dom\Renderer\Renderer
      * @var \App\Controller\Iface
      */
     protected $controller = null;
+
+    /**
+     * @var string
+     */
+    protected $templatePath = '';
     
     
     /**
@@ -25,18 +30,20 @@ abstract class Iface extends \Dom\Renderer\Renderer
     public function __construct(\App\Controller\Iface $controller)
     {
         $this->controller = $controller;
+        if (!$this->templatePath)
+            $this->templatePath = $this->getConfig()->getSitePath() . $this->getConfig()->get('template.public.path');
         
         // It could lead to possible rendering issues....
         $this->show();
     }
 
     /**
-     * 
+     *
      * @return string
      */
     public function getTemplatePath()
     {
-        return $this->controller->getTemplatePath();
+        return $this->templatePath;
     }
 
     /**
@@ -51,10 +58,10 @@ abstract class Iface extends \Dom\Renderer\Renderer
         $template = $this->getTemplate();
 
         if ($this->getConfig()->get('site.meta.keywords')) {
-            $template->appendMetaTag('keywords', array('content', $this->getConfig()->get('site.meta.keywords')));
+            $template->appendMetaTag('keywords', $this->getConfig()->get('site.meta.keywords'));
         }
         if ($this->getConfig()->get('site.meta.description')) {
-            $template->appendMetaTag('description', array('content', $this->getConfig()->get('site.meta.description')));
+            $template->appendMetaTag('description', $this->getConfig()->get('site.meta.description'));
         }
 
         $template->appendMetaTag('tk-author', 'http://www.tropotek.com/, http://www.phpdomtemplate.com/', $template->getTitleElement());

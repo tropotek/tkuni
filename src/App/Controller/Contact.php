@@ -162,6 +162,6 @@ MSG;
      */
     public function __makeTemplate()
     {
-        return \Dom\Loader::loadFile($this->getTemplatePath().'/xtpl/contact.xtpl');
+        return \Dom\Loader::loadFile($this->getPage()->getTemplatePath().'/xtpl/contact.xtpl');
     }
 }

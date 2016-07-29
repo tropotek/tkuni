@@ -131,7 +131,7 @@ class Data extends \Tk\Collection
         }
         if ($this->dbHas($key)) {
             $sql = sprintf('UPDATE %s SET value = %s WHERE %s = %s AND foreign_id = %d AND foreign_key = %s ',
-                $this->getTable(), $this->db->quoteParameter('key'), $this->db->quote($value), $this->db->quote($key),
+                $this->getTable(), $this->db->quote($value), $this->db->quoteParameter('key'), $this->db->quote($key),
                 (int)$this->foreignId, $this->db->quote($this->foreignKey) );
         } else {
             $sql = sprintf('INSERT INTO %s (foreign_id, foreign_key, %s, value) VALUES (%d, %s, %s, %s) ',

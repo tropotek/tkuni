@@ -10,7 +10,7 @@ use \App\Db\Role;
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  */
-class Access 
+class Acl
 {
     const ROLE_ADMIN = 'admin';
     const ROLE_CLIENT= 'client';
@@ -39,7 +39,7 @@ class Access
      *   - Access::create($user)->isAdmin();
      * 
      * @param \App\Db\User $user
-     * @return Access
+     * @return Acl
      */
     static function create($user)
     {
@@ -60,21 +60,6 @@ class Access
             }
         }
         return false;
-
-//        if (!is_array($role)) $role = array($role);
-//
-//        foreach ($role as $r) {
-//            if (!$r instanceof Role) {
-//                $r = Role::getMapper()->findByName($r);
-//            }
-//            if ($r) {
-//                $obj = Role::getMapper()->findRole($r->id, $this->user->id);
-//                if ($obj && $obj->id = $r->id) {
-//                    return true;
-//                }
-//            }
-//        }
-//        return false;
     }
 
     /**

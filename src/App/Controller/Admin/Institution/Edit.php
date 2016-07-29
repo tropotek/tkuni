@@ -6,7 +6,7 @@ use Tk\Form;
 use Tk\Form\Event;
 use Tk\Form\Field;
 use Tk\Request;
-use \App\Controller\Admin\Iface;
+use \App\Controller\Iface;
 
 /**
  *
@@ -60,7 +60,7 @@ class Edit extends Iface
 //        if ($this->institution) {
 //            $iid = $this->institution->id;
 //        }
-        $clients = new \Tk\Form\Field\Option\ArrayObjectIterator(\App\Db\User::getMapper()->findByRole(\App\Auth\Access::ROLE_CLIENT)->toArray());
+        $clients = new \Tk\Form\Field\Option\ArrayObjectIterator(\App\Db\User::getMapper()->findByRole(\App\Auth\Acl::ROLE_CLIENT)->toArray());
         $this->form->addField(new Field\Select('ownerId', $clients))->prependOption('-- Select --', '')->setRequired(true)->setTabGroup('Details');
 
         $this->form->addField(new Field\Input('name'))->setRequired(true)->setTabGroup('Details');
@@ -108,10 +108,10 @@ class Edit extends Iface
             $courseTable = new \App\Ui\CourseTable($this->institution->id, \Tk\Uri::create('/admin/courseEdit.html')->set('institutionId', $this->institution->id));
             $template->insertTemplate('courseTable', $courseTable->show());
 
-            $staffTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Access::ROLE_STAFF, 0, \Tk\Uri::create('/admin/userEdit.html')->set('institutionId', $this->institution->id));
+            $staffTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Acl::ROLE_STAFF, 0, \Tk\Uri::create('/admin/userEdit.html')->set('institutionId', $this->institution->id));
             $template->insertTemplate('staffTable', $staffTable->show());
 
-            $studentTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Access::ROLE_STUDENT, 0, \Tk\Uri::create('/admin/userEdit.html')->set('institutionId', $this->institution->id));
+            $studentTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Acl::ROLE_STUDENT, 0, \Tk\Uri::create('/admin/userEdit.html')->set('institutionId', $this->institution->id));
             $template->insertTemplate('studentTable', $studentTable->show());
 
             $template->addClass('editPanel', 'col-md-4');

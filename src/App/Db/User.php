@@ -3,7 +3,7 @@ namespace App\Db;
 
 use Tk\Auth;
 use Tk\Auth\Exception;
-use App\Auth\Access;
+use App\Auth\Acl;
 
 
 /**
@@ -79,7 +79,7 @@ class User extends \Tk\Db\Map\Model
     public $created = null;
 
     /**
-     * @var \App\Auth\Access
+     * @var \App\Auth\Acl
      */
     private $access = null;
 
@@ -103,12 +103,12 @@ class User extends \Tk\Db\Map\Model
     }
 
     /**
-     * @return Access
+     * @return Acl
      */
-    public function getAccess()
+    public function getAcl()
     {
         if (!$this->access) {
-            $this->access = new Access($this);
+            $this->access = new Acl($this);
         }
         return $this->access;
     }
@@ -180,13 +180,13 @@ class User extends \Tk\Db\Map\Model
      */
     public function getHomeUrl()
     {
-        if ($this->getAccess()->isAdmin())
+        if ($this->getAcl()->isAdmin())
             return '/admin/index.html';
-        if ($this->getAccess()->isClient())
+        if ($this->getAcl()->isClient())
             return '/client/index.html';
-        if ($this->getAccess()->isStaff())
+        if ($this->getAcl()->isStaff())
             return '/staff/index.html';
-        if ($this->getAccess()->isStudent())
+        if ($this->getAcl()->isStudent())
             return '/student/index.html';
         return '/index.html';   // Should not get here unless their is no roles
     }

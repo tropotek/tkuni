@@ -40,6 +40,7 @@ $routes->add('register', new \Tk\Routing\Route('/register.html', 'App\Controller
 
 
 // Admin Pages
+$params = array('access' => \App\Auth\Acl::ROLE_ADMIN);
 $routes->add('admin-home', new \Tk\Routing\Route('/admin/index.html', 'App\Controller\Admin\Index::doDefault', $params));
 $routes->add('admin-home-base', new \Tk\Routing\Route('/admin/', 'App\Controller\Admin\Index::doDefault', $params));
 
@@ -59,6 +60,7 @@ $routes->add('admin-settings', new \Tk\Routing\Route('/admin/settings.html', 'Ap
 
 
 // Client Pages
+$params = array('access' => \App\Auth\Acl::ROLE_CLIENT);
 $routes->add('client-home', new \Tk\Routing\Route('/client/index.html', 'App\Controller\Client\Index::doDefault', $params));
 $routes->add('client-home-base', new \Tk\Routing\Route('/client/', 'App\Controller\Client\Index::doDefault', $params));
 
@@ -78,6 +80,7 @@ $routes->add('client-user-profile', new \Tk\Routing\Route('/client/profile.html'
 
 
 // Staff Pages
+$params = array('access' => \App\Auth\Acl::ROLE_STAFF);
 $routes->add('staff-home', new \Tk\Routing\Route('/staff/index.html', 'App\Controller\Staff\Index::doDefault', $params));
 $routes->add('staff-home-base', new \Tk\Routing\Route('/staff/', 'App\Controller\Staff\Index::doDefault', $params));
 
@@ -87,6 +90,7 @@ $routes->add('staff-home-base', new \Tk\Routing\Route('/staff/', 'App\Controller
 
 
 // Student Pages
+$params = array('access' => \App\Auth\Acl::ROLE_STUDENT);
 $routes->add('student-home', new \Tk\Routing\Route('/student/index.html', 'App\Controller\Student\Index::doDefault', $params));
 $routes->add('student-home-base', new \Tk\Routing\Route('/student/', 'App\Controller\Student\Index::doDefault', $params));
 

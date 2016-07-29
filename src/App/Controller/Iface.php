@@ -6,19 +6,9 @@ abstract class Iface extends \Dom\Renderer\Renderer
 {
 
     /**
-     * @var string|array
-     */
-    protected $access = null;
-
-    /**
      * @var string
      */
     protected $pageTitle = '';
-
-    /**
-     * @var string
-     */
-    protected $templatePath = '';
     
     /**
      * @var \App\Page\Iface
@@ -30,11 +20,10 @@ abstract class Iface extends \Dom\Renderer\Renderer
      * @param string $pageTitle
      * @param string|array $access
      */
-    public function __construct($pageTitle = '', $access = null)
+    public function __construct($pageTitle = '')
     {
-        $this->setAccess($access);
         $this->setPageTitle($pageTitle);
-        $this->templatePath = $this->getConfig()->getSitePath() . $this->getConfig()->get('template.public.path');
+        $this->getPage();
     }
 
     /**
@@ -45,18 +34,22 @@ abstract class Iface extends \Dom\Renderer\Renderer
     public function getPage()
     {
         if (!$this->page) {
-            $this->page = new \App\Page\PublicPage($this);
+            if (!$this->getUser()) {
+                $this->page = new \App\Page\PublicPage($this);
+                return $this->page;
+            }
+            $acl = $this->getUser()->getAcl();
+            if ($acl->hasRole(\App\Auth\Acl::ROLE_ADMIN)) {
+                $this->page = new \App\Page\AdminPage($this);
+            } else if ($acl->hasRole(\App\Auth\Acl::ROLE_CLIENT)) {
+                $this->page = new \App\Page\ClientPage($this);
+            } else if ($acl->hasRole(\App\Auth\Acl::ROLE_STAFF)) {
+                $this->page = new \App\Page\StaffPage($this);
+            } else if ($acl->hasRole(\App\Auth\Acl::ROLE_STUDENT)) {
+                $this->page = new \App\Page\StudentPage($this);
+            }
         }
         return $this->page;
-    }
-
-    /**
-     * 
-     * @return string
-     */
-    public function getTemplatePath()
-    {
-        return $this->templatePath;
     }
 
     /**
@@ -97,42 +90,6 @@ abstract class Iface extends \Dom\Renderer\Renderer
     public function getUser()
     {
         return $this->getConfig()->getUser();
-    }
-
-    /**
-     * Add a role(s) that can access this page
-     *
-     * @param string|array $role
-     * @return $this
-     */
-    public function setAccess($role)
-    {
-        $this->access = $role;
-        return $this;
-    }
-
-    /**
-     * Get the controllers roles
-     *
-     * @return string|array
-     */
-    public function getAccess()
-    {
-        return $this->access;
-    }
-
-    /**
-     * Can this user access this page
-     *
-     * @param \App\Db\User $user
-     * @return bool
-     */
-    public function hasAccess($user)
-    {
-        if (empty($this->access)) return true;
-        if (!$user) return false;
-        if ($user->getAccess()->hasRole($this->access)) return true;
-        return false;
     }
 
 }

@@ -6,7 +6,7 @@ use Tk\Form;
 use Tk\Form\Event;
 use Tk\Form\Field;
 use Tk\Request;
-use \App\Controller\Client\Iface;
+use \App\Controller\Iface;
 
 /**
  *
@@ -50,7 +50,7 @@ class Edit extends Iface
     public function doDefault(Request $request)
     {
         $this->institution = new \App\Db\Institution();
-        if ($this->getUser()->getAccess()->hasRole(\App\Auth\Access::ROLE_CLIENT)) {
+        if ($this->getUser()->getAcl()->hasRole(\App\Auth\Acl::ROLE_CLIENT)) {
             $this->institution->ownerId = $this->getUser()->id;
             $this->institution->getHash();
         }
@@ -109,10 +109,10 @@ class Edit extends Iface
             $courseTable = new \App\Ui\CourseTable($this->institution->id);
             $template->insertTemplate('courseTable', $courseTable->show());
 
-            $staffTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Access::ROLE_STAFF);
+            $staffTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Acl::ROLE_STAFF);
             $template->insertTemplate('staffTable', $staffTable->show());
 
-            $studentTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Access::ROLE_STUDENT);
+            $studentTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Acl::ROLE_STUDENT);
             $template->insertTemplate('studentTable', $studentTable->show());
 
             $template->addClass('editPanel', 'col-md-4');

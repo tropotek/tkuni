@@ -6,8 +6,7 @@ use Dom\Template;
 use Tk\Form;
 use Tk\Form\Field;
 use Tk\Form\Event;
-use App\Controller\Admin\Iface;
-use Tk\Form\Field\Option\ArrayObjectIterator;
+use \App\Controller\Iface;
 
 /**
  *
@@ -73,9 +72,9 @@ class Edit extends Iface
             $emailF->setAttr('readonly', 'readonly');
         } else {
             //$list = array('-- Select --' => '', 'Admin' => \App\Auth\Access::ROLE_ADMIN, 'Client' => \App\Auth\Access::ROLE_CLIENT, 'Staff' => \App\Auth\Access::ROLE_STAFF, 'Student' => \App\Auth\Access::ROLE_STUDENT);
-            $list = array('-- Select --' => '', 'Admin' => \App\Auth\Access::ROLE_ADMIN, 'Client' => \App\Auth\Access::ROLE_CLIENT);
+            $list = array('-- Select --' => '', 'Admin' => \App\Auth\Acl::ROLE_ADMIN, 'Client' => \App\Auth\Acl::ROLE_CLIENT);
             if (!in_array($this->user->role, $list)) {
-                $list = array('-- Select --' => '', 'Staff' => \App\Auth\Access::ROLE_STAFF, 'Student' => \App\Auth\Access::ROLE_STUDENT);
+                $list = array('-- Select --' => '', 'Staff' => \App\Auth\Acl::ROLE_STAFF, 'Student' => \App\Auth\Acl::ROLE_STUDENT);
             }
             $this->form->addField(new Field\Select('role', $list))->setNotes('Select the access level for this user')->setRequired(true)->setTabGroup('Details')->setRequired(true);
             $this->form->addField(new Field\Checkbox('active'))->setTabGroup('Details');

@@ -170,7 +170,7 @@ class Login extends Iface
      */
     public function __makeTemplate()
     {
-        return \Dom\Loader::loadFile($this->getTemplatePath().'/xtpl/login.xtpl');
+        return \Dom\Loader::loadFile($this->getPage()->getTemplatePath().'/xtpl/login.xtpl');
     }
 
 }
