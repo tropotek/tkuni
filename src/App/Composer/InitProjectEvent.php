@@ -45,8 +45,8 @@ class InitProjectEvent
      */
     static function init(Event $event, $isInstall = false)
     {
-        $isCleanInstall = false;
 
+        vd('-----------------------');
         try {
             $sitePath = $_SERVER['PWD'];
             $io = $event->getIO();
@@ -85,7 +85,7 @@ STR;
                 $configContents = file_get_contents($configInFile);
 
                 if ($isInstall && @is_file($configFile)) {
-                    $v = $io-> askConfirmation(self::warning('NOTICE: Are you sure you want to remove the existing installation data [N]: '), false);
+                    $v = $io->askConfirmation(self::warning('NOTICE: Are you sure you want to remove the existing installation data [N]: '), false);
                     if ($v) {
                         try {
                             include $configFile;
