@@ -87,21 +87,19 @@ STR;
                 $configContents = file_get_contents($configInFile);
 
                 if ($isInstall && @is_file($configFile)) {
-                    // kill install if already setup
-                    return;
-//                    $v = $io-> askConfirmation(self::warning('NOTICE: Are you sure you want to remove the existing installation data [N]: '), false);
-//                    if ($v) {
-//                        try {
-//                            include $configFile;
-//                            $config = Config::getInstance();
-//                            $db = Pdo::getInstance($config['db.name'], $config->getGroup('db'));
-//                            $db->dropAllTables(true);
-//                        } catch (\Exception $e) {}
-//                        @unlink($configFile);
-//                        @unlink($htFile);
-//                    } else {
-//                        return;
-//                    }
+                    $v = $io-> askConfirmation(self::warning('NOTICE: Are you sure you want to remove the existing installation data [N]: '), false);
+                    if ($v) {
+                        try {
+                            include $configFile;
+                            $config = Config::getInstance();
+                            $db = Pdo::getInstance($config['db.name'], $config->getGroup('db'));
+                            $db->dropAllTables(true);
+                        } catch (\Exception $e) {}
+                        @unlink($configFile);
+                        @unlink($htFile);
+                    } else {
+                        return;
+                    }
                 }
 
                 if (!@is_file($configFile)) {
