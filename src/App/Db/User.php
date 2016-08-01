@@ -26,6 +26,11 @@ class User extends \Tk\Db\Map\Model
     /**
      * @var string
      */
+    public $uid = '';
+
+    /**
+     * @var string
+     */
     public $username = '';
 
     /**
@@ -82,6 +87,11 @@ class User extends \Tk\Db\Map\Model
      * @var \App\Auth\Acl
      */
     private $access = null;
+
+    /**
+     * @var \App\Db\Institution
+     */
+    private $institution = null;
 
 
     /**
@@ -170,6 +180,17 @@ class User extends \Tk\Db\Map\Model
             $pwd = self::createPassword(10);
         }
         $this->password = \App\Factory::hashPassword($pwd, $this);
+    }
+
+    /**
+     *
+     */
+    public function getInstitution()
+    {
+        if ($this->id && !$this->institution) {
+            $this->institution = \App\Db\Institution::getMapper()->findByUserId($this->id);
+        }
+        return $this->institution;
     }
 
     /**

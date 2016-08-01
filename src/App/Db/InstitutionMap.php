@@ -154,14 +154,13 @@ class InstitutionMap extends Mapper
     /**
      * 
      * @param int $courseId
-     * @param Tool $tool
-     * @return ArrayObject
+     * @return Institution
      */
-    public function findByUserId($courseId, $tool = null)
+    public function findByUserId($courseId)
     {
         $from = sprintf('%s a, user_course b', $this->getDb()->quoteParameter($this->getTable()));
         $where = sprintf('a.id = b.course_id AND b.user_id = %d', (int)$courseId);
-        return $this->selectFrom($from, $where, $tool);
+        return $this->selectFrom($from, $where)->current();
     }
 
     /**
@@ -210,45 +209,45 @@ class InstitutionMap extends Mapper
 
 
     /**
-     * @param $courseId
-     * @param $userId
+     * @param int $institutionId
+     * @param int $userId
      * @return boolean
      */
-    public function hasUser($courseId, $userId)
+    public function hasUser($institutionId, $userId)
     {
-        $sql = sprintf('SELECT * FROM user_institution WHERE course_id = %d AND user_id = %d', (int)$courseId, (int)$userId);
+        $sql = sprintf('SELECT * FROM user_institution WHERE institution_id = %d AND user_id = %d', (int)$institutionId, (int)$userId);
         return ($this->getDb()->query($sql)->rowCount() > 0);
     }
 
     /**
-     * @param $courseId
-     * @param $userId
+     * @param int $institutionId
+     * @param int $userId
      * @return \Tk\Db\PDOStatement
      */
-    public function deleteUser($courseId, $userId)
+    public function deleteUser($institutionId, $userId)
     {
-        $query = sprintf('DELETE FROM user_institution WHERE user_id = %d AND course_id = %d', (int)$userId, (int)$courseId);
+        $query = sprintf('DELETE FROM user_institution WHERE user_id = %d AND institution_id = %d', (int)$userId, (int)$institutionId);
         return $this->getDb()->exec($query);
     }
 
     /**
-     * @param $courseId
-     * @param $userId
+     * @param int $institutionId
+     * @param int $userId
      * @return \Tk\Db\PDOStatement
      */
-    public function addUser($courseId, $userId)
+    public function addUser($institutionId, $userId)
     {
-        $query = sprintf('INSERT INTO user_institution (user_id, course_id)  VALUES (%d, %d) ', (int)$userId, (int)$courseId);
+        $query = sprintf('INSERT INTO user_institution (user_id, institution_id)  VALUES (%d, %d) ', (int)$userId, (int)$institutionId);
         return $this->getDb()->exec($query);
     }
 
     /**
-     * @param int $courseId
+     * @param int $institutionId
      * @return \Tk\Db\PDOStatement
      */
-    public function deleteAllUsers($courseId)
+    public function deleteAllUsers($institutionId)
     {
-        $query = sprintf('DELETE FROM user_institution WHERE course_id = %d ', (int)$courseId);
+        $query = sprintf('DELETE FROM user_institution WHERE institution_id = %d ', (int)$institutionId);
         return $this->getDb()->exec($query);
     }
 

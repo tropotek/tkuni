@@ -93,6 +93,22 @@ class Manager extends Iface
     {
         $xhtml = <<<XHTML
 <div class="row">
+
+  <div class="col-lg-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <i class="fa fa-cogs fa-fw"></i> Actions
+      </div>
+      <div class="panel-body ">
+        <div class="row">
+          <div class="col-lg-12">
+            <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <div class="col-lg-12">
     <div class="panel panel-default">
       <div class="panel-heading">

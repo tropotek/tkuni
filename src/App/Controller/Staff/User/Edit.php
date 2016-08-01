@@ -1,5 +1,5 @@
 <?php
-namespace App\Controller\Admin\User;
+namespace App\Controller\Staff\User;
 
 use Tk\Request;
 use Dom\Template;
@@ -47,7 +47,6 @@ class Edit extends Iface
         $this->user = new \App\Db\User();
         $this->user = \App\Db\User::getMapper()->find($request->get('userId'));
 
-
         $this->form = new Form('formEdit');
 
         $this->form->addField(new Field\Input('username'))->setRequired(true)->setTabGroup('Details');
@@ -71,11 +70,11 @@ class Edit extends Iface
         if (!$this->user->getId())
             $f->setRequired(true);
 
+
+
         $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
         $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
-        $url = \Tk\Uri::create('/admin/userManager.html');
-        if ($this->getConfig()->getRequest()->has('institutionId'))
-            $url = \Tk\Uri::create('/admin/institutionEdit.html')->set('institutionId', $this->getConfig()->getRequest()->get('institutionId'));
+        $url = \Tk\Uri::create('/staff/userManager.html');
 
         $this->form->addField(new Event\Link('cancel', $url));
         
@@ -120,9 +119,7 @@ class Edit extends Iface
 
         \App\Alert::addSuccess('User record saved!');
         if ($form->getTriggeredEvent()->getName() == 'update') {
-            if ($this->getConfig()->getRequest()->has('institutionId'))
-                \Tk\Uri::create('/admin/institutionEdit.html')->set('institutionId', $this->getConfig()->getRequest()->get('institutionId'))->redirect();
-            \Tk\Uri::create('/admin/userManager.html')->redirect();
+            \Tk\Uri::create('/staff/userManager.html')->redirect();
         }
         \Tk\Uri::create()->set('userId', $this->user->id)->redirect();
     }

@@ -47,6 +47,7 @@ class UserTable extends \Dom\Renderer\Renderer
      * CourseTable constructor.
      * @param int $institutionId
      * @param null|array|string $role
+     * @param int $courseId
      * @param null|\Tk\Uri $editUrl
      */
     public function __construct($institutionId = 0, $role = null, $courseId = 0, $editUrl = null)
@@ -100,7 +101,7 @@ class UserTable extends \Dom\Renderer\Renderer
     }
 
     /**
-     * @return \App\Page\Iface
+     * @return \Dom\Template
      */
     public function show()
     {
@@ -154,4 +155,6 @@ class CourseCell extends \Tk\Table\Cell\Text
         $str = '<small>' . $propValue . '</small>';
         return $str;
     }
+
+
 }

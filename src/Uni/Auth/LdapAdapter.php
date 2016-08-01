@@ -91,9 +91,8 @@ class LdapAdapter extends \Tk\Auth\Adapter\Ldap
             if (!empty($ldapData[0]['mail'][0]))
                 $user->email = $ldapData[0]['mail'][0];
             $user->setPassword($password);
-
-//            if (!empty($ldapData[0]['auedupersonid'][0]))
-//                $user->uid = $ldapData[0]['auedupersonid'][0];
+            if (!empty($ldapData[0]['auedupersonid'][0]))
+                $user->uid = $ldapData[0]['auedupersonid'][0];
             $user->save();
         }
         return $r;

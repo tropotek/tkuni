@@ -1,5 +1,5 @@
 <?php
-namespace App\Controller\Admin\User;
+namespace App\Controller\Ui;
 
 use Tk\Request;
 use Dom\Template;
@@ -15,7 +15,7 @@ use \App\Controller\Iface;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Edit extends Iface
+class Profile extends Iface
 {
 
     /**
@@ -34,7 +34,8 @@ class Edit extends Iface
      */
     public function __construct()
     {
-        parent::__construct('User Edit');
+        $title = 'My Profile';
+        parent::__construct($title);
     }
 
     /**
@@ -44,43 +45,26 @@ class Edit extends Iface
      */
     public function doDefault(Request $request)
     {
-        $this->user = new \App\Db\User();
-        $this->user = \App\Db\User::getMapper()->find($request->get('userId'));
+        $this->user = $this->getUser();
 
 
         $this->form = new Form('formEdit');
+        $this->form->setAttr('autocomplete', 'off');
 
         $this->form->addField(new Field\Input('username'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\Input('name'))->setRequired(true)->setTabGroup('Details');
-        $this->form->addField(new Field\Input('email'))->setRequired(true)->setTabGroup('Details');
+        $emailF = $this->form->addField(new Field\Input('email'))->setRequired(true)->setTabGroup('Details');
+        $emailF->setAttr('readonly', 'readonly');
 
-        //$list = array('-- Select --' => '', 'Admin' => \App\Auth\Access::ROLE_ADMIN, 'Client' => \App\Auth\Access::ROLE_CLIENT, 'Staff' => \App\Auth\Access::ROLE_STAFF, 'Student' => \App\Auth\Access::ROLE_STUDENT);
-        $list = array('-- Select --' => '', 'Admin' => \App\Auth\Acl::ROLE_ADMIN, 'Client' => \App\Auth\Acl::ROLE_CLIENT);
-        if (!in_array($this->user->role, $list)) {
-            $list = array('-- Select --' => '', 'Staff' => \App\Auth\Acl::ROLE_STAFF, 'Student' => \App\Auth\Acl::ROLE_STUDENT);
-        }
-        $this->form->addField(new Field\Select('role', $list))->setNotes('Select the access level for this user')->setRequired(true)->setTabGroup('Details')->setRequired(true);
-        $this->form->addField(new Field\Checkbox('active'))->setTabGroup('Details');
-
-        
-        $this->form->setAttr('autocomplete', 'off');
-        $f = $this->form->addField(new Field\Password('newPassword'))->setAttr('placeholder', 'Click to edit')->setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setTabGroup('Password');
-        if (!$this->user->getId())
-            $f->setRequired(true);
-        $f = $this->form->addField(new Field\Password('confPassword'))->setAttr('placeholder', 'Click to edit')->setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setNotes('Change this users password.')->setTabGroup('Password');
-        if (!$this->user->getId())
-            $f->setRequired(true);
+        $this->form->addField(new Field\Password('newPassword'))->setAttr('placeholder', 'Click to edit')->setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setTabGroup('Password');
+        $this->form->addField(new Field\Password('confPassword'))->setAttr('placeholder', 'Click to edit')->setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setNotes('Change this users password.')->setTabGroup('Password');
 
         $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
         $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
-        $url = \Tk\Uri::create('/admin/userManager.html');
-        if ($this->getConfig()->getRequest()->has('institutionId'))
-            $url = \Tk\Uri::create('/admin/institutionEdit.html')->set('institutionId', $this->getConfig()->getRequest()->get('institutionId'));
-
+        $url = \Tk\Uri::create($this->getUser()->getHomeUrl());
         $this->form->addField(new Event\Link('cancel', $url));
-        
+
         $this->form->load(\App\Db\UserMap::unmapForm($this->user));
-        
         $this->form->execute();
         
         return $this->show();
@@ -111,6 +95,7 @@ class Edit extends Iface
         if ($form->hasErrors()) {
             return;
         }
+
         // Hash the password correctly
         if ($this->form->getFieldValue('newPassword')) {
             $this->user->password = \App\Factory::hashPassword($this->form->getFieldValue('newPassword'), $this->user);
@@ -120,11 +105,9 @@ class Edit extends Iface
 
         \App\Alert::addSuccess('User record saved!');
         if ($form->getTriggeredEvent()->getName() == 'update') {
-            if ($this->getConfig()->getRequest()->has('institutionId'))
-                \Tk\Uri::create('/admin/institutionEdit.html')->set('institutionId', $this->getConfig()->getRequest()->get('institutionId'))->redirect();
-            \Tk\Uri::create('/admin/userManager.html')->redirect();
+            \Tk\Uri::create($this->user->getHomeUrl())->redirect();
         }
-        \Tk\Uri::create()->set('userId', $this->user->id)->redirect();
+        \Tk\Uri::create()->redirect();
     }
 
     /**
@@ -134,11 +117,8 @@ class Edit extends Iface
     {
         $template = $this->getTemplate();
         
-        if ($this->user->id)
-            $template->insertText('username', $this->user->name . ' - [UID ' . $this->user->id . ']');
-        else
-            $template->insertText('username', 'Create User');
-        
+        $template->insertText('username', $this->user->name . ' - [UID ' . $this->user->id . ']');
+
         // Render the form
         $fren = new \Tk\Form\Renderer\Dom($this->form);
         $template->appendTemplate($this->form->getId(), $fren->show()->getTemplate());
@@ -157,22 +137,6 @@ class Edit extends Iface
 
         $xhtml = <<<XHTML
 <div class="row">
-
-  <div class="col-lg-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <i class="fa fa-cogs fa-fw"></i> Actions
-      </div>
-      <div class="panel-body ">
-        <div class="row">
-          <div class="col-lg-12">
-            <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  
   <div class="col-lg-12">
     <div class="panel panel-default">
       <div class="panel-heading">

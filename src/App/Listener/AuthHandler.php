@@ -50,7 +50,6 @@ class AuthHandler implements SubscriberInterface
             }
             $user->lastLogin = \Tk\Date::create();
             $user->save();
-            //$user->redirectHome();
 
             \Tk\Uri::create($user->getHomeUrl())->redirect();
         }

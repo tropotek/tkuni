@@ -10,6 +10,7 @@
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS "user" (
   id SERIAL PRIMARY KEY,
+  uid VARCHAR(128) NOT NULL DEFAULT '',
   username VARCHAR(64) NOT NULL DEFAULT '',
   password VARCHAR(64) NOT NULL DEFAULT '',
   -- ROLES: 'admin', 'client', 'staff', 'student
@@ -77,7 +78,6 @@ CREATE TABLE IF NOT EXISTS course (
   description TEXT,
   start TIMESTAMP DEFAULT NOW(),
   finish TIMESTAMP DEFAULT NOW(),
-  active NUMERIC(1) NOT NULL DEFAULT 1,
   del NUMERIC(1) NOT NULL DEFAULT 0,
   modified TIMESTAMP DEFAULT NOW(),
   created TIMESTAMP DEFAULT NOW(),
@@ -130,8 +130,8 @@ INSERT INTO institution (owner_id, name, email, description, logo, active, hash,
     (2, 'The University Of Melbourne', 'admin@unimelb.edu.au', 'This is a test institution for this app', '', 1, MD5('1'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW()))
 ;
 
-INSERT INTO course (institution_id, name, code, email, description, start, finish, active, modified, created)
-    VALUES (1, 'Poultry Industry Field Work', 'VETS50001_2014_SM1', 'course@unimelb.edu.au', '',  date_trunc('seconds', NOW()), date_trunc('seconds', (CURRENT_TIMESTAMP + (190 * interval '1 day')) ), 1, date_trunc('seconds', NOW()) , date_trunc('seconds', NOW()) )
+INSERT INTO course (institution_id, name, code, email, description, start, finish, modified, created)
+    VALUES (1, 'Poultry Industry Field Work', 'VETS50001_2014_SM1', 'course@unimelb.edu.au', '',  date_trunc('seconds', NOW()), date_trunc('seconds', (CURRENT_TIMESTAMP + (190 * interval '1 day')) ), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW()) )
 ;
 
 INSERT INTO user_course (user_id, course_id)

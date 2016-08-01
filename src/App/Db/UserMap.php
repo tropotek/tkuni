@@ -30,6 +30,8 @@ class UserMap extends Mapper
             $obj = new User();
         }
         //$obj->id = $row['id'];
+        if (isset($row['uid']))
+            $obj->uid = $row['uid'];
         if (isset($row['username']))
             $obj->username = $row['username'];
         if (isset($row['password']))
@@ -61,6 +63,7 @@ class UserMap extends Mapper
     {
         $arr = array(
             'id' => $obj->id,
+            'uid' => $obj->uid,
             'username' => $obj->username,
             'password' => $obj->password,
             'name' => $obj->name,
@@ -77,6 +80,7 @@ class UserMap extends Mapper
     {
         $obj = new User();
         $obj->id = $row['id'];
+        $obj->uid = $row['uid'];
         $obj->username = $row['username'];
         $obj->password = $row['password'];
         $obj->name = $row['name'];
@@ -97,6 +101,7 @@ class UserMap extends Mapper
     {
         $arr = array(
             'id' => $obj->id,
+            'uid' => $obj->uid,
             'username' => $obj->username,
             'password' => $obj->password,
             'name' => $obj->name,
@@ -270,6 +275,11 @@ class UserMap extends Mapper
             if ($w) {
                 $where .= '(' . substr($w, 0, -3) . ') AND ';
             }
+        }
+
+
+        if (!empty($filter['uid'])) {
+            $where .= sprintf('a.uid = %s AND ', $this->getDb()->quote($filter['uid']));
         }
 
 

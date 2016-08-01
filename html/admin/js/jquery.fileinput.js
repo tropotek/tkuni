@@ -112,9 +112,14 @@
       if ($element.attr('value')) {
         template.find('input.image-preview-filename').val($element.attr('value').replace(/\\/g,'/').replace( /.*\//, '' ));
         // show thumb
-        template.find('.image-preview-thumb img').attr('src', plugin.settings.dataUrl + $element.attr('value')).show();
-        template.find('.image-preview-thumb').show();
-        template.find('.image-preview-thumb').attr('data-content', copyImageHtml(img));
+        if (isImage($element.attr('value'))) {
+          template.find('.image-preview-thumb img').attr('src', plugin.settings.dataUrl + $element.attr('value')).show();
+          template.find('.image-preview-thumb').show();
+          template.find('.image-preview-thumb').attr('data-content', copyImageHtml(img));
+        } else {
+          template.find('.image-preview-thumb').hide();
+          template.find('.image-preview-thumb').attr('data-content', '');
+        }
       } else {
         template.find('.image-preview-clear').hide();
       }
@@ -145,10 +150,12 @@
             //prev.find('.image-preview-input-title').text(' Change');
             prev.find('.image-preview-clear').show();
             prev.find('.image-preview-filename').val(file.name);
-            prev.find('.image-preview-thumb').show();
-            prev.find('.image-preview-thumb img').attr('src', e.target.result);
-            prev.find('.image-preview-thumb').attr('data-content', copyImageHtml(img));
-            prev.find('.image-preview-thumb').removeClass('disabled');
+            if (isImage(file.name)) {
+              prev.find('.image-preview-thumb').show();
+              prev.find('.image-preview-thumb img').attr('src', e.target.result);
+              prev.find('.image-preview-thumb').attr('data-content', copyImageHtml(img));
+              prev.find('.image-preview-thumb').removeClass('disabled');
+            }
 
             if ($element.attr('data-maxsize') && file.size) {
               var maxSize = parseInt($element.attr('data-maxsize'), 10);
@@ -158,13 +165,57 @@
             }
           };
           reader.readAsDataURL(file);
+
+
+
         }
       });
 
     };
 
-    var copyImageHtml = function (img)
-    {
+    /**
+     *
+     * @param filename
+     */
+    var isImage = function(filename) {
+      var ext = getExtension(basename(filename)).toLowerCase();
+      switch (ext) {
+        case 'jpg':
+        case 'jpeg':
+        case 'gif':
+        case 'png':
+          return true;
+      }
+      return false;
+    };
+
+    /**
+     *
+     * @param path
+     * @returns {XML|string}
+     */
+    var basename = function(path) {
+      return path.replace(/\\/g,'/').replace( /.*\//, '' );
+    };
+
+    /**
+     *
+     * @param file
+     */
+    var getExtension = function(file) {
+      var pos = file.lastIndexOf('.');
+      if (pos > -1) {
+        return file.substring(pos + 1);
+      }
+      return '';
+    };
+
+    /**
+     *
+     * @param img
+     * @returns {*|string}
+     */
+    var copyImageHtml = function (img) {
       var cpy = $(img).clone();
       cpy.attr('style', '').css({maxWidth: 250, height: 'auto'});
       return cpy[0].outerHTML;

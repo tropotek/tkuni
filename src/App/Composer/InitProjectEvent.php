@@ -47,7 +47,7 @@ class InitProjectEvent
     {
         $isCleanInstall = false;
 
-        throw new \Tk\Exception('TODO: Implement/Test the composer install script ...');
+
 
         try {
             $sitePath = $_SERVER['PWD'];
@@ -87,19 +87,21 @@ STR;
                 $configContents = file_get_contents($configInFile);
 
                 if ($isInstall && @is_file($configFile)) {
-                    $v = $io-> askConfirmation(self::warning('NOTICE: Are you sure you want to remove the existing installation data [N]: '), false);
-                    if ($v) {
-                        try {
-                            include $configFile;
-                            $config = Config::getInstance();
-                            $db = Pdo::getInstance($config['db.name'], $config->getGroup('db'));
-                            $db->dropAllTables(true);
-                        } catch (\Exception $e) {}
-                        @unlink($configFile);
-                        @unlink($htFile);
-                    } else {
-                        return;
-                    }
+                    // kill install if already setup
+                    return;
+//                    $v = $io-> askConfirmation(self::warning('NOTICE: Are you sure you want to remove the existing installation data [N]: '), false);
+//                    if ($v) {
+//                        try {
+//                            include $configFile;
+//                            $config = Config::getInstance();
+//                            $db = Pdo::getInstance($config['db.name'], $config->getGroup('db'));
+//                            $db->dropAllTables(true);
+//                        } catch (\Exception $e) {}
+//                        @unlink($configFile);
+//                        @unlink($htFile);
+//                    } else {
+//                        return;
+//                    }
                 }
 
                 if (!@is_file($configFile)) {
@@ -139,7 +141,7 @@ STR;
 
             if (!is_dir($sitePath . '/data')) {
                 $io->write(self::green('Creating: Site data directory `/data`'));
-                mkdir($sitePath . '/data', 0755, true);
+                mkdir($sitePath . '/data', 0777, true);
             }
 
             // Migrate the SQL db
@@ -159,9 +161,10 @@ STR;
             // TODO This could be considered unsecure and may need to be removed in favor of an email address only?
             // TODO ----------------------------------------------------------------------------------------
             if ($isInstall) {
-                $sql = sprintf('SELECT * FROM %s WHERE id = 1 ;', $db->quoteParameter('user'));
+                $sql = sprintf('SELECT * FROM %s WHERE role = %s', $db->quoteParameter('user'), $db->quote('admin'));
                 $res = $db->query($sql);
-                if ($res->fetch()) {
+
+                if (!$res->rowCount()) {
                     $p = $io->ask(self::bold('Please create a new `admin` user password: '), 'admin');
                     $hashed = \App\Factory::hashPassword($p);
                     $sql = sprintf('UPDATE %s SET password = %s WHERE id = 1', $db->quoteParameter('user'), $db->quote($hashed));
@@ -173,9 +176,6 @@ STR;
                     } else {
                         $io->write(self::green('Administrator password updated.'));
                     }
-                } else {
-                    // TODO: You should write some code to prompt the user and auto-create an admin user
-                    $io->write(self::red('No administrator account found, you will have to install it manually'));
                 }
             }
 

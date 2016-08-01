@@ -45,9 +45,6 @@ class CourseMap extends Mapper
             $obj->start = \Tk\Date::createFormDate($row['start']);
         if (isset($row['finish']))
             $obj->finish = \Tk\Date::createFormDate($row['finish']);
-        
-        if (isset($row['active']))
-            $obj->active = ($row['active'] == 'active');
 
         if (isset($row['modified']))
             $obj->modified = \Tk\Date::createFormDate($row['modified']);
@@ -84,7 +81,6 @@ class CourseMap extends Mapper
             'description' => $obj->description,
             'start' => $start,
             'finish' => $finish,
-            'active' => (int)$obj->active,
             'modified' => $obj->modified->format(\Tk\Date::$formFormat),
             'created' => $obj->created->format(\Tk\Date::$formFormat)
         );
@@ -92,6 +88,10 @@ class CourseMap extends Mapper
         return $arr;
     }
 
+    /**
+     * @param array|\stdClass|Model $row
+     * @return Course
+     */
     public function map($row)
     {
         $obj = new Course();
@@ -105,7 +105,6 @@ class CourseMap extends Mapper
             $obj->start = \Tk\Date::create($row['start']);
         if ($row['finish'])
             $obj->finish = \Tk\Date::create($row['finish']);
-        $obj->active = ($row['active'] == 1);
         if ($row['modified'])
             $obj->modified = \Tk\Date::create($row['modified']);
         if ($row['created'])
@@ -113,6 +112,10 @@ class CourseMap extends Mapper
         return $obj;
     }
 
+    /**
+     * @param \stdClass|Model $obj
+     * @return array
+     */
     public function unmap($obj)
     {
         $arr = array(
@@ -124,13 +127,11 @@ class CourseMap extends Mapper
             'description' => $obj->description,
             'start' => $obj->start->format(\Tk\Date::ISO_DATE),
             'finish' => $obj->finish->format(\Tk\Date::ISO_DATE),
-            'active' => (int)$obj->active,
             'modified' => $obj->modified->format(\Tk\Date::ISO_DATE),
             'created' => $obj->created->format(\Tk\Date::ISO_DATE)
         );
         return $arr;
     }
-
 
 
     /**
@@ -200,10 +201,6 @@ class CourseMap extends Mapper
 
         if (!empty($filter['institutionId'])) {
             $where .= sprintf('a.institution_id = %s AND ', (int)$filter['institutionId']);
-        }
-
-        if (!empty($filter['active'])) {
-            $where .= sprintf('a.active = %s AND ', (int)$filter['active']);
         }
 
         if ($where) {

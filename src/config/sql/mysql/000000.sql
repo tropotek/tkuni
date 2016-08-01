@@ -10,6 +10,7 @@
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `user` (
   `id` INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `uid` VARCHAR(128) NOT NULL DEFAULT '',
   `username` VARCHAR(64) NOT NULL DEFAULT '',
   `password` VARCHAR(64) NOT NULL DEFAULT '',
   -- ROLES: 'admin', 'client', 'staff', 'student
@@ -74,7 +75,6 @@ CREATE TABLE IF NOT EXISTS `course` (
 
   `start` DATETIME NOT NULL,
   `finish` DATETIME NOT NULL,
-  `active` TINYINT(1) NOT NULL DEFAULT 1,
   `del` TINYINT(1) NOT NULL DEFAULT 0,
   `modified` DATETIME NOT NULL,
   `created` DATETIME NOT NULL,
@@ -126,8 +126,8 @@ INSERT INTO `institution` (`owner_id`, `name`, `email`, `description`, `logo`, `
     (2, 'The University Of Melbourne', 'admin@unimelb.edu.au', 'This is a test institution for this app', '', 1, MD5('1'), NOW() , NOW())
 ;
 
-INSERT INTO `course` (`institution_id`, `name`, `code`, `email`, `description`, `start`, `finish`, `active`, `modified`, `created`)
-    VALUES (1, 'Poultry Industry Field Work', 'VETS50001_2014_SM1', 'course@unimelb.edu.au', '',  NOW(), DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 190 DAY), 1, NOW() , NOW() )
+INSERT INTO `course` (`institution_id`, `name`, `code`, `email`, `description`, `start`, `finish`, `modified`, `created`)
+    VALUES (1, 'Poultry Industry Field Work', 'VETS50001_2014_SM1', 'course@unimelb.edu.au', '',  NOW(), DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 190 DAY), NOW() , NOW() )
 ;
 
 INSERT INTO `user_course` (`user_id`, `course_id`)

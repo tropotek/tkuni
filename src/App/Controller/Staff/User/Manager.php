@@ -1,9 +1,9 @@
 <?php
-namespace App\Controller\Admin\Institution;
+namespace App\Controller\Staff\User;
 
+use Tk\Request;
 use Dom\Template;
 use Tk\Form\Field;
-use Tk\Request;
 use \App\Controller\Iface;
 
 /**
@@ -20,14 +20,14 @@ class Manager extends Iface
      * @var \Tk\Table
      */
     protected $table = null;
-
+    
 
     /**
      *
      */
     public function __construct()
     {
-        parent::__construct('Institution Manager');
+        parent::__construct('User Manager');
     }
 
     /**
@@ -37,28 +37,34 @@ class Manager extends Iface
      */
     public function doDefault(Request $request)
     {
-        //$this->getBreadcrumbs()->reset()->init();
-        
-        $this->table = new \Tk\Table('InstitutionList');
-        $this->table->setParam('renderer', \Tk\Table\Renderer\Dom\Table::create($this->table));
+        $this->table = new \Tk\Table('tableOne');
 
         $this->table->addCell(new \Tk\Table\Cell\Checkbox('id'));
-        $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCellCss('key')->setUrl(\Tk\Uri::create('admin/institutionEdit.html'));
-        $this->table->addCell(new OwnerCell('owner'));
+        $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCellCss('key')->setUrl(\Tk\Uri::create('staff/userEdit.html'));
+        $this->table->addCell(new \Tk\Table\Cell\Text('username'));
         $this->table->addCell(new \Tk\Table\Cell\Text('email'));
-        $this->table->addCell(new \Tk\Table\Cell\Text('description'))->setCharacterLimit(64);
+        $this->table->addCell(new \Tk\Table\Cell\Text('role'));
+        $this->table->addCell(new \Tk\Table\Cell\Text('uid'))->setLabel('UID');
         $this->table->addCell(new \Tk\Table\Cell\Boolean('active'));
         $this->table->addCell(new \Tk\Table\Cell\Date('created'));
 
         // Filters
         $this->table->addFilter(new Field\Input('keywords'))->setLabel('')->setAttr('placeholder', 'Keywords');
 
+        $list = array('-- Role --' => '', 'Staff' => \App\Auth\Acl::ROLE_STAFF, 'Student' => \App\Auth\Acl::ROLE_STUDENT);
+        $this->table->addFilter(new Field\Select('role', $list))->setLabel('');
+
         // Actions
-        $this->table->addAction(\Tk\Table\Action\Button::getInstance('New Institution', 'fa fa-plus', \Tk\Uri::create('admin/institutionEdit.html')));
-        $this->table->addAction(\Tk\Table\Action\Delete::getInstance());
+        //$this->table->addAction(\Tk\Table\Action\Button::getInstance('New User', 'fa fa-plus', \Tk\Uri::create('staff/userEdit.html')));
+        //$this->table->addAction(\Tk\Table\Action\Delete::getInstance());
         $this->table->addAction(\Tk\Table\Action\Csv::getInstance($this->getConfig()->getDb()));
 
-        $users = \App\Db\Institution::getMapper()->findFiltered($this->table->getFilterValues(), $this->table->makeDbTool('a.id'));
+        $filter = $this->table->getFilterValues();
+        $filter['institutionId'] = $this->getUser()->getInstitution()->id;
+        if (empty($filter['role']))
+            $filter['role'] = array(\App\Auth\Acl::ROLE_STAFF, \App\Auth\Acl::ROLE_STUDENT);
+
+        $users = \App\Db\User::getMapper()->findFiltered($filter, $this->table->makeDbTool('a.name'));
         $this->table->setList($users);
 
         return $this->show();
@@ -70,10 +76,13 @@ class Manager extends Iface
     public function show()
     {
         $template = $this->getTemplate();
-        $template->replaceTemplate('table', $this->table->getParam('renderer')->show());
+
+        $ren = \Tk\Table\Renderer\Dom\Table::create($this->table);
+        $ren->show();
+        $template->replaceTemplate('table', $ren->getTemplate());
+
         return $this->getPage()->setPageContent($template);
     }
-
 
     /**
      * DomTemplate magic method
@@ -100,18 +109,17 @@ class Manager extends Iface
     </div>
   </div>
   
-
+  
   <div class="col-lg-12">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <i class="fa fa-university fa-fw"></i> Institution
+        <i class="fa fa-users fa-fw"></i> Users
       </div>
       <div class="panel-body">
         <div var="table"></div>
       </div>
     </div>
   </div>
-
 </div>
 XHTML;
 
@@ -120,33 +128,3 @@ XHTML;
 
 
 }
-
-
-class OwnerCell extends \Tk\Table\Cell\Text
-{
-
-    public function __construct($property, $label = null)
-    {
-        parent::__construct($property, $label);
-        $this->setOrderProperty('');
-    }
-
-    /**
-     * @param \App\Db\Institution $obj
-     * @param string $property
-     * @return mixed
-     */
-    public function getPropertyValue($obj, $property)
-    {
-        //$val =  parent::getPropertyValue($obj, $property);
-        $val =  '';
-        $owner = $obj->getOwner();
-        if ($owner) {
-            $val = $owner->name;
-        }
-        return $val;
-    }
-
-}
-
-

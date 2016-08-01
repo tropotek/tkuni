@@ -48,15 +48,10 @@ class Manager extends Iface
         $this->table->addCell(new \Tk\Table\Cell\Text('email'));
         $this->table->addCell(new \Tk\Table\Cell\Date('start'));
         $this->table->addCell(new \Tk\Table\Cell\Date('finish'));
-        
-        $this->table->addCell(new \Tk\Table\Cell\Boolean('active'));
-        //$this->table->addCell(new \Tk\Table\Cell\Date('created'))->setFormat(\Tk\Table\Cell\Date::FORMAT_RELATIVE);
         $this->table->addCell(new \Tk\Table\Cell\Date('created'));
 
         // Filters
         $this->table->addFilter(new Field\Input('keywords'))->setLabel('')->setAttr('placeholder', 'Keywords');
-
-
 
         // Actions
         $this->table->addAction(\Tk\Table\Action\Button::getInstance('New Course', 'fa fa-plus', \Tk\Uri::create('admin/courseEdit.html')));
@@ -89,6 +84,22 @@ class Manager extends Iface
     {
         $xhtml = <<<XHTML
 <div class="row">
+
+  <div class="col-lg-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <i class="fa fa-cogs fa-fw"></i> Actions
+      </div>
+      <div class="panel-body ">
+        <div class="row">
+          <div class="col-lg-12">
+            <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <div class="col-lg-12">
     <div class="panel panel-default">
       <div class="panel-heading">

@@ -1,5 +1,5 @@
 <?php
-namespace App\Controller\Admin\Course;
+namespace App\Controller\Staff\Course;
 
 use Dom\Template;
 use Tk\Form;
@@ -62,7 +62,6 @@ class Edit extends Iface
         }
         $this->institution = \App\Db\Institution::getMapper()->find($this->course->institutionId);
 
-
         $this->form = new Form('formEdit');
         
         if (!$request->get('institutionId')) {
@@ -79,9 +78,7 @@ class Edit extends Iface
 
         $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
         $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
-        $url = \Tk\Uri::create('/admin/courseManager.html');
-        if ($this->getConfig()->getRequest()->has('institutionId'))
-            $url = \Tk\Uri::create('/admin/institutionEdit.html')->set('institutionId', $this->getConfig()->getRequest()->get('institutionId'));
+        $url = \Tk\Uri::create('/staff/courseManager.html');
         $this->form->addField(new Event\Link('cancel', $url));
 
         $this->form->load(\App\Db\CourseMap::unmapForm($this->course));
@@ -106,8 +103,6 @@ class Edit extends Iface
         $fren = new \Tk\Form\Renderer\Dom($this->form);
         $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());
 
-        //$this->getTemplate()->replaceTemplate('table', $this->table->getParam('renderer')->show());
-        
         return $this->getPage()->setPageContent($template);
     }
 
@@ -129,11 +124,9 @@ class Edit extends Iface
         $this->course->save();
 
         \App\Alert::addSuccess('Record saved!');
+
         if ($form->getTriggeredEvent()->getName() == 'update') {
-            if ($this->getConfig()->getRequest()->has('institutionId')) {
-                \Tk\Uri::create('admin/institutionEdit.html')->set('institutionId', $this->getConfig()->getRequest()->get('institutionId'))->redirect();
-            }
-            \Tk\Uri::create('admin/courseManager.html')->redirect();
+            \Tk\Uri::create('staff/courseManager.html')->redirect();
         }
 
         \Tk\Uri::create()->set('courseId', $this->course->id)->redirect();
@@ -164,13 +157,11 @@ class Edit extends Iface
       </div>
     </div>
   </div>
-  
 
   <div class="col-lg-12">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <i class="fa fa-university fa-fw"></i>
-        Course Edit
+        <i class="fa fa-university fa-fw"></i> Course Edit
       </div>
       <div class="panel-body ">
         <div class="row">
@@ -185,10 +176,16 @@ class Edit extends Iface
   <div class="col-lg-12">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <i class="fa fa-users fa-fw"></i>
-        Course Enrollments
+        <i class="fa fa-users fa-fw"></i> Course Enrollments
       </div>
       <div class="panel-body ">
+        
+        <!-- div class="row">
+          <div class="col-lg-12">
+            <a href="javascript:;" class="btn btn-default"><i class="fa fa-users"></i> <span>Enroll User</span></a>
+          </div>
+        </div -->
+        
         <div class="row">
           <div class="col-lg-12">
             <div var="table"></div>
