@@ -89,10 +89,11 @@ class Recover extends Iface
         $user->save();
         
         // Fire the login event to allow developing of misc auth plugins
-        $event = new \App\Event\FormEvent($form);
+        $event = new \Tk\EventDispatcher\Event();
+        $event->set('form', $form);
         $event->set('user', $user);
         $event->set('password', $newPass);
-        $event->set('templatePath', $this->getTemplatePath());
+        $event->set('templatePath', $this->getPage()->getTemplatePath());
         
         $this->dispatcher->dispatch('auth.onRecover', $event);
         

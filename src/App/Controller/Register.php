@@ -123,15 +123,13 @@ class Register extends Iface
         
         $this->user->save();
 
-        
-        
         // Fire the login event to allow developing of misc auth plugins
-        $event = new \App\Event\FormEvent($form);
+        $event = new \Tk\EventDispatcher\Event();
+        $event->set('form', $form);
         $event->set('user', $this->user);
-        $event->set('templatePath', $this->getTemplatePath());
+        $event->set('templatePath', $this->getPage()->getTemplatePath());
         $this->dispatcher->dispatch('auth.onRegister', $event);
 
-        
         // Redirect with message to check their email
         \App\Alert::addSuccess('Your New Account Has Been Created.');
         \Tk\Config::getInstance()->getSession()->set('h', $this->user->getHash());
@@ -160,7 +158,7 @@ class Register extends Iface
         $user->active = true;
         $user->save();
         
-        $event = new \Tk\Event\RequestEvent($request);
+        $event = new \Tk\EventDispatcher\Event($request);
         $event->set('user', $user);
         $event->set('templatePath', $this->getTemplatePath());
         $this->dispatcher->dispatch('auth.onRegisterConfirm', $event);

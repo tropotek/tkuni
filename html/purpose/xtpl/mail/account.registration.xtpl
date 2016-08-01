@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Activation Request</title>
+    
+  </head>
+  <body>
+    <h2>Account Registration Activation.</h2>
+    <p>
+      Welcome <span var="name">Name</span>
+    </p>
+    <p>
+      To complete your account registration please click on the following activation Link:<br/>
+      <a href="#" var="url">http://link-as-text/</a>
+    </p>
+    <p>&nbsp;</p>
+    <hr/>
+    <p var="footer">
+      &copy; Some Happy Feelgood Footer. 
+    </p>
+    
+  </body>
+</html>
+
+
+

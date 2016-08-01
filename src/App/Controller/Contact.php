@@ -48,13 +48,13 @@ class Contact extends Iface
         $opts = new Field\Option\ArrayIterator(array('General', 'Services', 'Orders'));
         $this->form->addField(new Field\Select('type[]', $opts));
         
-        $this->form->addField(new Field\File('attach[]'));
+        $this->form->addField(new Field\File('attach', $request));
         $this->form->addField(new Field\Textarea('message'));
         
         $this->form->addField(new Event\Button('send', array($this, 'doSubmit')));
         
         // Find and Fire submit event
-        $ret = $this->form->execute();
+        $this->form->execute();
 
         return $this->show();
     }
@@ -97,8 +97,6 @@ class Contact extends Iface
             $form->addFieldError('message', 'Please enter some message text');
         }
 
-        //$form->addFieldError('test', 'ggggg');
-        
         // validate any files
         $attach->isValid();
 
@@ -106,14 +104,14 @@ class Contact extends Iface
             return;
         }
         if ($attach->hasFile()) {
-            $attach->moveUploadedFile($this->getConfig()->getDataPath() . '/contact/' . date('d-m-Y') . '-' . str_replace('@', '_', $values['email']));
+            //$attach->moveUploadedFile($this->getConfig()->getDataPath() . '/contact/' . date('d-m-Y') . '-' . str_replace('@', '_', $values['email']));
         }
 
         if ($this->sendEmail($form)) {
             \App\Alert::getInstance()->addSuccess('<strong>Success!</strong> Your form has been sent.');
         }
 
-        \Tk\Uri::create()->redirect();
+        //\Tk\Uri::create()->redirect();
     }
 
 
@@ -132,10 +130,10 @@ class Contact extends Iface
             $type = implode(', ', $form->getFieldValue('type'));
         $message = $form->getFieldValue('message');
         $attachCount = '';
-
+        /** @var Field\File $field */
         $field = $form->getField('attach');
-        if ($field->count()) {
-            $attachCount = 'Attachments: ' . $field->count();
+        if ($field->hasFile()) {
+            $attachCount = 'Attachments: ' . $field->getUploadedFile()->getFilename();
         }
 
         $message = <<<MSG

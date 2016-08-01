@@ -88,6 +88,64 @@ class AuthHandler implements SubscriberInterface
         }
     }
 
+
+
+    public function onRegister(\Tk\EventDispatcher\Event $event)
+    {
+        /** @var \App\Db\User $user */
+        $user = $event->get('user');
+
+        // on success email user confirmation
+        $message = \Dom\Loader::loadFile($event->get('templatePath').'/xtpl/mail/account.registration.xtpl');
+        $message->insertText('name', $user->name);
+        $url = \Tk\Uri::create()->set('h', $user->hash);
+        $message->insertText('url', $url->toString());
+        $message->setAttr('url', 'href', $url->toString());
+
+        // TODO: Send the email here
+        vd($message->toString());
+
+    }
+
+    public function onRegisterConfirm(\Tk\EventDispatcher\Event $event)
+    {
+        /** @var \App\Db\User $user */
+        $user = $event->get('user');
+
+        // Send an email to confirm account active
+        $message = \Dom\Loader::loadFile($event->get('templatePath').'/xtpl/mail/account.activated.xtpl');
+        $message->insertText('name', $user->name);
+        $url = \Tk\Uri::create('/login.html');
+        $message->insertText('url', $url->toString());
+        $message->setAttr('url', 'href', $url->toString());
+
+
+        // TODO: Send the email here
+        vd($message->toString());
+
+    }
+
+    public function onRecover(\Tk\EventDispatcher\Event $event)
+    {
+        /** @var \App\Db\User $user */
+        $user = $event->get('user');
+        $pass = $event->get('password');
+
+        // Send an email to confirm account active
+        $message = \Dom\Loader::loadFile($event->get('templatePath').'/xtpl/mail/account.recover.xtpl');
+        $message->insertText('name', $user->name);
+        $message->insertText('password', $pass);
+        $url = \Tk\Uri::create('/login.html');
+        $message->insertText('url', $url->toString());
+        $message->setAttr('url', 'href', $url->toString());
+
+
+        // TODO: Send the email here
+        vd($message->toString());
+
+    }
+
+
     /**
      * Returns an array of event names this subscriber wants to listen to.
      *
@@ -113,7 +171,10 @@ class AuthHandler implements SubscriberInterface
         return array(
             KernelEvents::CONTROLLER => 'onControllerAccess',
             'auth.onLogin' => 'onLogin',
-            'auth.onLogout' => 'onLogout'
+            'auth.onLogout' => 'onLogout',
+            'auth.onRegister' => 'onRegister',
+            'auth.onRegisterConfirm' => 'onRegisterConfirm',
+            'auth.onRecover' => 'onRecover'
         );
     }
     
