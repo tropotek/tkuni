@@ -26,7 +26,7 @@ class Index extends Iface
      */
     public function doDefault(Request $request)
     {
-        // TODO: 
+        // TODO:
 
         return $this->show();
     }
@@ -36,8 +36,7 @@ class Index extends Iface
     public function show()
     {
         $template = $this->getTemplate();
-        
-        
+
         return $this->getPage()->setPageContent($template);
     }
 

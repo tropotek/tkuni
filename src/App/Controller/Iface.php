@@ -18,7 +18,6 @@ abstract class Iface extends \Dom\Renderer\Renderer
 
     /**
      * @param string $pageTitle
-     * @param string|array $access
      */
     public function __construct($pageTitle = '')
     {
@@ -33,20 +32,24 @@ abstract class Iface extends \Dom\Renderer\Renderer
      */
     public function getPage()
     {
+        $pageAccess = $this->getConfig()->getRequest()->getAttribute('access');
         if (!$this->page) {
-            if (!$this->getUser()) {
-                $this->page = new \App\Page\PublicPage($this);
-                return $this->page;
-            }
-            $acl = $this->getUser()->getAcl();
-            if ($acl->hasRole(\App\Auth\Acl::ROLE_ADMIN)) {
-                $this->page = new \App\Page\AdminPage($this);
-            } else if ($acl->hasRole(\App\Auth\Acl::ROLE_CLIENT)) {
-                $this->page = new \App\Page\ClientPage($this);
-            } else if ($acl->hasRole(\App\Auth\Acl::ROLE_STAFF)) {
-                $this->page = new \App\Page\StaffPage($this);
-            } else if ($acl->hasRole(\App\Auth\Acl::ROLE_STUDENT)) {
-                $this->page = new \App\Page\StudentPage($this);
+            switch($pageAccess) {
+                case \App\Auth\Acl::ROLE_ADMIN:
+                    $this->page = new \App\Page\AdminPage($this);
+                    break;
+                case \App\Auth\Acl::ROLE_CLIENT:
+                    $this->page = new \App\Page\ClientPage($this);
+                    break;
+                case \App\Auth\Acl::ROLE_STAFF:
+                    $this->page = new \App\Page\StaffPage($this);
+                    break;
+                case \App\Auth\Acl::ROLE_STUDENT:
+                    $this->page = new \App\Page\StudentPage($this);
+                    break;
+                default:
+                    $this->page = new \App\Page\PublicPage($this);
+                    break;
             }
         }
         return $this->page;

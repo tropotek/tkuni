@@ -42,11 +42,10 @@ class InitProjectEvent
 
     /**
      * @param Event $event
+     * @param bool $isInstall
      */
     static function init(Event $event, $isInstall = false)
     {
-
-        vd('-----------------------');
         try {
             $sitePath = $_SERVER['PWD'];
             $io = $event->getIO();
@@ -153,30 +152,8 @@ STR;
                 $io->write(self::green('  ' . $f));
             }
 
-            // TODO Prompt for new admin user password and update DB
-            // TODO This could be considered unsecure and may need to be removed in favor of an email address only?
-            // TODO ----------------------------------------------------------------------------------------
             if ($isInstall) {
-
                 $io->write(self::green('As this is a new install login into the site using User: `admin` and Password: `password` and configure your site as needed.'));
-
-//                $sql = sprintf('SELECT * FROM %s WHERE role = %s', $db->quoteParameter('user'), $db->quote('admin'));
-//                $res = $db->query($sql);
-//
-//                if (!$res->rowCount()) {
-//                    $p = $io->ask(self::bold('Please create a new `admin` user password: '), 'admin');
-//                    $hashed = \App\Factory::hashPassword($p);
-//                    $sql = sprintf('UPDATE %s SET password = %s WHERE id = 1', $db->quoteParameter('user'), $db->quote($hashed));
-//
-//                    $r = $db->exec($sql);
-//                    if ($r === false) {
-//                        print_r($db->errorInfo());
-//                        $io->write(self::red('Error updating admin user password.'));
-//                    } else {
-//                        $io->write(self::green('Administrator password updated.'));
-//                    }
-//                }
-
             }
 
         } catch (\Exception $e) {

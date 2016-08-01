@@ -54,7 +54,7 @@ class Settings extends Iface
 
         $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
         $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
-        $this->form->addField(new Event\LinkButton('cancel', \Tk\Uri::create('/')));
+        $this->form->addField(new Event\LinkButton('cancel', \Tk\Uri::create('/admin/index.html')));
 
         $this->form->load($this->data->toArray());
         $this->form->execute();
@@ -108,8 +108,6 @@ class Settings extends Iface
         return $this->getPage()->setPageContent($template);
     }
 
-
-
     /**
      * DomTemplate magic method
      *
@@ -120,24 +118,21 @@ class Settings extends Iface
         $xhtml = <<<XHTML
 <div class="row" var="content">
   <div class="col-lg-12">
+  
     <div class="panel panel-default">
       <div class="panel-heading">
         <i class="glyphicon glyphicon-cog"></i>
         Site Settings
       </div>
-      <!-- /.panel-heading -->
       <div class="panel-body">
         <div class="row">
           <div class="col-lg-12">
-
             <div var="formEdit"></div>
-
           </div>
         </div>
       </div>
-      <!-- /.panel-body -->
     </div>
-    <!-- /.panel -->
+    
   </div>
 </div>
 XHTML;

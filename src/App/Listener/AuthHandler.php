@@ -1,12 +1,10 @@
 <?php
 namespace App\Listener;
 
-
 use Tk\EventDispatcher\SubscriberInterface;
 use App\Event\AuthEvent;
 use Tk\Kernel\KernelEvents;
 use Tk\Event\ControllerEvent;
-
 
 /**
  * Class StartupHandler
@@ -38,7 +36,6 @@ class AuthHandler implements SubscriberInterface
             }
         }
         if (!$result) {
-            //throw new \Tk\Auth\Exception('Unknown Error: Contact Your Administrator.');
             throw new \Tk\Auth\Exception('Invalid login credentials');
         }
         
@@ -78,9 +75,9 @@ class AuthHandler implements SubscriberInterface
 
             // Get page access permission from route params (see config/routes.php
             $role = $event->getRequest()->getAttribute('access');
-
             // Check the user has access to the controller in question
-            if (empty($role)) return;
+            if (!$role || empty($role)) return;
+
             if (!$user) \Tk\Uri::create('/login.html')->redirect();
             if (!$user->getAcl()->hasRole($role)) {
                 // Could redirect to a authentication error page...
