@@ -47,8 +47,6 @@ class InitProjectEvent
     {
         $isCleanInstall = false;
 
-
-
         try {
             $sitePath = $_SERVER['PWD'];
             $io = $event->getIO();
@@ -159,22 +157,26 @@ STR;
             // TODO This could be considered unsecure and may need to be removed in favor of an email address only?
             // TODO ----------------------------------------------------------------------------------------
             if ($isInstall) {
-                $sql = sprintf('SELECT * FROM %s WHERE role = %s', $db->quoteParameter('user'), $db->quote('admin'));
-                $res = $db->query($sql);
 
-                if (!$res->rowCount()) {
-                    $p = $io->ask(self::bold('Please create a new `admin` user password: '), 'admin');
-                    $hashed = \App\Factory::hashPassword($p);
-                    $sql = sprintf('UPDATE %s SET password = %s WHERE id = 1', $db->quoteParameter('user'), $db->quote($hashed));
+                $io->write(self::green('As this is a new install login into the site using User: `admin` and Password: `password` and configure your site as needed.'));
 
-                    $r = $db->exec($sql);
-                    if ($r === false) {
-                        print_r($db->errorInfo());
-                        $io->write(self::red('Error updating admin user password.'));
-                    } else {
-                        $io->write(self::green('Administrator password updated.'));
-                    }
-                }
+//                $sql = sprintf('SELECT * FROM %s WHERE role = %s', $db->quoteParameter('user'), $db->quote('admin'));
+//                $res = $db->query($sql);
+//
+//                if (!$res->rowCount()) {
+//                    $p = $io->ask(self::bold('Please create a new `admin` user password: '), 'admin');
+//                    $hashed = \App\Factory::hashPassword($p);
+//                    $sql = sprintf('UPDATE %s SET password = %s WHERE id = 1', $db->quoteParameter('user'), $db->quote($hashed));
+//
+//                    $r = $db->exec($sql);
+//                    if ($r === false) {
+//                        print_r($db->errorInfo());
+//                        $io->write(self::red('Error updating admin user password.'));
+//                    } else {
+//                        $io->write(self::green('Administrator password updated.'));
+//                    }
+//                }
+
             }
 
         } catch (\Exception $e) {
