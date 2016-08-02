@@ -28,6 +28,7 @@ class AuthHandler implements SubscriberInterface
 
         foreach($adapterList as $name => $class) {
             $adapter = \App\Factory::getAuthAdapter($class, $event->all());
+            vd($adapter);
             if (!$adapter) continue;
             $result = $event->getAuth()->authenticate($adapter);
             $event->setResult($result);
@@ -73,7 +74,7 @@ class AuthHandler implements SubscriberInterface
         $user = $controller->getUser();
         if ($controller instanceof \App\Controller\Iface) {
 
-            // Get page access permission from route params (see config/routes.php
+            // Get page access permission from route params (see config/routes.php)
             $role = $event->getRequest()->getAttribute('access');
             // Check the user has access to the controller in question
             if (!$role || empty($role)) return;

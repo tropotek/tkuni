@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS "user" (
   id SERIAL PRIMARY KEY,
   uid VARCHAR(128) NOT NULL DEFAULT '',
   username VARCHAR(64) NOT NULL DEFAULT '',
-  password VARCHAR(64) NOT NULL DEFAULT '',
+  password VARCHAR(128) NOT NULL DEFAULT '',
   -- ROLES: 'admin', 'client', 'staff', 'student
   role VARCHAR(64) NOT NULL DEFAULT '',
   name VARCHAR(255) NOT NULL DEFAULT '',

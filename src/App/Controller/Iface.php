@@ -59,6 +59,15 @@ abstract class Iface extends \Dom\Renderer\Renderer
      *
      * @return string
      */
+    public function getTemplatePath()
+    {
+        return $this->getPage()->getTemplatePath();
+    }
+
+    /**
+     *
+     * @return string
+     */
     public function getPageTitle()
     {
         return $this->pageTitle;

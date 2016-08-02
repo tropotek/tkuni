@@ -8,7 +8,7 @@ namespace App\Page;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-abstract class Iface extends \Dom\Renderer\Renderer
+abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterface
 {
 
     /**
@@ -32,8 +32,7 @@ abstract class Iface extends \Dom\Renderer\Renderer
         $this->controller = $controller;
         if (!$this->templatePath)
             $this->templatePath = $this->getConfig()->getSitePath() . $this->getConfig()->get('template.public.path');
-        
-        // It could lead to possible rendering issues....
+
         $this->show();
     }
 
@@ -96,7 +95,6 @@ abstract class Iface extends \Dom\Renderer\Renderer
 
         $siteUrl = $this->getConfig()->getSiteUrl();
         $dataUrl = $this->getConfig()->getDataUrl();
-
 
         $js = <<<JS
 

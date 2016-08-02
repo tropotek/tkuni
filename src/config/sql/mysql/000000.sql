@@ -12,13 +12,13 @@ CREATE TABLE IF NOT EXISTS `user` (
   `id` INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   `uid` VARCHAR(128) NOT NULL DEFAULT '',
   `username` VARCHAR(64) NOT NULL DEFAULT '',
-  `password` VARCHAR(64) NOT NULL DEFAULT '',
+  `password` VARCHAR(128) NOT NULL DEFAULT '',
   -- ROLES: 'admin', 'client', 'staff', 'student
   `role` VARCHAR(255) NOT NULL DEFAULT '',
   `name` VARCHAR(255) NOT NULL DEFAULT '',
   `email` VARCHAR(255) NOT NULL DEFAULT '',
   `active` TINYINT(1) NOT NULL DEFAULT 1,
-  `hash` VARCHAR(64) NOT NULL DEFAULT '',
+  `hash` VARCHAR(128) NOT NULL DEFAULT '',
   `notes` TEXT,
   `last_login` DATETIME,
   `del` TINYINT(1) NOT NULL DEFAULT 0,
@@ -40,11 +40,10 @@ CREATE TABLE IF NOT EXISTS `institution` (
   `description` TEXT,
   `logo` VARCHAR(255) NOT NULL DEFAULT '',
   `active` TINYINT(1) NOT NULL DEFAULT 1,
-  `hash` VARCHAR(64) NOT NULL DEFAULT '',
+  `hash` VARCHAR(128) NOT NULL DEFAULT '',
   `del` TINYINT(1) NOT NULL DEFAULT 0,
   `modified` DATETIME NOT NULL,
   `created` DATETIME NOT NULL,
-
   UNIQUE KEY `inst_domain` (`domain`),
   UNIQUE KEY `inst_hash` (`hash`)
 ) ENGINE=InnoDB;
@@ -56,7 +55,6 @@ CREATE TABLE IF NOT EXISTS `institution` (
 CREATE TABLE IF NOT EXISTS `user_institution` (
 	`user_id` INT(10) UNSIGNED NOT NULL DEFAULT 0,
 	`institution_id` INT(10) NOT NULL DEFAULT 0,
-
   -- TODO: Look into the best place for this info, as it has to do with LMS access more precisly, maybe the data table instead...
   `uid` VARCHAR(128) NOT NULL DEFAULT '',    -- A unique identifier for a specific institution (IE: staffId, studentId, etc...)
   UNIQUE KEY `ui_key` (`user_id`, `institution_id`)
@@ -72,7 +70,6 @@ CREATE TABLE IF NOT EXISTS `course` (
   `code` VARCHAR(64) NOT NULL DEFAULT '',
   `email` VARCHAR(255) NOT NULL DEFAULT '',
   `description` TEXT,
-
   `start` DATETIME NOT NULL,
   `finish` DATETIME NOT NULL,
   `del` TINYINT(1) NOT NULL DEFAULT 0,
@@ -88,7 +85,6 @@ CREATE TABLE IF NOT EXISTS `course` (
 CREATE TABLE IF NOT EXISTS `user_course` (
   `user_id` INT(10) UNSIGNED NOT NULL DEFAULT 0,
   `course_id` INT(10) UNSIGNED NOT NULL DEFAULT 0,
-
   UNIQUE KEY `user_course_key` (`user_id`, `course_id`)
 ) ENGINE=InnoDB;
 

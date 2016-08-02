@@ -165,7 +165,7 @@ class User extends \Tk\Db\Map\Model
         if (!$this->username || !$this->role || !$this->email) {
             throw new \Tk\Exception('The username, role and email must be set before generating a valid hash');
         }
-        return hash(self::$HASH_FUNCTION, sprintf('%s', $this->username, $this->role, $this->email));
+        return hash(self::$HASH_FUNCTION, sprintf('%s%s%s', $this->username, $this->role, $this->email));
     }
 
     /**
