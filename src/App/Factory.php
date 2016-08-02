@@ -262,10 +262,7 @@ class Factory
             else if ($user->hash)
                 $pwd = $pwd . $user->hash;
         }
-        vd($pwd);
         $h = hash('md5', $pwd);
-        vd($h);
-
         return $h;
     }
     
