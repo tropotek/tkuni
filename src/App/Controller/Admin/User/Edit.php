@@ -47,7 +47,6 @@ class Edit extends Iface
         $this->user = new \App\Db\User();
         $this->user = \App\Db\User::getMapper()->find($request->get('userId'));
 
-
         $this->form = new Form('formEdit');
 
         $this->form->addField(new Field\Input('username'))->setRequired(true)->setTabGroup('Details');
@@ -79,7 +78,7 @@ class Edit extends Iface
 
         $this->form->addField(new Event\Link('cancel', $url));
         
-        $this->form->load(\App\Db\UserMap::unmapForm($this->user));
+        $this->form->load(\App\Db\UserMap::create()->unmapForm($this->user));
         
         $this->form->execute();
         
@@ -92,7 +91,6 @@ class Edit extends Iface
     public function doSubmit($form)
     {
         // Load the object with data from the form using a helper object
-        //\App\Form\ModelLoader::loadObject($form, $this->user);
         \App\Db\UserMap::mapForm($form->getValues(), $this->user);
 
         // Password validation needs to be here

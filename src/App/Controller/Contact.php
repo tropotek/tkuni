@@ -111,7 +111,7 @@ class Contact extends Iface
             \App\Alert::getInstance()->addSuccess('<strong>Success!</strong> Your form has been sent.');
         }
 
-        //\Tk\Uri::create()->redirect();
+        \Tk\Uri::create()->redirect();
     }
 
 

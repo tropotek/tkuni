@@ -84,7 +84,7 @@ class Edit extends Iface
             $url = \Tk\Uri::create('/admin/institutionEdit.html')->set('institutionId', $this->getConfig()->getRequest()->get('institutionId'));
         $this->form->addField(new Event\Link('cancel', $url));
 
-        $this->form->load(\App\Db\CourseMap::unmapForm($this->course));
+        $this->form->load(\App\Db\CourseMap::create()->unmapForm($this->course));
         $this->form->execute();
 
         return $this->show();
@@ -117,8 +117,7 @@ class Edit extends Iface
     public function doSubmit($form)
     {
         // Load the object with data from the form using a helper object
-        //\App\Form\ModelLoader::loadObject($form, $this->user);
-        \App\Db\CourseMap::mapForm($form->getValues(), $this->course);
+        \App\Db\CourseMap::create()->mapForm($form->getValues(), $this->course);
 
         $form->addFieldErrors(\App\Db\CourseValidator::create($this->course)->getErrors());
 

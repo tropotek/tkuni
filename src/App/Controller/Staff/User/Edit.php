@@ -78,7 +78,7 @@ class Edit extends Iface
 
         $this->form->addField(new Event\Link('cancel', $url));
         
-        $this->form->load(\App\Db\UserMap::unmapForm($this->user));
+        $this->form->load(\App\Db\UserMap::create()->unmapForm($this->user));
         
         $this->form->execute();
         
@@ -91,8 +91,7 @@ class Edit extends Iface
     public function doSubmit($form)
     {
         // Load the object with data from the form using a helper object
-        //\App\Form\ModelLoader::loadObject($form, $this->user);
-        \App\Db\UserMap::mapForm($form->getValues(), $this->user);
+        \App\Db\UserMap::create()->mapForm($form->getValues(), $this->user);
 
         // Password validation needs to be here
         if ($this->form->getFieldValue('newPassword')) {

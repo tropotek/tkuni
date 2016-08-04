@@ -1,10 +1,11 @@
 <?php
 namespace App\Db;
 
-use Tk\Db\Map\Mapper;
 use Tk\Db\Map\Model;
 use Tk\Db\Tool;
 use Tk\Db\Map\ArrayObject;
+use Tk\DataMap\Db;
+use Tk\DataMap\Form;
 
 /**
  * Class UserMapper
@@ -16,108 +17,55 @@ use Tk\Db\Map\ArrayObject;
  */
 class UserMap extends Mapper
 {
-
     /**
-     * Map the form fields data to the object
      *
-     * @param array $row
-     * @param User $obj
-     * @return User
+     * @return \Tk\DataMap\DataMap
      */
-    static function mapForm($row, $obj = null)
+    public function getDbMap()
     {
-        if (!$obj) {
-            $obj = new User();
+        if (!$this->dbMap) {
+            $this->dbMap = new \Tk\DataMap\DataMap();
+            $this->dbMap->addProperty(new Db\Number('id'), 'key');
+            $this->dbMap->addProperty(new Db\Text('uid'));
+            $this->dbMap->addProperty(new Db\Text('username'));
+            $this->dbMap->addProperty(new Db\Text('password'));
+            $this->dbMap->addProperty(new Db\Text('name'));
+            $this->dbMap->addProperty(new Db\Text('role'));
+            $this->dbMap->addProperty(new Db\Text('email'));
+            $this->dbMap->addProperty(new Db\Boolean('active'));
+            $this->dbMap->addProperty(new Db\Text('hash'));
+            $this->dbMap->addProperty(new Db\Date('lastLogin', 'last_login'));
+            $this->dbMap->addProperty(new Db\Date('modified'));
+            $this->dbMap->addProperty(new Db\Date('created'));
+
+            $this->setPrimaryKey($this->dbMap->currentProperty('key')->getColumnName());
         }
-        //$obj->id = $row['id'];
-        if (isset($row['uid']))
-            $obj->uid = $row['uid'];
-        if (isset($row['username']))
-            $obj->username = $row['username'];
-        if (isset($row['password']))
-            $obj->password = $row['password'];
-        if (isset($row['name']))
-            $obj->name = $row['name'];
-        if (isset($row['role']))
-            $obj->role = $row['role'];
-        if (isset($row['email']))
-            $obj->email = $row['email'];
-        if (isset($row['active']))
-            $obj->active = ($row['active'] == 'active');
-
-        if (isset($row['modified']))
-            $obj->modified = \Tk\Date::createFormDate($row['modified']);
-        if (isset($row['created']))
-            $obj->created = \Tk\Date::createFormDate($row['created']);
-
-        return $obj;
+        return $this->dbMap;
     }
 
     /**
-     * Unmap the object to an array for the form fields
      *
-     * @param $obj
-     * @return array
+     * @return \Tk\DataMap\DataMap
      */
-    static function unmapForm($obj)
+    public function getFormMap()
     {
-        $arr = array(
-            'id' => $obj->id,
-            'uid' => $obj->uid,
-            'username' => $obj->username,
-            'password' => $obj->password,
-            'name' => $obj->name,
-            'role' => $obj->role,
-            'email' => $obj->email,
-            'active' => (int)$obj->active,
-            'modified' => $obj->modified->format(\Tk\Date::$formFormat),
-            'created' => $obj->created->format(\Tk\Date::$formFormat)
-        );
-        return $arr;
-    }
+        if (!$this->formMap) {
+            $this->formMap = new \Tk\DataMap\DataMap();
+            $this->formMap->addProperty(new Form\Number('id'), 'key');
+            $this->formMap->addProperty(new Form\Text('uid'));
+            $this->formMap->addProperty(new Form\Text('username'));
+            $this->formMap->addProperty(new Form\Text('password'));
+            $this->formMap->addProperty(new Form\Text('name'));
+            $this->formMap->addProperty(new Form\Text('role'));
+            $this->formMap->addProperty(new Form\Text('email'));
+            $this->formMap->addProperty(new Form\Boolean('active'));
 
-    public function map($row)
-    {
-        $obj = new User();
-        $obj->id = $row['id'];
-        $obj->uid = $row['uid'];
-        $obj->username = $row['username'];
-        $obj->password = $row['password'];
-        $obj->name = $row['name'];
-        $obj->role = $row['role'];
-        $obj->email = $row['email'];
-        $obj->active = ($row['active'] == 1);
-        $obj->hash = $row['hash'];
-        if ($row['last_login'])
-            $obj->lastLogin = \Tk\Date::create($row['last_login']);
-        if ($row['modified'])
-            $obj->modified = \Tk\Date::create($row['modified']);
-        if ($row['created'])
-            $obj->created = \Tk\Date::create($row['created']);
-        return $obj;
-    }
-
-    public function unmap($obj)
-    {
-        $arr = array(
-            'id' => $obj->id,
-            'uid' => $obj->uid,
-            'username' => $obj->username,
-            'password' => $obj->password,
-            'name' => $obj->name,
-            'role' => $obj->role,
-            'email' => $obj->email,
-            'hash' => $obj->hash,
-            'active' => (int)$obj->active,
-            'modified' => $obj->modified->format(\Tk\Date::ISO_DATE),
-            'created' => $obj->created->format(\Tk\Date::ISO_DATE)
-        );
-        if ($obj->lastLogin) {
-            $arr['last_login'] = $obj->lastLogin->format(\Tk\Date::ISO_DATE);
+            $this->setPrimaryKey($this->formMap->currentProperty('key')->getColumnName());
         }
-        
-        return $arr;
+        return $this->formMap;
     }
+
+
 
 
     /**
@@ -277,11 +225,9 @@ class UserMap extends Mapper
             }
         }
 
-
         if (!empty($filter['uid'])) {
             $where .= sprintf('a.uid = %s AND ', $this->getDb()->quote($filter['uid']));
         }
-
 
         if (!empty($filter['institutionId'])) {
             $from .= sprintf(', user_institution b');
@@ -311,9 +257,5 @@ class UserMap extends Mapper
         $res = $this->selectFrom($from, $where, $tool);
         return $res;
     }
-
-
-
-
 
 }

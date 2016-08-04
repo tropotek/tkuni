@@ -5,6 +5,24 @@
 -- ---------------------------------
 
 
+
+
+CREATE TABLE IF NOT EXISTS `mapper_test` (
+-- `id` SERIAL PRIMARY KEY,
+  `id` INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `integer` INTEGER NOT NULL DEFAULT 0,
+  `bool` NUMERIC(1) NOT NULL DEFAULT 0,
+  `float` NUMERIC(10,10) NOT NULL DEFAULT 0,
+  `float2` FLOAT NOT NULL DEFAULT 0,
+  `varchar` VARCHAR(255) NOT NULL DEFAULT '',
+  `text` TEXT,
+  `timestamp` TIMESTAMP,
+  `datetetime` DATETIME
+);
+
+
+
+
 -- ----------------------------
 --  user
 -- ----------------------------

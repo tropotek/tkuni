@@ -87,7 +87,7 @@ class Edit extends Iface
         $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
         $this->form->addField(new Event\Link('cancel', \Tk\Uri::create('/client/institutionManager.html')));
 
-        $this->form->load(\App\Db\InstitutionMap::unmapForm($this->institution));
+        $this->form->load(\App\Db\InstitutionMap::create()->unmapForm($this->institution));
         $this->form->load($this->institution->getData()->all());
 
 //        if ($this->institution->id && $this->institution->getOwner()) {
@@ -134,8 +134,7 @@ class Edit extends Iface
     public function doSubmit($form)
     {
         // Load the object with data from the form using a helper object
-        //\App\Form\ModelLoader::loadObject($form, $this->user);
-        \App\Db\InstitutionMap::mapForm($form->getValues(), $this->institution);
+        \App\Db\InstitutionMap::create()->mapForm($form->getValues(), $this->institution);
 
         $form->addFieldErrors(\App\Db\InstitutionValidator::create($this->institution)->getErrors());
 

@@ -63,7 +63,7 @@ class Bootstrap
 
         if (isset($config['hash.function']))
             \App\Db\User::$HASH_FUNCTION = $config['hash.function'];
-        
+
         /**
          * This makes our life easier when dealing with paths. Everything is relative
          * to the application root now.

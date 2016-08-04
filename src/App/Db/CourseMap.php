@@ -1,10 +1,11 @@
 <?php
 namespace App\Db;
 
-use Tk\Db\Map\Mapper;
 use Tk\Db\Map\Model;
 use Tk\Db\Tool;
 use Tk\Db\Map\ArrayObject;
+use Tk\DataMap\Db;
+use Tk\DataMap\Form;
 
 /**
  * Class CourseMap
@@ -18,120 +19,53 @@ class CourseMap extends Mapper
 {
 
     /**
-     * Map the form fields data to the object
      *
-     * @param array $row
-     * @param Course $obj
-     * @return Course
+     * @return \Tk\DataMap\DataMap
      */
-    static function mapForm($row, $obj = null)
+    public function getDbMap()
     {
-        if (!$obj) {
-            $obj = new Course();
+        if (!$this->dbMap) {
+            $this->dbMap = new \Tk\DataMap\DataMap();
+            $this->dbMap->addProperty(new Db\Number('id'), 'key');
+            $this->dbMap->addProperty(new Db\Number('institutionId', 'institution_id'));
+            $this->dbMap->addProperty(new Db\Text('name'));
+            $this->dbMap->addProperty(new Db\Text('code'));
+            $this->dbMap->addProperty(new Db\Text('email'));
+            $this->dbMap->addProperty(new Db\Text('description'));
+
+            $this->dbMap->addProperty(new Db\Date('start'));
+            $this->dbMap->addProperty(new Db\Date('finish'));
+            $this->dbMap->addProperty(new Db\Date('modified'));
+            $this->dbMap->addProperty(new Db\Date('created'));
+
+            $this->setPrimaryKey($this->dbMap->currentProperty('key')->getColumnName());
         }
-        //$obj->id = $row['id'];
-        if (isset($row['institutionId']))
-            $obj->institutionId = $row['institutionId'];
-        if (isset($row['name']))
-            $obj->name = $row['name'];
-        if (isset($row['code']))
-            $obj->code = $row['code'];
-        if (isset($row['email']))
-            $obj->email = $row['email'];
-        if (isset($row['description']))
-            $obj->description = $row['description'];
-
-        if (isset($row['start']))
-            $obj->start = \Tk\Date::createFormDate($row['start']);
-        if (isset($row['finish']))
-            $obj->finish = \Tk\Date::createFormDate($row['finish']);
-
-        if (isset($row['modified']))
-            $obj->modified = \Tk\Date::createFormDate($row['modified']);
-        if (isset($row['created']))
-            $obj->created = \Tk\Date::createFormDate($row['created']);
-        
-        return $obj;
+        return $this->dbMap;
     }
 
     /**
-     * Unmap the object to an array for the form fields
      *
-     * @param Course|\stdClass $obj
-     * @return array
+     * @return \Tk\DataMap\DataMap
      */
-    static function unmapForm($obj)
+    public function getFormMap()
     {
-        $start = null;
-        $finish = null;
+        if (!$this->formMap) {
+            $this->formMap = new \Tk\DataMap\DataMap();
+            $this->formMap->addProperty(new Form\Number('id'), 'key');
+            $this->formMap->addProperty(new Form\Number('institutionId'));
+            $this->formMap->addProperty(new Form\Text('name'));
+            $this->formMap->addProperty(new Form\Text('code'));
+            $this->formMap->addProperty(new Form\Text('email'));
+            $this->formMap->addProperty(new Form\Text('description'));
+            $this->formMap->addProperty(new Form\Date('start'));
+            $this->formMap->addProperty(new Form\Date('finish'));
 
-        if ($obj->start) {
-            $start = $obj->start->format(\Tk\Date::$formFormat);
+            $this->setPrimaryKey($this->formMap->currentProperty('key')->getColumnName());
         }
-        if ($obj->finish) {
-            $finish = $obj->finish->format(\Tk\Date::$formFormat);
-        }
-        
-        $arr = array(
-            'id' => $obj->id,
-            'institutionId' => $obj->institutionId,
-            'name' => $obj->name,
-            'code' => $obj->code,
-            'email' => $obj->email,
-            'description' => $obj->description,
-            'start' => $start,
-            'finish' => $finish,
-            'modified' => $obj->modified->format(\Tk\Date::$formFormat),
-            'created' => $obj->created->format(\Tk\Date::$formFormat)
-        );
-
-        return $arr;
+        return $this->formMap;
     }
 
-    /**
-     * @param array|\stdClass|Model $row
-     * @return Course
-     */
-    public function map($row)
-    {
-        $obj = new Course();
-        $obj->id = $row['id'];
-        $obj->institutionId = $row['institution_id'];
-        $obj->name = $row['name'];
-        $obj->code = $row['code'];
-        $obj->email = $row['email'];
-        $obj->description = $row['description'];
-        if ($row['start'])
-            $obj->start = \Tk\Date::create($row['start']);
-        if ($row['finish'])
-            $obj->finish = \Tk\Date::create($row['finish']);
-        if ($row['modified'])
-            $obj->modified = \Tk\Date::create($row['modified']);
-        if ($row['created'])
-            $obj->created = \Tk\Date::create($row['created']);
-        return $obj;
-    }
 
-    /**
-     * @param \stdClass|Model $obj
-     * @return array
-     */
-    public function unmap($obj)
-    {
-        $arr = array(
-            'id' => $obj->id,
-            'institution_id' => $obj->institutionId,
-            'name' => $obj->name,
-            'code' => $obj->code,
-            'email' => $obj->email,
-            'description' => $obj->description,
-            'start' => $obj->start->format(\Tk\Date::ISO_DATE),
-            'finish' => $obj->finish->format(\Tk\Date::ISO_DATE),
-            'modified' => $obj->modified->format(\Tk\Date::ISO_DATE),
-            'created' => $obj->created->format(\Tk\Date::ISO_DATE)
-        );
-        return $arr;
-    }
 
 
     /**

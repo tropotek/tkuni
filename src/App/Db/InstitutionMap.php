@@ -1,14 +1,13 @@
 <?php
 namespace App\Db;
 
-use Tk\Db\Map\Mapper;
-use Tk\Db\Map\Model;
 use Tk\Db\Tool;
 use Tk\Db\Map\ArrayObject;
+use Tk\DataMap\Db;
+use Tk\DataMap\Form;
 
 /**
  * Class CourseMap
- *
  *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
@@ -18,104 +17,53 @@ class InstitutionMap extends Mapper
 {
 
     /**
-     * Map the form fields data to the object
      *
-     * @param array $row
-     * @param Institution $obj
-     * @return Institution
+     * @return \Tk\DataMap\DataMap
      */
-    static function mapForm($row, $obj = null)
+    public function getDbMap()
     {
-        if (!$obj) {
-            $obj = new Institution();
-        }
-        //$obj->id = $row['id'];
-        if (isset($row['ownerId']))
-            $obj->ownerId = $row['ownerId'];
-        if (isset($row['name']))
-            $obj->name = $row['name'];
-        if (isset($row['domain']))
-            $obj->domain = $row['domain'];
-        if (isset($row['email']))
-            $obj->email = $row['email'];
-        if (isset($row['description']))
-            $obj->description = $row['description'];
-        if (isset($row['logo']))
-            $obj->logo = $row['logo'];
-        if (isset($row['active']))
-            $obj->active = ($row['active'] == 'active');
-        if (isset($row['hash']))
-            $obj->hash = $row['hash'];
+        if (!$this->dbMap) {
+            $this->dbMap = new \Tk\DataMap\DataMap();
+            $this->dbMap->addProperty(new Db\Number('id'), 'key');
+            $this->dbMap->addProperty(new Db\Number('ownerId', 'owner_id'));
+            $this->dbMap->addProperty(new Db\Text('name'));
+            $this->dbMap->addProperty(new Db\Text('domain'));
+            $this->dbMap->addProperty(new Db\Text('email'));
+            $this->dbMap->addProperty(new Db\Text('description'));
+            $this->dbMap->addProperty(new Db\Text('logo'));
+            $this->dbMap->addProperty(new Db\Boolean('active'));
+            $this->dbMap->addProperty(new Db\Text('hash'));
+            $this->dbMap->addProperty(new Db\Date('modified'));
+            $this->dbMap->addProperty(new Db\Date('created'));
 
-        if (isset($row['modified']))
-            $obj->modified = \Tk\Date::createFormDate($row['modified']);
-        if (isset($row['created']))
-            $obj->created = \Tk\Date::createFormDate($row['created']);
-        
-        return $obj;
+            $this->setPrimaryKey($this->dbMap->currentProperty('key')->getColumnName());
+        }
+        return $this->dbMap;
     }
 
     /**
-     * Unmap the object to an array for the form fields
      *
-     * @param $obj
-     * @return array
+     * @return \Tk\DataMap\DataMap
      */
-    static function unmapForm($obj)
+    public function getFormMap()
     {
-        $arr = array(
-            'id' => $obj->id,
-            'ownerId' => $obj->ownerId,
-            'name' => $obj->name,
-            'domain' => $obj->domain,
-            'email' => $obj->email,
-            'description' => $obj->description,
-            'logo' => $obj->logo,
-            'active' => $obj->active ? 'active' : '',
-            'hash' => $obj->hash,
-            'modified' => $obj->modified->format(\Tk\Date::$formFormat),
-            'created' => $obj->created->format(\Tk\Date::$formFormat)
-        );
+        if (!$this->formMap) {
+            $this->formMap = new \Tk\DataMap\DataMap();
+            $this->formMap->addProperty(new Form\Number('id'), 'key');
+            $this->formMap->addProperty(new Form\Number('ownerId'));
+            $this->formMap->addProperty(new Form\Text('name'));
+            $this->formMap->addProperty(new Form\Text('domain'));
+            $this->formMap->addProperty(new Form\Text('email'));
+            $this->formMap->addProperty(new Form\Text('description'));
+            $this->formMap->addProperty(new Form\Text('logo'));
+            $this->formMap->addProperty(new Form\Boolean('active'));
 
-        return $arr;
+            $this->setPrimaryKey($this->formMap->currentProperty('key')->getColumnName());
+        }
+        return $this->formMap;
     }
 
-    public function map($row)
-    {
-        $obj = new Institution();
-        $obj->id = $row['id'];
-        $obj->ownerId = $row['owner_id'];
-        $obj->name = $row['name'];
-        $obj->domain = $row['domain'];
-        $obj->email = $row['email'];
-        $obj->description = $row['description'];
-        $obj->logo = $row['logo'];
-        $obj->active = ($row['active'] == 1);
-        $obj->hash = $row['hash'];
-        if ($row['modified'])
-            $obj->modified = \Tk\Date::create($row['modified']);
-        if ($row['created'])
-            $obj->created = \Tk\Date::create($row['created']);
-        return $obj;
-    }
 
-    public function unmap($obj)
-    {
-        $arr = array(
-            'id' => $obj->id,
-            'owner_id' => $obj->ownerId,
-            'name' => $obj->name,
-            'domain' => $obj->domain,
-            'email' => $obj->email,
-            'description' => $obj->description,
-            'logo' => $obj->logo,
-            'active' => (int)$obj->active,
-            'hash' => $obj->hash,
-            'modified' => $obj->modified->format(\Tk\Date::ISO_DATE),
-            'created' => $obj->created->format(\Tk\Date::ISO_DATE)
-        );
-        return $arr;
-    }
 
     /**
      *
@@ -252,3 +200,4 @@ class InstitutionMap extends Mapper
     }
 
 }
+

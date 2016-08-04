@@ -5,6 +5,22 @@
 -- ---------------------------------
 
 
+
+
+CREATE TABLE IF NOT EXISTS mapper_test (
+  "id" SERIAL PRIMARY KEY,
+  "integer" INTEGER NOT NULL DEFAULT 0,
+  "bool" NUMERIC(1) NOT NULL DEFAULT 0,
+  "float" DECIMAL(10,10) NOT NULL DEFAULT 0,
+  "float2" FLOAT NOT NULL DEFAULT 0,
+  "varchar" VARCHAR(255) NOT NULL DEFAULT '',
+  "text" TEXT,
+  "timestamp" TIMESTAMP
+);
+
+
+
+
 -- ----------------------------
 --  user
 -- ----------------------------

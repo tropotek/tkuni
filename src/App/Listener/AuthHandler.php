@@ -28,7 +28,6 @@ class AuthHandler implements SubscriberInterface
 
         foreach($adapterList as $name => $class) {
             $adapter = \App\Factory::getAuthAdapter($class, $event->all());
-            vd($adapter);
             if (!$adapter) continue;
             $result = $event->getAuth()->authenticate($adapter);
             $event->setResult($result);

@@ -30,10 +30,7 @@ class Index extends Iface
      */
     public function doDefault(Request $request)
     {
-        
-        //throw new \Exception('This is a test');
-        
-        
+
         return $this->show();
     }
 
