@@ -49,7 +49,8 @@
         "ttek/tk-domtemplate": "~2.0",
         "ttek/tk-form": "~2.0",
         "ttek/tk-table": "~2.0",
-        "monolog/monolog": "^1.13@dev"
+        "monolog/monolog": "^1.13@dev",
+        "phpmailer/phpmailer": "~5.2"
     },
     "require-dev":  {
         "ttek/tk-debug": "~2.0"

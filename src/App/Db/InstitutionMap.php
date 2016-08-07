@@ -36,6 +36,7 @@ class InstitutionMap extends Mapper
             $this->dbMap->addProperty(new Db\Date('modified'));
             $this->dbMap->addProperty(new Db\Date('created'));
 
+            $this->setMarkDeleted('del');
             $this->setPrimaryKey($this->dbMap->currentProperty('key')->getColumnName());
         }
         return $this->dbMap;

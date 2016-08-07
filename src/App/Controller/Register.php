@@ -65,7 +65,6 @@ class Register extends Iface
         $this->user = new \App\Db\User();
         $this->user->role = \App\Auth\Acl::ROLE_CLIENT;
         
-        
         $this->form = new Form('registerForm', $request);
 
         $this->form->addField(new Field\Input('name'));
@@ -75,7 +74,7 @@ class Register extends Iface
         $this->form->addField(new Field\Password('passwordConf'));
         $this->form->addField(new Event\Button('login', array($this, 'doRegister')));
 
-        $this->form->load(\App\Db\UserMap::unmapForm($this->user));
+        $this->form->load(\App\Db\UserMap::create()->unmapForm($this->user));
         
         // Find and Fire submit event
         $this->form->execute();
@@ -92,9 +91,8 @@ class Register extends Iface
      */
     public function doRegister($form)
     {
-        \App\Db\UserMap::mapForm($form->getValues(), $this->user);
+        \App\Db\UserMap::create()->mapForm($form->getValues(), $this->user);
 
-        
         if (!$this->form->getFieldValue('password')) {
             $form->addFieldError('password', 'Please enter a password');
             $form->addFieldError('passwordConf');
@@ -132,7 +130,8 @@ class Register extends Iface
 
         // Redirect with message to check their email
         \App\Alert::addSuccess('Your New Account Has Been Created.');
-        \Tk\Config::getInstance()->getSession()->set('h', $this->user->getHash());
+        $this->getConfig()->getSession()->set('h', $this->user->getHash());
+
         \Tk\Uri::create()->redirect();
     }
 
@@ -158,14 +157,14 @@ class Register extends Iface
         $user->active = true;
         $user->save();
         
-        $event = new \Tk\EventDispatcher\Event($request);
+        $event = new \Tk\EventDispatcher\Event();
+        $event->set('request', $request);
         $event->set('user', $user);
         $event->set('templatePath', $this->getTemplatePath());
         $this->dispatcher->dispatch('auth.onRegisterConfirm', $event);
         
         \App\Alert::addSuccess('Account Activation Successful.');
         \Tk\Uri::create('/login.html')->redirect();
-        
     }
 
 
@@ -173,7 +172,7 @@ class Register extends Iface
     {
         $template = $this->getTemplate();
 
-        if (\Tk\Config::getInstance()->getSession()->getOnce('h')) {
+        if ($this->getConfig()->getSession()->getOnce('h')) {
             $template->setChoice('success');
             
         } else {

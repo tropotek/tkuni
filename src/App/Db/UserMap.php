@@ -38,6 +38,7 @@ class UserMap extends Mapper
             $this->dbMap->addProperty(new Db\Date('modified'));
             $this->dbMap->addProperty(new Db\Date('created'));
 
+            $this->setMarkDeleted('del');
             $this->setPrimaryKey($this->dbMap->currentProperty('key')->getColumnName());
         }
         return $this->dbMap;
@@ -66,6 +67,17 @@ class UserMap extends Mapper
     }
 
 
+
+    /**
+     *
+     * @param $hash
+     * @return Institution|null
+     */
+    public function findByhash($hash)
+    {
+        $where = sprintf('hash = %s ', $this->getDb()->quote($hash));
+        return $this->select($where)->current();
+    }
 
 
     /**
