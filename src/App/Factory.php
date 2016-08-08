@@ -61,6 +61,16 @@ class Factory
         return self::getConfig()->getSession();
     }
 
+
+    public static function getEmailGateway()
+    {
+        if (!self::getConfig()->getEmailGateway()) {
+            $gateway = \Tk\Mail\Gateway::getInstance(self::getConfig());
+            $gateway->setDispatcher(self::getEventDispatcher());
+            self::getConfig()->setEmailGateway($gateway);
+        }
+        return self::getConfig()->getEmailGateway();
+    }
     
     /**
      * getDb
@@ -293,5 +303,100 @@ class Factory
 
         return $user;
     }
-    
+
+
+    /**
+     * See if a string contains any supicious coding.
+     *
+     * @param string $str
+     * @throws \Tk\Mail\Exception
+     */
+    private function validateString($str)
+    {
+        if (!$str) { return; }
+        $badStrings = array("content-type:", "mime-version:", "multipart\/mixed", "content-transfer-encoding:", "bcc:", "cc:", "to:");
+        foreach ($badStrings as $badString) {
+            if (preg_match('/'.$badString.'/i', strtolower($str))) {
+                throw new Exception("'$badString' found. Suspected injection attempt - mail not being sent.");
+            }
+        }
+        if (preg_match("/(%0A|%0D|\\n+|\\r+)/i", $str) != 0) {
+            throw new Exception("newline found in '$str'. Suspected injection attempt - mail not being sent.");
+        }
+    }
+
+
+    /**
+     * Helper Method
+     * Make a default HTML template to create HTML emails
+     * usage:
+     *  $message->setBody($message->createHtmlTemplate($bodyStr));
+     *
+     * @param string $body
+     * @return string
+     */
+    static function createMailTemplate($body, $showFooter = true)
+    {
+        $request = self::getRequest();
+
+        $foot = '';
+        if (!self::getConfig()->isCli() && $showFooter) {
+            $foot .= sprintf('<i>Page:</i> <a href="%s">%s</a><br/>', $request->getUri()->toString(), $request->getUri()->toString());
+            if ($request->getReferer()) {
+                $foot .= sprintf('<i>Referer:</i> <span>%s</span><br/>', $request->getReferer()->toString());
+            }
+            $foot .= sprintf('<i>IP Address:</i> <span>%s</span><br/>', $request->getIp());
+            $foot .= sprintf('<i>User Agent:</i> <span>%s</span>', $request->getUserAgent());
+        }
+
+        $defaultHtml = sprintf('
+<html>
+<head>
+  <title>Email</title>
+
+<style type="text/css">
+body {
+  font-family: arial,sans-serif;
+  font-size: 80%%;
+  padding: 5px;
+  background-color: #FFF;
+}
+table {
+  font-size: 0.9em;
+}
+th, td {
+  vertical-align: top;
+}
+table {
+
+}
+th {
+  text-align: left;
+}
+td {
+  padding: 4px 5px;
+}
+.content {
+  padding: 0px 0px 0px 20px;
+}
+p {
+  margin: 0px 0px 10px 0px;
+  padding: 0px;
+}
+</style>
+</head>
+<body>
+  <div class="content">%s</div>
+  <p>&#160;</p>
+  <hr />
+  <div class="footer">
+    <p>
+      %s
+    </p>
+  </div>
+</body>
+</html>', $body, $foot);
+
+        return $defaultHtml;
+    }
 }

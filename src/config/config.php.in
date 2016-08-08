@@ -22,5 +22,6 @@ $config['debug'] = false;
 if ($config['debug']) {
     $config['system.log.path'] = '/home/user/log/error.log';
     $config['system.log.level'] = \Psr\Log\LogLevel::DEBUG;
+    $config['system.debug.email'] = 'info@tropotek.com';
 }
 

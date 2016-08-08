@@ -107,7 +107,23 @@ class Bootstrap
         Factory::getCookie();
         // * Session    
         Factory::getSession();
-        
+
+
+
+        // initalise Dom Loader
+        \App\Factory::getDomLoader();
+
+        // Initiate the default database connection
+        \App\Factory::getDb();
+
+        // Initiate the email gateway
+        \App\Factory::getEmailGateway();
+
+        // Init Auth
+        $auth = \App\Factory::getAuth();
+        if ($auth->getIdentity()) {
+            $config->setUser(\App\Db\UserMap::create()->findByUsername($auth->getIdentity()));
+        }
         return $config;
     }
 

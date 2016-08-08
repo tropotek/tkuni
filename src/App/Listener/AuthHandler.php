@@ -105,6 +105,11 @@ class AuthHandler implements SubscriberInterface
         // TODO: Send the email here
         vd($message->toString());
 
+        $mailer = new \PHPMailer();
+
+
+
+
     }
 
     public function onRegisterConfirm(\Tk\EventDispatcher\Event $event)
