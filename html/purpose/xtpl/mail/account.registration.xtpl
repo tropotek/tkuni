@@ -2,11 +2,11 @@
 <html>
   <head>
 
-    <title>Activation Request</title>
+    <title>Registration Request</title>
     
   </head>
   <body>
-    <h2>Account Registration Activation.</h2>
+    <h2>Account Registration Request.</h2>
     <p>
       Welcome <span var="name">Name</span>
     </p>

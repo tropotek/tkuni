@@ -98,7 +98,7 @@ class AuthHandler implements SubscriberInterface
         // on success email user confirmation
         $body = \Dom\Loader::loadFile($event->get('templatePath').'/xtpl/mail/account.registration.xtpl');
         $body->insertText('name', $user->name);
-        $url = \Tk\Uri::create()->set('h', $user->hash);
+        $url = \Tk\Uri::create('/register.html')->set('h', $user->hash);
         $body->insertText('url', $url->toString());
         $body->setAttr('url', 'href', $url->toString());
         $subject = 'Account Registration Request.';

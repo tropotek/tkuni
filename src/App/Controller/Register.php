@@ -153,6 +153,11 @@ class Register extends Iface
         if (!$user) {
             throw new \InvalidArgumentException('Cannot locate user. Please contact administrator.');
         }
+        if ($user->active == true) {
+            \App\Alert::addSuccess('Account Already Activated.');
+            \Tk\Uri::create('/login.html')->redirect();
+        }
+
         $user->hash = $user->generateHash();
         $user->active = true;
         $user->save();
