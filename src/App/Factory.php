@@ -1,5 +1,6 @@
 <?php
 namespace App;
+
 use Tk\Db\Pdo;
 
 /**
@@ -13,6 +14,8 @@ class Factory
 {
     
     /**
+     * getConfig
+     *
      * @param string $sitePath
      * @param string $siteUrl
      * @return \Tk\Config
@@ -23,6 +26,8 @@ class Factory
     }
 
     /**
+     * getRequest
+     *
      * @return \Tk\Request
      */
     public static function getRequest()
@@ -36,6 +41,8 @@ class Factory
     }
 
     /**
+     * getCookie
+     *
      * @return \Tk\Cookie
      */
     public static function getCookie()
@@ -48,6 +55,8 @@ class Factory
     }
 
     /**
+     * getSession
+     *
      * @return \Tk\Session
      */
     public static function getSession()
@@ -61,7 +70,11 @@ class Factory
         return self::getConfig()->getSession();
     }
 
-
+    /**
+     * getEmailGateway
+     *
+     * @return \Tk\Mail\Gateway
+     */
     public static function getEmailGateway()
     {
         if (!self::getConfig()->getEmailGateway()) {
@@ -143,6 +156,8 @@ class Factory
     }
 
     /**
+     * getFrontController
+     *
      * @return \App\FrontController
      */
     public static function getFrontController()
@@ -156,6 +171,8 @@ class Factory
 
 
     /**
+     * getEventDispatcher
+     *
      * @return \Tk\EventDispatcher\EventDispatcher
      */
     public static function getEventDispatcher()
@@ -168,6 +185,8 @@ class Factory
     }
 
     /**
+     * getControllerResolver
+     *
      * @return \Tk\Controller\ControllerResolver
      */
     public static function getControllerResolver()
@@ -181,6 +200,8 @@ class Factory
     
     
     /**
+     * getAuth
+     *
      * @return \Tk\Auth
      */
     public static function getAuth()
@@ -194,7 +215,6 @@ class Factory
     
     /**
      * A helper method to create an instance of an Auth adapter
-     *
      *
      * @param string $class
      * @param array $submittedData
@@ -260,6 +280,8 @@ class Factory
     }
 
     /**
+     * hashPassword
+     *
      * @param $pwd
      * @param \App\Db\User $user (optional)
      * @return string
@@ -306,34 +328,15 @@ class Factory
 
 
     /**
-     * See if a string contains any supicious coding.
-     *
-     * @param string $str
-     * @throws \Tk\Mail\Exception
-     */
-    private function validateString($str)
-    {
-        if (!$str) { return; }
-        $badStrings = array("content-type:", "mime-version:", "multipart\/mixed", "content-transfer-encoding:", "bcc:", "cc:", "to:");
-        foreach ($badStrings as $badString) {
-            if (preg_match('/'.$badString.'/i', strtolower($str))) {
-                throw new Exception("'$badString' found. Suspected injection attempt - mail not being sent.");
-            }
-        }
-        if (preg_match("/(%0A|%0D|\\n+|\\r+)/i", $str) != 0) {
-            throw new Exception("newline found in '$str'. Suspected injection attempt - mail not being sent.");
-        }
-    }
-
-
-    /**
      * Helper Method
      * Make a default HTML template to create HTML emails
      * usage:
      *  $message->setBody($message->createHtmlTemplate($bodyStr));
      *
      * @param string $body
+     * @param bool $showFooter
      * @return string
+     * @todo: Probably not the best place for this..... Dependant on the App
      */
     static function createMailTemplate($body, $showFooter = true)
     {

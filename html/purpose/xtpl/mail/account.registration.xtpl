@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+
     <title>Activation Request</title>
     
   </head>
@@ -16,7 +17,7 @@
     <p>&nbsp;</p>
     <hr/>
     <p var="footer">
-      &copy; Some Happy Feelgood Footer. 
+      &copy; Some Happy Feelgood Footer.
     </p>
     
   </body>

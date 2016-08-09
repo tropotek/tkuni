@@ -96,19 +96,15 @@ class AuthHandler implements SubscriberInterface
         $user = $event->get('user');
 
         // on success email user confirmation
-        $message = \Dom\Loader::loadFile($event->get('templatePath').'/xtpl/mail/account.registration.xtpl');
-        $message->insertText('name', $user->name);
+        $body = \Dom\Loader::loadFile($event->get('templatePath').'/xtpl/mail/account.registration.xtpl');
+        $body->insertText('name', $user->name);
         $url = \Tk\Uri::create()->set('h', $user->hash);
-        $message->insertText('url', $url->toString());
-        $message->setAttr('url', 'href', $url->toString());
+        $body->insertText('url', $url->toString());
+        $body->setAttr('url', 'href', $url->toString());
+        $subject = 'Account Registration Request.';
 
-        // TODO: Send the email here
-        vd($message->toString());
-
-        $mailer = new \PHPMailer();
-
-
-
+        $message = new \Tk\Mail\Message($body->toString(true, true), $subject, \App\Factory::getConfig()->get('site.email'), $user->email);
+        $message->send();
 
     }
 
@@ -118,15 +114,15 @@ class AuthHandler implements SubscriberInterface
         $user = $event->get('user');
 
         // Send an email to confirm account active
-        $message = \Dom\Loader::loadFile($event->get('templatePath').'/xtpl/mail/account.activated.xtpl');
-        $message->insertText('name', $user->name);
+        $body = \Dom\Loader::loadFile($event->get('templatePath').'/xtpl/mail/account.activated.xtpl');
+        $body->insertText('name', $user->name);
         $url = \Tk\Uri::create('/login.html');
-        $message->insertText('url', $url->toString());
-        $message->setAttr('url', 'href', $url->toString());
+        $body->insertText('url', $url->toString());
+        $body->setAttr('url', 'href', $url->toString());
+        $subject = 'Account Registration Activation.';
 
-
-        // TODO: Send the email here
-        vd($message->toString());
+        $message = new \Tk\Mail\Message($body->toString(true, true), $subject, \App\Factory::getConfig()->get('site.email'), $user->email);
+        $message->send();
 
     }
 
@@ -137,16 +133,16 @@ class AuthHandler implements SubscriberInterface
         $pass = $event->get('password');
 
         // Send an email to confirm account active
-        $message = \Dom\Loader::loadFile($event->get('templatePath').'/xtpl/mail/account.recover.xtpl');
-        $message->insertText('name', $user->name);
-        $message->insertText('password', $pass);
+        $body = \Dom\Loader::loadFile($event->get('templatePath').'/xtpl/mail/account.recover.xtpl');
+        $body->insertText('name', $user->name);
+        $body->insertText('password', $pass);
         $url = \Tk\Uri::create('/login.html');
-        $message->insertText('url', $url->toString());
-        $message->setAttr('url', 'href', $url->toString());
+        $body->insertText('url', $url->toString());
+        $body->setAttr('url', 'href', $url->toString());
+        $subject = 'Account Password Recovery.';
 
-
-        // TODO: Send the email here
-        vd($message->toString());
+        $message = new \Tk\Mail\Message($body->toString(true, true), $subject, \App\Factory::getConfig()->get('site.email'), $user->email);
+        $message->send();
 
     }
 

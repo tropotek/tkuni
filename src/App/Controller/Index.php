@@ -26,8 +26,6 @@ class Index extends Iface
      */
     public function doDefault(Request $request)
     {
-        // TODO:
-
 
 
         return $this->show();

@@ -91,7 +91,7 @@ class Edit extends Iface
     public function doSubmit($form)
     {
         // Load the object with data from the form using a helper object
-        \App\Db\UserMap::mapForm($form->getValues(), $this->user);
+        \App\Db\UserMap::create()->mapForm($form->getValues(), $this->user);
 
         // Password validation needs to be here
         if ($this->form->getFieldValue('newPassword')) {

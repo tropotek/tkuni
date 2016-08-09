@@ -69,9 +69,6 @@ class FrontController extends \Tk\Kernel\HttpKernel
         $this->dispatcher->addSubscriber(new Listener\ShutdownHandler($logger));
 
 
-        // (mail.*)
-        $this->dispatcher->addSubscriber(new Listener\MailHandler());
-
 
     }
     

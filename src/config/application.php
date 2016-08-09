@@ -46,12 +46,10 @@ $config['system.auth.adapters'] = array(
 );
 
 
-
-
-
 // To avoid var dump errors when debug lib not present
 // TODO: there could be a better way to handle this in the future 
 if (!class_exists('\Tk\Vd')) {
     function vd() {}
     function vdd() {}
 }
+
