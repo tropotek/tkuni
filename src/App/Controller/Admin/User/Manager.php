@@ -52,18 +52,19 @@ class Manager extends Iface
         // Filters
         $this->table->addFilter(new Field\Input('keywords'))->setLabel('')->setAttr('placeholder', 'Keywords');
 
-        $list = array('-- Role --' => '', 'Admin' => \App\Auth\Acl::ROLE_ADMIN, 'Client' => \App\Auth\Acl::ROLE_CLIENT);
-        $this->table->addFilter(new Field\Select('role', $list))->setLabel('');
+//        $list = array('-- Role --' => '', 'Admin' => \App\Auth\Acl::ROLE_ADMIN, 'Client' => \App\Auth\Acl::ROLE_CLIENT);
+//        $this->table->addFilter(new Field\Select('role', $list))->setLabel('');
 
         // Actions
-        $this->table->addAction(\Tk\Table\Action\Button::getInstance('New User', 'fa fa-plus', \Tk\Uri::create('admin/userEdit.html')));
-        $this->table->addAction(\Tk\Table\Action\Delete::getInstance());
-        $this->table->addAction(\Tk\Table\Action\Csv::getInstance($this->getConfig()->getDb()));
+        //$this->table->addAction(\Tk\Table\Action\Button::getInstance('New User', 'fa fa-plus', \Tk\Uri::create('admin/userEdit.html')));
+        $this->table->addAction(\Tk\Table\Action\Delete::getInstance()->setExcludeList(array(1)));
+        //$this->table->addAction(\Tk\Table\Action\Csv::getInstance($this->getConfig()->getDb()));
 
         $filter = $this->table->getFilterValues();
-        if (empty($filter['role']))
-            $filter['role'] = array(\App\Auth\Acl::ROLE_ADMIN, \App\Auth\Acl::ROLE_CLIENT);
-
+        if (empty($filter['role'])) {
+            //$filter['role'] = array(\App\Auth\Acl::ROLE_ADMIN, \App\Auth\Acl::ROLE_CLIENT);
+            $filter['role'] = array(\App\Auth\Acl::ROLE_ADMIN);
+        }
         $users = \App\Db\User::getMapper()->findFiltered($filter, $this->table->makeDbTool('a.name'));
         $this->table->setList($users);
 
@@ -103,6 +104,7 @@ class Manager extends Iface
         <div class="row">
           <div class="col-lg-12">
             <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
+            <a href="/admin/userEdit.html" class="btn btn-default"><i class="fa fa-user-plus"></i> <span>New User</span></a>
           </div>
         </div>
       </div>

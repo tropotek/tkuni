@@ -94,6 +94,7 @@ class Manager extends Iface
         <div class="row">
           <div class="col-lg-12">
             <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
+            <a href="/admin/userEdit.html" class="btn btn-default"><i class="fa fa-university"></i> <span>New Institution</span></a>
           </div>
         </div>
       </div>

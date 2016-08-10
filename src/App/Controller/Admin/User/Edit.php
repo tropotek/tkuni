@@ -41,11 +41,18 @@ class Edit extends Iface
      *
      * @param Request $request
      * @return \App\Page\Iface|Template|string
+     * @throws \Tk\Exception
      */
     public function doDefault(Request $request)
     {
         $this->user = new \App\Db\User();
-        $this->user = \App\Db\User::getMapper()->find($request->get('userId'));
+        $this->user->role = \App\Auth\Acl::ROLE_ADMIN;
+        if ($request->get('userId')) {
+            $this->user = \App\Db\User::getMapper()->find($request->get('userId'));
+            if ($this->user->role != \App\Auth\Acl::ROLE_ADMIN) {
+                throw new \Tk\Exception('Invalid user account.');
+            }
+        }
 
         $this->form = new Form('formEdit');
 
@@ -54,14 +61,13 @@ class Edit extends Iface
         $this->form->addField(new Field\Input('email'))->setRequired(true)->setTabGroup('Details');
 
         //$list = array('-- Select --' => '', 'Admin' => \App\Auth\Access::ROLE_ADMIN, 'Client' => \App\Auth\Access::ROLE_CLIENT, 'Staff' => \App\Auth\Access::ROLE_STAFF, 'Student' => \App\Auth\Access::ROLE_STUDENT);
-        $list = array('-- Select --' => '', 'Admin' => \App\Auth\Acl::ROLE_ADMIN, 'Client' => \App\Auth\Acl::ROLE_CLIENT);
-        if (!in_array($this->user->role, $list)) {
-            $list = array('-- Select --' => '', 'Staff' => \App\Auth\Acl::ROLE_STAFF, 'Student' => \App\Auth\Acl::ROLE_STUDENT);
-        }
-        $this->form->addField(new Field\Select('role', $list))->setNotes('Select the access level for this user')->setRequired(true)->setTabGroup('Details')->setRequired(true);
+//        $list = array('-- Select --' => '', 'Admin' => \App\Auth\Acl::ROLE_ADMIN, 'Client' => \App\Auth\Acl::ROLE_CLIENT);
+//        if (!in_array($this->user->role, $list)) {
+//            $list = array('-- Select --' => '', 'Staff' => \App\Auth\Acl::ROLE_STAFF, 'Student' => \App\Auth\Acl::ROLE_STUDENT);
+//        }
+        //$this->form->addField(new Field\Select('role', $list))->setNotes('Select the access level for this user')->setRequired(true)->setTabGroup('Details')->setRequired(true);
         $this->form->addField(new Field\Checkbox('active'))->setTabGroup('Details');
 
-        
         $this->form->setAttr('autocomplete', 'off');
         $f = $this->form->addField(new Field\Password('newPassword'))->setAttr('placeholder', 'Click to edit')->setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setTabGroup('Password');
         if (!$this->user->getId())
@@ -72,11 +78,7 @@ class Edit extends Iface
 
         $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
         $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
-        $url = \Tk\Uri::create('/admin/userManager.html');
-        if ($this->getConfig()->getRequest()->has('institutionId'))
-            $url = \Tk\Uri::create('/admin/institutionEdit.html')->set('institutionId', $this->getConfig()->getRequest()->get('institutionId'));
-
-        $this->form->addField(new Event\Link('cancel', $url));
+        $this->form->addField(new Event\Link('cancel', \Tk\Uri::create('/admin/userManager.html')));
         
         $this->form->load(\App\Db\UserMap::create()->unmapForm($this->user));
         
@@ -109,6 +111,7 @@ class Edit extends Iface
         if ($form->hasErrors()) {
             return;
         }
+
         // Hash the password correctly
         if ($this->form->getFieldValue('newPassword')) {
             $this->user->password = \App\Factory::hashPassword($this->form->getFieldValue('newPassword'), $this->user);
@@ -118,8 +121,6 @@ class Edit extends Iface
 
         \App\Alert::addSuccess('User record saved!');
         if ($form->getTriggeredEvent()->getName() == 'update') {
-            if ($this->getConfig()->getRequest()->has('institutionId'))
-                \Tk\Uri::create('/admin/institutionEdit.html')->set('institutionId', $this->getConfig()->getRequest()->get('institutionId'))->redirect();
             \Tk\Uri::create('/admin/userManager.html')->redirect();
         }
         \Tk\Uri::create()->set('userId', $this->user->id)->redirect();

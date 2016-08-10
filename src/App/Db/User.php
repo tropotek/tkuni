@@ -237,6 +237,7 @@ class UserValidator extends \Tk\Db\Map\Validator
         if (!$obj->username) {
             $this->addError('username', 'Invalid field username value.');
         } else {
+            //$dup = User::getMapper()->findByUsername($obj->username, $obj->role);
             $dup = User::getMapper()->findByUsername($obj->username);
             if ($dup && $dup->getId() != $obj->getId()) {
                 $this->addError('username', 'This username is already in use.');
@@ -246,6 +247,7 @@ class UserValidator extends \Tk\Db\Map\Validator
         if (!filter_var($obj->email, FILTER_VALIDATE_EMAIL)) {
             $this->addError('email', 'Please enter a valid email address');
         } else {
+            //$dup = User::getMapper()->findByEmail($obj->email, $obj->role);
             $dup = User::getMapper()->findByEmail($obj->email);
             if ($dup && $dup->getId() != $obj->getId()) {
                 $this->addError('email', 'This email is already in use.');

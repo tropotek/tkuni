@@ -71,11 +71,21 @@ class UserMap extends Mapper
     /**
      *
      * @param $hash
+     * @param string|array $role
      * @return Institution|null
      */
-    public function findByhash($hash)
+    public function findByhash($hash, $role = null)
     {
         $where = sprintf('hash = %s ', $this->getDb()->quote($hash));
+        if ($role) {
+            if (!is_array($role)) $role = array($role);
+            $w = '';
+            foreach ($role as $r) {
+                $w .= sprintf('a.role = %s OR ', $this->getDb()->quote($r));
+            }
+            if ($w)
+                $where .= ' AND (' . rtrim($w, ' OR ') . ')';
+        }
         return $this->select($where)->current();
     }
 

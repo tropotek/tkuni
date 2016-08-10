@@ -97,8 +97,8 @@ class AdminMenu extends \Dom\Renderer\Renderer
         <ul class="nav" id="side-menu">
           <li><a href="/admin/index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
           <li><a href="/admin/settings.html"><i class="fa fa-cogs fa-fw"></i> Settings</a></li>
-          <li><a href="/admin/institutionManager.html"><i class="fa fa-university fa-fw"></i> Institutions</a></li>
           <li><a href="/admin/userManager.html"><i class="fa fa-users fa-fw"></i> Users</a></li>
+          <li><a href="/admin/institutionManager.html"><i class="fa fa-university fa-fw"></i> Institutions</a></li>
           <!-- li><a href="/admin/courseManager.html"><i class="fa fa-university fa-fw"></i> <strike>Courses</strike></a></li -->
         </ul>
       </div>

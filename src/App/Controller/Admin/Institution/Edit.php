@@ -29,6 +29,11 @@ class Edit extends Iface
     private $institution = null;
 
     /**
+     * @var \App\Db\user
+     */
+    private $owner = null;
+
+    /**
      * @var \Tk\Table
      */
     protected $table = null;
@@ -50,26 +55,32 @@ class Edit extends Iface
     public function doDefault(Request $request)
     {
         $this->institution = new \App\Db\Institution();
+        $this->owner = new \App\Db\User();
 
         if ($request->get('institutionId')) {
             $this->institution = \App\Db\Institution::getMapper()->find($request->get('institutionId'));
+            $this->owner = $this->institution->getOwner();
         }
 
         $this->form = new Form('formEdit');
-//        $iid = 0;
-//        if ($this->institution) {
-//            $iid = $this->institution->id;
-//        }
-        $clients = new \Tk\Form\Field\Option\ArrayObjectIterator(\App\Db\User::getMapper()->findByRole(\App\Auth\Acl::ROLE_CLIENT)->toArray());
-        $this->form->addField(new Field\Select('ownerId', $clients))->prependOption('-- Select --', '')->setRequired(true)->setTabGroup('Details');
 
         $this->form->addField(new Field\Input('name'))->setRequired(true)->setTabGroup('Details');
+        $this->form->addField(new Field\Input('username'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\Input('email'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\File('logo', $request, $this->getConfig()->getDataPath()))->setAttr('accept', '.png,.jpg,.jpeg,.gif')->setTabGroup('Details');
         $insUrl = \Tk\Uri::create('/inst/'.$this->institution->getHash().'/login.html');
         $this->form->addField(new Field\Input('domain'))->setTabGroup('Details')->setNotes('If this is set the login Url will be http://{domain}/login.html or else use the standard institution login of ' . $insUrl . '');
         $this->form->addField(new Field\Textarea('description'))->setTabGroup('Details');
         $this->form->addField(new Field\Checkbox('active'))->setTabGroup('Details');
+
+        $this->form->setAttr('autocomplete', 'off');
+        $f = $this->form->addField(new Field\Password('newPassword'))->setAttr('placeholder', 'Click to edit')->setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setTabGroup('Password');
+        if (!$this->owner->getId())
+            $f->setRequired(true);
+        $f = $this->form->addField(new Field\Password('confPassword'))->setAttr('placeholder', 'Click to edit')->setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setNotes('Change this users password.')->setTabGroup('Password');
+        if (!$this->owner->getId())
+            $f->setRequired(true);
+
 
         // TODO: Implement LTI tables for LMS access
         $this->form->addField(new Field\Input('ltiKey'))->setTabGroup('LTI');
@@ -87,11 +98,12 @@ class Edit extends Iface
         $this->form->addField(new Event\Link('cancel', \Tk\Uri::create('/admin/institutionManager.html')));
 
         $this->form->load(\App\Db\InstitutionMap::create()->unmapForm($this->institution));
+        $this->form->load(\App\Db\UserMap::create()->unmapForm($this->owner));
         $this->form->load($this->institution->getData()->all());
 
-        if ($this->institution->id && $this->institution->getOwner()) {
-            $this->form->setFieldValue('ownerId', $this->institution->getOwner()->id);
-        }
+//        if ($this->institution->id && $this->institution->getOwner()) {
+//            $this->form->setFieldValue('ownerId', $this->institution->getOwner()->id);
+//        }
         $this->form->execute();
 
         return $this->show();
@@ -105,13 +117,14 @@ class Edit extends Iface
         $template = $this->getTemplate();
 
         if ($this->institution->id) {
-            $courseTable = new \App\Ui\CourseTable($this->institution->id, \Tk\Uri::create('/admin/courseEdit.html')->set('institutionId', $this->institution->id));
+            //$courseTable = new \App\Ui\CourseTable($this->institution->id, \Tk\Uri::create('/admin/courseEdit.html')->set('institutionId', $this->institution->id));
+            $courseTable = new \App\Ui\CourseTable($this->institution->id);
             $template->insertTemplate('courseTable', $courseTable->show());
 
-            $staffTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Acl::ROLE_STAFF, 0, \Tk\Uri::create('/admin/userEdit.html')->set('institutionId', $this->institution->id));
+            $staffTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Acl::ROLE_STAFF, 0);
             $template->insertTemplate('staffTable', $staffTable->show());
 
-            $studentTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Acl::ROLE_STUDENT, 0, \Tk\Uri::create('/admin/userEdit.html')->set('institutionId', $this->institution->id));
+            $studentTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Acl::ROLE_STUDENT, 0);
             $template->insertTemplate('studentTable', $studentTable->show());
 
             $template->addClass('editPanel', 'col-md-4');
@@ -133,10 +146,21 @@ class Edit extends Iface
     public function doSubmit($form)
     {
         // Load the object with data from the form using a helper object
-        //\App\Form\ModelLoader::loadObject($form, $this->user);
         \App\Db\InstitutionMap::create()->mapForm($form->getValues(), $this->institution);
+        \App\Db\UserMap::create()->mapForm($form->getValues(), $this->owner);
 
         $form->addFieldErrors(\App\Db\InstitutionValidator::create($this->institution)->getErrors());
+
+        // Password validation needs to be here
+        if ($this->form->getFieldValue('newPassword')) {
+            if ($this->form->getFieldValue('newPassword') != $this->form->getFieldValue('confPassword')) {
+                $form->addFieldError('newPassword', 'Passwords do not match.');
+                $form->addFieldError('confPassword');
+            }
+        }
+        if (!$this->owner->id && !$this->form->getFieldValue('newPassword')) {
+            $form->addFieldError('newPassword', 'Please enter a new password.');
+        }
 
         $form->getField('logo')->isValid();
 
@@ -149,6 +173,13 @@ class Edit extends Iface
         // Get the relative file path from the field
         $this->institution->logo = $form->getField('logo')->getValue();
 
+        // Hash the password correctly
+        if ($this->form->getFieldValue('newPassword')) {
+            $this->owner->password = \App\Factory::hashPassword($this->form->getFieldValue('newPassword'), $this->owner);
+        }
+
+        $this->owner->save();
+        $this->institution->ownerId = $this->owner->id;
         $this->institution->save();
 
         $data = $this->institution->getData();
@@ -181,6 +212,7 @@ class Edit extends Iface
         <div class="row">
           <div class="col-lg-12">
             <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
+            <a href="javascript:;" class="btn btn-default"><i class="fa fa-user-secret"></i> <span>Masquerade</span></a>
           </div>
         </div>
       </div>

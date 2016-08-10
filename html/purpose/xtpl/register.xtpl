@@ -17,35 +17,8 @@
                 Thank You!
               </p>
             </div>
-            
-            <form role="form" id="registerForm" method="post" choice="form">
-              <input type="hidden" name="act" value="register" />
 
-              <div class="form-group">
-                <label for="fid-name"><b>Name</b></label>
-                <input type="text" name="name" id="fid-name" class="form-control" />
-              </div>
-              <div class="form-group">
-                <label for="fid-email"><b>Email</b></label>
-                <input type="email" name="email" id="fid-email" class="form-control" />
-              </div>
-              <div class="form-group">
-                <label for="fid-username"><b>Username</b></label>
-                <input type="text" name="username" id="fid-username" class="form-control" />
-              </div>
-              <div class="form-group">
-                <label for="fid-password"><b>Password</b></label>
-                <input type="password" name="password" id="fid-password" class="form-control" />
-              </div>
-              <div class="form-group">
-                <label for="fid-passwordConf"><b>Confirm Password</b></label>
-                <input type="password" name="passwordConf" id="fid-passwordConf" class="form-control" />
-              </div>
-              
-              <div class="form-group">
-                <button type="submit" name="recover" class="btn pull-right">Register</button>
-              </div>
-            </form>
+            <div var="registerForm" choice="form"></div>
           </div>
           
           

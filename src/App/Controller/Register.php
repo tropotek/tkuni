@@ -31,6 +31,11 @@ class Register extends Iface
     private $user = null;
 
     /**
+     * @var \App\Db\Institution
+     */
+    private $institution = null;
+
+    /**
      * @var \Tk\EventDispatcher\EventDispatcher
      */
     private $dispatcher = null;
@@ -64,15 +69,17 @@ class Register extends Iface
 
         $this->user = new \App\Db\User();
         $this->user->role = \App\Auth\Acl::ROLE_CLIENT;
+
+        $this->institution = new \App\Db\Institution();
         
         $this->form = new Form('registerForm', $request);
 
-        $this->form->addField(new Field\Input('name'));
+        $this->form->addField(new Field\Input('name'))->setLabel('Institution Name');
         $this->form->addField(new Field\Input('email'));
         $this->form->addField(new Field\Input('username'));
         $this->form->addField(new Field\Password('password'));
         $this->form->addField(new Field\Password('passwordConf'));
-        $this->form->addField(new Event\Button('login', array($this, 'doRegister')));
+        $this->form->addField(new Event\Button('register', array($this, 'doRegister')));
 
         $this->form->load(\App\Db\UserMap::create()->unmapForm($this->user));
         
@@ -92,6 +99,7 @@ class Register extends Iface
     public function doRegister($form)
     {
         \App\Db\UserMap::create()->mapForm($form->getValues(), $this->user);
+        \App\Db\InstitutionMap::create()->mapForm($form->getValues(), $this->institution);
 
         if (!$this->form->getFieldValue('password')) {
             $form->addFieldError('password', 'Please enter a password');
@@ -109,22 +117,30 @@ class Register extends Iface
         }
         
         $form->addFieldErrors(\App\Db\UserValidator::create($this->user)->getErrors());
+        $form->addFieldErrors(\App\Db\InstitutionValidator::create($this->institution)->getErrors());
         
         if ($form->hasErrors()) {
             return;
         }
 
+        $pass = \App\Db\User::createPassword(10);
+
         // Create a user and make a temp hash until the user activates the account
-        $this->user->hash = $this->user->generateHash();
+        $this->user->getHash();
         $this->user->active = false;
-        $this->user->password = \App\Factory::hashPassword($this->user->password, $this->user);
-        
+        $this->user->password = \App\Factory::hashPassword($pass, $this->user);
         $this->user->save();
+
+        $this->institution->ownerId = $this->user->id;
+        $this->institution->active = false;
+        $this->institution->save();
 
         // Fire the login event to allow developing of misc auth plugins
         $event = new \Tk\EventDispatcher\Event();
         $event->set('form', $form);
         $event->set('user', $this->user);
+        $event->set('pass', $this->form->getFieldValue('password'));
+        $event->set('institution', $this->institution);
         $event->set('templatePath', $this->getPage()->getTemplatePath());
         $this->dispatcher->dispatch('auth.onRegister', $event);
 
@@ -150,21 +166,27 @@ class Register extends Iface
         }
         /** @var \App\Db\User $user */
         $user = \App\Db\User::getMapper()->findByHash($hash);
-        if (!$user) {
+        if (!$user || $user->role != \App\Auth\Acl::ROLE_CLIENT) {
             throw new \InvalidArgumentException('Cannot locate user. Please contact administrator.');
         }
         if ($user->active == true) {
-            \App\Alert::addSuccess('Account Already Activated.');
+            \App\Alert::addSuccess('Account Already Active.');
             \Tk\Uri::create('/login.html')->redirect();
         }
 
-        $user->hash = $user->generateHash();
+        $institution = \App\Db\Institution::getMapper()->findByUserId($user->id);
+
+        $user->getHash();
         $user->active = true;
         $user->save();
+
+        $institution->active = true;
+        $institution->save();
         
         $event = new \Tk\EventDispatcher\Event();
         $event->set('request', $request);
         $event->set('user', $user);
+        $event->set('institution', $institution);
         $event->set('templatePath', $this->getTemplatePath());
         $this->dispatcher->dispatch('auth.onRegisterConfirm', $event);
         
@@ -183,8 +205,11 @@ class Register extends Iface
         } else {
             $template->setChoice('form');
             // Render the form
-            $ren = new \Tk\Form\Renderer\DomStatic($this->form, $template);
-            $ren->show();
+//            $ren = new \Tk\Form\Renderer\DomStatic($this->form, $template);
+//            $ren->show();
+            // Render the form
+            $fren = new \Tk\Form\Renderer\Dom($this->form);
+            $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());
         }
         
         return $this->getPage()->setPageContent($template);

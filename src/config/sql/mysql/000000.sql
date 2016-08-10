@@ -24,8 +24,10 @@ CREATE TABLE IF NOT EXISTS `user` (
   `del` TINYINT(1) NOT NULL DEFAULT 0,
   `modified` DATETIME NOT NULL,
   `created` DATETIME NOT NULL,
-  UNIQUE KEY `user_username` (`username`, `role`, `email`),
-  UNIQUE KEY `user_hash` (`hash`)
+  UNIQUE KEY `user_username` (`username`, `role`),
+  UNIQUE KEY `user_uid` (`uid`, `role`),
+  UNIQUE KEY `user_email` (`email`, `role`),
+  UNIQUE KEY `user_hash` (`hash`, `role`)
 ) ENGINE=InnoDB;
 
 -- ----------------------------
@@ -55,8 +57,6 @@ CREATE TABLE IF NOT EXISTS `institution` (
 CREATE TABLE IF NOT EXISTS `user_institution` (
 	`user_id` INT(10) UNSIGNED NOT NULL DEFAULT 0,
 	`institution_id` INT(10) NOT NULL DEFAULT 0,
-  -- TODO: Look into the best place for this info, as it has to do with LMS access more precisly, maybe the data table instead...
-  `uid` VARCHAR(128) NOT NULL DEFAULT '',    -- A unique identifier for a specific institution (IE: staffId, studentId, etc...)
   UNIQUE KEY `ui_key` (`user_id`, `institution_id`)
 ) ENGINE=InnoDB;
 

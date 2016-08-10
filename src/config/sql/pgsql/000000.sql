@@ -25,8 +25,10 @@ CREATE TABLE IF NOT EXISTS "user" (
   modified TIMESTAMP DEFAULT NOW(),
   created TIMESTAMP DEFAULT NOW(),
 
-  CONSTRAINT user_username UNIQUE (username, role, email),
-  CONSTRAINT user_hash UNIQUE (hash)
+  CONSTRAINT user_username UNIQUE (username, role),
+  CONSTRAINT user_uid UNIQUE (uid, role),
+  CONSTRAINT user_email UNIQUE (email, role),
+  CONSTRAINT user_hash UNIQUE (hash, role)
 );
 
 -- ----------------------------
@@ -59,9 +61,6 @@ CREATE TABLE IF NOT EXISTS institution (
 CREATE TABLE IF NOT EXISTS user_institution (
 	user_id INTEGER NOT NULL,
 	institution_id INTEGER NOT NULL,
-  -- TODO: Look into the best place for this info, as it has to do with LMS access more precisly, maybe the data table instead...
-  uid VARCHAR(128) NOT NULL DEFAULT '',    -- A unique identifier for a specific institution (IE: staffId, studentId, etc...)
-
 	FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE,
 	FOREIGN KEY (institution_id) REFERENCES institution(id)  ON DELETE CASCADE
 );
