@@ -37,7 +37,7 @@ class ShutdownHandler implements SubscriberInterface
             $this->logger->info('------------------------------------------------');
             $this->logger->info('Load Time: ' . round(\Tk\Config::scriptDuration(), 4) . ' sec');
             $this->logger->info('Peek Mem:  ' . self::bytes2String(memory_get_peak_usage(), 4));
-            $this->logger->info('------------------------------------------------' . \PHP_EOL . \PHP_EOL);
+            $this->logger->info('------------------------------------------------' . \PHP_EOL);
         }
     }
 

@@ -90,12 +90,12 @@ class Edit extends Iface
 
             $this->table->addCell(new \Tk\Table\Cell\Checkbox('id'));
             $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCellCss('key');
-            $this->table->addCell(new \Tk\Table\Cell\Text('username'));
+            //$this->table->addCell(new \Tk\Table\Cell\Text('username'));
             $this->table->addCell(new \Tk\Table\Cell\Text('email'));
             $this->table->addCell(new \Tk\Table\Cell\Text('role'));
             $this->table->addCell(new \Tk\Table\Cell\Text('uid'))->setLabel('UID');
             $this->table->addCell(new \Tk\Table\Cell\Boolean('active'));
-            $this->table->addCell(new \Tk\Table\Cell\Date('created'));
+            $this->table->addCell(new \Tk\Table\Cell\Date('lastLogin'));
 
             // Filters
             $this->table->addFilter(new Field\Input('keywords'))->setLabel('')->setAttr('placeholder', 'Keywords');
