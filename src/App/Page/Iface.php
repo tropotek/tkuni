@@ -72,6 +72,7 @@ abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
             $template->setAttr('siteName', 'title', $this->getConfig()->get('site.title'));
             $template->setTitleText(trim($template->getTitleText() . ' - ' . $this->getConfig()->get('site.title'), '- '));
         }
+        // TODO Consider putting all this into a method called setPageTitle($str)
         if ($this->getController()->getPageTitle()) {
             $template->setTitleText(trim($this->getController()->getPageTitle() . ' - ' . $template->getTitleText(), '- '));
             $template->insertText('pageHeading', $this->getController()->getPageTitle());

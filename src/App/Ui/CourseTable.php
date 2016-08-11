@@ -83,7 +83,7 @@ class CourseTable extends \Dom\Renderer\Renderer
     }
 
     /**
-     * @return \App\Page\Iface
+     * @return \Dom\Template
      */
     public function show()
     {

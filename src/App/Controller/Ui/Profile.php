@@ -104,7 +104,7 @@ class Profile extends Iface
 
         \App\Alert::addSuccess('User record saved!');
         if ($form->getTriggeredEvent()->getName() == 'update') {
-            \Tk\Uri::create($this->user->getHomeUrl())->redirect();
+            \App\Uri::createHomeUrl('/index.html')->redirect();
         }
         \Tk\Uri::create()->redirect();
     }

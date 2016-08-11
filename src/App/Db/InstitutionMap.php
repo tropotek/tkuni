@@ -99,16 +99,28 @@ class InstitutionMap extends Mapper
         $where = sprintf('domain = %s', $this->getDb()->quote($domain));
         return $this->select($where)->current();
     }
-    
+
     /**
-     * 
+     *
+     * @param int $userId
+     * @return Institution
+     */
+    public function findByOwnerId($userId)
+    {
+        $where = sprintf('owner_id = %s', (int)$userId);
+        return $this->select($where)->current();
+    }
+
+    /**
+     *
      * @param int $userId
      * @return Institution
      */
     public function findByUserId($userId)
     {
-        $where = sprintf('owner_id = %s', (int)$userId);
-        return $this->select($where)->current();
+        $from = sprintf('%s a, user_institution b', $this->getDb()->quoteParameter($this->getTable()));
+        $where = sprintf('a.id = b.institution_id AND a.id = %d', (int)$userId);
+        return $this->selectFrom($from, $where)->current();
     }
 
     /**

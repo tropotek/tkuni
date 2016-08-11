@@ -139,10 +139,10 @@ VALUES
   (4, 1)
 ;
 
-INSERT INTO user_institution (user_id, institution_id, uid)
+INSERT INTO user_institution (user_id, institution_id)
 VALUES
-  (3, 1, 'staff_id'),
-  (4, 1, 'student_id')
+  (3, 1),
+  (4, 1)
 ;
 
 INSERT INTO data (foreign_id, foreign_key, key, value) VALUES

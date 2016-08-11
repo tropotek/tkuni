@@ -77,7 +77,7 @@ class Bootstrap
             $logger = new Logger('system');
             $handler = new StreamHandler($config['system.log.path'], $config['system.log.level']);
             //$formatter = new LineFormatter(null, 'H:i:s', true, true);
-            $formatter = new Util\LogLineFormatter();
+            $formatter = new \Tk\Log\MonologLineFormatter();
             $handler->setFormatter($formatter);
             $logger->pushHandler($handler);
             $config['log'] = $logger;

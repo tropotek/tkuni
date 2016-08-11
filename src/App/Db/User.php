@@ -183,12 +183,15 @@ class User extends \Tk\Db\Map\Model
     }
 
     /**
-     *
+     * Get the institution related to this user
      */
     public function getInstitution()
     {
         if ($this->id && !$this->institution) {
-            $this->institution = \App\Db\Institution::getMapper()->findByUserId($this->id);
+            $this->institution = \App\Db\InstitutionMap::create()->findByOwnerId($this->id);
+            if (!$this->institution) {
+                $this->institution = \App\Db\InstitutionMap::create()->findByUserId($this->id);
+            }
         }
         return $this->institution;
     }

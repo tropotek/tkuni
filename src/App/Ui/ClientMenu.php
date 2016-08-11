@@ -84,7 +84,7 @@ class ClientMenu extends \Dom\Renderer\Renderer
           <i class="fa fa-user fa-fw"></i> <span var="username">Admin</span> <i class="fa fa-caret-down"></i>
         </a>
         <ul class="dropdown-menu dropdown-user">
-          <li><a href="/client/profile.html"><i class="fa fa-user fa-fw"></i> My Profile</a></li>
+          <li><a href="/client/institutionEdit.html"><i class="fa fa-user fa-fw"></i> My Profile</a></li>
           <li class="divider"></li>
           <li><a href="/logout.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
         </ul>
@@ -95,7 +95,9 @@ class ClientMenu extends \Dom\Renderer\Renderer
       <div class="sidebar-nav navbar-collapse">
         <ul class="nav" id="side-menu">
           <li><a href="/client/index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
-          <li><a href="/client/institutionManager.html"><i class="fa fa-university fa-fw"></i> Institutions</a></li>
+          <li><a href="/client/institutionEdit.html"><i class="fa fa-university fa-fw"></i> Institution</a></li>
+          <li><a href="/client/courseManager.html"><i class="fa fa-graduation-cap fa-fw"></i> Courses</a></li>
+          <li><a href="/client/userManager.html"><i class="fa fa-group fa-fw"></i> Staff</a></li>
         </ul>
       </div>
     </div>

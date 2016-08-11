@@ -1,5 +1,5 @@
 <?php
-namespace App\Controller\Staff\User;
+namespace App\Controller\Ui\User;
 
 use Tk\Request;
 use Dom\Template;
@@ -49,8 +49,9 @@ class Edit extends Iface
 
         $this->form = new Form('formEdit');
 
-        $this->form->addField(new Field\Input('username'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\Input('name'))->setRequired(true)->setTabGroup('Details');
+        $this->form->addField(new Field\Input('uid'))->setLabel('UID')->setTabGroup('Details')->setNotes('The student or staff number assigned by the institution.');
+        $this->form->addField(new Field\Input('username'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\Input('email'))->setRequired(true)->setTabGroup('Details');
 
         //$list = array('-- Select --' => '', 'Admin' => \App\Auth\Access::ROLE_ADMIN, 'Client' => \App\Auth\Access::ROLE_CLIENT, 'Staff' => \App\Auth\Access::ROLE_STAFF, 'Student' => \App\Auth\Access::ROLE_STUDENT);
@@ -61,7 +62,6 @@ class Edit extends Iface
         $this->form->addField(new Field\Select('role', $list))->setNotes('Select the access level for this user')->setRequired(true)->setTabGroup('Details')->setRequired(true);
         $this->form->addField(new Field\Checkbox('active'))->setTabGroup('Details');
 
-        
         $this->form->setAttr('autocomplete', 'off');
         $f = $this->form->addField(new Field\Password('newPassword'))->setAttr('placeholder', 'Click to edit')->setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setTabGroup('Password');
         if (!$this->user->getId())
@@ -74,8 +74,8 @@ class Edit extends Iface
 
         $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
         $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
-        $url = \Tk\Uri::create('/staff/userManager.html');
 
+        $url = \App\Uri::createHomeUrl('/userManager.html');
         $this->form->addField(new Event\Link('cancel', $url));
         
         $this->form->load(\App\Db\UserMap::create()->unmapForm($this->user));
@@ -118,7 +118,7 @@ class Edit extends Iface
 
         \App\Alert::addSuccess('User record saved!');
         if ($form->getTriggeredEvent()->getName() == 'update') {
-            \Tk\Uri::create('/staff/userManager.html')->redirect();
+            \App\Uri::createHomeUrl('/userManager.html')->redirect();
         }
         \Tk\Uri::create()->set('userId', $this->user->id)->redirect();
     }

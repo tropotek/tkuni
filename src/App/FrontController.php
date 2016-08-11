@@ -73,17 +73,6 @@ class FrontController extends \Tk\Kernel\HttpKernel
 
     }
     
-
-    /**
-     * Get the current script running time in seconds
-     *
-     * @return string
-     */
-    public static function scriptDuration()
-    {
-        return (string)(microtime(true) - Factory::getConfig()->getScripTime());
-    }
-    
     
     
 }

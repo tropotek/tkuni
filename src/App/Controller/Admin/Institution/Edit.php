@@ -101,9 +101,6 @@ class Edit extends Iface
         $this->form->load(\App\Db\UserMap::create()->unmapForm($this->owner));
         $this->form->load($this->institution->getData()->all());
 
-//        if ($this->institution->id && $this->institution->getOwner()) {
-//            $this->form->setFieldValue('ownerId', $this->institution->getOwner()->id);
-//        }
         $this->form->execute();
 
         return $this->show();
@@ -150,6 +147,7 @@ class Edit extends Iface
         \App\Db\UserMap::create()->mapForm($form->getValues(), $this->owner);
 
         $form->addFieldErrors(\App\Db\InstitutionValidator::create($this->institution)->getErrors());
+        $form->addFieldErrors(\App\Db\UserValidator::create($this->owner)->getErrors());
 
         // Password validation needs to be here
         if ($this->form->getFieldValue('newPassword')) {
