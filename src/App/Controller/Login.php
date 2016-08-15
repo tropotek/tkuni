@@ -153,10 +153,12 @@ class Login extends Iface
             
             $result = $event->getResult();
             if (!$result) {
+                //$form->addError( implode("<br/>\n", $result->getMessages()) );
                 $form->addError('Error 1001: Invalid Username or password.');
                 return;
             }
-            $form->addError( implode("<br/>\n", $result->getMessages()) );
+
+            $this->getConfig()->getEventDispatcher()->dispatch('auth.onLogin.success', $event);
 
         } catch (\Exception $e) {
             $form->addError($e->getMessage());

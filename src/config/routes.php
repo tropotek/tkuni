@@ -60,6 +60,7 @@ $routes->add('client-institution-edit', new \Tk\Routing\Route('/client/instituti
 
 $routes->add('client-course-manager', new \Tk\Routing\Route('/client/courseManager.html', 'App\Controller\Ui\Course\Manager::doDefault', $params));
 $routes->add('client-course-edit', new \Tk\Routing\Route('/client/courseEdit.html', 'App\Controller\Ui\Course\Edit::doDefault', $params));
+$routes->add('client-course-enrollment', new \Tk\Routing\Route('/client/courseEnrollment.html', 'App\Controller\Ui\Course\Enrollment::doDefault', $params));
 
 $routes->add('client-user-manager', new \Tk\Routing\Route('/client/userManager.html', 'App\Controller\Ui\User\Manager::doDefault', $params));
 $routes->add('client-user-edit', new \Tk\Routing\Route('/client/userEdit.html', 'App\Controller\Ui\User\Edit::doDefault', $params));

@@ -104,6 +104,18 @@ CREATE TABLE IF NOT EXISTS `data` (
   UNIQUE KEY `data_foreign_fields` (`foreign_id`, `foreign_key`, `key`)
 ) ENGINE=InnoDB;
 
+-- --------------------------------------------------------
+--
+--
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `enrollment` (
+  `course_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `email` VARCHAR(255) NOT NULL DEFAULT '',
+  `uid` varchar(64) NOT NULL DEFAULT '',
+  PRIMARY KEY (`course_id`, `email`)
+) ENGINE=InnoDB;
+
+
 
 
 -- ----------------------------
@@ -130,6 +142,11 @@ INSERT INTO `user_course` (`user_id`, `course_id`)
 VALUES
   (3, 1),
   (4, 1)
+;
+
+INSERT INTO `enrollment` (`course_id`, `email`)
+VALUES
+  (1, 'student@unimelb.edu.au')
 ;
 
 INSERT INTO `user_institution` (`user_id`, `institution_id`)

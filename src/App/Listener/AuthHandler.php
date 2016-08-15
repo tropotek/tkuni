@@ -20,6 +20,29 @@ class AuthHandler implements SubscriberInterface
      * @param AuthEvent $event
      * @throws \Exception
      */
+    public function onLoginSuccess(AuthEvent $event)
+    {
+        $result = $event->getResult();
+        if (!$result || !$result->isValid()) {
+            return;
+        }
+        $user = \App\Db\User::getMapper()->findByUsername($result->getIdentity());
+        $institution = $user->getInstitution();
+
+        $courseList = \App\Db\CourseMap::create()->findPendingEnrollment($institution->id, $user->email);
+        /** @var \App\Db\Course $course */
+        foreach ($courseList as $course) {
+            \App\Db\CourseMap::create()->addUser($course->id, $user->id);
+        }
+
+        \Tk\Uri::create($user->getHomeUrl())->redirect();
+
+    }
+
+    /**
+     * @param AuthEvent $event
+     * @throws \Exception
+     */
     public function onLogin(AuthEvent $event)
     {
         $config = \App\Factory::getConfig();
@@ -38,18 +61,19 @@ class AuthHandler implements SubscriberInterface
         if (!$result) {
             throw new \Tk\Auth\Exception('Invalid login credentials');
         }
-        
-        if ($result->isValid()) {
-            /** @var \App\Db\User $user */
-            $user = \App\Db\User::getMapper()->findByUsername($result->getIdentity());
-            if (!$user) {
-                throw new \Tk\Auth\Exception('User not found: Contact Your Administrator.');
-            }
-            $user->lastLogin = \Tk\Date::create();
-            $user->save();
-
-            \Tk\Uri::create($user->getHomeUrl())->redirect();
+        if (!$result->isValid()) {
+            return;
         }
+
+        /** @var \App\Db\User $user */
+        $user = \App\Db\User::getMapper()->findByUsername($result->getIdentity());
+        if (!$user) {
+            throw new \Tk\Auth\Exception('User not found: Contact Your Administrator.');
+        }
+        $user->lastLogin = \Tk\Date::create();
+        $user->save();
+
+        $event->set('user', $user);
     }
 
     /**
@@ -172,6 +196,7 @@ class AuthHandler implements SubscriberInterface
         return array(
             KernelEvents::CONTROLLER => 'onControllerAccess',
             'auth.onLogin' => 'onLogin',
+            'auth.onLogin.success' => 'onLoginSuccess',
             'auth.onLogout' => 'onLogout',
             'auth.onRegister' => 'onRegister',
             'auth.onRegisterConfirm' => 'onRegisterConfirm',

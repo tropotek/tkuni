@@ -119,7 +119,7 @@ class InstitutionMap extends Mapper
     public function findByUserId($userId)
     {
         $from = sprintf('%s a, user_institution b', $this->getDb()->quoteParameter($this->getTable()));
-        $where = sprintf('a.id = b.institution_id AND a.id = %d', (int)$userId);
+        $where = sprintf('a.id = b.institution_id AND b.user_id = %d', (int)$userId);
         return $this->selectFrom($from, $where)->current();
     }
 

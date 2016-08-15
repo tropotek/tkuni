@@ -192,4 +192,75 @@ class CourseMap extends Mapper
     }
     
 
+    // Enrolment queries
+
+
+
+    public function findPendingEnrollment($institutionId, $email, $tool = null)
+    {
+        $from = sprintf('%s a, enrollment b, %s c LEFT JOIN user_course d ON (c.id = d.user_id) ', $this->getDb()->quoteParameter($this->getTable()), $this->getDb()->quoteParameter('user'));
+        $where = sprintf('a.id = b.course_id AND b.email = c.email AND a.institution_id = %d AND b.email = %s AND d.user_id IS NULL', (int)$institutionId, $this->getDb()->quote($email));
+
+        return $this->selectFrom($from, $where, $tool);
+    }
+
+    /**
+     *
+     *
+     * @param $courseId
+     * @return array
+     */
+    public function findEnrollmentByCourseId($courseId, $tool = null)
+    {
+        $sql = sprintf('SELECT a.* FROM enrollment a LEFT JOIN %s b ON (a.email = b.email) WHERE a.course_id = %d', $this->getDb()->quoteParameter('user'), (int)$courseId);
+//        if ($tool)
+//            $sql .= $tool->toSql();
+        $res = $this->getDb()->query($sql);
+        $arr = $res->fetchAll();
+        return $arr;
+    }
+
+    public function hasEnrollment($courseId, $email)
+    {
+        $sql = sprintf('SELECT * FROM enrollment WHERE course_id = %d AND email = %s', (int)$courseId, $this->getDb()->quote($email));
+        return ($this->getDb()->query($sql)->rowCount() > 0);
+    }
+
+    /**
+     * @param int $courseId
+     * @param string $email
+     * @param string $uid
+     */
+    public function enrollUser($courseId, $email, $uid = '')
+    {
+        if (!$this->hasEnrollment($courseId, $email)) {
+            $query = sprintf('INSERT INTO enrollment (course_id, email, uid)  VALUES (%d, %s, %s) ', (int)$courseId, $this->getDb()->quote($email), $this->getDb()->quote($uid));
+            $this->getDb()->exec($query);
+        }
+        // Do not add the user to the user_course table as this will be added automatically the next time the user logs in
+        // This part should be implemented in a auth.onLogin listener
+    }
+
+
+    /**
+     * @param int $courseId
+     * @param string $email
+     */
+    public function unenrollUser($courseId, $email)
+    {
+        $query = sprintf('DELETE FROM enrollment WHERE course_id = %d AND email = %s', (int)$courseId, $this->getDb()->quote($email));
+        $this->getDb()->exec($query);
+        /** @var Course  $course */
+        $course = CourseMap::create()->find($courseId);
+        if (!$course) return;
+        $user = UserMap::create()->findByEmail($email, null, $course->institutionId);
+        if ($user) {
+            $this->deleteUser($courseId, $user->id);
+        }
+    }
+
+
+
+
+
 }

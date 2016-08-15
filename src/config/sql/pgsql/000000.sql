@@ -111,6 +111,15 @@ CREATE TABLE IF NOT EXISTS data (
   CONSTRAINT data_foreign_fields UNIQUE (foreign_id, foreign_key, key)
 );
 
+-- --------------------------------------------------------
+--
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS enrollment (
+  course_id INTEGER NOT NULL DEFAULT '0',
+  email VARCHAR(255) NOT NULL DEFAULT '',
+  uid VARCHAR(64) NOT NULL DEFAULT '',
+  PRIMARY KEY (course_id, email)
+);
 
 
 -- ----------------------------
@@ -137,6 +146,11 @@ INSERT INTO user_course (user_id, course_id)
 VALUES
   (3, 1),
   (4, 1)
+;
+
+INSERT INTO enrollment (course_id, email)
+VALUES
+  (1, 'student@unimelb.edu.au')
 ;
 
 INSERT INTO user_institution (user_id, institution_id)

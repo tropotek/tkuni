@@ -199,6 +199,8 @@ class User extends \Tk\Db\Map\Model
     /**
      * Return the users home|dashboard relative url
      *
+     * @note \App\Uri::createHomeUrl() uses this method to get the home path
+     *
      * @return string
      * @throws \Exception
      */

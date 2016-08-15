@@ -171,6 +171,13 @@ class Edit extends Iface
 
         }
 
+        if ($this->course->id) {
+            $template->setChoice('update');
+            $template->setAttr('enroll', 'href', \App\Uri::createHomeUrl('/courseEnrollment.html')->set('courseId', $this->course->id));
+        } else {
+            $template->setChoice('new');
+        }
+
         return $this->getPage()->setPageContent($template);
     }
 
@@ -194,7 +201,7 @@ class Edit extends Iface
         <div class="row">
           <div class="col-lg-12">
             <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
-            <a href="javascript:;" class="btn btn-default" var="enroll"><i class="fa fa-user-plus"></i> <span>Add User</span></a>
+            <a href="javascript:;" class="btn btn-default" var="enroll" choice="update"><i class="fa fa-list"></i> <span>Enrollment List</span></a>
           </div>
         </div>
       </div>
