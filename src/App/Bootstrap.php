@@ -122,7 +122,10 @@ class Bootstrap
         // Init Auth
         $auth = \App\Factory::getAuth();
         if ($auth->getIdentity()) {
-            $config->setUser(\App\Db\UserMap::create()->findByUsername($auth->getIdentity()));
+            $ident = $auth->getIdentity();
+            //error_log(print_r($ident, true));
+            $user = \App\Db\User::getMapper()->findByUsername($ident['username'], $ident['institutionId']);
+            $config->setUser($user);
         }
         return $config;
     }

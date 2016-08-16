@@ -253,7 +253,7 @@ class CourseMap extends Mapper
         /** @var Course  $course */
         $course = CourseMap::create()->find($courseId);
         if (!$course) return;
-        $user = UserMap::create()->findByEmail($email, null, $course->institutionId);
+        $user = UserMap::create()->findByEmail($email, $course->institutionId);
         if ($user) {
             $this->deleteUser($courseId, $user->id);
         }

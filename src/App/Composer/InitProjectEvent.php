@@ -47,6 +47,7 @@ class InitProjectEvent
     static function init(Event $event, $isInstall = false)
     {
         try {
+            $overwrite = false;
             $sitePath = $_SERVER['PWD'];
             $io = $event->getIO();
             $composer = $event->getComposer();
@@ -85,8 +86,9 @@ STR;
                 $configContents = file_get_contents($configInFile);
 
                 if ($isInstall && @is_file($configFile)) {
-                    $v = $io->askConfirmation(self::warning('NOTICE: Are you sure you want to remove the existing installation data [N]: '), false);
-                    if ($v) {
+                    $overwrite = $io->askConfirmation(self::warning('NOTICE: Are you sure you want to remove the existing installation data [N]: '), false);
+                    if ($overwrite) {
+                        // TODO: This should be asked after the DB is selected and exists in the new location (not here....)
                         try {
                             include $configFile;
                             $config = Config::getInstance();

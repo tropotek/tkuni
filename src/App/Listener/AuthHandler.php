@@ -26,13 +26,18 @@ class AuthHandler implements SubscriberInterface
         if (!$result || !$result->isValid()) {
             return;
         }
-        $user = \App\Db\User::getMapper()->findByUsername($result->getIdentity());
-        $institution = $user->getInstitution();
 
-        $courseList = \App\Db\CourseMap::create()->findPendingEnrollment($institution->id, $user->email);
-        /** @var \App\Db\Course $course */
-        foreach ($courseList as $course) {
-            \App\Db\CourseMap::create()->addUser($course->id, $user->id);
+        //$user = \App\Db\UserMap::create()->findByUsername($result->getIdentity());
+        /** @var \App\Db\User $user */
+        $user = \App\Factory::getConfig()->getUser();
+
+        $institution = $user->getInstitution();
+        if ($institution) {
+            $courseList = \App\Db\CourseMap::create()->findPendingEnrollment($institution->id, $user->email);
+            /** @var \App\Db\Course $course */
+            foreach ($courseList as $course) {
+                \App\Db\CourseMap::create()->addUser($course->id, $user->id);
+            }
         }
 
         \Tk\Uri::create($user->getHomeUrl())->redirect();
@@ -66,7 +71,9 @@ class AuthHandler implements SubscriberInterface
         }
 
         /** @var \App\Db\User $user */
-        $user = \App\Db\User::getMapper()->findByUsername($result->getIdentity());
+        $ident = $result->getIdentity();
+        vd($ident);
+        $user = \App\Db\UserMap::create()->findByUsername($ident['username'], $ident['institutionId']);
         if (!$user) {
             throw new \Tk\Auth\Exception('User not found: Contact Your Administrator.');
         }

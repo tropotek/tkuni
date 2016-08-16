@@ -112,18 +112,6 @@ class InstitutionMap extends Mapper
     }
 
     /**
-     *
-     * @param int $userId
-     * @return Institution
-     */
-    public function findByUserId($userId)
-    {
-        $from = sprintf('%s a, user_institution b', $this->getDb()->quoteParameter($this->getTable()));
-        $where = sprintf('a.id = b.institution_id AND b.user_id = %d', (int)$userId);
-        return $this->selectFrom($from, $where)->current();
-    }
-
-    /**
      * Find filtered records
      *
      * @param array $filter
@@ -168,48 +156,6 @@ class InstitutionMap extends Mapper
     }
 
 
-    /**
-     * @param int $institutionId
-     * @param int $userId
-     * @return boolean
-     */
-    public function hasUser($institutionId, $userId)
-    {
-        $sql = sprintf('SELECT * FROM user_institution WHERE institution_id = %d AND user_id = %d', (int)$institutionId, (int)$userId);
-        return ($this->getDb()->query($sql)->rowCount() > 0);
-    }
-
-    /**
-     * @param int $institutionId
-     * @param int $userId
-     * @return \Tk\Db\PDOStatement
-     */
-    public function deleteUser($institutionId, $userId)
-    {
-        $query = sprintf('DELETE FROM user_institution WHERE user_id = %d AND institution_id = %d', (int)$userId, (int)$institutionId);
-        return $this->getDb()->exec($query);
-    }
-
-    /**
-     * @param int $institutionId
-     * @param int $userId
-     * @return \Tk\Db\PDOStatement
-     */
-    public function addUser($institutionId, $userId)
-    {
-        $query = sprintf('INSERT INTO user_institution (user_id, institution_id)  VALUES (%d, %d) ', (int)$userId, (int)$institutionId);
-        return $this->getDb()->exec($query);
-    }
-
-    /**
-     * @param int $institutionId
-     * @return \Tk\Db\PDOStatement
-     */
-    public function deleteAllUsers($institutionId)
-    {
-        $query = sprintf('DELETE FROM user_institution WHERE institution_id = %d ', (int)$institutionId);
-        return $this->getDb()->exec($query);
-    }
 
 }
 

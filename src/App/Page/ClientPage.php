@@ -35,7 +35,7 @@ class ClientPage extends Iface
         /** @var \Dom\Template $template */
         $template = $this->getTemplate();
 
-        $template->replaceTemplate('nav', \App\Ui\ClientMenu::create()->show());
+        $template->replaceTemplate('nav', \App\Ui\Menu\ClientMenu::create()->show());
 
         return $template;
     }

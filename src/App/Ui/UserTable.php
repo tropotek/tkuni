@@ -95,7 +95,7 @@ class UserTable extends \Dom\Renderer\Renderer
         $filter['courseId'] = $this->courseId;
         $filter['role'] = $this->role;
 
-        $users = \App\Db\User::getMapper()->findFiltered($filter, $this->table->makeDbTool('a.name'));
+        $users = \App\Db\UserMap::create()->findFiltered($filter, $this->table->makeDbTool('a.name'));
         $this->table->setList($users);
 
     }
@@ -134,7 +134,7 @@ class CourseCell extends \Tk\Table\Cell\Text
     public function getPropertyValue($obj, $property)
     {
         //$val =  parent::getPropertyValue($obj, $property);
-        $courseList = \App\Db\Course::getMapper()->findByUserId($obj->id, $this->institutionId, \Tk\Db\Tool::create('a.name'));
+        $courseList = \App\Db\CourseMap::create()->findByUserId($obj->id, $this->institutionId, \Tk\Db\Tool::create('a.name'));
         $val =  '';
         foreach ($courseList as $course) {
             $val .= $course->code. ', ';

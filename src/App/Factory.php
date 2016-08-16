@@ -104,9 +104,9 @@ class Factory
         if (!$config->getDb() && $config->has('db.type')) {
             try {
                 $pdo = Pdo::getInstance($name, $config->getGroup('db'));
-                $logger = $config->getLog();
-//                if ($logger && $config->isDebug()) {
-//                    $pdo->setOnLogListener(function ($entry) use ($logger) {
+//                $logger = $config->getLog();
+//                if ($config->getLog() && $config->isDebug()) {
+//                    $pdo->setOnLogListener(function ($entry) use ($config->getLog()) {
 //                        $logger->debug('[' . round($entry['time'], 4) . 'sec] ' . $entry['query']);
 //                    });
 //                }
@@ -228,46 +228,22 @@ class Factory
         /** @var \Tk\Auth\Adapter\Iface $adapter */
         $adapter = null;
         switch ($class) {
-//            case '\Tk\Auth\Adapter\Config':
-//                $adapter = new \Tk\Auth\Adapter\Config(
-//                    $config['system.auth.config.username'],
-//                    $config['system.auth.config.password']);
-//                break;
-//            case '\Tk\Auth\Adapter\Ldap':
-//                $adapter = new \Tk\Auth\Adapter\Ldap(
-//                    $config['system.auth.ldap.host'],
-//                    $config['system.auth.ldap.baseDn'],
-//                    $config['system.auth.ldap.filter'],
-//                    $config['system.auth.ldap.port'],
-//                    $config['system.auth.ldap.tls']);
-//                break;
-            case '\Uni\Auth\LdapAdapter':
+            case '\App\Auth\Adapter\UnimelbLdap':
                 if (!isset($submittedData['institutionId'])) return null;
-                // TODO: we need to get the LDAP settings from the institution config table
-//                $adapter = new \Uni\Auth\LdapAdapter(
-//                    $config['system.auth.ldap.host'],
-//                    $config['system.auth.ldap.baseDn'],
-//                    $config['system.auth.ldap.filter'],
-//                    $config['system.auth.ldap.port'],
-//                    $config['system.auth.ldap.tls']);
-                $institution = \App\Db\Institution::getMapper()->find($submittedData['institutionId']);
+                $institution = \App\Db\InstitutionMap::create()->find($submittedData['institutionId']);
                 if (!$institution || !$institution->getData()->get('ldapHost')) return null;
-                $adapter = new \Uni\Auth\LdapAdapter($institution);
+                $adapter = new \App\Auth\Adapter\UnimelbLdap($institution);
                 break;
-            case '\Tk\Auth\Adapter\DbTable':
+            case '\App\Auth\Adapter\DbTable':
                 //if (isset($submittedData['institutionId'])) return null;
-                $adapter = new \Tk\Auth\Adapter\DbTable(
+                $adapter = new \App\Auth\Adapter\DbTable(
                     $config->getDb(),
                     $config['system.auth.dbtable.tableName'],
                     $config['system.auth.dbtable.usernameColumn'],
                     $config['system.auth.dbtable.passwordColumn'],
                     $config['system.auth.dbtable.activeColumn']);
-                //$adapter->setHashFunction($config['hash.function']);
                 $adapter->setHashCallback(array(__CLASS__, 'hashPassword'));
                 break;
-//            case '\Tk\Auth\Adapter\Trapdoor':
-//                $adapter = new \Tk\Auth\Adapter\Trapdoor();
-//                break;
             default:
                 if (class_exists($class))
                     $adapter = new $class();

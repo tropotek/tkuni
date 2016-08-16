@@ -43,7 +43,7 @@ class DialogBox extends \Dom\Renderer\Renderer
     }
 
     /**
-     * @return strings
+     * @return string
      */
     public function getId()
     {

@@ -78,6 +78,8 @@ class Manager extends Iface
     {
         $template = $this->getTemplate();
 
+        $template->setAttr('new', 'href', \App\Uri::createHomeUrl('/courseEdit.html'));
+
         $template->replaceTemplate('table', $this->table->getParam('renderer')->show());
         return $this->getPage()->setPageContent($template);
     }
@@ -102,7 +104,7 @@ class Manager extends Iface
         <div class="row">
           <div class="col-lg-12">
             <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
-            <a href="/client/courseEdit.html" class="btn btn-default"><i class="fa fa-graduation-cap"></i> <span>New Course</span></a>
+            <a href="/client/courseEdit.html" class="btn btn-default" var="new"><i class="fa fa-graduation-cap"></i> <span>New Course</span></a>
           </div>
         </div>
       </div>
@@ -112,7 +114,7 @@ class Manager extends Iface
   <div class="col-lg-12">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <i class="fa fa-university fa-fw"></i> Course
+        <i class="fa fa-graduation-cap fa-fw"></i> Course
       </div>
       <div class="panel-body">
         <div var="table"></div>

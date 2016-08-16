@@ -98,7 +98,7 @@ class EnrollmentDialog extends DialogBox
 
             if (!\App\Db\CourseMap::create()->hasEnrollment($this->course->id, $email)) {
                 \App\Db\CourseMap::create()->enrollUser($this->course->id, $email, $uid);
-                $user = \App\Db\UserMap::create()->findByEmail($email);
+                $user = \App\Db\UserMap::create()->findByEmail($email, $this->course->institutionId);
                 if ($user) {
                     \App\Db\CourseMap::create()->addUser($this->course->id, $user->id);
                 }

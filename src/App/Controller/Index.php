@@ -27,7 +27,7 @@ class Index extends Iface
     public function doDefault(Request $request)
     {
         // on success email user confirmation
-//        $user = \App\Db\User::getMapper()->find(2);
+//        $user = \App\Db\UserMap::create()->find(2);
 //        $body = \Dom\Loader::loadFile($this->getConfig()->getSitePath().'/html/purpose/xtpl/mail/account.registration.xtpl');
 //        $body->insertText('name', $user->name);
 //        $url = \Tk\Uri::create('/register.html')->set('h', $user->hash);

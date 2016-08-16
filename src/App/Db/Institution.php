@@ -152,7 +152,7 @@ class Institution extends \Tk\Db\Map\Model
     public function getOwner()
     {
         if (!$this->owner)
-            $this->owner = \App\Db\User::getMapper()->find($this->ownerId);
+            $this->owner = \App\Db\UserMap::create()->find($this->ownerId);
         return $this->owner;
     }
 

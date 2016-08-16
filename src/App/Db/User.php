@@ -17,11 +17,16 @@ class User extends \Tk\Db\Map\Model
 {
     static $HASH_FUNCTION = 'md5';
 
-    
+
     /**
      * @var int
      */
     public $id = 0;
+
+    /**
+     * @var int
+     */
+    public $institutionId = 0;
 
     /**
      * @var string
@@ -124,6 +129,15 @@ class User extends \Tk\Db\Map\Model
     }
 
     /**
+     * @param string|array $role
+     * @return bool
+     */
+    public function hasRole($role)
+    {
+        return $this->getAcl()->hasRole($role);
+    }
+
+    /**
      * Create a random password
      *
      * @param int $length
@@ -165,6 +179,7 @@ class User extends \Tk\Db\Map\Model
         if (!$this->username || !$this->role || !$this->email) {
             throw new \Tk\Exception('The username, role and email must be set before generating a valid hash');
         }
+        // TODO: We should really add the institutionId to this hash
         return hash(self::$HASH_FUNCTION, sprintf('%s%s%s', $this->username, $this->role, $this->email));
     }
 
@@ -187,11 +202,8 @@ class User extends \Tk\Db\Map\Model
      */
     public function getInstitution()
     {
-        if ($this->id && !$this->institution) {
-            $this->institution = \App\Db\InstitutionMap::create()->findByOwnerId($this->id);
-            if (!$this->institution) {
-                $this->institution = \App\Db\InstitutionMap::create()->findByUserId($this->id);
-            }
+        if (!$this->institution) {
+            $this->institution = \App\Db\InstitutionMap::create()->find($this->institutionId);
         }
         return $this->institution;
     }
@@ -242,8 +254,8 @@ class UserValidator extends \Tk\Db\Map\Validator
         if (!$obj->username) {
             $this->addError('username', 'Invalid field username value.');
         } else {
-            //$dup = User::getMapper()->findByUsername($obj->username, $obj->role);
-            $dup = User::getMapper()->findByUsername($obj->username);
+            //$dup = UserMap::create()->findByUsername($obj->username, $obj->role);
+            $dup = UserMap::create()->findByUsername($obj->username, $obj->institutionId);
             if ($dup && $dup->getId() != $obj->getId()) {
                 $this->addError('username', 'This username is already in use.');
             }
@@ -252,8 +264,8 @@ class UserValidator extends \Tk\Db\Map\Validator
         if (!filter_var($obj->email, FILTER_VALIDATE_EMAIL)) {
             $this->addError('email', 'Please enter a valid email address');
         } else {
-            //$dup = User::getMapper()->findByEmail($obj->email, $obj->role);
-            $dup = User::getMapper()->findByEmail($obj->email);
+            //$dup = UserMap::create()->findByEmail($obj->email, $obj->role);
+            $dup = UserMap::create()->findByEmail($obj->email, $obj->institutionId);
             if ($dup && $dup->getId() != $obj->getId()) {
                 $this->addError('email', 'This email is already in use.');
             }

@@ -125,7 +125,7 @@ class CourseValidator extends \Tk\Db\Map\Validator
             $this->addError('code', 'Invalid field value.');
         } else {
             // Look for existing courses with same code
-            $c = \App\Db\Course::getMapper()->findByCode($obj->code, $obj->institutionId);
+            $c = \App\Db\CourseMap::create()->findByCode($obj->code, $obj->institutionId);
             if ($c && $c->id != $obj->id) {
                 $this->addError('code', 'Code already exists.');
             }

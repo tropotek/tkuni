@@ -70,14 +70,18 @@ class Recover extends Iface
         }
         
         // TODO: This should be made a bit more secure for larger sites.
-        
+
+        // For Admin and Client users only
+        // TODO: Do an institution recovery system if possible.
+
         $account = $form->getFieldValue('account');
+
         /** @var \App\Db\User $user */
         $user = null;
         if (filter_var($account, FILTER_VALIDATE_EMAIL)) {
-            $user = \App\Db\User::getMapper()->findByEmail($account);
+            $user = \App\Db\UserMap::create()->findByEmail($account);
         } else {
-            $user = \App\Db\User::getMapper()->findByUsername($account);
+            $user = \App\Db\UserMap::create()->findByUsername($account);
         }
         if (!$user) {
             $form->addFieldError('account', 'Please enter a valid username or email');

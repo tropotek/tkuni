@@ -1,5 +1,5 @@
 <?php
-namespace Uni\Auth;
+namespace App\Auth\Adapter;
 
 use Tk\Auth\Result;
 
@@ -13,7 +13,7 @@ use Tk\Auth\Result;
  *
  *
  */
-class ELdapAdapter extends \Tk\Auth\Adapter\Ldap
+class UnimelbLdap extends \Tk\Auth\Adapter\Ldap
 {
 
     /**
@@ -47,20 +47,25 @@ class ELdapAdapter extends \Tk\Auth\Adapter\Ldap
         
         /** @var \Tk\Auth\Result $r */
         $r = parent::authenticate();
+        if ($r->getCode() != Result::SUCCESS)
+            return $r;
+
         $ldapData = $r->get('ldap');
         if (!$ldapData) return new Result(Result::FAILURE_CREDENTIAL_INVALID, $username, 'Error Connecting to LDAP Server.');
-
 
         if ($ldapData[0]['auedupersontype'][0] != $this->get('userType')) {
             return new Result(Result::FAILURE_CREDENTIAL_INVALID, $username, 'Invalid user');
         }
 
         // Update the user record with ldap data
+        $iid = null;
+        if ($this->institution) {
+            $iid = $this->institution->id;
+        }
         /** @var \App\Db\User $user */
-        $user = \App\Db\User::getMapper()->findByUsername($r->getIdentity());
+        $user = \App\Db\User::getMapper()->findByUsername($r->getIdentity(), $iid);
         if (!$user && isset($ldapData[0]['mail'][0])) {
-            // Check if there is one by email
-            $user = \App\Db\User::getMapper()->findByEmail($ldapData[0]['mail'][0]);
+            $user = \App\Db\User::getMapper()->findByEmail($ldapData[0]['mail'][0], $iid);
         }
 
         // Create the user record if none exists....
@@ -95,6 +100,8 @@ class ELdapAdapter extends \Tk\Auth\Adapter\Ldap
                 $user->uid = $ldapData[0]['auedupersonid'][0];
             $user->save();
         }
+
+        $r = new Result(Result::SUCCESS, array('username' => $username, 'institutionId' => $this->institution->id), 'User Found!');
         return $r;
     }
 

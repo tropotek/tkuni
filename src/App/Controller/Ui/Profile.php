@@ -54,7 +54,7 @@ class Profile extends Iface
         $this->form->addField(new Field\Input('username'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\Input('name'))->setRequired(true)->setTabGroup('Details');
         $emailF = $this->form->addField(new Field\Input('email'))->setRequired(true)->setTabGroup('Details');
-        $emailF->setAttr('readonly', 'readonly');
+        //$emailF->setAttr('readonly', 'readonly');
 
         $this->form->addField(new Field\Password('newPassword'))->setAttr('placeholder', 'Click to edit')->setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setTabGroup('Password');
         $this->form->addField(new Field\Password('confPassword'))->setAttr('placeholder', 'Click to edit')->setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setNotes('Change this users password.')->setTabGroup('Password');

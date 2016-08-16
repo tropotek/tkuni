@@ -10,6 +10,7 @@
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS "user" (
   id SERIAL PRIMARY KEY,
+  institution_id INTEGER DEFAULT NULL,
   uid VARCHAR(128) NOT NULL DEFAULT '',
   username VARCHAR(64) NOT NULL DEFAULT '',
   password VARCHAR(128) NOT NULL DEFAULT '',
@@ -25,10 +26,9 @@ CREATE TABLE IF NOT EXISTS "user" (
   modified TIMESTAMP DEFAULT NOW(),
   created TIMESTAMP DEFAULT NOW(),
 
-  CONSTRAINT user_username UNIQUE (username, role),
-  CONSTRAINT user_uid UNIQUE (uid, role),
-  CONSTRAINT user_email UNIQUE (email, role),
-  CONSTRAINT user_hash UNIQUE (hash, role)
+  CONSTRAINT user_username UNIQUE (institution_id, username),
+  CONSTRAINT user_email UNIQUE (institution_id, email),
+  CONSTRAINT user_hash UNIQUE (institution_id, hash)
 );
 
 -- ----------------------------
@@ -58,12 +58,12 @@ CREATE TABLE IF NOT EXISTS institution (
 -- user_institution
 -- User belongs to institution for `staff and `student` roles.
 -- ----------------------------
-CREATE TABLE IF NOT EXISTS user_institution (
-	user_id INTEGER NOT NULL,
-	institution_id INTEGER NOT NULL,
-	FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE,
-	FOREIGN KEY (institution_id) REFERENCES institution(id)  ON DELETE CASCADE
-);
+-- CREATE TABLE IF NOT EXISTS user_institution (
+-- 	user_id INTEGER NOT NULL,
+-- 	institution_id INTEGER NOT NULL,
+-- 	FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE,
+-- 	FOREIGN KEY (institution_id) REFERENCES institution(id)  ON DELETE CASCADE
+-- );
 
 -- ----------------------------
 --  Course Data Tables
@@ -125,12 +125,12 @@ CREATE TABLE IF NOT EXISTS enrollment (
 -- ----------------------------
 --  TEST DATA
 -- ----------------------------
-INSERT INTO "user" (username, password ,role ,name, email, active, hash, modified, created)
+INSERT INTO "user" (institution_id, username, password ,role ,name, email, active, hash, modified, created)
 VALUES
-  ('admin', MD5(CONCAT('password', MD5('adminadminadmin@example.com'))), 'admin', 'Administrator', 'admin@example.com', 1, MD5('adminadminadmin@example.com'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW()) ),
-  ('unimelb', MD5(CONCAT('password', MD5('unimelbclientfvas@unimelb.edu.au'))), 'client', 'Unimelb Client', 'fvas@unimelb.edu.au', 1, MD5('unimelbclientfvas@unimelb.edu.au'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW())  ),
-  ('staff', MD5(CONCAT('password', MD5('staffstaffstaff@unimelb.edu.au'))), 'staff', 'Unimelb Staff', 'staff@unimelb.edu.au', 1, MD5('staffstaffstaff@unimelb.edu.au'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW())  ),
-  ('student', MD5(CONCAT('password', MD5('studentstudentstudent@unimelb.edu.au'))), 'student', 'Unimelb Student', 'student@unimelb.edu.au', 1, MD5('studentstudentstudent@unimelb.edu.au'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW())  )
+  (NULL, 'admin', MD5(CONCAT('password', MD5('adminadminadmin@example.com'))), 'admin', 'Administrator', 'admin@example.com', 1, MD5('adminadminadmin@example.com'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW()) ),
+  (NULL, 'unimelb', MD5(CONCAT('password', MD5('unimelbclientfvas@unimelb.edu.au'))), 'client', 'Unimelb Client', 'fvas@unimelb.edu.au', 1, MD5('unimelbclientfvas@unimelb.edu.au'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW())  ),
+  (1, 'staff', MD5(CONCAT('password', MD5('staffstaffstaff@unimelb.edu.au'))), 'staff', 'Unimelb Staff', 'staff@unimelb.edu.au', 1, MD5('staffstaffstaff@unimelb.edu.au'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW())  ),
+  (1, 'student', MD5(CONCAT('password', MD5('studentstudentstudent@unimelb.edu.au'))), 'student', 'Unimelb Student', 'student@unimelb.edu.au', 1, MD5('studentstudentstudent@unimelb.edu.au'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW())  )
 ;
 
 INSERT INTO institution (owner_id, name, email, description, logo, active, hash, modified, created)
@@ -153,11 +153,11 @@ VALUES
   (1, 'student@unimelb.edu.au')
 ;
 
-INSERT INTO user_institution (user_id, institution_id)
-VALUES
-  (3, 1),
-  (4, 1)
-;
+-- INSERT INTO user_institution (user_id, institution_id)
+-- VALUES
+--   (3, 1),
+--   (4, 1)
+-- ;
 
 INSERT INTO data (foreign_id, foreign_key, key, value) VALUES
   (0, 'system', 'site.title', 'Tk2Uni Site'),

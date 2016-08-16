@@ -1,18 +1,18 @@
 <?php
-namespace App\Ui;
+namespace App\Ui\Menu;
 
 
 use Dom\Template;
 
 /**
- * Class StaffMenu
+ * Class StudentMenu
  */
-class StaffMenu extends \Dom\Renderer\Renderer
+class StudentMenu extends \Dom\Renderer\Renderer
 {
 
 
     /**
-     * StaffMenu constructor.
+     * StudentMenu constructor.
      */
     public function __construct()
     {
@@ -20,7 +20,7 @@ class StaffMenu extends \Dom\Renderer\Renderer
     }
 
     /**
-     * @return StaffMenu
+     * @return StudentMenu
      */
     static function create()
     {
@@ -56,7 +56,6 @@ class StaffMenu extends \Dom\Renderer\Renderer
         return $template;
     }
 
-
     /**
      * DomTemplate magic method
      *
@@ -74,7 +73,7 @@ class StaffMenu extends \Dom\Renderer\Renderer
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/staff/index.html" var="siteTitle">Tk2Uni v2.0 Template</a>
+      <a class="navbar-brand" href="/student/index.html" var="siteTitle">Tk2Uni v2.0 Template</a>
     </div>
     <!-- /.navbar-header -->
 
@@ -84,7 +83,7 @@ class StaffMenu extends \Dom\Renderer\Renderer
           <i class="fa fa-user fa-fw"></i> <span var="username">Admin</span> <i class="fa fa-caret-down"></i>
         </a>
         <ul class="dropdown-menu dropdown-user">
-          <li><a href="/staff/profile.html"><i class="fa fa-user fa-fw"></i> My Profile</a></li>
+          <li><a href="/student/profile.html"><i class="fa fa-user fa-fw"></i> My Profile</a></li>
           <li class="divider"></li>
           <li><a href="/logout.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
         </ul>
@@ -94,9 +93,8 @@ class StaffMenu extends \Dom\Renderer\Renderer
     <div class="navbar-default sidebar" role="navigation">
       <div class="sidebar-nav navbar-collapse">
         <ul class="nav" id="side-menu">
-          <li><a href="/staff/index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
-          <li><a href="/staff/userManager.html"><i class="fa fa-users fa-fw"></i> Users</a></li>
-          <li><a href="/staff/courseManager.html"><i class="fa fa-university fa-fw"></i> Courses</a></li>
+          <li><a href="/student/index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
+          <!-- li><a href="/student/courseManager.html"><i class="fa fa-university fa-fw"></i> Courses</a></li -->
         </ul>
       </div>
     </div>

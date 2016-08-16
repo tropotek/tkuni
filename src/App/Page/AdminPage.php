@@ -34,7 +34,7 @@ class AdminPage extends Iface
         /** @var \Dom\Template $template */
         $template = $this->getTemplate();
 
-        $template->replaceTemplate('nav', \App\Ui\AdminMenu::create()->show());
+        $template->replaceTemplate('nav', \App\Ui\Menu\AdminMenu::create()->show());
 
         return $template;
     }

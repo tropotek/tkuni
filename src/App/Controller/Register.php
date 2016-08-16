@@ -165,7 +165,7 @@ class Register extends Iface
             throw new \InvalidArgumentException('Cannot locate user. Please contact administrator.');
         }
         /** @var \App\Db\User $user */
-        $user = \App\Db\User::getMapper()->findByHash($hash);
+        $user = \App\Db\UserMap::create()->findByHash($hash);
         if (!$user || $user->role != \App\Auth\Acl::ROLE_CLIENT) {
             throw new \InvalidArgumentException('Cannot locate user. Please contact administrator.');
         }
@@ -174,7 +174,7 @@ class Register extends Iface
             \Tk\Uri::create('/login.html')->redirect();
         }
 
-        $institution = \App\Db\Institution::getMapper()->findByUserId($user->id);
+        $institution = \App\Db\InstitutionMap::create()->findByUserId($user->id);
 
         $user->getHash();
         $user->active = true;

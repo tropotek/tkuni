@@ -58,7 +58,7 @@ class Edit extends Iface
         $this->owner = new \App\Db\User();
 
         if ($request->get('institutionId')) {
-            $this->institution = \App\Db\Institution::getMapper()->find($request->get('institutionId'));
+            $this->institution = \App\Db\InstitutionMap::create()->find($request->get('institutionId'));
             $this->owner = $this->institution->getOwner();
         }
 

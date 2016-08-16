@@ -60,7 +60,7 @@ class Edit extends Iface
         $this->course = new \App\Db\Course();
         $this->course->institutionId = $this->institution->id;
         if ($request->get('courseId')) {
-            $this->course = \App\Db\Course::getMapper()->find($request->get('courseId'));
+            $this->course = \App\Db\CourseMap::create()->find($request->get('courseId'));
             if ($this->institution->id != $this->course->institutionId) {
                 throw new \Tk\Exception('You do not have permission to edit this course.');
             }

@@ -72,15 +72,6 @@ abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
             $template->setAttr('siteName', 'title', $this->getConfig()->get('site.title'));
             $template->setTitleText(trim($template->getTitleText() . ' - ' . $this->getConfig()->get('site.title'), '- '));
         }
-        // TODO Consider putting all this into a method called setPageTitle($str)
-        if ($this->getController()->getPageTitle()) {
-            $template->setTitleText(trim($this->getController()->getPageTitle() . ' - ' . $template->getTitleText(), '- '));
-            $template->insertText('pageHeading', $this->getController()->getPageTitle());
-            $template->setChoice('pageHeading');
-        }
-        if ($this->getConfig()->isDebug()) {
-            $template->setTitleText(trim('DEBUG: ' . $template->getTitleText(), '- '));
-        }
 
         if ($this->controller->getUser()) {
             $template->setChoice('logout');
@@ -126,6 +117,7 @@ JS;
      */
     public function setPageContent($content)
     {
+        $this->renderPageTitle();
         if (!$content) return $this;
         if ($content instanceof \Dom\Template) {
             $this->getTemplate()->appendTemplate('content', $content);
@@ -137,6 +129,19 @@ JS;
             $this->template->insertHtml('content', $content);
         }
         return $this;
+    }
+
+    protected function renderPageTitle()
+    {
+        $template = $this->getTemplate();
+        if ($this->getController()->getPageTitle()) {
+            $template->setTitleText(trim($this->getController()->getPageTitle() . ' - ' . $template->getTitleText(), '- '));
+            $template->insertText('pageHeading', $this->getController()->getPageTitle());
+            $template->setChoice('pageHeading');
+        }
+        if ($this->getConfig()->isDebug()) {
+            $template->setTitleText(trim('DEBUG: ' . $template->getTitleText(), '- '));
+        }
     }
 
     /**

@@ -28,6 +28,11 @@ class Edit extends Iface
      */
     private $user = null;
 
+    /**
+     * @var \App\Db\Institution
+     */
+    private $institution = null;
+
 
     /**
      *
@@ -37,29 +42,58 @@ class Edit extends Iface
         parent::__construct('User Edit');
     }
 
+
+    public function setPageHeading()
+    {
+        switch($this->getUser()->role) {
+            case \App\Auth\Acl::ROLE_ADMIN:
+                $this->setPageTitle('Administration User Edit');
+                break;
+            case \App\Auth\Acl::ROLE_CLIENT:
+                $this->setPageTitle('Staff/Student Edit');
+                break;
+            case \App\Auth\Acl::ROLE_STAFF:
+                $this->setPageTitle('Staff/Student Edit');
+                break;
+        }
+    }
+
     /**
      *
      * @param Request $request
      * @return \App\Page\Iface|Template|string
+     * @throws \Tk\Exception
      */
     public function doDefault(Request $request)
     {
+        $this->setPageHeading();
+        $this->institution = $this->getUser()->getInstitution();
+
         $this->user = new \App\Db\User();
-        $this->user = \App\Db\User::getMapper()->find($request->get('userId'));
+        $this->user->role = $this->getUser()->role;
+
+        if ($request->has('userId')) {
+            $this->user = \App\Db\UserMap::create()->find($request->get('userId'));
+            if (!$this->user) {
+                throw new \Tk\Exception('Invalid user account.');
+            }
+            if ($this->institution && $this->institution->id != $this->user->getInstitution()->id) {
+                throw new \Tk\Exception('Invalid user account.');
+            }
+        }
 
         $this->form = new Form('formEdit');
 
         $this->form->addField(new Field\Input('name'))->setRequired(true)->setTabGroup('Details');
-        $this->form->addField(new Field\Input('uid'))->setLabel('UID')->setTabGroup('Details')->setNotes('The student or staff number assigned by the institution.');
         $this->form->addField(new Field\Input('username'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\Input('email'))->setRequired(true)->setTabGroup('Details');
-
-        //$list = array('-- Select --' => '', 'Admin' => \App\Auth\Access::ROLE_ADMIN, 'Client' => \App\Auth\Access::ROLE_CLIENT, 'Staff' => \App\Auth\Access::ROLE_STAFF, 'Student' => \App\Auth\Access::ROLE_STUDENT);
-        $list = array('-- Select --' => '', 'Admin' => \App\Auth\Acl::ROLE_ADMIN, 'Client' => \App\Auth\Acl::ROLE_CLIENT);
-        if (!in_array($this->user->role, $list)) {
-            $list = array('-- Select --' => '', 'Staff' => \App\Auth\Acl::ROLE_STAFF, 'Student' => \App\Auth\Acl::ROLE_STUDENT);
+        if ($this->user->hasRole(array(\App\Auth\Acl::ROLE_STAFF, \App\Auth\Acl::ROLE_STUDENT))) {
+            $this->form->addField(new Field\Input('uid'))->setLabel('UID')->setTabGroup('Details')->setNotes('The student or staff number assigned by the institution.');
         }
-        $this->form->addField(new Field\Select('role', $list))->setNotes('Select the access level for this user')->setRequired(true)->setTabGroup('Details')->setRequired(true);
+        if ($this->getUser()->hasRole(\App\Auth\Acl::ROLE_STAFF)) {
+            $list = array('-- Select --' => '', 'Staff' => \App\Auth\Acl::ROLE_STAFF, 'Student' => \App\Auth\Acl::ROLE_STUDENT);
+            $this->form->addField(new Field\Select('role', $list))->setNotes('Select the access level for this user')->setRequired(true)->setTabGroup('Details')->setRequired(true);
+        }
         $this->form->addField(new Field\Checkbox('active'))->setTabGroup('Details');
 
         $this->form->setAttr('autocomplete', 'off');
@@ -93,6 +127,11 @@ class Edit extends Iface
         // Load the object with data from the form using a helper object
         \App\Db\UserMap::create()->mapForm($form->getValues(), $this->user);
 
+        // TODO: We have a unique issue here where if a user is to be created
+        // TODO:  and the record has been marked deleted, then it will throw an error
+        // TODO:  that the email/username, already exists. Should we locate that record
+        // TODO:  and update/undelete it?
+
         // Password validation needs to be here
         if ($this->form->getFieldValue('newPassword')) {
             if ($this->form->getFieldValue('newPassword') != $this->form->getFieldValue('confPassword')) {
@@ -115,6 +154,14 @@ class Edit extends Iface
         }
 
         $this->user->save();
+
+        // Add user to institution
+        if ($this->institution) {
+            \App\Db\InstitutionMap::create()->addUser($this->institution->id, $this->user->id);
+
+            // TODO: Add the ability to assign a staff member to courses.
+        }
+
 
         \App\Alert::addSuccess('User record saved!');
         if ($form->getTriggeredEvent()->getName() == 'update') {
@@ -163,6 +210,7 @@ class Edit extends Iface
         <div class="row">
           <div class="col-lg-12">
             <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
+            <a href="javascript:;" class="btn btn-default"><i class="fa fa-user-secret"></i> <span>Masquerade</span></a>
           </div>
         </div>
       </div>

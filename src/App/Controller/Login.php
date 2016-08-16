@@ -62,7 +62,7 @@ class Login extends Iface
      */
     public function doDefault(Request $request)
     {
-        $this->institution = \App\Db\Institution::getMapper()->findByDomain($request->getUri()->getHost());
+        $this->institution = \App\Db\InstitutionMap::create()->findByDomain($request->getUri()->getHost());
         if ($this->institution) {
             return $this->doInsLogin($request, $this->institution->getHash());
         }
@@ -83,7 +83,7 @@ class Login extends Iface
     public function doInsLogin(Request $request, $institutionId)
     {
         if (!$this->institution)
-            $this->institution = \App\Db\Institution::getMapper()->findByHash($institutionId);
+            $this->institution = \App\Db\InstitutionMap::create()->findByHash($institutionId);
         if (!$this->institution->active) {
             throw new \Tk\NotFoundHttpException('Institution page not found.');
         }
@@ -153,9 +153,11 @@ class Login extends Iface
             
             $result = $event->getResult();
             if (!$result) {
-                //$form->addError( implode("<br/>\n", $result->getMessages()) );
-                $form->addError('Error 1001: Invalid Username or password.');
+                $form->addError('Invalid Username or password.');
                 return;
+            }
+            if (!$result->isValid()) {
+                $form->addError( implode("<br/>\n", $result->getMessages()) );
             }
 
             $this->getConfig()->getEventDispatcher()->dispatch('auth.onLogin.success', $event);

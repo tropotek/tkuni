@@ -35,7 +35,7 @@ class StaffPage extends Iface
         /** @var \Dom\Template $template */
         $template = $this->getTemplate();
 
-        $template->replaceTemplate('nav', \App\Ui\StaffMenu::create()->show());
+        $template->replaceTemplate('nav', \App\Ui\Menu\StaffMenu::create()->show());
 
         return $template;
     }

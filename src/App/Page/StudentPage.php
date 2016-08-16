@@ -34,7 +34,7 @@ class StudentPage extends Iface
         /** @var \Dom\Template $template */
         $template = $this->getTemplate();
 
-        $template->replaceTemplate('nav', \App\Ui\StudentMenu::create()->show());
+        $template->replaceTemplate('nav', \App\Ui\Menu\StudentMenu::create()->show());
 
         return $template;
     }

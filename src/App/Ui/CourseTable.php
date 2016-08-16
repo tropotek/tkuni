@@ -77,7 +77,7 @@ class CourseTable extends \Dom\Renderer\Renderer
         $filter = $this->table->getFilterValues();
         if ($this->institutionId)
             $filter['institutionId'] = $this->institutionId;
-        $users = \App\Db\Course::getMapper()->findFiltered($filter, $this->table->makeDbTool('a.id'));
+        $users = \App\Db\CourseMap::create()->findFiltered($filter, $this->table->makeDbTool('a.id'));
         $this->table->setList($users);
 
     }

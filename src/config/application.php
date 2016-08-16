@@ -39,8 +39,8 @@ $config['system.auth.dbtable.activeColumn'] = 'active';
 //$config['system.auth.ldap.filter'] = 'uid={username}';
 
 $config['system.auth.adapters'] = array(
-    'LDAP' => '\Uni\Auth\LdapAdapter',  
-    'DbTable' => '\Tk\Auth\Adapter\DbTable'
+    'LDAP' => '\App\Auth\Adapter\UnimelbLdap',
+    'DbTable' => '\App\Auth\Adapter\DbTable'
     //'LDAP' => '\Tk\Auth\Adapter\Ldap',
     //'Trap' => '\Tk\Auth\Adapter\Trapdoor'
 );

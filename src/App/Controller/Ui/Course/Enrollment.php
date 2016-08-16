@@ -151,7 +151,7 @@ class NameCell extends \Tk\Table\Cell\Text
 {
     public function getPropertyValue($obj, $property)
     {
-        $user = \App\Db\UserMap::create()->findByEmail($obj->email);
+        $user = \App\Db\UserMap::create()->findByEmail($obj->email, $obj->institutionId);
         if ($user) {
             return $user->name;
         }
@@ -183,7 +183,7 @@ class ActionUnenroll extends \Tk\Table\Action\Delete
         if (!is_array($selected)) return;
         $i = 0;
 
-        /** @var \Tk\Db\Map\Model $obj */
+        /** @var \stdClass $obj */
         foreach($this->getTable()->getList() as $obj) {
             if (in_array($obj->email, $selected) && !in_array($obj->email, $this->excludeIdList)) {
                 \App\Db\CourseMap::create()->unenrollUser($obj->course_id, $obj->email);

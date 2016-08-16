@@ -1,5 +1,5 @@
 <?php
-namespace App\Ui;
+namespace App\Ui\Menu;
 
 
 use Dom\Template;
