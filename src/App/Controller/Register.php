@@ -123,12 +123,17 @@ class Register extends Iface
             return;
         }
 
-        $pass = \App\Db\User::createPassword(10);
+        // TODO: in the email make sure the username (alternativly all account details) is clearly visible....
+
+        $pass = '';
+        if ($form->getFieldValue('password')) {
+            $pass = $form->getFieldValue('password');
+        }
 
         // Create a user and make a temp hash until the user activates the account
-        $this->user->getHash();
+        $this->user->role = \App\Auth\Acl::ROLE_CLIENT;
         $this->user->active = false;
-        $this->user->password = \App\Factory::hashPassword($pass, $this->user);
+        $this->user->setPassword($pass);
         $this->user->save();
 
         $this->institution->ownerId = $this->user->id;
@@ -174,12 +179,11 @@ class Register extends Iface
             \Tk\Uri::create('/login.html')->redirect();
         }
 
-        $institution = \App\Db\InstitutionMap::create()->findByUserId($user->id);
-
-        $user->getHash();
+        $institution = \App\Db\InstitutionMap::create()->findByOwnerId($user->id);
+vd($user);
         $user->active = true;
         $user->save();
-
+vd($user);
         $institution->active = true;
         $institution->save();
         

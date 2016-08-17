@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS institution (
   modified TIMESTAMP DEFAULT NOW(),
   created TIMESTAMP DEFAULT NOW(),
   FOREIGN KEY (owner_id) REFERENCES "user"(id) ON DELETE CASCADE,
-  CONSTRAINT inst_domain UNIQUE (domain),
+--  CONSTRAINT inst_domain UNIQUE (domain),
   CONSTRAINT inst_hash UNIQUE (hash)
 );
 

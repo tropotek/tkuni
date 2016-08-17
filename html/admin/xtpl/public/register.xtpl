@@ -23,14 +23,10 @@
           
           
         </div>
-        <div class="col-sm-7 social-login text-center clearfix">
-          <!-- 
-          <p>Or login with your Facebook or Twitter</p>
-          <div class="social-login-buttons">
-            <a href="#" class="btn-facebook-login">Login with Facebook</a>
-            <a href="#" class="btn-twitter-login">Login with Twitter</a>
+        <div class="col-sm-7 social-login text-center clearfix well">
+          <div class="not-member">
+            <p>Forgot your password? <a href="/recover.html">Recover It Here</a></p>
           </div>
-          -->
         </div>
       </div>  
     </div>

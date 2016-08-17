@@ -120,7 +120,9 @@ class Login extends Iface
             $template->insertText('instName', $this->institution->name);
             $template->setChoice('inst');
         }
-
+        if ($this->getConfig()->get('site.client.registration')) {
+            $template->setChoice('register');
+        }
 
         return $this->getPage()->setPageContent($template);
     }
@@ -136,10 +138,10 @@ class Login extends Iface
         /** @var Auth $auth */
         $auth = \App\Factory::getAuth();
 
-        if (!$form->getFieldValue('username') || !preg_match('/[a-z0-9_ -]{4,32}/i', $form->getFieldValue('username'))) {
+        if (!$form->getFieldValue('username') || !preg_match('/[a-z0-9_ -]{3,32}/i', $form->getFieldValue('username'))) {
             $form->addFieldError('username', 'Please enter a valid username');
         }
-        if (!$form->getFieldValue('password') || !preg_match('/[a-z0-9_ -]{4,32}/i', $form->getFieldValue('password'))) {
+        if (!$form->getFieldValue('password') || !preg_match('/[a-z0-9_ -]{6,32}/i', $form->getFieldValue('password'))) {
             $form->addFieldError('password', 'Please enter a valid password');
         }
 

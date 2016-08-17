@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `institution` (
   `del` TINYINT(1) NOT NULL DEFAULT 0,
   `modified` DATETIME NOT NULL,
   `created` DATETIME NOT NULL,
-  UNIQUE KEY `inst_domain` (`domain`),
+--  UNIQUE KEY `inst_domain` (`domain`),
   UNIQUE KEY `inst_hash` (`hash`)
 ) ENGINE=InnoDB;
 

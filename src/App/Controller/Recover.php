@@ -110,7 +110,9 @@ class Recover extends Iface
     public function show()
     {
         $template = $this->getTemplate();
-        
+        if ($this->getConfig()->get('site.client.registration')) {
+            $template->setChoice('register');
+        }
         return $this->getPage()->setPageContent($template);
     }
 

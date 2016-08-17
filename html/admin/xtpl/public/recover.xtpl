@@ -23,7 +23,7 @@
           </div>
           
         </div>
-        <div class="col-sm-7 social-login clearfix">
+        <div class="col-sm-7 social-login text-center clearfix well">
           <!--
           <p>Or login with your Facebook or Twitter</p>
           <div class="social-login-buttons">

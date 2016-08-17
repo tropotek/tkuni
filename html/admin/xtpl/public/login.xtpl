@@ -39,19 +39,9 @@
 
 
         </div>
-        <div class="col-sm-7 social-login2 text-center">
-          <!-- p>Or login with your Facebook or Twitter</p -->
-          <p>&nbsp;</p>
-          <div class="social-login-buttons2">
-            <a href="/staff/login.html" class="btn btn-primary"><i class="glyphicon glyphicon-apple"></i> Staff Login</a>
-            <a href="/student/login.html" class="btn btn-primary"><i class="glyphicon glyphicon-education"></i> Student Login</a>
-            <!--
-            <a href="#" class="btn-facebook-login">Login with Facebook</a>
-            <a href="#" class="btn-twitter-login">Login with Twitter</a>
-            -->
-          </div>
-          <div class="clearfix"></div>
-          <div class="not-member">
+        <div class="col-sm-7 social-login2 text-center well">
+
+          <div class="not-member" choice="register">
             <p>Not a member? <a href="/register.html">Register here</a></p>
           </div>
         </div>
