@@ -29,6 +29,12 @@ class PublicPage extends Iface
         /** @var \Dom\Template $template */
         $template = $this->getTemplate();
 
+        if ($this->getUser()) {
+            $template->insertText('username', $this->getUser()->name);
+            $template->setAttr('dashUrl', 'href', \App\Uri::createHomeUrl('/index.html'));
+        }
+
+
 
         return $template;
     }
@@ -40,7 +46,7 @@ class PublicPage extends Iface
      */
     public function __makeTemplate()
     {
-        $tplFile =  $this->getTemplatePath().'/main.xtpl';
+        $tplFile =  $this->getTemplatePath().'/public.xtpl';
         return \Dom\Loader::loadFile($tplFile);
     }
 

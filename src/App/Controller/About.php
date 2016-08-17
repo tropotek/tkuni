@@ -1,58 +1,76 @@
 <?php
-namespace App\Controller\Admin;
+namespace App\Controller;
 
 use Tk\Request;
-use Dom\Template;
-use \App\Controller\Iface;
+use Tk\Form;
 
 /**
- *
+ * Class Contact
  *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Index extends Iface
+class About extends Iface
 {
+
+    /**
+     * @var Form
+     */
+    protected $form = null;
+
     
     /**
      *
      */
     public function __construct()
     {
-        parent::__construct('Dashboard');
+        parent::__construct('About Us');
     }
-    
+
     /**
+     * doDefault
      *
      * @param Request $request
-     * @return \App\Page\Iface|Template|string
+     * @return \App\Page\PublicPage
      */
     public function doDefault(Request $request)
     {
+
+
 
         return $this->show();
     }
 
     /**
-     * @return \App\Page\Iface
+     * show()
+     *
+     * @return \App\Page\PublicPage
      */
     public function show()
     {
         $template = $this->getTemplate();
+
+
         return $this->getPage()->setPageContent($template);
     }
 
 
+
     /**
      * DomTemplate magic method
-     * @return Template
+     *
+     * @return \Dom\Template
      */
     public function __makeTemplate()
     {
-        $tplFile =  $this->getPage()->getTemplatePath() . '/xtpl/admin/index.xtpl';
-        return \Dom\Loader::loadFile($tplFile);
+
+        $xhtml = <<<HTML
+<div class="">
+ <p>About Us Content.</p>
+</div>
+HTML;
+
+        return \Dom\Loader::load($xhtml);
     }
-
-
 }

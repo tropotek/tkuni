@@ -52,16 +52,16 @@
       '<div class="input-group image-preview">' +
         '<span class="input-group-btn">' +
           '<!-- image-preview-input -->' +
-          '<div class="btn btn-default btn-sm image-preview-input" title="Select an image">' +
+          '<div class="btn btn-default image-preview-input" title="Select an image">' +
             '<span class="glyphicon glyphicon-folder-open"></span>' +
             '<span class="image-preview-input-title"></span>' +
             //'<input type="file" accept="image/png, image/jpeg, image/gif" name="input-file-preview"/> <!-- rename it -->' +
           '</div>' +
           '<!-- image-preview-clear button -->' +
-          '<button type="button" class="btn btn-default btn-sm image-preview-clear" title="Remove image">' +
+          '<button type="button" class="btn btn-default image-preview-clear" title="Remove image">' +
             '<span class="glyphicon glyphicon-trash"></span>' +
           '</button>' +
-          '<button type="button" class="btn btn-default btn-sm image-preview-thumb" title="" style="display: none;">' +
+          '<button type="button" class="btn btn-default image-preview-thumb" title="" style="display: none;">' +
             '<img class="thumb-img" src="#" alt="" style="max-height: 16px;max-width: 100px;display: inline;"/>' +
           '</button>' +
         '</span>' +
@@ -83,6 +83,19 @@
       if (delCb.length) {
         parent.find('.'+$element.attr('id')+plugin.settings.delClassAppend+'-wrap').hide();
       }
+
+      // Check bootstral element sizes
+      if ($element.parents('.form-group-sm').length || $element.hasClass('input-sm')) {
+        template.find('.image-preview-input').addClass('btn-sm');
+        template.find('.image-preview-clear').addClass('btn-sm');
+        template.find('.image-preview-thumb').addClass('btn-sm');
+      } else if ($element.parents('.form-group-lg').length || $element.hasClass('input-lg')) {
+        template.find('.image-preview-input').addClass('btn-lg');
+        template.find('.image-preview-clear').addClass('btn-lg');
+        template.find('.image-preview-thumb').addClass('btn-lg');
+      }
+
+
 
       $element.detach();
       parent.prepend(template);

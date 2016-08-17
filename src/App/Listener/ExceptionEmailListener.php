@@ -51,7 +51,7 @@ class ExceptionEmailListener implements SubscriberInterface
                 $body = $event->getResponse()->getBody();
                 $subject = $config->get('site.title') . ' Error `' . $e->getMessage() . '`';
                 $from = $to = $config->get('site.email');
-                $message = new \Tk\Mail\Message($body, $subject, $from, $to);
+                $message = new \Tk\Mail\Message($body, $subject, $to, $from);
                 $message->send();
             }
         } catch (\Exception $ee) { $this->logger->warning($ee->getMessage()); }

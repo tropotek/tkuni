@@ -17,7 +17,7 @@ class Index extends Iface
      */
     public function __construct()
     {
-        parent::__construct('Home');
+        parent::__construct();
     }
 
     /**
@@ -60,7 +60,7 @@ class Index extends Iface
      */
     public function __makeTemplate()
     {
-        $tplFile = $this->getPage()->getTemplatePath().'/xtpl/index.xtpl';
+        $tplFile = $this->getPage()->getTemplatePath().'/xtpl/public/index.xtpl';
         return \Dom\Loader::loadFile($tplFile);
     }
 

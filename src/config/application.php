@@ -14,15 +14,19 @@ include_once(__DIR__ . '/session.php');
 include_once(__DIR__ . '/routes.php');
 
 
-date_default_timezone_set('Australia/Victoria');
-
-
 // Template folders for pages
 $config['template.admin.path'] = '/html/admin';
-$config['template.public.path'] = '/html/purpose';
+$config['template.public.path'] = '/html/admin';
+
+$config['system.timezone'] = 'Australia/Victoria';
 
 
 // -- AUTH CONFIG --
+
+// The hash function to use for passwords and general hashing
+// Warning if you change this after user account creation
+// users will have to reset/recover their passwords
+$config['hash.function'] = 'md5';
 
 // DbTable
 $config['system.auth.dbtable.tableName'] = 'user';
@@ -31,18 +35,10 @@ $config['system.auth.dbtable.passwordColumn'] = 'password';
 $config['system.auth.dbtable.saltColumn'] = 'hash';
 $config['system.auth.dbtable.activeColumn'] = 'active';
 
-// LDAPs
-//$config['system.auth.ldap.host']    = 'centaur.unimelb.edu.au';
-//$config['system.auth.ldap.tls']    = true;
-//$config['system.auth.ldap.port']   = 389;
-//$config['system.auth.ldap.baseDn'] = 'ou=people,o=unimelb';
-//$config['system.auth.ldap.filter'] = 'uid={username}';
 
 $config['system.auth.adapters'] = array(
     'LDAP' => '\App\Auth\Adapter\UnimelbLdap',
     'DbTable' => '\App\Auth\Adapter\DbTable'
-    //'LDAP' => '\Tk\Auth\Adapter\Ldap',
-    //'Trap' => '\Tk\Auth\Adapter\Trapdoor'
 );
 
 

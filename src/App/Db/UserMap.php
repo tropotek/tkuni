@@ -68,8 +68,6 @@ class UserMap extends Mapper
         return $this->formMap;
     }
 
-
-
     /**
      *
      * @param $hash
@@ -125,8 +123,6 @@ class UserMap extends Mapper
             $where .= sprintf(' AND (a.institution_id IS NULL OR a.institution_id = 0)');
         }
         $res = $this->selectFrom($from, $where)->current();
-
-        vd($res);
         return $res;
     }
 

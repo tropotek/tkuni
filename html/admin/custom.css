@@ -1,4 +1,41 @@
 
+/******************************************/
+/** Public Styles                        **/
+/******************************************/
+
+
+body.public {
+  padding-top: 20px;
+  padding-bottom: 30px;
+  background: #FFF;
+}
+
+.public .container.content {
+  margin-top: 20px;
+}
+
+.public .theme-dropdown .dropdown-menu {
+  display: block;
+  position: static;
+  margin-bottom: 20px;
+}
+
+
+.public .footer {
+  margin-top: 50px;
+  padding-top: 20px;
+  border-top: 1px solid #CCC;
+}
+
+
+
+
+
+/******************************************/
+/** General Styles                       **/
+/******************************************/
+
+
 .nopadding {
   padding: 0;
 }

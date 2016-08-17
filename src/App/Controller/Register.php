@@ -223,7 +223,7 @@ class Register extends Iface
      */
     public function __makeTemplate()
     {
-        $tplFile = $this->getPage()->getTemplatePath().'/xtpl/register.xtpl';
+        $tplFile = $this->getPage()->getTemplatePath().'/xtpl/public/register.xtpl';
         return \Dom\Loader::loadFile($tplFile);
     }
 

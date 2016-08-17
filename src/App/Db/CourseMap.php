@@ -138,6 +138,11 @@ class CourseMap extends Mapper
             $where .= sprintf('a.institution_id = %s AND ', (int)$filter['institutionId']);
         }
 
+        if (!empty($filter['userId'])) {
+            $from .= sprintf(', user_course b');
+            $where .= sprintf('a.id = b.course_id AND b.user_id = %s AND ', (int)$filter['userId']);
+        }
+
         if ($where) {
             $where = substr($where, 0, -4);
         }

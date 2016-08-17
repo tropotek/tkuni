@@ -153,14 +153,14 @@ class Edit extends Iface
             $this->user->password = \App\Factory::hashPassword($this->form->getFieldValue('newPassword'), $this->user);
         }
 
-        $this->user->save();
 
         // Add user to institution
         if ($this->institution) {
-            \App\Db\InstitutionMap::create()->addUser($this->institution->id, $this->user->id);
-
+            $this->user->institutionId = $this->institution->id;
             // TODO: Add the ability to assign a staff member to courses.
+
         }
+        $this->user->save();
 
 
         \App\Alert::addSuccess('User record saved!');

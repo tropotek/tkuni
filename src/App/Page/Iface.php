@@ -162,4 +162,14 @@ JS;
         return \Tk\Config::getInstance();
     }
 
+    /**
+     * Get the currently logged in user
+     *
+     * @return \App\Db\User
+     */
+    public function getUser()
+    {
+        return $this->getConfig()->getUser();
+    }
+
 }

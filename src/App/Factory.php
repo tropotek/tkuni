@@ -229,13 +229,12 @@ class Factory
         $adapter = null;
         switch ($class) {
             case '\App\Auth\Adapter\UnimelbLdap':
-                if (!isset($submittedData['institutionId'])) return null;
-                $institution = \App\Db\InstitutionMap::create()->find($submittedData['institutionId']);
+                if (!isset($submittedData['instHash'])) return null;
+                $institution = \App\Db\InstitutionMap::create()->findByHash($submittedData['instHash']);
                 if (!$institution || !$institution->getData()->get('ldapHost')) return null;
                 $adapter = new \App\Auth\Adapter\UnimelbLdap($institution);
                 break;
             case '\App\Auth\Adapter\DbTable':
-                //if (isset($submittedData['institutionId'])) return null;
                 $adapter = new \App\Auth\Adapter\DbTable(
                     $config->getDb(),
                     $config['system.auth.dbtable.tableName'],
@@ -270,13 +269,30 @@ class Factory
             else if ($user->hash)
                 $pwd = $pwd . $user->hash;
         }
-        $h = hash('md5', $pwd);
+        $h = self::hash($pwd);
         return $h;
+    }
+
+    /**
+     * Hash a string using the system config set algorithm
+     *
+     * @link http://php.net/manual/en/function.hash.php
+     * @param $str
+     * @return string
+     */
+    static public function hash($str)
+    {
+        $hf = 'md5';    //  (e.g. "md5", "sha256", "haval160,4", etc..) see hash_algos()
+        if (self::getConfig()->has('hash.function')) {
+            $hf = self::getConfig()->get('hash.function');
+        }
+        return hash($hf, $str);
     }
     
     /**
      * Create a new user
      *
+     * @param int $institutionId
      * @param string $username
      * @param string $email
      * @param string $role
@@ -287,9 +303,10 @@ class Factory
      * @return Db\User
      * @todo Save any extra required data, IE: `auedupersonid` (Student/Staff Number)
      */
-    static function createNewUser($username, $email, $role, $password, $name = '', $uid = '', $active = true)
+    static function createNewUser($institutionId, $username, $email, $role, $password, $name = '', $uid = '', $active = true)
     {
         $user = new \App\Db\User();
+        $user->institutionId = $institutionId;
         $user->uid = $uid;
         $user->username = $username;
         $user->name = $name;
@@ -301,7 +318,6 @@ class Factory
 
         return $user;
     }
-
 
     /**
      * Helper Method

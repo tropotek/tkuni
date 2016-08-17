@@ -74,7 +74,7 @@ class AdminMenu extends \Dom\Renderer\Renderer
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/admin/index.html" var="siteTitle">Tk2Uni v2.0 Template</a>
+      <a class="navbar-brand" href="/admin/index.html" var="siteTitle">Tk2Uni v2.0</a>
     </div>
     <!-- /.navbar-header -->
 
@@ -85,6 +85,7 @@ class AdminMenu extends \Dom\Renderer\Renderer
         </a>
         <ul class="dropdown-menu dropdown-user">
           <li><a href="/admin/profile.html"><i class="fa fa-user fa-fw"></i> My Profile</a></li>
+          <li><a href="/index.html"><i class="fa fa-home fa-fw"></i> Site Home</a></li>
           <li><a href="/admin/settings.html"><i class="fa fa-gear fa-fw"></i> Settings</a></li>
           <li class="divider"></li>
           <li><a href="/logout.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>

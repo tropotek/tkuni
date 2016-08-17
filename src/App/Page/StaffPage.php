@@ -48,7 +48,7 @@ class StaffPage extends Iface
      */
     public function __makeTemplate()
     {
-        $tplFile =  $this->getTemplatePath().'/main.xtpl';
+        $tplFile =  $this->getTemplatePath().'/admin.xtpl';
         return \Dom\Loader::loadFile($tplFile);
     }
 

@@ -151,9 +151,12 @@ class NameCell extends \Tk\Table\Cell\Text
 {
     public function getPropertyValue($obj, $property)
     {
-        $user = \App\Db\UserMap::create()->findByEmail($obj->email, $obj->institutionId);
-        if ($user) {
-            return $user->name;
+        $course = \App\Db\CourseMap::create()->find($obj->course_id);
+        if ($course) {
+            $user = \App\Db\UserMap::create()->findByEmail($obj->email, $course->institutionId);
+            if ($user) {
+                return $user->name;
+            }
         }
         return '';
     }

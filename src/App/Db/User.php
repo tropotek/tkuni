@@ -15,8 +15,6 @@ use App\Auth\Acl;
  */
 class User extends \Tk\Db\Map\Model
 {
-    static $HASH_FUNCTION = 'md5';
-
 
     /**
      * @var int
@@ -26,7 +24,7 @@ class User extends \Tk\Db\Map\Model
     /**
      * @var int
      */
-    public $institutionId = 0;
+    public $institutionId = null;
 
     /**
      * @var string
@@ -180,7 +178,7 @@ class User extends \Tk\Db\Map\Model
             throw new \Tk\Exception('The username, role and email must be set before generating a valid hash');
         }
         // TODO: We should really add the institutionId to this hash
-        return hash(self::$HASH_FUNCTION, sprintf('%s%s%s', $this->username, $this->role, $this->email));
+        return \App\Factory::hash(sprintf('%s%s%s', $this->username, $this->role, $this->email));
     }
 
     /**

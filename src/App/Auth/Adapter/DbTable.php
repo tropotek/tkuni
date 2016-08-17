@@ -53,7 +53,7 @@ class DbTable extends \Tk\Auth\Adapter\DbTable
     {
         $username = $this->get('username');
         $password = $this->get('password');
-        
+
         if (!$username || !$password) {
             return new Result(Result::FAILURE_CREDENTIAL_INVALID, $username, 'No username or password.');
         }

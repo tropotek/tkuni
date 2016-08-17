@@ -27,7 +27,7 @@ class Contact extends Iface
      */
     public function __construct()
     {
-        parent::__construct('Contact');
+        parent::__construct('Contact Us');
     }
 
     /**
@@ -128,7 +128,7 @@ class Contact extends Iface
         $type = '';
         if (is_array($form->getFieldValue('type')))
             $type = implode(', ', $form->getFieldValue('type'));
-        $message = $form->getFieldValue('message');
+        $msg = nl2br($form->getFieldValue('message'));
         $attachCount = '';
         /** @var Field\File $field */
         $field = $form->getField('attach');
@@ -136,19 +136,27 @@ class Contact extends Iface
             $attachCount = 'Attachments: ' . $field->getUploadedFile()->getFilename();
         }
 
-        $message = <<<MSG
-Dear $name,
-
-Email: $email
-Type: $type
-
-Message:
-  $message
-
+        $body = <<<MSG
+<div>
+<p>Dear $name,</p>
+<p>
+<b>Email:</b> $email<br/>
+<b>Type:</b> $type<br/>
+</p>
+<p>
+<b>Message:</b><br/>
+  $msg
+</p>
+<p>
 $attachCount
+</p>
 MSG;
         
-        vd($message);
+
+        $message = new \Tk\Mail\Message(\App\Factory::createMailTemplate($body), $this->getConfig()->get('site.name') . ':'. $name .' Contact Form Submission', $this->getConfig()->get('site.email'), $email);
+        $message->addAttachment($field->getUploadedFile()->getFile(), $field->getUploadedFile()->getFilename());
+        $message->send();
+
         return true;
     }
 
@@ -160,6 +168,6 @@ MSG;
      */
     public function __makeTemplate()
     {
-        return \Dom\Loader::loadFile($this->getPage()->getTemplatePath().'/xtpl/contact.xtpl');
+        return \Dom\Loader::loadFile($this->getPage()->getTemplatePath().'/xtpl/public/contact.xtpl');
     }
 }

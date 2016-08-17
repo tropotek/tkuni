@@ -108,6 +108,7 @@ class Edit extends Iface
 
             $filter = $this->table->getFilterValues();
             $filter['institutionId'] = $this->getUser()->getInstitution()->id;
+            $filter['courseId'] = $this->course->id;
             if (empty($filter['role']))
                 $filter['role'] = array(\App\Auth\Acl::ROLE_STAFF, \App\Auth\Acl::ROLE_STUDENT);
 
@@ -134,6 +135,11 @@ class Edit extends Iface
         }
 
         $this->course->save();
+
+        // If this is a staff member add them to the course
+        if ($this->getUser()->hasRole(\App\Auth\Acl::ROLE_STAFF)) {
+            \App\Db\CourseMap::create()->addUser($this->course->id, $this->getUser()->id);
+        }
 
         \App\Alert::addSuccess('Record saved!');
 

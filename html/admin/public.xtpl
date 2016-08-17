@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  <title>SB Admin 2 - Bootstrap Admin Theme</title>
+
+  <!-- Bootstrap Core CSS -->
+  <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- Jquery UI -->
+  <link href="js/jquery-ui-1.12.0/jquery-ui.min.css" rel="stylesheet"/>
+  <!-- MetisMenu CSS -->
+  <link href="bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet"/>
+  <!-- Custom CSS -->
+  <link href="dist/css/sb-admin-2.css" rel="stylesheet"/>
+  <!-- Custom Fonts -->
+  <link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+  <!-- Custom CSS -->
+  <link href="js/jquery.fileinput.css" rel="stylesheet"/>
+  <link href="custom.css" rel="stylesheet"/>
+
+</head>
+<body class="public">
+<a id="t-top"></a>
+
+
+  <div role="navigation" class="navbar navbar-default navbar-fixed-top user-public">
+    <div class="container">
+      <div class="navbar-header">
+        <button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a href="/" var="homeUrl" class="navbar-brand"><b>Tk2Uni v2.0</b></a>
+      </div>
+
+      <div class="navbar-collapse collapse" var="_topNav1_">
+        <ul class="nav navbar-nav">
+          <li><a href="/index.html">Home</a></li>
+          <li><a href="/about.html">About</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li choice="login"><a href="/login.html">Login</a></li>
+          <li choice="logout"><a href="/logout.html">Logout</a></li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right" choice="logout">
+          <li class="dropdown">
+            <a data-toggle="dropdown" class="dropdown-toggle" href="javascript:;"><span var="username">user</span> <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="#" var="dashUrl"><span class="glyphicon glyphicon-dashboard"></span> Dashboard</a></li>
+              <!--<li><a href="#"><span class="glyphicon glyphicon-user"></span> My Profile</a></li>-->
+              <!--<li><a href="#"><span class="glyphicon glyphicon-random"></span> Change Password</a></li>-->
+              <li><a href="/logout.html"><span class="glyphicon glyphicon-log-out"></span> Sign Out</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <!--/.nav-collapse -->
+    </div>
+  </div>
+
+  <div class="container content">
+
+    <div class="row" choice="pageHeading">
+      <div class="col-lg-12">
+        <h1 class="page-header" var="pageHeading"></h1>
+      </div>
+    </div>
+
+    <div class="row" choice="alerts">
+      <div class="col-md-12">
+        <div var="alerts"></div>
+      </div>
+    </div>
+
+    <div var="content"></div>
+
+  </div>
+
+  <div class="container">
+    <div class="footer" var="_footer_">
+      <div class="pull-left">&copy; Tropotek 2016</div>
+    </div>
+  </div>
+
+
+<!-- jQuery -->
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="js/jquery-ui-1.12.0/jquery-ui.min.js"></script>
+<!-- Bootstrap Core JavaScript -->
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- Metis Menu Plugin JavaScript -->
+<script src="bower_components/metisMenu/dist/metisMenu.min.js"></script>
+<!-- Custom Theme JavaScript -->
+<script src="dist/js/sb-admin-2.js"></script>
+<script src="js/jquery.fileinput.js"></script>
+<script src="js/custom.js"></script>
+
+</body>
+</html>

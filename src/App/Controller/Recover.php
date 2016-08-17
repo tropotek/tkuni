@@ -122,7 +122,7 @@ class Recover extends Iface
      */
     public function __makeTemplate()
     {
-        $tplFile = $this->getPage()->getTemplatePath().'/xtpl/recover.xtpl';
+        $tplFile = $this->getPage()->getTemplatePath().'/xtpl/public/recover.xtpl';
         return \Dom\Loader::loadFile($tplFile);
     }
 

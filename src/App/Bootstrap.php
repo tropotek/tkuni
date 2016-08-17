@@ -58,11 +58,14 @@ class Bootstrap
 
         // Import settings from DB
         $config->import(\App\Db\Data::create());
+
+        // Set system timezone
+        $tz = 'Australia/Victoria';
+        if (isset($config['system.timezone']))
+            $tz = $config['system.timezone'];
+        date_default_timezone_set($tz);
         
         \Tk\Uri::$BASE_URL_PATH = $config->getSiteUrl();
-
-        if (isset($config['hash.function']))
-            \App\Db\User::$HASH_FUNCTION = $config['hash.function'];
 
         /**
          * This makes our life easier when dealing with paths. Everything is relative
@@ -109,8 +112,7 @@ class Bootstrap
         Factory::getSession();
 
 
-
-        // initalise Dom Loader
+        // initialise Dom Loader
         \App\Factory::getDomLoader();
 
         // Initiate the default database connection
@@ -119,14 +121,6 @@ class Bootstrap
         // Initiate the email gateway
         \App\Factory::getEmailGateway();
 
-        // Init Auth
-        $auth = \App\Factory::getAuth();
-        if ($auth->getIdentity()) {
-            $ident = $auth->getIdentity();
-            //error_log(print_r($ident, true));
-            $user = \App\Db\User::getMapper()->findByUsername($ident['username'], $ident['institutionId']);
-            $config->setUser($user);
-        }
         return $config;
     }
 

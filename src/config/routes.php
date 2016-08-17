@@ -21,6 +21,7 @@ $config['site.routes'] = $routes;
 $routes->add('home', new \Tk\Routing\Route('/index.html', 'App\Controller\Index::doDefault', $params));
 $routes->add('home-base', new \Tk\Routing\Route('/', 'App\Controller\Index::doDefault', $params));
 $routes->add('contact', new \Tk\Routing\Route('/contact.html', 'App\Controller\Contact::doDefault', $params));
+$routes->add('about', new \Tk\Routing\Route('/about.html', 'App\Controller\About::doDefault', $params));
 
 $routes->add('login', new \Tk\Routing\Route('/login.html', 'App\Controller\Login::doDefault', $params));
 $routes->add('institution-login', new \Tk\Routing\Route('/inst/{institutionId}/login.html', 'App\Controller\Login::doInsLogin', $params));

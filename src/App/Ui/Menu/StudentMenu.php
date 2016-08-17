@@ -73,7 +73,7 @@ class StudentMenu extends \Dom\Renderer\Renderer
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/student/index.html" var="siteTitle">Tk2Uni v2.0 Template</a>
+      <a class="navbar-brand" href="/student/index.html" var="siteTitle">Tk2Uni v2.0</a>
     </div>
     <!-- /.navbar-header -->
 

@@ -80,16 +80,17 @@ class Login extends Iface
      * @param Request $request
      * @return mixed
      */
-    public function doInsLogin(Request $request, $institutionId)
+    public function doInsLogin(Request $request, $instHash)
     {
+
         if (!$this->institution)
-            $this->institution = \App\Db\InstitutionMap::create()->findByHash($institutionId);
+            $this->institution = \App\Db\InstitutionMap::create()->findByHash($instHash);
         if (!$this->institution->active) {
             throw new \Tk\NotFoundHttpException('Institution page not found.');
         }
 
         $this->init();
-        $this->form->addField(new Field\Hidden('institutionId', (int)$institutionId));
+        $this->form->addField(new Field\Hidden('instHash', $instHash));
         $this->form->addField(new Event\Link('forgotPassword', \Tk\Uri::create('/recover.html')));
 
         // Find and Fire submit event
@@ -174,7 +175,7 @@ class Login extends Iface
      */
     public function __makeTemplate()
     {
-        return \Dom\Loader::loadFile($this->getPage()->getTemplatePath().'/xtpl/login.xtpl');
+        return \Dom\Loader::loadFile($this->getPage()->getTemplatePath().'/xtpl/public/login.xtpl');
     }
 
 }

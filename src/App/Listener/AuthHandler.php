@@ -4,6 +4,7 @@ namespace App\Listener;
 use Tk\EventDispatcher\SubscriberInterface;
 use App\Event\AuthEvent;
 use Tk\Kernel\KernelEvents;
+use Tk\Event\KernelEvent;
 use Tk\Event\ControllerEvent;
 
 /**
@@ -16,32 +17,50 @@ use Tk\Event\ControllerEvent;
 class AuthHandler implements SubscriberInterface
 {
 
+
     /**
-     * @param AuthEvent $event
-     * @throws \Exception
+     * do any auth init setup
+     *
+     * @param KernelEvent $event
      */
-    public function onLoginSuccess(AuthEvent $event)
+    public function onSystemInit(KernelEvent $event)
     {
-        $result = $event->getResult();
-        if (!$result || !$result->isValid()) {
-            return;
+        // if a user is in the session add them to the global config
+        // Only the identity details should be in the auth session not the full user object, to save space and be secure.
+        $config = \App\Factory::getConfig();
+        $auth = \App\Factory::getAuth();
+        if ($auth->getIdentity()) {
+            $ident = $auth->getIdentity();
+            $user = \App\Db\User::getMapper()->findByUsername($ident['username'], $ident['institutionId']);
+            $config->setUser($user);
         }
+    }
 
-        //$user = \App\Db\UserMap::create()->findByUsername($result->getIdentity());
-        /** @var \App\Db\User $user */
-        $user = \App\Factory::getConfig()->getUser();
+    /**
+     * Check the user has access to this controller
+     *
+     * @param ControllerEvent $event
+     */
+    public function onControllerAccess(ControllerEvent $event)
+    {
+        /** @var \App\Controller\Iface $controller */
+        $controller = $event->getController();
+        $user = $controller->getUser();
+        if ($controller instanceof \App\Controller\Iface) {
 
-        $institution = $user->getInstitution();
-        if ($institution) {
-            $courseList = \App\Db\CourseMap::create()->findPendingEnrollment($institution->id, $user->email);
-            /** @var \App\Db\Course $course */
-            foreach ($courseList as $course) {
-                \App\Db\CourseMap::create()->addUser($course->id, $user->id);
+            // Get page access permission from route params (see config/routes.php)
+            $role = $event->getRequest()->getAttribute('access');
+            // Check the user has access to the controller in question
+            if (!$role || empty($role)) return;
+
+            if (!$user) \Tk\Uri::create('/login.html')->redirect();
+            if (!$user->getAcl()->hasRole($role)) {
+                // Could redirect to a authentication error page...
+                // Could cause a loop if the permissions are stuffed
+                \App\Alert::getInstance()->addWarning('You do not have access to the requested page.');
+                \Tk\Uri::create($user->getHomeUrl())->redirect();
             }
         }
-
-        \Tk\Uri::create($user->getHomeUrl())->redirect();
-
     }
 
     /**
@@ -72,7 +91,6 @@ class AuthHandler implements SubscriberInterface
 
         /** @var \App\Db\User $user */
         $ident = $result->getIdentity();
-        vd($ident);
         $user = \App\Db\UserMap::create()->findByUsername($ident['username'], $ident['institutionId']);
         if (!$user) {
             throw new \Tk\Auth\Exception('User not found: Contact Your Administrator.');
@@ -87,36 +105,36 @@ class AuthHandler implements SubscriberInterface
      * @param AuthEvent $event
      * @throws \Exception
      */
+    public function onLoginSuccess(AuthEvent $event)
+    {
+        $result = $event->getResult();
+        if (!$result || !$result->isValid()) {
+            return;
+        }
+
+        /** @var \App\Db\User $user */
+        $user = $event->get('user');
+
+        $institution = $user->getInstitution();
+        if ($institution) {
+            $courseList = \App\Db\CourseMap::create()->findPendingEnrollment($institution->id, $user->email);
+            /** @var \App\Db\Course $course */
+            foreach ($courseList as $course) {
+                \App\Db\CourseMap::create()->addUser($course->id, $user->id);
+            }
+        }
+
+        \Tk\Uri::create($user->getHomeUrl())->redirect();
+
+    }
+
+    /**
+     * @param AuthEvent $event
+     * @throws \Exception
+     */
     public function onLogout(AuthEvent $event)
     {
         $event->getAuth()->clearIdentity();
-    }
-    
-    /**
-     * Check the user has access to this controller
-     *
-     * @param ControllerEvent $event
-     */
-    public function onControllerAccess(ControllerEvent $event)
-    {
-        /** @var \App\Controller\Iface $controller */
-        $controller = $event->getController();
-        $user = $controller->getUser();
-        if ($controller instanceof \App\Controller\Iface) {
-
-            // Get page access permission from route params (see config/routes.php)
-            $role = $event->getRequest()->getAttribute('access');
-            // Check the user has access to the controller in question
-            if (!$role || empty($role)) return;
-
-            if (!$user) \Tk\Uri::create('/login.html')->redirect();
-            if (!$user->getAcl()->hasRole($role)) {
-                // Could redirect to a authentication error page...
-                // Could cause a loop if the permissions are stuffed
-                \App\Alert::getInstance()->addWarning('You do not have access to the requested page.');
-                \Tk\Uri::create($user->getHomeUrl())->redirect();
-            }
-        }
     }
 
 
@@ -134,7 +152,7 @@ class AuthHandler implements SubscriberInterface
         $body->setAttr('url', 'href', $url->toString());
         $subject = 'Account Registration Request.';
 
-        $message = new \Tk\Mail\Message($body->toString(true, true), $subject, \App\Factory::getConfig()->get('site.email'), $user->email);
+        $message = new \Tk\Mail\Message($body->toString(true, true), $subject, $user->email, \App\Factory::getConfig()->get('site.email'));
         $message->send();
 
     }
@@ -152,7 +170,7 @@ class AuthHandler implements SubscriberInterface
         $body->setAttr('url', 'href', $url->toString());
         $subject = 'Account Registration Activation.';
 
-        $message = new \Tk\Mail\Message($body->toString(true, true), $subject, \App\Factory::getConfig()->get('site.email'), $user->email);
+        $message = new \Tk\Mail\Message($body->toString(true, true), $subject, $user->email, \App\Factory::getConfig()->get('site.email'));
         $message->send();
 
     }
@@ -172,7 +190,7 @@ class AuthHandler implements SubscriberInterface
         $body->setAttr('url', 'href', $url->toString());
         $subject = 'Account Password Recovery.';
 
-        $message = new \Tk\Mail\Message($body->toString(true, true), $subject, \App\Factory::getConfig()->get('site.email'), $user->email);
+        $message = new \Tk\Mail\Message($body->toString(true, true), $subject, $user->email, \App\Factory::getConfig()->get('site.email'));
         $message->send();
 
     }
@@ -201,6 +219,7 @@ class AuthHandler implements SubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
+            KernelEvents::INIT => 'onSystemInit',
             KernelEvents::CONTROLLER => 'onControllerAccess',
             'auth.onLogin' => 'onLogin',
             'auth.onLogin.success' => 'onLoginSuccess',

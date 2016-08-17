@@ -57,6 +57,10 @@ class Manager extends Iface
 
         // Filters
         $this->table->addFilter(new Field\Input('keywords'))->setLabel('')->setAttr('placeholder', 'Keywords');
+        if ($this->getUser()->hasRole(\App\Auth\Acl::ROLE_STAFF)) {
+            $list = array('-- Show All --' => '', 'My Courses' => '1');
+            $this->table->addFilter(new Field\Select('userId', $list))->setLabel('')->setValue('1');
+        }
 
         // Actions
         //$this->table->addAction(\Tk\Table\Action\Button::getInstance('New Course', 'fa fa-plus', \Tk\Uri::create('/client/courseEdit.html')));
@@ -65,6 +69,12 @@ class Manager extends Iface
 
         $filter = $this->table->getFilterValues();
         $filter['institutionId'] = $this->institution->id;
+        if (!empty($filter['userId'])) {
+            $filter['userId'] = $this->getUser()->id;
+        }
+
+
+
         $users = \App\Db\CourseMap::create()->findFiltered($filter, $this->table->makeDbTool('a.id'));
         $this->table->setList($users);
 
@@ -100,7 +110,7 @@ class Manager extends Iface
       <div class="panel-heading">
         <i class="fa fa-cogs fa-fw"></i> Actions
       </div>
-      <div class="panel-body ">
+      <div class="panel-body">
         <div class="row">
           <div class="col-lg-12">
             <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
