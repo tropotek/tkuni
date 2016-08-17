@@ -80,8 +80,11 @@ class Edit extends Iface
         // TODO: Implement LTI tables for LMS access
         $lurl = \Tk\Uri::create('/lti/'.$this->institution->getHash().'/launch.html')->toString();
         $this->form->addField(new Field\Html('ltiUrl', $lurl))->setLabel('Launch Url')->setTabGroup('LTI');
+        // ltiName = user->name, ltiEnabled = user->active, ltiProtected = true, ltiEnable_until = null
         $this->form->addField(new Field\Input('ltiKey'))->setTabGroup('LTI');
         $this->form->addField(new Field\Input('ltiSecret'))->setTabGroup('LTI');
+
+
 
         $this->form->addField(new Field\Input('ldapHost'))->setTabGroup('LDAP');
         $this->form->addField(new Field\Input('ldapPort'))->setTabGroup('LDAP');

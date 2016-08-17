@@ -25,15 +25,3 @@ if ($config['debug']) {
     $config['system.debug.email'] = 'info@domain.com';
 }
 
-
-// LDAPs
-//$config['system.auth.ldap.host']    = 'centaur.unimelb.edu.au';
-//$config['system.auth.ldap.tls']    = true;
-//$config['system.auth.ldap.port']   = 389;
-//$config['system.auth.ldap.baseDn'] = 'ou=people,o=unimelb';
-//$config['system.auth.ldap.filter'] = 'uid={username}';
-
-// LTI Debug
-$config['lti.key'] = 'unimelb_00002';
-$config['lti.secret'] = '1f72a0bac401a3e375e737185817463c';
-

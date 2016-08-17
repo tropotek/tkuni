@@ -25,6 +25,28 @@ class Factory
         return \Tk\Config::getInstance($sitePath, $siteUrl);
     }
 
+
+
+
+
+    /**
+     * getRequest
+     *
+     * @return \IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector_pdo
+     * @todo: This may need to be moved to a factory in an Lti lib?????
+     */
+    public static function getLtiDataConnector()
+    {
+        if (!self::getConfig()->getLtiDataConnector()) {
+            $obj = \IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector::getDataConnector('', self::getDb(), 'pdo');
+            self::getConfig()->setLtiDataConnector($obj);
+        }
+        return self::getConfig()->getLtiDataConnector();
+    }
+
+
+
+
     /**
      * getRequest
      *

@@ -26,18 +26,7 @@ class Index extends Iface
      */
     public function doDefault(Request $request)
     {
-        // on success email user confirmation
-//        $user = \App\Db\UserMap::create()->find(2);
-//        $body = \Dom\Loader::loadFile($this->getConfig()->getSitePath().'/html/purpose/xtpl/mail/account.registration.xtpl');
-//        $body->insertText('name', $user->name);
-//        $url = \Tk\Uri::create('/register.html')->set('h', $user->hash);
-//        $body->insertText('url', $url->toString());
-//        $body->setAttr('url', 'href', $url->toString());
-//        $subject = 'Account Registration Request.';
-//
-//        //$message = new \Tk\Mail\Message($body->toString(true, true), $subject, \App\Factory::getConfig()->get('site.email'), $user->email);
-//        $message = new \Tk\Mail\Message($body, $subject, \App\Factory::getConfig()->get('site.email'), $user->email);
-//        $message->send();
+
 
         //vd('------------------');
         return $this->show();

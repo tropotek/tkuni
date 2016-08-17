@@ -94,6 +94,20 @@ class Institution extends \Tk\Db\Map\Model
     public function save()
     {
         $this->getHash();
+
+        // Create the lti consumer
+        // Maybe we need a dispatcher hook here for extendability
+        // Think this out but the LTI should be plugable....
+//        $consumer = new \IMSGlobal\LTI\ToolProvider\ToolConsumer('testing.edu', \App\Factory::getLtiDataConnector(), true);
+//        $consumer->name = 'Testing';
+//        $consumer->secret = 'ThisIsASecret!';
+//        $consumer->enabled = TRUE;
+//        $consumer->save();
+
+
+
+
+
         parent::save();
     }
 
