@@ -110,24 +110,13 @@
 
   <div class="row">
     <div class="col-lg-4">
-      <h2>Safari bug warning!</h2>
-      <p class="text-danger">Safari exhibits a bug in which resizing your browser horizontally causes rendering
-        errors in the justified nav that are cleared upon refreshing.
-      </p>
-      <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris
-        condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis
-        euismod. Donec sed odio dui.
-      </p>
-      <p>
-        <a role="button" href="#" class="btn btn-primary">View details »</a>
-      </p>
-    </div>
-    <div class="col-lg-4">
-      <h2>Heading</h2>
-      <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris
-        condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis
-        euismod. Donec sed odio dui.
-      </p>
+      <h2>User Roles</h2>
+      <ul>
+        <li><b>admin:</b> Site administration. Manage client accounts and site setup/content</li>
+        <li><b>client:</b> Institution user, manage Institution settings and all course information</li>
+        <li><b>staff:</b> Institution coordinator to assigned courses. Manage Courses students and application data.</li>
+        <li><b>student:</b> Institution student assigned to courses. Manage application data for their enrolled courses.</li>
+      </ul>
       <p>
         <a role="button" href="#" class="btn btn-primary">View details »</a>
       </p>
@@ -137,6 +126,19 @@
       <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula
         porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut
         fermentum massa.
+      </p>
+      <p>
+        <a role="button" href="#" class="btn btn-primary">View details »</a>
+      </p>
+    </div>
+    <div class="col-lg-4">
+      <h2>Safari bug warning!</h2>
+      <p class="text-danger">Safari exhibits a bug in which resizing your browser horizontally causes rendering
+        errors in the justified nav that are cleared upon refreshing.
+      </p>
+      <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris
+        condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis
+        euismod. Donec sed odio dui.
       </p>
       <p>
         <a role="button" href="#" class="btn btn-primary">View details »</a>

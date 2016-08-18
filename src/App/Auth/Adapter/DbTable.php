@@ -60,7 +60,6 @@ class DbTable extends \Tk\Auth\Adapter\DbTable
 
         try {
             $user = $this->getUser($username);
-            vd($user, $this->hashPassword($password, $user), $user->{$this->passwordColumn});
             // TODO: The password should be modified/hashed before it is sent to the adapter for processing ???
             if ($user && $this->hashPassword($password, $user) == $user->{$this->passwordColumn}) {
                 return new Result(Result::SUCCESS, array('username' => $username, 'institutionId' => $user->institution_id));

@@ -308,9 +308,7 @@ class Factory
         if (self::getConfig()->has('hash.function')) {
             $hf = self::getConfig()->get('hash.function');
         }
-        vd($hf, $str);
         $r = hash($hf, $str);
-        vd($r);
         return $r;
     }
     

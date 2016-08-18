@@ -68,7 +68,7 @@ class Manager extends Iface
         $this->table->addAction(\Tk\Table\Action\Csv::getInstance($this->getConfig()->getDb()));
 
         $filter = $this->table->getFilterValues();
-        $filter['institutionId'] = $this->institution->id;
+        $filter['institutionId'] = $this->institution->id;       // <------- ??????? For new insitution still shows other courses????
         if (!empty($filter['userId'])) {
             $filter['userId'] = $this->getUser()->id;
         }
