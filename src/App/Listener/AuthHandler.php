@@ -95,8 +95,6 @@ class AuthHandler implements SubscriberInterface
         if (!$user) {
             throw new \Tk\Auth\Exception('User not found: Contact Your Administrator.');
         }
-        $user->lastLogin = \Tk\Date::create();
-        $user->save();
 
         $event->set('user', $user);
     }
@@ -107,16 +105,19 @@ class AuthHandler implements SubscriberInterface
      */
     public function onLoginSuccess(AuthEvent $event)
     {
-        $result = $event->getResult();
-        if (!$result || !$result->isValid()) {
-            return;
-        }
 
         /** @var \App\Db\User $user */
         $user = $event->get('user');
+        if (!$user) {
+            throw new \Tk\Exception('No user found.');
+        }
+
+
+        $user->lastLogin = \Tk\Date::create();
+        $user->save();
 
         $institution = $user->getInstitution();
-        if ($institution) {
+        if ($institution && ($user->hasRole(\App\Auth\Acl::ROLE_STUDENT) || $user->hasRole(\App\Auth\Acl::ROLE_STAFF)) ) {
             $courseList = \App\Db\CourseMap::create()->findPendingEnrollment($institution->id, $user->email);
             /** @var \App\Db\Course $course */
             foreach ($courseList as $course) {
@@ -135,6 +136,9 @@ class AuthHandler implements SubscriberInterface
     public function onLogout(AuthEvent $event)
     {
         $event->getAuth()->clearIdentity();
+
+        // check if we are in an lti session then return to the LMS
+
     }
 
 

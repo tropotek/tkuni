@@ -59,12 +59,18 @@ class Edit extends Iface
 
         $this->form = new Form('formEdit');
 
+        $domain = '{domain}';
+        if ($this->institution->domain)
+            $domain = $this->institution->domain;
+
         $this->form->addField(new Field\Input('name'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\Input('username'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\Input('email'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\File('logo', $request, $this->getConfig()->getDataPath()))->setAttr('accept', '.png,.jpg,.jpeg,.gif')->setTabGroup('Details');
-        $insUrl = \Tk\Uri::create('/inst/'.$this->institution->getHash().'/login.html');
-        $this->form->addField(new Field\Input('domain'))->setTabGroup('Details')->setNotes('If this is set the login Url will be http://{domain}/login.html or else use the standard institution login of ' . $insUrl . '');
+        $insUrl = \Tk\Uri::create('/inst/'.$this->institution->getHash().'/login.html')->toString();
+        if ($this->institution->domain)
+            $insUrl = \Tk\Uri::create('http://'.$this->institution->domain.'/login.html')->toString();
+        $this->form->addField(new Field\Input('domain'))->setTabGroup('Details')->setNotes('Your Institution login URL is: <a href="'.$insUrl.'">'.$insUrl.'</a>' );
         $this->form->addField(new Field\Textarea('description'))->setTabGroup('Details');
         $this->form->addField(new Field\Checkbox('active'))->setTabGroup('Details');
 
@@ -76,22 +82,26 @@ class Edit extends Iface
         if (!$this->owner->getId())
             $f->setRequired(true);
 
-
         // TODO: Implement LTI tables for LMS access
+        $this->form->addField(new Field\Checkbox(\App\Db\Institution::LTI_ENABLE))->setTabGroup('LTI')->setNotes('Enable the LTI V1 launch URL for LMS systems.');
         $lurl = \Tk\Uri::create('/lti/'.$this->institution->getHash().'/launch.html')->toString();
-        $this->form->addField(new Field\Html('ltiUrl', $lurl))->setLabel('Launch Url')->setTabGroup('LTI');
-        // ltiName = user->name, ltiEnabled = user->active, ltiProtected = true, ltiEnable_until = null
-        $this->form->addField(new Field\Input('ltiKey'))->setTabGroup('LTI');
-        $this->form->addField(new Field\Input('ltiSecret'))->setTabGroup('LTI');
+        if ($this->institution->domain)
+            $lurl = \Tk\Uri::create('http://'.$this->institution->domain.'/lti/launch.html')->toString();
+        $this->form->addField(new Field\Html(\App\Db\Institution::LTI_URL, $lurl))->setLabel('Launch Url')->setTabGroup('LTI');
+        $this->institution->getData()->set(\App\Db\Institution::LTI_URL, $lurl);
+        $this->form->addField(new Field\Input(\App\Db\Institution::LTI_KEY))->setTabGroup('LTI');
+        $this->form->addField(new Field\Input(\App\Db\Institution::LTI_SECRET))->setTabGroup('LTI');
 
+        $this->form->addField(new Field\Checkbox(\App\Db\Institution::LDAP_ENABLE))->setTabGroup('LDAP')->setNotes('Enable LDAP authentication for the institution staff and student login.');
+        $this->form->addField(new Field\Input(\App\Db\Institution::LDAP_HOST))->setTabGroup('LDAP');
+        $this->form->addField(new Field\Checkbox(\App\Db\Institution::LDAP_TLS))->setTabGroup('LDAP');
+        $this->form->addField(new Field\Input(\App\Db\Institution::LDAP_PORT))->setTabGroup('LDAP');
+        $this->form->addField(new Field\Input(\App\Db\Institution::LDAP_BASE_DN))->setTabGroup('LDAP');
+        $this->form->addField(new Field\Input(\App\Db\Institution::LDAP_FILTER))->setTabGroup('LDAP')->setNotes('`{username}` will be replaced with the login request username.');
 
-
-        $this->form->addField(new Field\Input('ldapHost'))->setTabGroup('LDAP');
-        $this->form->addField(new Field\Input('ldapPort'))->setTabGroup('LDAP');
-        $this->form->addField(new Field\Input('ldapBaseDn'))->setTabGroup('LDAP');
-        $this->form->addField(new Field\Input('ldapFilter'))->setTabGroup('LDAP');
-        $this->form->addField(new Field\Checkbox('ldapTls'))->setTabGroup('LDAP');
-
+        // TODO
+        $this->form->addField(new Field\Checkbox(\App\Db\Institution::API_ENABLE))->setTabGroup('API')->setNotes('Enable the system API key for this Institution.');
+        $this->form->addField(new Field\Input(\App\Db\Institution::API_KEY))->setTabGroup('API');
 
         $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
         $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
@@ -114,6 +124,8 @@ class Edit extends Iface
         // Load the object with data from the form using a helper object
         \App\Db\InstitutionMap::create()->mapForm($form->getValues(), $this->institution);
         \App\Db\UserMap::create()->mapForm($form->getValues(), $this->owner);
+        $data = $this->institution->getData();
+        $data->replace($form->getValues('/^(ldap|lti|api)/'));
 
         $form->addFieldErrors(\App\Db\InstitutionValidator::create($this->institution)->getErrors());
         $form->addFieldErrors(\App\Db\UserValidator::create($this->owner)->getErrors());
@@ -129,6 +141,19 @@ class Edit extends Iface
             $form->addFieldError('newPassword', 'Please enter a new password.');
         }
 
+        // validate LTI consumer key
+        $lid = (int)$data->get(\App\Db\Institution::LTI_CURRENT_ID);
+        if ($form->getFieldValue(\App\Db\Institution::LTI_ENABLE)) {
+            if (!$form->getFieldValue(\App\Db\Institution::LTI_KEY)) {
+                $form->addFieldError(\App\Db\Institution::LTI_KEY, 'Please enter a valid LTI Key');
+            }
+            if (!$form->getFieldValue(\App\Db\Institution::LTI_SECRET) && $lid > 0) {
+                $form->addFieldError(\App\Db\Institution::LTI_SECRET, 'Please enter a valid LTI secret code');
+            }
+            if (\App\Db\InstitutionMap::create()->ltiKeyExists($form->getFieldValue(\App\Db\Institution::LTI_KEY), $lid)) {
+                $form->addFieldError(\App\Db\Institution::LTI_KEY, 'This LTI key already exists for another Institution.');
+            }
+        }
 
         $form->getField('logo')->isValid();
 
@@ -147,13 +172,10 @@ class Edit extends Iface
         }
 
         $this->owner->save();
-        //$this->institution->ownerId = $this->owner->id;
         $this->institution->save();
 
-        $data = $this->institution->getData();
-        $data->replace($form->getValues('/^ldap/'));
-        $data->replace($form->getValues('/^lti/'));
         $data->save();
+        $this->institution->save();
 
         \App\Alert::addSuccess('Record saved!');
         if ($form->getTriggeredEvent()->getName() == 'update')

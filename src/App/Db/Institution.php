@@ -11,6 +11,25 @@ namespace App\Db;
 class Institution extends \Tk\Db\Map\Model
 {
 
+    // Data fields
+    const LTI_ENABLE = 'ltiEnable';
+    const LTI_KEY = 'ltiKey';
+    const LTI_SECRET = 'ltiSecret';
+    const LTI_URL = 'ltiUrl';
+    const LTI_CURRENT_KEY = 'ltiCurrentKey';
+    const LTI_CURRENT_ID = 'ltiCurrentId';
+
+    const LDAP_ENABLE = 'ldapEnable';
+    const LDAP_HOST = 'ldapHost';
+    const LDAP_TLS = 'ldapTls';
+    const LDAP_PORT = 'ldapPort';
+    const LDAP_BASE_DN = 'ldapBaseDn';
+    const LDAP_FILTER = 'ldapFilter';
+
+    const API_ENABLE = 'apiEnable';
+    const API_KEY = 'apiKey';
+
+
     /**
      * @var int
      */
@@ -76,6 +95,11 @@ class Institution extends \Tk\Db\Map\Model
      * @var Data
      */
     private $data = null;
+
+    /**
+     * @var \IMSGlobal\LTI\ToolProvider\ToolConsumer
+     */
+    private $ltiConsumer = null;
     
     
 
@@ -95,20 +119,70 @@ class Institution extends \Tk\Db\Map\Model
     {
         $this->getHash();
 
-        // Create the lti consumer
+        // TODO LTI Consumer ??????????
         // Maybe we need a dispatcher hook here for extendability
-        // Think this out but the LTI should be plugable....
-//        $consumer = new \IMSGlobal\LTI\ToolProvider\ToolConsumer('testing.edu', \App\Factory::getLtiDataConnector(), true);
-//        $consumer->name = 'Testing';
-//        $consumer->secret = 'ThisIsASecret!';
-//        $consumer->enabled = TRUE;
-//        $consumer->save();
+        // Think this out but the LTI should be plugable.
 
+        // unimelb_00002
+        // 1f72a0bac401a3e375e737185817463c
 
+        $lurl = \Tk\Uri::create('/lti/'.$this->getHash().'/launch.html')->toString();
+        if ($this->domain)
+            $lurl = \Tk\Uri::create('http://'.$this->domain.'/lti/launch.html')->toString();
+        $this->getData()->set(self::LTI_URL, $lurl);
+        $this->getData()->save();
 
+        // Create the lti consumer
+        // TODO: could this be simplefied?????? Using getLtiConsumer() ????
+        if ($this->getData()->get(self::LTI_ENABLE) ) {
+            if (!$this->getData()->has(self::LTI_CURRENT_KEY)) {
+                $this->ltiConsumer = new \IMSGlobal\LTI\ToolProvider\ToolConsumer(null, \App\Factory::getLtiDataConnector());
+                $this->ltiConsumer->setKey($this->getData()->get(self::LTI_KEY));
+                if ($this->getData()->get(self::LTI_SECRET))
+                    $this->ltiConsumer->secret = $this->getData()->get(self::LTI_SECRET);
+                $this->ltiConsumer->enabled = true;
+                $this->ltiConsumer->name = $this->name;
+                $this->ltiConsumer->save();
+                $this->getData()->set(self::LTI_CURRENT_KEY, $this->ltiConsumer->getKey());
+                $this->getData()->set(self::LTI_CURRENT_ID, $this->ltiConsumer->getRecordId());
+                $this->getData()->set(self::LTI_SECRET, $this->ltiConsumer->secret);
+                $this->getData()->save();
+            } else if ($this->getLtiConsumer()) {
+                $this->getLtiConsumer()->name = $this->name;
+                $this->getLtiConsumer()->enabled = true;
+                if ($this->getData()->get(self::LTI_SECRET))
+                    $this->getLtiConsumer()->secret = $this->getData()->get(self::LTI_SECRET);
+                $this->getLtiConsumer()->save();
+            }
+        } else {
+            if ($this->getData()->has(self::LTI_CURRENT_KEY)) {
+                $this->ltiConsumer = $this->getLtiConsumer();
+                $this->ltiConsumer->enabled = false;
+                $this->ltiConsumer->save();
 
-
+                // Should we have a delete option?
+//                $this->getData()->remove(self::LTI_KEY);
+//                $this->getData()->remove(self::LTI_SECRET);
+//                $this->getData()->remove(self::LTI_CURRENT_KEY);
+//                $this->getData()->remove(self::LTI_CURRENT_ID);
+//                $this->getData()->save();
+//                if ($this->ltiConsumer)
+//                    $this->ltiConsumer->delete();
+            }
+        }
         parent::save();
+    }
+
+    /**
+     *
+     * @return \IMSGlobal\LTI\ToolProvider\ToolConsumer
+     */
+    public function getLtiConsumer()
+    {
+        if (!$this->ltiConsumer && $this->getData()->get(self::LTI_CURRENT_KEY)) {
+            $this->ltiConsumer = new \IMSGlobal\LTI\ToolProvider\ToolConsumer($this->getData()->get(self::LTI_CURRENT_KEY), \App\Factory::getLtiDataConnector());
+        }
+        return $this->ltiConsumer;
     }
 
     /**

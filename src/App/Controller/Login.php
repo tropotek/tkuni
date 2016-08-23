@@ -85,8 +85,8 @@ class Login extends Iface
 
         if (!$this->institution)
             $this->institution = \App\Db\InstitutionMap::create()->findByHash($instHash);
-        if (!$this->institution->active) {
-            throw new \Tk\NotFoundHttpException('Institution page not found.');
+        if (!$this->institution || $this->institution->active ) {
+            throw new \Tk\NotFoundHttpException('Institution not found.');
         }
 
         $this->init();

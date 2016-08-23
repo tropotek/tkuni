@@ -37,6 +37,11 @@ class StartupHandler implements SubscriberInterface
             $this->logger->info('- ' . $event->getRequest()->getMethod() . ': ' . $event->getRequest()->getUri());
             $this->logger->info('- ' . $event->getRequest()->getIp());
             $this->logger->info('- ' . $event->getRequest()->getUserAgent());
+            if (\App\Factory::getSession()) {
+                $this->logger->info('- Session ID: ' . \App\Factory::getSession()->getId());
+                $this->logger->info('- Session Name: ' . \App\Factory::getSession()->getName());
+            }
+
             $this->logger->info('- PHP: ' . \PHP_VERSION);
             $this->logger->info('------------------------------------------------');
         }

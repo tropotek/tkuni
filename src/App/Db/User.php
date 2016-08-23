@@ -202,6 +202,9 @@ class User extends \Tk\Db\Map\Model
     {
         if (!$this->institution) {
             $this->institution = \App\Db\InstitutionMap::create()->find($this->institutionId);
+            if (!$this->institution && $this->hasRole(\App\Auth\Acl::ROLE_CLIENT)) {
+                $this->institution = \App\Db\InstitutionMap::create()->findByOwnerId($this->id);
+            }
         }
         return $this->institution;
     }

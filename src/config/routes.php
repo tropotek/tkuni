@@ -24,14 +24,14 @@ $routes->add('contact', new \Tk\Routing\Route('/contact.html', 'App\Controller\C
 $routes->add('about', new \Tk\Routing\Route('/about.html', 'App\Controller\About::doDefault', $params));
 
 $routes->add('login', new \Tk\Routing\Route('/login.html', 'App\Controller\Login::doDefault', $params));
-$routes->add('institution-login', new \Tk\Routing\Route('/inst/{institutionId}/login.html', 'App\Controller\Login::doInsLogin', $params));
+$routes->add('institution-login', new \Tk\Routing\Route('/inst/{instHash}/login.html', 'App\Controller\Login::doInsLogin', $params));
 $routes->add('logout', new \Tk\Routing\Route('/logout.html', 'App\Controller\Logout::doDefault', $params));
 $routes->add('recover', new \Tk\Routing\Route('/recover.html', 'App\Controller\Recover::doDefault', $params));
 $routes->add('register', new \Tk\Routing\Route('/register.html', 'App\Controller\Register::doDefault', $params));
 
 // LTI launch
-$routes->add('lti-launch', new \Tk\Routing\Route('/lti/launch.html', 'App\Controller\LtiLaunch::doDefault', $params));
-$routes->add('institution-lti-launch', new \Tk\Routing\Route('/lti/{institutionId}/launch.html', 'App\Controller\LtiLaunch::doInsLaunch', $params));
+$routes->add('lti-launch', new \Tk\Routing\Route('/lti/launch.html', 'Lti\Controller\Launch::doLaunch', $params));
+$routes->add('institution-lti-launch', new \Tk\Routing\Route('/lti/{instHash}/launch.html', 'Lti\Controller\Launch::doInsLaunch', $params));
 
 
 

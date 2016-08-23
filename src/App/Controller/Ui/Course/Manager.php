@@ -43,6 +43,8 @@ class Manager extends Iface
     public function doDefault(Request $request)
     {
         $this->institution = $this->getUser()->getInstitution();
+        if (!$this->institution)
+            throw new \Tk\Exception('Institution Not Found.');
         
         $this->table = new \Tk\Table('CourseList');
         $this->table->setParam('renderer', \Tk\Table\Renderer\Dom\Table::create($this->table));
@@ -68,7 +70,7 @@ class Manager extends Iface
         $this->table->addAction(\Tk\Table\Action\Csv::getInstance($this->getConfig()->getDb()));
 
         $filter = $this->table->getFilterValues();
-        $filter['institutionId'] = $this->institution->id;       // <------- ??????? For new insitution still shows other courses????
+        $filter['institutionId'] = $this->institution->id;       // <------- ??????? For new institution still shows other courses????
         if (!empty($filter['userId'])) {
             $filter['userId'] = $this->getUser()->id;
         }

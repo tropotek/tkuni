@@ -15,7 +15,11 @@ namespace App\Db;
  */
 class Data extends \Tk\Collection
 {
-    
+    /**
+     * The constant for the internal delete flag
+     */
+    const DEL = 'd___';
+
     /**
      * @var \Tk\Db\Pdo
      */
@@ -112,10 +116,29 @@ class Data extends \Tk\Collection
     public function save()
     {
         foreach($this as $k => $v) {
-            $this->dbSet($k, $v);
+            if (preg_match('/^'.self::DEL.'(.+)/', $k, $reg)) {   // Marked for delete
+                $this->dbDelete($reg[1]);
+            } else {
+                $this->dbSet($k, $v);
+            }
         }
         return $this;
     }
+
+
+    /**
+     * Remove item from collection
+     *
+     * @param string $key The data key
+     * @return $this
+     */
+    public function remove($key)
+    {
+        $this->data[self::DEL.$key] = $this->data[$key];
+        unset($this->data[$key]);
+        return $this;
+    }
+
 
     /**
      * Set a single data value in the Database 

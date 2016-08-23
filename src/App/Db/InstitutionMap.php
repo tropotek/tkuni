@@ -156,6 +156,23 @@ class InstitutionMap extends Mapper
     }
 
 
+    /**
+     * Check if
+     *
+     * @param $consumer_key256
+     * @return bool
+     */
+    public function ltiKeyExists($consumer_key256, $ignoreId = 0)
+    {
+        $sql = sprintf('SELECT * FROM lti2_consumer WHERE consumer_key256 = %s', $this->getDb()->quote($consumer_key256));
+        if ($ignoreId) {
+            $sql .= sprintf(' AND consumer_pk != %s ', (int)$ignoreId);
+        }
+        return ($this->getDb()->query($sql)->rowCount() > 0);
+    }
+
+
+
 
 }
 

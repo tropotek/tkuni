@@ -73,7 +73,7 @@ class CourseMap extends Mapper
      *
      * @param string $code
      * @param int $institutionId
-     * @return Model
+     * @return Course
      */
     public function findByCode($code, $institutionId)
     {
@@ -154,8 +154,8 @@ class CourseMap extends Mapper
     
 
     /**
-     * @param $courseId
-     * @param $userId
+     * @param int $courseId
+     * @param int $userId
      * @return boolean
      */
     public function hasUser($courseId, $userId)
@@ -165,8 +165,8 @@ class CourseMap extends Mapper
     }
 
     /**
-     * @param $courseId
-     * @param $userId
+     * @param int $courseId
+     * @param int $userId
      * @return \Tk\Db\PDOStatement
      */
     public function deleteUser($courseId, $userId)
@@ -176,12 +176,13 @@ class CourseMap extends Mapper
     }
 
     /**
-     * @param $courseId
-     * @param $userId
+     * @param int $courseId
+     * @param int $userId
      * @return \Tk\Db\PDOStatement
      */
     public function addUser($courseId, $userId)
     {
+        if ($this->hasUser($courseId, $userId)) return;
         $query = sprintf('INSERT INTO user_course (user_id, course_id)  VALUES (%d, %d) ', (int)$userId, (int)$courseId);
         return $this->getDb()->exec($query);
     }
@@ -263,9 +264,5 @@ class CourseMap extends Mapper
             $this->deleteUser($courseId, $user->id);
         }
     }
-
-
-
-
 
 }
