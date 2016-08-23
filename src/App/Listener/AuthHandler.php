@@ -111,7 +111,7 @@ class AuthHandler implements SubscriberInterface
         if (!$user) {
             throw new \Tk\Exception('No user found.');
         }
-        
+
         $user->lastLogin = \Tk\Date::create();
         $user->save();
 

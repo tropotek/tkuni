@@ -77,6 +77,8 @@ class Provider extends ToolProvider\ToolProvider
                 }
 
                 list($username, $domain) = explode('@', $this->user->email);
+                // TODO: There is a possibility that the usernames clash so check first and add numbers.... ;-)
+
                 $user = \App\Factory::createNewUser($this->institution->id, $username, $this->user->email, $role, '', $this->user->fullname);
                 // TODO: New users should be prompted to create a new password when they enter their Dashboard....?????
             }
