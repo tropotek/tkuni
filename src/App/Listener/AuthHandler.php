@@ -111,8 +111,7 @@ class AuthHandler implements SubscriberInterface
         if (!$user) {
             throw new \Tk\Exception('No user found.');
         }
-
-
+        
         $user->lastLogin = \Tk\Date::create();
         $user->save();
 
@@ -156,7 +155,7 @@ class AuthHandler implements SubscriberInterface
         $body->setAttr('url', 'href', $url->toString());
         $subject = 'Account Registration Request.';
 
-        $message = new \Tk\Mail\Message($body->toString(true, true), $subject, $user->email, \App\Factory::getConfig()->get('site.email'));
+        $message = new \Tk\Mail\Message($body->toString(), $subject, $user->email, \App\Factory::getConfig()->get('site.email'));
         $message->send();
 
     }
@@ -174,7 +173,7 @@ class AuthHandler implements SubscriberInterface
         $body->setAttr('url', 'href', $url->toString());
         $subject = 'Account Registration Activation.';
 
-        $message = new \Tk\Mail\Message($body->toString(true, true), $subject, $user->email, \App\Factory::getConfig()->get('site.email'));
+        $message = new \Tk\Mail\Message($body->toString(), $subject, $user->email, \App\Factory::getConfig()->get('site.email'));
         $message->send();
 
     }
@@ -194,7 +193,7 @@ class AuthHandler implements SubscriberInterface
         $body->setAttr('url', 'href', $url->toString());
         $subject = 'Account Password Recovery.';
 
-        $message = new \Tk\Mail\Message($body->toString(true, true), $subject, $user->email, \App\Factory::getConfig()->get('site.email'));
+        $message = new \Tk\Mail\Message($body->toString(), $subject, $user->email, \App\Factory::getConfig()->get('site.email'));
         $message->send();
 
     }
