@@ -21,7 +21,6 @@ class Launch extends Iface
      */
     protected $institution = null;
 
-
     
     /**
      *
@@ -38,12 +37,10 @@ class Launch extends Iface
      */
     public function doLaunch(Request $request)
     {
-
         $this->institution = \App\Db\InstitutionMap::create()->findByDomain($request->getUri()->getHost());
         if ($this->institution) {
             return $this->doInsLaunch($request, $this->institution->getHash());
         }
-
         return $this->show();
     }
 
@@ -63,8 +60,6 @@ class Launch extends Iface
             //throw new \Tk\NotFoundHttpException('LTI request not found.');
             return $this->show();
         }
-
-
 
         $tool = new \Lti\Provider(\App\Factory::getLtiDataConnector(), $this->institution, $this->getConfig()->getEventDispatcher());
         $tool->handleRequest();

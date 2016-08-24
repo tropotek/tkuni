@@ -51,7 +51,7 @@ class Enrollment extends Iface
         if (!$this->course)
             throw new \Tk\Exception('Invalid course details');
 
-        $this->dialog = new \App\Ui\EnrollmentDialog('Enroll Student');
+        $this->dialog = new \App\Ui\EnrollmentDialog('Enroll User');
         $this->dialog->execute($request);
 
         $this->table = new \Tk\Table('tableOne');

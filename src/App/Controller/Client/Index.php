@@ -70,9 +70,6 @@ class Index extends Iface
               <li>Edit Client profile</li>
               <li>Manage/Pay account online (future)</li>
               <li>Create/Modify institutions belonging to the institution</li>
-              <li></li>
-              <li></li>
-              <li></li>
             </ul>
           </div>
         </div>

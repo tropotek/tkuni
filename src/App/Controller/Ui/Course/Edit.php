@@ -71,8 +71,8 @@ class Edit extends Iface
         $this->form->addField(new Field\Input('name'))->setRequired(true);
         $this->form->addField(new Field\Input('code'))->setRequired(true);
         $this->form->addField(new Field\Input('email'))->setRequired(true);
-        $this->form->addField(new Field\Input('start'))->addCss('date')->setRequired(true);
-        $this->form->addField(new Field\Input('finish'))->addCss('date')->setRequired(true);
+        $this->form->addField(new Field\Input('start'))->addCssClass('date')->setRequired(true);
+        $this->form->addField(new Field\Input('finish'))->addCssClass('date')->setRequired(true);
         $this->form->addField(new Field\Textarea('description'));
 
         $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));

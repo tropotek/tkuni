@@ -111,4 +111,6 @@ body.public {
   color: #e70000;
   font-weight: bold;
 }
-
+.tk-form select[multiple] {
+  min-height: 150px;
+}

@@ -13,6 +13,6 @@ $(document).ready(function() {
     dateFormat: 'dd/mm/yy'
   });
 
-
+  $('select.tk-dualSelect').DualListBox();
 
 });

@@ -72,9 +72,8 @@ class Manager extends Iface
         $this->table->addAction(\Tk\Table\Action\Csv::getInstance($this->getConfig()->getDb()));
 
         $filter = $this->table->getFilterValues();
-        if ($this->getUser()->hasRole(\App\Auth\Acl::ROLE_STAFF) || $this->getUser()->hasRole(\App\Auth\Acl::ROLE_STUDENT)) {
+        if ($this->getUser()->getInstitution())
             $filter['institutionId'] = $this->getUser()->getInstitution()->id;
-        }
         if (empty($filter['role'])) {
             $filter['role'] = $this->getUser()->role;
             if ($this->getUser()->hasRole(array(\App\Auth\Acl::ROLE_CLIENT, \App\Auth\Acl::ROLE_STAFF))) {

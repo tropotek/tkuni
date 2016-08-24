@@ -10,7 +10,7 @@ use IMSGlobal\LTI\ToolProvider;
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  *
- * @todo Should we optomize the entire app level LTI objects to be more abstract ?????
+ * @todo Should we optimize the entire app level LTI objects to be more abstract ?????
  * @todo I have implemented this as a working example primarily
  *
  */
@@ -55,13 +55,10 @@ class Provider extends ToolProvider\ToolProvider
      *  - keep a record of the return URL for the tool consumer (for example, in a session variable);
      *  - set the URL for the home page of the application so the user may be redirected to it.
      *
-     *
      */
     function onLaunch()
     {
-
         try {
-
             if (!$this->user->email) {
                 throw new \Tk\Exception('User email not found! Cannot log in.');
             }
@@ -77,10 +74,22 @@ class Provider extends ToolProvider\ToolProvider
                 }
 
                 list($username, $domain) = explode('@', $this->user->email);
-                // TODO: There is a possibility that the usernames clash so check first and add numbers.... ;-)
+                // There is a possibility that the usernames clash so auto create a unique one.
+                $un = $username;
+                $i = 0;
+                $found = null;
+                do {
+                    $found = \App\Db\UserMap::create()->findByUsername($un, $this->institution->id);
+                    if (!$found) {
+                        $username = $un;
+                    }
+                    $un = $username.'_'.$i;
+                    $i++;
+                } while ($found);
 
                 $user = \App\Factory::createNewUser($this->institution->id, $username, $this->user->email, $role, '', $this->user->fullname);
-                // TODO: New users should be prompted to create a new password when they enter their Dashboard....?????
+                // TODO: Should new users should be prompted to create a new password when they enter their Dashboard through LTI....?????
+                // Maybe not they should be instructed to change their password via access through the LTI.......
             }
 
             if (!$user->active) {
@@ -97,9 +106,6 @@ class Provider extends ToolProvider\ToolProvider
                 \App\Db\CourseMap::create()->addUser($course->id, $user->id);
             }
             \Tk\Session::getInstance()->set('lti.launch', array_merge($_GET, $_POST));
-
-            //vd($this->context);
-            //vd(\Tk\Session::getInstance()->get('lti.launch') );
 
             // fire loginSuccess....
             if ($this->dispatcher) {    // This event should redirect the user to their homepage.
@@ -125,7 +131,6 @@ class Provider extends ToolProvider\ToolProvider
     function onContentItem()
     {
         vd('LTI: onContentItem');
-
     }
 
     /**
@@ -136,22 +141,20 @@ class Provider extends ToolProvider\ToolProvider
     function onRegister()
     {
         vd('LTI: onRegister');
-
     }
 
     /**
      * Insert code here to handle errors on incoming connections - do not expect
      * the user, context and resourceLink properties to be populated but check the reason
-     * property for the cause of the error.  Return TRUE if the error was fully
-     * handled by this method.
+     * property for the cause of the error.
+     * Return TRUE if the error was fully handled by this method.
      *
+     * @return null|bool
      */
     function onError()
     {
         vd('LTI: onError', $this->reason, $this->message);
         //return true;        // Stops redirect back to app, incase you want to show an error messages locally
     }
-
-
 
 }

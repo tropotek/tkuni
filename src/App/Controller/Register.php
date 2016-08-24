@@ -48,9 +48,6 @@ class Register extends Iface
     {
         parent::__construct('Create New Account');
         $this->dispatcher = $this->getConfig()->getEventDispatcher();
-
-        //throw new \Tk\Exception('Not Implemented Yet');
-        
     }
 
     /**
@@ -180,10 +177,10 @@ class Register extends Iface
         }
 
         $institution = \App\Db\InstitutionMap::create()->findByOwnerId($user->id);
-vd($user);
+
         $user->active = true;
         $user->save();
-vd($user);
+
         $institution->active = true;
         $institution->save();
         

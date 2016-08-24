@@ -59,10 +59,6 @@ class Edit extends Iface
 
         $this->form = new Form('formEdit');
 
-        $domain = '{domain}';
-        if ($this->institution->domain)
-            $domain = $this->institution->domain;
-
         $this->form->addField(new Field\Input('name'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\Input('username'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\Input('email'))->setRequired(true)->setTabGroup('Details');
@@ -99,9 +95,8 @@ class Edit extends Iface
         $this->form->addField(new Field\Input(\App\Db\Institution::LDAP_BASE_DN))->setTabGroup('LDAP');
         $this->form->addField(new Field\Input(\App\Db\Institution::LDAP_FILTER))->setTabGroup('LDAP')->setNotes('`{username}` will be replaced with the login request username.');
 
-        // TODO
-        $this->form->addField(new Field\Checkbox(\App\Db\Institution::API_ENABLE))->setTabGroup('API')->setNotes('Enable the system API key for this Institution.');
-        $this->form->addField(new Field\Input(\App\Db\Institution::API_KEY))->setTabGroup('API');
+//        $this->form->addField(new Field\Checkbox(\App\Db\Institution::API_ENABLE))->setTabGroup('API')->setNotes('Enable the system API key for this Institution.');
+//        $this->form->addField(new Field\Input(\App\Db\Institution::API_KEY))->setTabGroup('API');
 
         $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
         $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));

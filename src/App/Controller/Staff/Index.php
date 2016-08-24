@@ -72,7 +72,6 @@ class Index extends Iface
               <li>Manage Course setup and data</li>
               <li>Manage Student accounts</li>
               <li>Manage student course enrollments</li>
-              <li></li>
             </ul>
           </div>
         </div>

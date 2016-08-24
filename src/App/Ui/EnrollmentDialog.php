@@ -118,7 +118,6 @@ class EnrollmentDialog extends DialogBox
             \App\Alert::addError(count($error) . ' records contained errors.');
         }
 
-
         $request->getUri()->redirect();
     }
 
@@ -165,7 +164,7 @@ class EnrollmentDialog extends DialogBox
 
   <!-- Nav tabs -->
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#add" aria-controls="add" role="tab" data-toggle="tab">Add Student</a></li>
+    <li role="presentation" class="active"><a href="#add" aria-controls="add" role="tab" data-toggle="tab">Add User</a></li>
     <li role="presentation"><a href="#files" aria-controls="files" role="tab" data-toggle="tab">Upload CSV List</a></li>
     <li role="presentation"><a href="#list" aria-controls="list" role="tab" data-toggle="tab">Paste CSV List</a></li>
   </ul>
@@ -189,12 +188,14 @@ class EnrollmentDialog extends DialogBox
         <input type="file" class="form-control" id="fid-csvFile" name="csvFile"/>
         </div>
       </div>
+      <div class=""><p>The CSV file should contain the users email address per line</p></div>
     </div>
     <div role="tabpanel" class="tab-pane" id="list">
       <div class="form-group form-group-sm">
         <label for="fid-csvList" class="control-label">* CSV List:</label>
         <textarea class="form-control" id="fid-csvList" name="csvList" style="height: 90px;"></textarea>
       </div>
+      <div class=""><p>The CSV List should contain the users email address per line</p></div>
     </div>
     
   </div>

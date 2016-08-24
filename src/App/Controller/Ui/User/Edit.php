@@ -71,6 +71,9 @@ class Edit extends Iface
 
         $this->user = new \App\Db\User();
         $this->user->role = $this->getUser()->role;
+        if ($this->user->hasRole(\App\Auth\Acl::ROLE_CLIENT)) {
+            $this->user->role = \App\Auth\Acl::ROLE_STAFF;
+        }
 
         if ($request->has('userId')) {
             $this->user = \App\Db\UserMap::create()->find($request->get('userId'));
@@ -82,7 +85,12 @@ class Edit extends Iface
             }
         }
 
+
         $this->form = new Form('formEdit');
+
+        $list = array('Option 1' => '1', 'Option 2' => '2', 'Option 3' => '3', 'Option 4' => '4', 'Option 5' => '5', 'Option 6' => '6' );
+        $this->form->addField(new Field\Select('selCourse[]', $list))->setNotes('')->setTabGroup('Details')->addCssClass('tk-dualSelect')->setAttr('data-title', 'Courses');
+        $this->form->setFieldValue('selCourse', array('3', '4', '6'));
 
         $this->form->addField(new Field\Input('name'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\Input('username'))->setRequired(true)->setTabGroup('Details');
@@ -90,9 +98,9 @@ class Edit extends Iface
         if ($this->user->hasRole(array(\App\Auth\Acl::ROLE_STAFF, \App\Auth\Acl::ROLE_STUDENT))) {
             $this->form->addField(new Field\Input('uid'))->setLabel('UID')->setTabGroup('Details')->setNotes('The student or staff number assigned by the institution.');
         }
-        if ($this->getUser()->hasRole(\App\Auth\Acl::ROLE_STAFF)) {
+        if ($this->getUser()->hasRole(array(\App\Auth\Acl::ROLE_STAFF, \App\Auth\Acl::ROLE_CLIENT))) {
             $list = array('-- Select --' => '', 'Staff' => \App\Auth\Acl::ROLE_STAFF, 'Student' => \App\Auth\Acl::ROLE_STUDENT);
-            $this->form->addField(new Field\Select('role', $list))->setNotes('Select the access level for this user')->setRequired(true)->setTabGroup('Details')->setRequired(true);
+            $this->form->addField(new Field\Select('role', $list))->setNotes('Select the access level for this user')->setTabGroup('Details')->setRequired(true);
         }
         $this->form->addField(new Field\Checkbox('active'))->setTabGroup('Details');
 
@@ -103,8 +111,6 @@ class Edit extends Iface
         $f = $this->form->addField(new Field\Password('confPassword'))->setAttr('placeholder', 'Click to edit')->setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setNotes('Change this users password.')->setTabGroup('Password');
         if (!$this->user->getId())
             $f->setRequired(true);
-
-
 
         $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
         $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
@@ -177,11 +183,14 @@ class Edit extends Iface
     {
         $template = $this->getTemplate();
         
-        if ($this->user->id)
+        if ($this->user->id) {
             $template->insertText('username', $this->user->name . ' - [UID ' . $this->user->id . ']');
-        else
+            $template->setChoice('update');
+        } else {
             $template->insertText('username', 'Create User');
-        
+            $template->setChoice('new');
+        }
+
         // Render the form
         $fren = new \Tk\Form\Renderer\Dom($this->form);
         $template->appendTemplate($this->form->getId(), $fren->show()->getTemplate());
@@ -206,11 +215,11 @@ class Edit extends Iface
       <div class="panel-heading">
         <i class="fa fa-cogs fa-fw"></i> Actions
       </div>
-      <div class="panel-body ">
+      <div class="panel-body">
         <div class="row">
           <div class="col-lg-12">
             <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
-            <a href="javascript:;" class="btn btn-default"><i class="fa fa-user-secret"></i> <span>Masquerade</span></a>
+            <a href="javascript:;" class="btn btn-default" choice="update"><i class="fa fa-user-secret"></i> <span>Masquerade</span></a>
           </div>
         </div>
       </div>
@@ -224,7 +233,7 @@ class Edit extends Iface
         <span var="username"></span>
       </div>
       
-      <div class="panel-body ">
+      <div class="panel-body">
         <div class="row">
           <div class="col-lg-12" var="formEdit">
           </div>

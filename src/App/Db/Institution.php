@@ -257,7 +257,7 @@ class InstitutionValidator extends \Tk\Db\Map\Validator
      */
     protected function validate()
     {
-        /** @var Course $obj */
+        /** @var Institution $obj */
         $obj = $this->getObject();
 
         if (!$obj->name) {
@@ -266,8 +266,18 @@ class InstitutionValidator extends \Tk\Db\Map\Validator
         if (!filter_var($obj->email, FILTER_VALIDATE_EMAIL)) {
             $this->addError('email', 'Please enter a valid email address');
         }
-        
-        // TODO: Validate start and end dates
+
+        // Ensure the domain is unique if set.
+        if ($obj->domain) {
+            if (!preg_match('/^(?!\-)(?:[a-zA-Z\d\-]{0,62}[a-zA-Z\d]\.){1,126}(?!\d+)[a-zA-Z\d]{1,63}$/g', $obj->domain)) {
+                $this->addError('domain', 'Please enter a valid domain name (EG: example.com.au)');
+            } else {
+                $dup = InstitutionMap::create()->findByDomain($obj->domain);
+                if ($dup && $dup->getId() != $obj->getId()) {
+                    $this->addError('domain', 'This domain name is already in use.');
+                }
+            }
+        }
 
     }
 }
