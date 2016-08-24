@@ -1,6 +1,7 @@
 /**
  * jQuery DualListBox plugin with Bootstrap styling v1.0
  * http://www.geodan.nl
+ * https://github.com/Geodan/DualListBox
  *
  * Copyright (c) 2014 Geodan B.V.
  * Created by: Alex van den Hoogen
