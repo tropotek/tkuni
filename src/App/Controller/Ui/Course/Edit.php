@@ -128,7 +128,7 @@ class Edit extends Iface
         // Load the object with data from the form using a helper object
         \App\Db\CourseMap::create()->mapForm($form->getValues(), $this->course);
 
-        $form->addFieldErrors(\App\Db\CourseValidator::create($this->course)->getErrors());
+        $form->addFieldErrors($this->course->validate());
 
         if ($form->hasErrors()) {
             return;
@@ -160,9 +160,6 @@ class Edit extends Iface
         // Render the form
         $fren = new \Tk\Form\Renderer\Dom($this->form);
         $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());
-
-//        $template->setAttr('userManager', 'href', \App\Uri::createHomeUrl('/userManager.html')->set('courseId', $this->course->id));
-//        $template->setAttr('enrollmentList', 'href', \App\Uri::createHomeUrl('/enrollment.html')->set('courseId', $this->course->id));
 
         if ($this->course->id == 0) {
             $template->setChoice('new');

@@ -8,7 +8,7 @@ namespace App\Db;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Institution extends \Tk\Db\Map\Model
+class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface
 {
 
     // Data fields
@@ -245,39 +245,69 @@ class Institution extends \Tk\Db\Map\Model
     }
 
 
-
-}
-
-class InstitutionValidator extends \Tk\Db\Map\Validator
-{
-
     /**
      * Implement the validating rules to apply.
      *
      */
-    protected function validate()
+    public function validate()
     {
-        /** @var Institution $obj */
-        $obj = $this->getObject();
+        $error = array();
 
-        if (!$obj->name) {
-            $this->addError('name', 'Invalid field value.');
-        }        
-        if (!filter_var($obj->email, FILTER_VALIDATE_EMAIL)) {
-            $this->addError('email', 'Please enter a valid email address');
+        if (!$this->name) {
+            $error['name'] = 'Invalid field value';
+        }
+        if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+            $error['email'] = 'Please enter a valid email address';
         }
 
         // Ensure the domain is unique if set.
-        if ($obj->domain) {
-            if (!preg_match('/^(?!\-)(?:[a-zA-Z\d\-]{0,62}[a-zA-Z\d]\.){1,126}(?!\d+)[a-zA-Z\d]{1,63}$/g', $obj->domain)) {
-                $this->addError('domain', 'Please enter a valid domain name (EG: example.com.au)');
+        if ($this->domain) {
+            //if (!preg_match('/^(?!\-)(?:[a-zA-Z\d\-]{0,62}[a-zA-Z\d]\.){1,126}(?!\d+)[a-zA-Z\d]{1,63}$/g', $obj->domain)) {
+            if (!preg_match(self::REG_DOMAIN, $this->domain)) {
+                $error['domain'] = 'Please enter a valid domain name (EG: example.com.au)';
             } else {
-                $dup = InstitutionMap::create()->findByDomain($obj->domain);
-                if ($dup && $dup->getId() != $obj->getId()) {
-                    $this->addError('domain', 'This domain name is already in use.');
+                $dup = InstitutionMap::create()->findByDomain($this->domain);
+                if ($dup && $dup->getId() != $this->getId()) {
+                    $error['domain'] = 'This domain name is already in use';
                 }
             }
         }
 
+        return $error;
     }
+
 }
+
+//class InstitutionValidator extends \Tk\Db\Map\Validator
+//{
+//
+//    /**
+//     * Implement the validating rules to apply.
+//     *
+//     */
+//    protected function validate()
+//    {
+//        /** @var Institution $obj */
+//        $obj = $this->getObject();
+//
+//        if (!$obj->name) {
+//            $this->addError('name', 'Invalid field value.');
+//        }
+//        if (!filter_var($obj->email, FILTER_VALIDATE_EMAIL)) {
+//            $this->addError('email', 'Please enter a valid email address');
+//        }
+//
+//        // Ensure the domain is unique if set.
+//        if ($obj->domain) {
+//            if (!preg_match('/^(?!\-)(?:[a-zA-Z\d\-]{0,62}[a-zA-Z\d]\.){1,126}(?!\d+)[a-zA-Z\d]{1,63}$/g', $obj->domain)) {
+//                $this->addError('domain', 'Please enter a valid domain name (EG: example.com.au)');
+//            } else {
+//                $dup = InstitutionMap::create()->findByDomain($obj->domain);
+//                if ($dup && $dup->getId() != $obj->getId()) {
+//                    $this->addError('domain', 'This domain name is already in use.');
+//                }
+//            }
+//        }
+//
+//    }
+//}

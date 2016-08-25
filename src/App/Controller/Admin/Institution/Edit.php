@@ -163,8 +163,8 @@ class Edit extends Iface
         $data = $this->institution->getData();
         $data->replace($form->getValues('/^(ldap|lti|api)/'));
 
-        $form->addFieldErrors(\App\Db\InstitutionValidator::create($this->institution)->getErrors());
-        $form->addFieldErrors(\App\Db\UserValidator::create($this->owner)->getErrors());
+        $form->addFieldErrors($this->institution->validate());
+        $form->addFieldErrors($this->owner->validate());
 
         // Password validation needs to be here
         if ($this->form->getFieldValue('newPassword')) {

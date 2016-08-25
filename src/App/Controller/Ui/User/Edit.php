@@ -155,7 +155,6 @@ class Edit extends Iface
             $form->addFieldError('newPassword', 'Please enter a new password.');
         }
 
-        //$form->addFieldErrors(\App\Db\UserValidator::create($this->user)->getErrors());
         $form->addFieldErrors($this->user->validate());
 
 
@@ -170,23 +169,23 @@ class Edit extends Iface
         // Add user to institution
         if ($this->institution) {
             $this->user->institutionId = $this->institution->id;
-            // TODO: Add the ability to assign a staff member to courses.
 
+            // TODO: Add the ability to assign a staff member to courses.
+            if ($this->user->id) {
+                $list = \App\Db\CourseMap::create()->findActive($this->institution->id);
+                $selected = $form->getFieldValue('selCourse');
+                /** @var \App\Db\Course $course */
+                foreach ($list as $course) {
+                    if (in_array($course->id, $selected)) {
+                        \App\Db\CourseMap::create()->addUser($course->id, $this->user->id);
+                    } else {
+                        \App\Db\CourseMap::create()->deleteUser($course->id, $this->user->id);
+                    }
+                }
+            }
         }
         $this->user->save();
 
-        $list = \App\Db\CourseMap::create()->findActive($this->institution->id);
-        $selected = $form->getFieldValue('selCourse');
-
-        /** @var \App\Db\Course $course */
-        foreach ($list as $course) {
-            if (in_array($course->id, $selected)) {
-                \App\Db\CourseMap::create()->addUser($course->id, $this->user->id);
-            } else {
-                \App\Db\CourseMap::create()->deleteUser($course->id, $this->user->id);
-            }
-        }
-        
         \App\Alert::addSuccess('User record saved!');
         if ($form->getTriggeredEvent()->getName() == 'update') {
             \App\Uri::createHomeUrl('/userManager.html')->redirect();
