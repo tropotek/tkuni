@@ -88,10 +88,6 @@ class Edit extends Iface
 
         $this->form = new Form('formEdit');
 
-        $list = array('Option 1' => '1', 'Option 2' => '2', 'Option 3' => '3', 'Option 4' => '4', 'Option 5' => '5', 'Option 6' => '6' );
-        $this->form->addField(new Field\Select('selCourse[]', $list))->setNotes('')->setTabGroup('Details')->addCssClass('tk-dualSelect')->setAttr('data-title', 'Courses');
-        $this->form->setFieldValue('selCourse', array('3', '4', '6'));
-
         $this->form->addField(new Field\Input('name'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\Input('username'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\Input('email'))->setRequired(true)->setTabGroup('Details');
@@ -111,6 +107,16 @@ class Edit extends Iface
         $f = $this->form->addField(new Field\Password('confPassword'))->setAttr('placeholder', 'Click to edit')->setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setNotes('Change this users password.')->setTabGroup('Password');
         if (!$this->user->getId())
             $f->setRequired(true);
+
+
+        if ($this->user->id && ($this->getUser()->hasRole(\App\Auth\Acl::ROLE_STAFF) || $this->getUser()->hasRole(\App\Auth\Acl::ROLE_CLIENT)) ) {
+            $list = \Tk\Form\Field\Option\ArrayObjectIterator::create(\App\Db\CourseMap::create()->findActive($this->institution->id));
+            $this->form->addField(new Field\Select('selCourse[]', $list))->setLabel('Course Selection')->setNotes('This list only shows active and enrolled courses. Use the enrollment form in the edit course page if your course is not visible.')->setTabGroup('Courses')->addCssClass('tk-dualSelect')->setAttr('data-title', 'Courses');
+            $arr = \App\Db\CourseMap::create()->findByUserId($this->user->id)->toArray('id');
+            $this->form->setFieldValue('selCourse', $arr);
+
+        }
+
 
         $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
         $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
@@ -149,7 +155,9 @@ class Edit extends Iface
             $form->addFieldError('newPassword', 'Please enter a new password.');
         }
 
-        $form->addFieldErrors(\App\Db\UserValidator::create($this->user)->getErrors());
+        //$form->addFieldErrors(\App\Db\UserValidator::create($this->user)->getErrors());
+        $form->addFieldErrors($this->user->validate());
+
 
         if ($form->hasErrors()) {
             return;
@@ -159,7 +167,6 @@ class Edit extends Iface
             $this->user->password = \App\Factory::hashPassword($this->form->getFieldValue('newPassword'), $this->user);
         }
 
-
         // Add user to institution
         if ($this->institution) {
             $this->user->institutionId = $this->institution->id;
@@ -168,7 +175,18 @@ class Edit extends Iface
         }
         $this->user->save();
 
+        $list = \App\Db\CourseMap::create()->findActive($this->institution->id);
+        $selected = $form->getFieldValue('selCourse');
 
+        /** @var \App\Db\Course $course */
+        foreach ($list as $course) {
+            if (in_array($course->id, $selected)) {
+                \App\Db\CourseMap::create()->addUser($course->id, $this->user->id);
+            } else {
+                \App\Db\CourseMap::create()->deleteUser($course->id, $this->user->id);
+            }
+        }
+        
         \App\Alert::addSuccess('User record saved!');
         if ($form->getTriggeredEvent()->getName() == 'update') {
             \App\Uri::createHomeUrl('/userManager.html')->redirect();

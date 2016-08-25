@@ -151,6 +151,15 @@
 
     $(options.parentElement).closest('form').submit(function() {
       selected.find('option').prop('selected', true);
+      var countSelected = $(options.parentElement + ' .selected-count').text();
+      if (countSelected == 0) {
+        $('<option>', {
+          value: '',
+          text: ''
+        }).appendTo(selected);
+
+        console.log(selected);
+      }
     });
 
     $(options.parentElement).find('input[type="text"]').keypress(function(e) {
@@ -187,7 +196,7 @@
   function createDualListBox(options) {
     $(options.element).parent().attr('id', options.parent);
 
-    $(options.parentElement).append(
+    $(options.parentElement).prepend(
       '<div class="row">' +
       (options.horizontal == false ? '   <div class="col-sm-5">' : '   <div class="col-sm-6">') +
       '       <h4><span class="unselected-title"></span> <small>- showing <span class="unselected-count"></span></small></h4>' +

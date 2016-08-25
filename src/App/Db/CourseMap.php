@@ -95,8 +95,27 @@ class CourseMap extends Mapper
         if ($institutionId) {
             $where .= sprintf(' AND a.institution_id = %d', (int)$institutionId);
         }
-        return $this->selectFrom($from, $where, $tool);
+        $arr = $this->selectFrom($from, $where, $tool);
+        return $arr;
     }
+
+    /**
+     *
+     * @param int $institutionId
+     * @param Tool $tool
+     * @return ArrayObject|Course[]
+     */
+    public function findActive($institutionId = 0, $tool = null)
+    {
+        $now = \Tk\Date::create()->format(\Tk\Date::ISO_DATE);
+        // `now >= start && now <= finish`          =>      active
+        $where = sprintf('%s >= start AND %s <= finish ', $this->getDb()->quote($now), $this->getDb()->quote($now));
+        if ($institutionId) {
+            $where .= sprintf(' AND a.institution_id = %d', (int)$institutionId);
+        }
+        return $this->select($where, $tool);
+    }
+
 
     /**
      * Find filtered records
@@ -151,7 +170,10 @@ class CourseMap extends Mapper
         return $res;
     }
 
-    
+
+
+
+    // Enrolment direct queries - user_course holds the currently enrolld users
 
     /**
      * @param int $courseId
@@ -198,10 +220,14 @@ class CourseMap extends Mapper
     }
     
 
-    // Enrolment queries
+    //  Enrolment Pending List Queries - The enrollment table holds emails of users that are to be enrolled on their next login.
 
-
-
+    /**
+     * @param $institutionId
+     * @param $email
+     * @param null $tool
+     * @return ArrayObject
+     */
     public function findPendingEnrollment($institutionId, $email, $tool = null)
     {
         $from = sprintf('%s a, enrollment b, %s c LEFT JOIN user_course d ON (c.id = d.user_id) ', $this->getDb()->quoteParameter($this->getTable()), $this->getDb()->quoteParameter('user'));
@@ -211,8 +237,6 @@ class CourseMap extends Mapper
     }
 
     /**
-     *
-     *
      * @param $courseId
      * @return array
      */
