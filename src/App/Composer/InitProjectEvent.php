@@ -18,7 +18,6 @@ use Tk\Util\SqlMigrate;
 class InitProjectEvent
 {
 
-
     /**
      * @param Event $event
      */
