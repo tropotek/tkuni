@@ -49,6 +49,7 @@ class FrontController extends \Tk\Kernel\HttpKernel
         $matcher = new \Tk\Routing\UrlMatcher($this->config['site.routes']);
         $this->dispatcher->addSubscriber(new \Tk\Listener\RouteListener($matcher));
         $this->dispatcher->addSubscriber(new Listener\StartupHandler($logger));
+        $this->dispatcher->addSubscriber(new \App\Listener\MasqueradeHandler());
 
         // Auth events
         $this->dispatcher->addSubscriber(new \App\Listener\AuthHandler());
@@ -68,6 +69,8 @@ class FrontController extends \Tk\Kernel\HttpKernel
 
         // (kernel.terminate)
         $this->dispatcher->addSubscriber(new Listener\ShutdownHandler($logger));
+
+
 
 
 

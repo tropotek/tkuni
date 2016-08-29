@@ -212,6 +212,11 @@ class Edit extends Iface
         $fren = new \Tk\Form\Renderer\Dom($this->form);
         $template->appendTemplate($this->form->getId(), $fren->show()->getTemplate());
 
+
+        $template->setAttr('msq', 'href', \App\Uri::create()->reset()->set('msq', $this->user->id));
+
+
+
         return $this->getPage()->setPageContent($this->getTemplate());
     }
 
@@ -236,7 +241,7 @@ class Edit extends Iface
         <div class="row">
           <div class="col-lg-12">
             <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
-            <a href="javascript:;" class="btn btn-default" choice="update"><i class="fa fa-user-secret"></i> <span>Masquerade</span></a>
+            <a href="javascript:;" class="btn btn-default" choice="update" var="msq"><i class="fa fa-user-secret"></i> <span>Masquerade</span></a>
           </div>
         </div>
       </div>

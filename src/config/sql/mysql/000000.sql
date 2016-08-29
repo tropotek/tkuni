@@ -21,10 +21,10 @@ CREATE TABLE IF NOT EXISTS `user` (
   `active` TINYINT(1) NOT NULL DEFAULT 1,
   `hash` VARCHAR(128) NOT NULL DEFAULT '',
   `notes` TEXT,
-  `last_login` DATETIME,
+  `last_login` TIMESTAMP,
   `del` TINYINT(1) NOT NULL DEFAULT 0,
-  `modified` DATETIME NOT NULL,
-  `created` DATETIME NOT NULL,
+  `modified` TIMESTAMP NOT NULL,
+  `created` TIMESTAMP NOT NULL,
   UNIQUE KEY `user_username` (`institution_id`, `username`),
   UNIQUE KEY `user_email` (`institution_id`, `email`),
   UNIQUE KEY `user_hash` (`institution_id`, `hash`)
@@ -44,8 +44,8 @@ CREATE TABLE IF NOT EXISTS `institution` (
   `active` TINYINT(1) NOT NULL DEFAULT 1,
   `hash` VARCHAR(128) NOT NULL DEFAULT '',
   `del` TINYINT(1) NOT NULL DEFAULT 0,
-  `modified` DATETIME NOT NULL,
-  `created` DATETIME NOT NULL,
+  `modified` TIMESTAMP NOT NULL,
+  `created` TIMESTAMP NOT NULL,
 --  UNIQUE KEY `inst_domain` (`domain`),
   UNIQUE KEY `inst_hash` (`hash`)
 ) ENGINE=InnoDB;
@@ -70,11 +70,11 @@ CREATE TABLE IF NOT EXISTS `course` (
   `code` VARCHAR(64) NOT NULL DEFAULT '',
   `email` VARCHAR(255) NOT NULL DEFAULT '',
   `description` TEXT,
-  `start` DATETIME NOT NULL,
-  `finish` DATETIME NOT NULL,
+  `start` TIMESTAMP NOT NULL,
+  `finish` TIMESTAMP NOT NULL,
   `del` TINYINT(1) NOT NULL DEFAULT 0,
-  `modified` DATETIME NOT NULL,
-  `created` DATETIME NOT NULL,
+  `modified` TIMESTAMP NOT NULL,
+  `created` TIMESTAMP NOT NULL,
   UNIQUE KEY `course_code_institution` (`code`, `institution_id`)
 ) ENGINE=InnoDB;
 

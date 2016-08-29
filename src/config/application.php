@@ -20,6 +20,8 @@ $config['template.public.path'] = '/html/admin';
 
 $config['system.timezone'] = 'Australia/Victoria';
 
+// TODO: implement this into the base config....
+$config['system.https'] = true;
 
 // -- AUTH CONFIG --
 

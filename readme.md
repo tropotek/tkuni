@@ -31,4 +31,5 @@ Next check the /src/App/sql folder for any .sql files you need to install to you
 
 
 
- Proposed new admin tempalte: https://almsaeedstudio.com
+Proposed new admin template - SmartTemplate: https://wrapbootstrap.com/theme/smartadmin-responsive-webapp-WB0573SK0  
+

@@ -1,7 +1,6 @@
 <?php
 namespace App\Listener;
 
-
 use Tk\EventDispatcher\SubscriberInterface;
 use Tk\Kernel\KernelEvents;
 use Tk\Event\GetResponseEvent;
@@ -28,8 +27,9 @@ class MasqueradeHandler implements SubscriberInterface
 
     /**
      * Add any headers to the final response.
-     * 
+     *
      * @param GetResponseEvent $event
+     * @throws \Tk\Exception
      */
     public function onMasquerade(GetResponseEvent $event)
     {
@@ -39,16 +39,15 @@ class MasqueradeHandler implements SubscriberInterface
         if (!$msqUser) {
             throw new \Tk\Exception('Cannot masquerade as this user.');
         }
+
         // TODO: Check if already masquerading, disalow nested masquerading for now.
-
         $user = \App\Factory::getConfig()->getUser();
+        if (!$this->canMasquerade($user, $msqUser)) {
+            throw new \Tk\Exception('Cannot masquerade as this user.');
+        }
 
-
-
-
-
-
-
+        vd('TODO: Implement Masquerading...');
+        
     }
 
     /**
@@ -58,16 +57,18 @@ class MasqueradeHandler implements SubscriberInterface
      */
     protected function canMasquerade($user, $msqUser)
     {
-        $inst = $user->getInstitution();
-        $mInst = $msqUser->getInstitution();
-
         switch($user->role) {
             case \App\Auth\Acl::ROLE_ADMIN:
                 return true;
             case \App\Auth\Acl::ROLE_CLIENT:
-                //if ($msqUser->hasRole())
+                $inst = $user->getInstitution();
+                $mInst = $msqUser->getInstitution();
+                if (!$msqUser->hasRole(\App\Auth\Acl::ROLE_ADMIN) && $inst->id == $mInst->id)
+                    return true;
                 return false;
             case \App\Auth\Acl::ROLE_STAFF:
+                if ($msqUser->hasRole(\App\Auth\Acl::ROLE_STUDENT) && $user->institutionId == $msqUser->institutionId)
+                    return true;
                 return false;
         }
         return false;
