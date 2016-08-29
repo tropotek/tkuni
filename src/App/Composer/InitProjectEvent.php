@@ -89,18 +89,7 @@ STR;
             $htFile = $sitePath . '/.htaccess';
 
 
-            // TODO: Clean up the logic flow.
-
-            // 1. Ask to replace the config
-              // 1.1. If yes, delete the config file and prompt user for new values
-              // 1.2. Install the new config
-            // 2.  Check if DB already exists and contains any tables
-              // 2.1. If Yes, Ask to remove and install a fresh DB Schema
-              // 2.2. If No, Auto install new DB schema
-            // 3. Check required dirs exists
-              // 3.1. If No, then create them and change permissions (ie data folder)
-
-
+            // Check existing config file
             $overwrite = false; // Overwrite the existing Config if it exists
             if (@is_file($configInFile)) {
                 if ($isInstall && is_file($configFile)) {
@@ -124,7 +113,7 @@ STR;
                     if (!empty($phpUser)) {
                         $logPath = $phpUser . '/log/error.log';
                     }
-                    $configVars['system.log.path'] = "'$logPath'";
+                    $configVars['system.log.path'] = $logPath;
                 }
 
                 // update the config contents string
@@ -162,9 +151,10 @@ STR;
             }
 
             // Migrate database.
-            include $configFile;
-            $config = Config::getInstance();
-            try {
+            if ($isInstall) {
+                include $configFile;
+                $config = Config::getInstance();
+
                 $db = Pdo::getInstance($config['db.name'], $config->getGroup('db'));
                 $tables = $db->getTableList();
                 $overwrite = false;
@@ -173,110 +163,17 @@ STR;
                 }
                 if ($overwrite) {
                     $db->dropAllTables(true);
+
+                    $io->write(self::green('Installing Site Database'));
+                    $migrate = new SqlMigrate($db, $config->getSitePath());
+                    $migrate->setTmpPath($config->getTempPath());
+                    $files = $migrate->migrate($config->getSrcPath() . '/config/sql');
+                    foreach ($files as $f) {
+                        $io->write(self::green('  .' . $f));
+                    }
+                    $io->write(self::green('As this is a new DB install login into the site using User: `admin` and Password: `password` and configure your site as needed.'));
                 }
-
-                $io->write(self::green('Installing Site Database'));
-                $migrate = new SqlMigrate($db, $config->getSitePath());
-                $migrate->setTmpPath($config->getTempPath());
-                $files = $migrate->migrate($config->getSrcPath() . '/config/sql');
-                foreach ($files as $f) {
-                    $io->write(self::green('  ' . $f));
-                }
-                echo "\n";
-
-
-            } catch (\Exception $e) {
-                //$io->write(self::red($e->__toString()));
             }
-
-            if ($isInstall) {
-                $io->write(self::green('As this is a new install login into the site using User: `admin` and Password: `password` and configure your site as needed.'));
-            }
-
-
-
-//            if (@is_file($configInFile)) {
-//                $configContents = file_get_contents($configInFile);
-//
-//                if ($isInstall && @is_file($configFile)) {
-//                    $overwrite = $io->askConfirmation(self::warning('NOTICE: Are you sure you want to remove the existing installation data [N]: '), false);
-//                    if ($overwrite) {
-//                        // TODO: This should be asked after the DB is selected and exists in the new location (not here....)
-//                        try {
-//                            include $configFile;
-//                            $config = Config::getInstance();
-//                            $db = Pdo::getInstance($config['db.name'], $config->getGroup('db'));
-//                            $db->dropAllTables(true);
-//                        } catch (\Exception $e) {}
-//                        @unlink($configFile);
-//                        @unlink($htFile);
-//                    } else {
-//                        return;
-//                    }
-//                }
-//
-//                if (!@is_file($configFile)) {
-//                    $io->write(self::green('Setup new config.php'));
-//                    $configVars = self::userInput($io);
-//                    foreach ($configVars as $k => $v) {
-//                        $configContents = self::setConfigValue($k, self::quote($v), $configContents);
-//                    }
-//                } else {
-//
-//                    $io->write(self::green('Update existing config.php'));
-//                    $configContents = file_get_contents($configFile);
-//                }
-//                // Set dev/debug mode
-//                if ($composer->getPackage()->isDev()) {
-//                    $configContents = self::setConfigValue('debug', 'true', $configContents);
-//                    $logPath = '/home/user/log/error.log';
-//                    if (!empty($phpUser['dir'])) {
-//                        $logPath = $phpUser['dir'] . '/log/error.log';
-//                    }
-//                    $configContents = self::setConfigValue('system.log.path', "'$logPath'", $configContents);
-//                }
-//                $io->write(self::green('Saving config.php'));
-//                file_put_contents($configFile, $configContents);
-//            }
-//
-//            if (!@is_file($htFile) && @is_file($htInFile)) {
-//                $io->write(self::green('Setup new .htaccess file'));
-//                copy($htInFile, $htFile);
-//                $path = '/';
-//                if (preg_match('/(.+)\/public_html\/(.*)/', $sitePath, $regs)) {
-//                    $user = basename($regs[1]);
-//                    $path = '/~' . $user . '/' . $regs[2] . '/';
-//                }
-//                $path = trim($io->ask(self::bold('What is the site base URL path [' . $path . ']: '), $path));
-//                if (!$path) $path = '/';
-//                $io->write(self::green('Saving new .htaccess file'));
-//                $buf = file_get_contents($htFile);
-//                $buf = str_replace('RewriteBase /', 'RewriteBase ' . $path, $buf);
-//                file_put_contents($htFile, $buf);
-//            }
-//
-//            if (!is_dir($sitePath . '/data')) {
-//                $io->write(self::green('Creating: Site data directory `/data`'));
-//                mkdir($sitePath . '/data', 0777, true);
-//            }
-//
-//            // Migrate the SQL db
-//            $io->write(self::green('Migrate the Database'));
-//
-//            include $configFile;
-//            $config = Config::getInstance();
-//            $db = Pdo::getInstance($config['db.name'], $config->getGroup('db'));
-//            $migrate = new SqlMigrate($db, $config->getSitePath());
-//            $migrate->setTmpPath($config->getTempPath());
-//            $files = $migrate->migrate($config->getSrcPath() . '/config/sql');
-//            foreach ($files as $f) {
-//                $io->write(self::green('  ' . $f));
-//            }
-//
-//            if ($isInstall) {
-//                $io->write(self::green('As this is a new install login into the site using User: `admin` and Password: `password` and configure your site as needed.'));
-//            }
-
         } catch (\Exception $e) {
             $io->write(self::red($e->__toString()));
         }
@@ -324,7 +221,7 @@ STR;
 
     static function green($str) { return '<fg=green>'.$str.'</>'; }
 
-    static function warning($str) { return '<fg=orange;options=bold>'.$str.'</>'; }
+    static function warning($str) { return '<fg=yellow;options=bold>'.$str.'</>'; }
 
     static function red($str) { return '<fg=white;bg=red>'.$str.'</>'; }
 
