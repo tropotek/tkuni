@@ -134,6 +134,7 @@ class Login extends Iface
                 $form->addError('Invalid username or password');
                 return;
             }
+
             if (!$result->isValid()) {
                 $form->addError( implode("<br/>\n", $result->getMessages()) );
                 return;

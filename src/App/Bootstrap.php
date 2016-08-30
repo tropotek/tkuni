@@ -99,6 +99,7 @@ class Bootstrap
             error_reporting(0);
             ini_set('display_errors', 'Off');
         }
+
         // --- HTTP only bootstrapping from here ---
         
         // * Request
@@ -119,6 +120,7 @@ class Bootstrap
 
         // Initiate the email gateway
         \App\Factory::getEmailGateway();
+
 
         return $config;
     }
