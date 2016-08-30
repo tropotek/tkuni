@@ -63,7 +63,7 @@ class Events extends Iface
                     'name' => '\\'.$className . '::' . $consName,
                     'value' => $constData['value'],
                     'eventClass' => '\\'.$constData['event'],
-                    'doc' => nl2br(preg_replace('/(?:(?:\r\n|\r|\n)\s*){2}/s', "\n", $constData['doc']))
+                    'doc' => nl2br($constData['doc'])
                 );
             }
         }
