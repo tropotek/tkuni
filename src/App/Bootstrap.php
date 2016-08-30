@@ -56,9 +56,6 @@ class Bootstrap
         // Include any config overriding settings
         include($config->getSrcPath() . '/config/config.php');
 
-        // Import settings from DB
-        $config->import(\Ts\Db\Data::create());
-
         // Set system timezone
         $tz = 'Australia/Victoria';
         if (isset($config['system.timezone']))
@@ -117,6 +114,8 @@ class Bootstrap
 
         // Initiate the default database connection
         \App\Factory::getDb();
+        // Import config settings from DB
+        $config->import(\Ts\Db\Data::create());
 
         // Initiate the email gateway
         \App\Factory::getEmailGateway();
