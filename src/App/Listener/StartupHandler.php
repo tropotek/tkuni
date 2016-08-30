@@ -3,7 +3,7 @@ namespace App\Listener;
 
 use Psr\Log\LoggerInterface;
 use Tk\EventDispatcher\SubscriberInterface;
-use Tk\Event\ControllerEvent;
+use Tk\Event\KernelEvent;
 
 
 /**
@@ -28,15 +28,16 @@ class StartupHandler implements SubscriberInterface
         $this->logger = $logger;
     }
 
-    public function onStartup(ControllerEvent $event)
+    public function onStartup(KernelEvent $event)
     {
+        $request = \App\Factory::getRequest();
         if ($this->logger) {
             $this->logger->info('------------------------------------------------');
             $this->logger->info('- Application');
             $this->logger->info('- ' . date('Y-m-d H:i:s'));
-            $this->logger->info('- ' . $event->getRequest()->getMethod() . ': ' . $event->getRequest()->getUri());
-            $this->logger->info('- ' . $event->getRequest()->getIp());
-            $this->logger->info('- ' . $event->getRequest()->getUserAgent());
+            $this->logger->info('- ' . $request->getMethod() . ': ' . $request->getUri());
+            $this->logger->info('- ' . $request->getIp());
+            $this->logger->info('- ' . $request->getUserAgent());
             if (\App\Factory::getSession()) {
                 $this->logger->info('- Session ID: ' . \App\Factory::getSession()->getId());
                 $this->logger->info('- Session Name: ' . \App\Factory::getSession()->getName());
@@ -52,6 +53,7 @@ class StartupHandler implements SubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(\Tk\Kernel\KernelEvents::CONTROLLER => 'onStartup');
+        //return array(\Tk\Kernel\KernelEvents::CONTROLLER => 'onStartup');
+        return array(\Tk\Kernel\KernelEvents::INIT  => 'onStartup');
     }
 }

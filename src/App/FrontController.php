@@ -44,15 +44,15 @@ class FrontController extends \Tk\Kernel\HttpKernel
     public function init()
     {
         $logger = $this->config->getLog();
-        
+
+        // (kernel.init)
+        $this->dispatcher->addSubscriber(new Listener\StartupHandler($logger));
+
         // (kernel.request)
         $matcher = new \Tk\Routing\UrlMatcher($this->config['site.routes']);
         $this->dispatcher->addSubscriber(new \Tk\Listener\RouteListener($matcher));
-        $this->dispatcher->addSubscriber(new Listener\StartupHandler($logger));
-        $this->dispatcher->addSubscriber(new \App\Listener\MasqueradeHandler());
-
-        // Auth events
         $this->dispatcher->addSubscriber(new \App\Listener\AuthHandler());
+        $this->dispatcher->addSubscriber(new \App\Listener\MasqueradeHandler());
 
         // (kernel.controller)
         

@@ -6,6 +6,7 @@ use App\Event\AuthEvent;
 use Tk\Kernel\KernelEvents;
 use Tk\Event\KernelEvent;
 use Tk\Event\ControllerEvent;
+use Tk\Event\GetResponseEvent;
 
 /**
  * Class StartupHandler
@@ -23,7 +24,7 @@ class AuthHandler implements SubscriberInterface
      *
      * @param KernelEvent $event
      */
-    public function onSystemInit(KernelEvent $event)
+    public function onSystemInit(GetResponseEvent $event)
     {
         // if a user is in the session add them to the global config
         // Only the identity details should be in the auth session not the full user object, to save space and be secure.
@@ -222,7 +223,7 @@ class AuthHandler implements SubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            KernelEvents::INIT => 'onSystemInit',
+            KernelEvents::REQUEST => 'onSystemInit',
             KernelEvents::CONTROLLER => 'onControllerAccess',
             \App\Auth\AuthEvents::LOGIN => 'onLogin',
             \App\Auth\AuthEvents::LOGIN_SUCCESS => 'onLoginSuccess',
