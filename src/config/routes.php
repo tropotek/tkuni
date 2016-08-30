@@ -50,6 +50,11 @@ $routes->add('admin-user-profile', new \Tk\Routing\Route('/admin/profile.html', 
 $routes->add('admin-settings', new \Tk\Routing\Route('/admin/settings.html', 'App\Controller\Admin\Settings::doDefault', $params));
 
 
+// Dev pages
+$routes->add('dev-events', new \Tk\Routing\Route('/admin/dev/events.html', 'App\Controller\Admin\Dev\Events::doDefault', $params));
+
+
+
 
 // Client Pages
 $params = array('access' => \App\Auth\Acl::ROLE_CLIENT);
@@ -88,9 +93,6 @@ $routes->add('student-home', new \Tk\Routing\Route('/student/index.html', 'App\C
 $routes->add('student-home-base', new \Tk\Routing\Route('/student/', 'App\Controller\Student\Index::doDefault', $params));
 
 $routes->add('student-user-profile', new \Tk\Routing\Route('/student/profile.html', 'App\Controller\Ui\Profile::doDefault', $params));
-
-
-
 
 
 

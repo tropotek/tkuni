@@ -224,12 +224,12 @@ class AuthHandler implements SubscriberInterface
         return array(
             KernelEvents::INIT => 'onSystemInit',
             KernelEvents::CONTROLLER => 'onControllerAccess',
-            'auth.onLogin' => 'onLogin',
-            'auth.onLogin.success' => 'onLoginSuccess',
-            'auth.onLogout' => 'onLogout',
-            'auth.onRegister' => 'onRegister',
-            'auth.onRegisterConfirm' => 'onRegisterConfirm',
-            'auth.onRecover' => 'onRecover'
+            \App\Auth\AuthEvents::LOGIN => 'onLogin',
+            \App\Auth\AuthEvents::LOGIN_SUCCESS => 'onLoginSuccess',
+            \App\Auth\AuthEvents::LOGOUT => 'onLogout',
+            \App\Auth\AuthEvents::REGISTER => 'onRegister',
+            \App\Auth\AuthEvents::REGISTER_CONFIRM => 'onRegisterConfirm',
+            \App\Auth\AuthEvents::RECOVER => 'onRecover'
         );
     }
     

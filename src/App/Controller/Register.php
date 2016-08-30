@@ -144,7 +144,7 @@ class Register extends Iface
         $event->set('pass', $this->form->getFieldValue('password'));
         $event->set('institution', $this->institution);
         $event->set('templatePath', $this->getPage()->getTemplatePath());
-        $this->dispatcher->dispatch('auth.onRegister', $event);
+        $this->dispatcher->dispatch(\App\Auth\AuthEvents::REGISTER, $event);
 
         // Redirect with message to check their email
         \App\Alert::addSuccess('Your New Account Has Been Created.');
@@ -189,7 +189,7 @@ class Register extends Iface
         $event->set('user', $user);
         $event->set('institution', $institution);
         $event->set('templatePath', $this->getTemplatePath());
-        $this->dispatcher->dispatch('auth.onRegisterConfirm', $event);
+        $this->dispatcher->dispatch(\App\Auth\AuthEvents::REGISTER_CONFIRM, $event);
         
         \App\Alert::addSuccess('Account Activation Successful.');
         \Tk\Uri::create('/login.html')->redirect();

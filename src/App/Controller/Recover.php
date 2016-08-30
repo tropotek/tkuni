@@ -99,7 +99,7 @@ class Recover extends Iface
         $event->set('password', $newPass);
         $event->set('templatePath', $this->getPage()->getTemplatePath());
         
-        $this->dispatcher->dispatch('auth.onRecover', $event);
+        $this->dispatcher->dispatch(\App\Auth\AuthEvents::RECOVER, $event);
         
         \App\Alert::addSuccess('You new access details have been sent to your email address.');
         \Tk\Uri::create()->redirect();

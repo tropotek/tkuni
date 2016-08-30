@@ -153,7 +153,7 @@ class Login extends Iface
         try {
             // Fire the login event to allow developing of misc auth plugins
             $event = new \App\Event\AuthEvent($auth, $form->getValues());
-            $this->getConfig()->getEventDispatcher()->dispatch('auth.onLogin', $event);
+            $this->getConfig()->getEventDispatcher()->dispatch(\App\Auth\AuthEvents::LOGIN, $event);
             
             $result = $event->getResult();
             if (!$result) {
@@ -164,7 +164,7 @@ class Login extends Iface
                 $form->addError( implode("<br/>\n", $result->getMessages()) );
             }
 
-            $this->getConfig()->getEventDispatcher()->dispatch('auth.onLogin.success', $event);
+            $this->getConfig()->getEventDispatcher()->dispatch(\App\Auth\AuthEvents::LOGIN_SUCCESS, $event);
 
         } catch (\Exception $e) {
             $form->addError($e->getMessage());

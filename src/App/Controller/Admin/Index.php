@@ -30,15 +30,6 @@ class Index extends Iface
      */
     public function doDefault(Request $request)
     {
-
-//        $consumer = new \IMSGlobal\LTI\ToolProvider\ToolConsumer('Testing0001' , \App\Factory::getLtiDataConnector());
-//        $consumer->name = 'Testing';
-//        //$consumer->secret = 'ThisIsASecret!';
-//        $consumer->enabled = TRUE;
-//        $consumer->setKey('Testing0002');
-//        vd($consumer);
-//        $consumer->save();
-
         return $this->show();
     }
 

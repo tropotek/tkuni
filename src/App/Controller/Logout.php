@@ -23,7 +23,7 @@ class Logout extends Iface
     {
         
         $event = new \App\Event\AuthEvent($this->getConfig()->getAuth());
-        $this->getConfig()->getEventDispatcher()->dispatch('auth.onLogout', $event);
+        $this->getConfig()->getEventDispatcher()->dispatch(\App\Auth\AuthEvents::LOGOUT, $event);
         
         \Tk\Uri::create('/index.html')->redirect();
     }

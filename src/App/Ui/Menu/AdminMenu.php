@@ -53,6 +53,10 @@ class AdminMenu extends \Dom\Renderer\Renderer
 
         $template->insertText('username', $this->getUser()->name);
 
+        if ($this->getConfig()->isDebug()) {
+            $template->setChoice('debug');
+        }
+
         return $template;
     }
 
@@ -100,7 +104,13 @@ class AdminMenu extends \Dom\Renderer\Renderer
           <li><a href="/admin/settings.html"><i class="fa fa-cogs fa-fw"></i> Settings</a></li>
           <li><a href="/admin/userManager.html"><i class="fa fa-users fa-fw"></i> Users</a></li>
           <li><a href="/admin/institutionManager.html"><i class="fa fa-university fa-fw"></i> Institutions</a></li>
-          <!-- li><a href="/admin/courseManager.html"><i class="fa fa-university fa-fw"></i> <strike>Courses</strike></a></li -->
+          
+          <li choice="debug"><a href="#"><i class="fa fa-bug fa-fw"></i> Development<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level">
+              <li choice="debug"><a href="/admin/dev/events.html"><i class="fa fa-empire fa-fw"></i> Events</a></li>
+            </ul>
+          </li>
+          
         </ul>
       </div>
     </div>

@@ -39,6 +39,7 @@ class ShutdownHandler implements SubscriberInterface
             $this->logger->info('Peek Mem:  ' . self::bytes2String(memory_get_peak_usage(), 4));
             $this->logger->info('------------------------------------------------' . \PHP_EOL);
         }
+
     }
 
     /**

@@ -111,7 +111,7 @@ class Provider extends ToolProvider\ToolProvider
             if ($this->dispatcher) {    // This event should redirect the user to their homepage.
                 $event = new \App\Event\AuthEvent($auth, $_POST);
                 $event->set('user', $user);
-                $this->dispatcher->dispatch('auth.onLogin.success', $event);
+                $this->dispatcher->dispatch(\App\Auth\AuthEvents::LOGIN_SUCCESS, $event);
             }
         } catch (\Exception $e) {
             $this->reason = $e->getMessage();
