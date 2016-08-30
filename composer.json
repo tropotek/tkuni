@@ -26,10 +26,10 @@
     },
     "scripts":  {
         "post-install-cmd":  [
-            "App\\Composer\\InitProjectEvent::postInstall"
+            "Ts\\Composer\\InitProjectEvent::postInstall"
         ],
         "post-update-cmd":  [
-            "App\\Composer\\InitProjectEvent::postUpdate"
+            "Ts\\Composer\\InitProjectEvent::postUpdate"
         ]
     },
     "extra":  {

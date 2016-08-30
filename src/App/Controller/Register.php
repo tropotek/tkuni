@@ -1,11 +1,11 @@
 <?php
 namespace App\Controller;
 
-use App\Alert;
 use Tk\Form;
 use Tk\Form\Field;
 use Tk\Form\Event;
 use Tk\Request;
+use Tk\Auth\AuthEvents;
 
 
 /**
@@ -113,8 +113,8 @@ class Register extends Iface
             $form->addFieldError('passwordConf');
         }
         
-        $form->addFieldErrors(\App\Db\UserValidator::create($this->user)->getErrors());
-        $form->addFieldErrors(\App\Db\InstitutionValidator::create($this->institution)->getErrors());
+        $form->addFieldErrors($this->user->validate());
+        $form->addFieldErrors($this->institution->validate());
         
         if ($form->hasErrors()) {
             return;
@@ -144,7 +144,7 @@ class Register extends Iface
         $event->set('pass', $this->form->getFieldValue('password'));
         $event->set('institution', $this->institution);
         $event->set('templatePath', $this->getPage()->getTemplatePath());
-        $this->dispatcher->dispatch(\App\Auth\AuthEvents::REGISTER, $event);
+        $this->dispatcher->dispatch(AuthEvents::REGISTER, $event);
 
         // Redirect with message to check their email
         \App\Alert::addSuccess('Your New Account Has Been Created.');
@@ -189,7 +189,7 @@ class Register extends Iface
         $event->set('user', $user);
         $event->set('institution', $institution);
         $event->set('templatePath', $this->getTemplatePath());
-        $this->dispatcher->dispatch(\App\Auth\AuthEvents::REGISTER_CONFIRM, $event);
+        $this->dispatcher->dispatch(AuthEvents::REGISTER_CONFIRM, $event);
         
         \App\Alert::addSuccess('Account Activation Successful.');
         \Tk\Uri::create('/login.html')->redirect();
@@ -205,9 +205,11 @@ class Register extends Iface
             
         } else {
             $template->setChoice('form');
+
             // Render the form
 //            $ren = new \Tk\Form\Renderer\DomStatic($this->form, $template);
 //            $ren->show();
+
             // Render the form
             $fren = new \Tk\Form\Renderer\Dom($this->form);
             $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());

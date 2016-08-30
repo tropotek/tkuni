@@ -2,9 +2,9 @@
 namespace App\Listener;
 
 use Tk\EventDispatcher\SubscriberInterface;
-use App\Event\AuthEvent;
+use Tk\Event\AuthEvent;
+use Tk\Auth\AuthEvents;
 use Tk\Kernel\KernelEvents;
-use Tk\Event\KernelEvent;
 use Tk\Event\ControllerEvent;
 use Tk\Event\GetResponseEvent;
 
@@ -225,12 +225,12 @@ class AuthHandler implements SubscriberInterface
         return array(
             KernelEvents::REQUEST => 'onSystemInit',
             KernelEvents::CONTROLLER => 'onControllerAccess',
-            \App\Auth\AuthEvents::LOGIN => 'onLogin',
-            \App\Auth\AuthEvents::LOGIN_SUCCESS => 'onLoginSuccess',
-            \App\Auth\AuthEvents::LOGOUT => 'onLogout',
-            \App\Auth\AuthEvents::REGISTER => 'onRegister',
-            \App\Auth\AuthEvents::REGISTER_CONFIRM => 'onRegisterConfirm',
-            \App\Auth\AuthEvents::RECOVER => 'onRecover'
+            AuthEvents::LOGIN => 'onLogin',
+            AuthEvents::LOGIN_SUCCESS => 'onLoginSuccess',
+            AuthEvents::LOGOUT => 'onLogout',
+            AuthEvents::REGISTER => 'onRegister',
+            AuthEvents::REGISTER_CONFIRM => 'onRegisterConfirm',
+            AuthEvents::RECOVER => 'onRecover'
         );
     }
     

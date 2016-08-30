@@ -5,6 +5,7 @@ use Tk\Form;
 use Tk\Form\Field;
 use Tk\Form\Event;
 use Tk\Request;
+use Tk\Auth\AuthEvents;
 
 
 /**
@@ -99,7 +100,7 @@ class Recover extends Iface
         $event->set('password', $newPass);
         $event->set('templatePath', $this->getPage()->getTemplatePath());
         
-        $this->dispatcher->dispatch(\App\Auth\AuthEvents::RECOVER, $event);
+        $this->dispatcher->dispatch(AuthEvents::RECOVER, $event);
         
         \App\Alert::addSuccess('You new access details have been sent to your email address.');
         \Tk\Uri::create()->redirect();

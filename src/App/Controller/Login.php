@@ -6,6 +6,8 @@ use Tk\Form;
 use Tk\Form\Field;
 use Tk\Form\Event;
 use Tk\Auth;
+use Tk\Auth\AuthEvents;
+use Tk\Event\AuthEvent;
 
 
 /**
@@ -152,8 +154,8 @@ class Login extends Iface
 
         try {
             // Fire the login event to allow developing of misc auth plugins
-            $event = new \App\Event\AuthEvent($auth, $form->getValues());
-            $this->getConfig()->getEventDispatcher()->dispatch(\App\Auth\AuthEvents::LOGIN, $event);
+            $event = new AuthEvent($auth, $form->getValues());
+            $this->getConfig()->getEventDispatcher()->dispatch(AuthEvents::LOGIN, $event);
             
             $result = $event->getResult();
             if (!$result) {
@@ -164,7 +166,7 @@ class Login extends Iface
                 $form->addError( implode("<br/>\n", $result->getMessages()) );
             }
 
-            $this->getConfig()->getEventDispatcher()->dispatch(\App\Auth\AuthEvents::LOGIN_SUCCESS, $event);
+            $this->getConfig()->getEventDispatcher()->dispatch(AuthEvents::LOGIN_SUCCESS, $event);
 
         } catch (\Exception $e) {
             $form->addError($e->getMessage());
