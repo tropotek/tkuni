@@ -13,6 +13,14 @@ $config = \Tk\Config::getInstance();
 include_once(__DIR__ . '/session.php');
 include_once(__DIR__ . '/routes.php');
 
+$config['site.title'] = 'Tk2Uni Site';
+$config['site.email'] = 'tkwiki@example.com';
+
+//$config['site.meta.keywords'] = '';
+//$config['site.meta.description'] = '';
+//$config['site.global.js'] = '';
+//$config['site.global.css'] = '';
+
 
 // Template folders for pages
 $config['template.admin.path'] = '/html/admin';
@@ -29,6 +37,10 @@ $config['system.https'] = true;
 // Warning if you change this after user account creation
 // users will have to reset/recover their passwords
 $config['hash.function'] = 'md5';
+
+//$config['site.client.registration'] = false;
+//$config['site.client.activation'] = false;
+
 
 // DbTable
 $config['system.auth.dbtable.tableName'] = 'user';
