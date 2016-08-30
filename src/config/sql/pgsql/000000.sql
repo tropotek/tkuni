@@ -50,20 +50,8 @@ CREATE TABLE IF NOT EXISTS institution (
   modified TIMESTAMP DEFAULT NOW(),
   created TIMESTAMP DEFAULT NOW(),
   FOREIGN KEY (owner_id) REFERENCES "user"(id) ON DELETE CASCADE,
---  CONSTRAINT inst_domain UNIQUE (domain),
   CONSTRAINT inst_hash UNIQUE (hash)
 );
-
--- ----------------------------
--- user_institution
--- User belongs to institution for `staff and `student` roles.
--- ----------------------------
--- CREATE TABLE IF NOT EXISTS user_institution (
--- 	user_id INTEGER NOT NULL,
--- 	institution_id INTEGER NOT NULL,
--- 	FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE,
--- 	FOREIGN KEY (institution_id) REFERENCES institution(id)  ON DELETE CASCADE
--- );
 
 -- ----------------------------
 --  Course Data Tables
@@ -93,22 +81,6 @@ CREATE TABLE IF NOT EXISTS user_course (
   CONSTRAINT user_course_key UNIQUE (user_id, course_id),
   FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE,
   FOREIGN KEY (course_id) REFERENCES course(id) ON DELETE CASCADE
-);
-
--- --------------------------------------------------------
--- Table structure for table `data`
--- This is the replacement for the `settings` table
--- Use foreign_id = 0 and foreign_key = `system` for site settings (suggestion only)
--- Can be used for other object data using the foreign_id and foreign_key
--- foreign_key can be a class namespace or anything describing the data group
--- --------------------------------------------------------
-CREATE TABLE IF NOT EXISTS data (
-  id SERIAL PRIMARY KEY,
-  foreign_id INTEGER NOT NULL DEFAULT 0,
-  foreign_key VARCHAR(128) NOT NULL DEFAULT '',
-  key VARCHAR(255),
-  value TEXT,
-  CONSTRAINT data_foreign_fields UNIQUE (foreign_id, foreign_key, key)
 );
 
 -- --------------------------------------------------------
@@ -153,21 +125,16 @@ VALUES
   (1, 'student@unimelb.edu.au')
 ;
 
--- INSERT INTO user_institution (user_id, institution_id)
--- VALUES
---   (3, 1),
---   (4, 1)
--- ;
-
 INSERT INTO data (foreign_id, foreign_key, key, value) VALUES
-  (0, 'system', 'site.title', 'Tk2Uni Site'),
-  (0, 'system', 'site.email', 'tkwiki@example.com'),
+--   (0, 'system', 'site.title', 'Tk2Uni Site'),
+--   (0, 'system', 'site.email', 'tkwiki@example.com'),
   (0, 'system', 'site.meta.keywords', ''),
   (0, 'system', 'site.meta.description', ''),
   (0, 'system', 'site.global.js', ''),
-  (0, 'system', 'site.global.css', ''),
-  (0, 'system', 'site.client.registration', 'site.client.registration'),
-  (0, 'system', 'site.client.activation', 'site.client.activation')
+  (0, 'system', 'site.global.css', '')
+--   ,
+--   (0, 'system', 'site.client.registration', 'site.client.registration'),
+--   (0, 'system', 'site.client.activation', 'site.client.activation')
 ;
 
 

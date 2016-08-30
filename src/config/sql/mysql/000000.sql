@@ -51,16 +51,6 @@ CREATE TABLE IF NOT EXISTS `institution` (
 ) ENGINE=InnoDB;
 
 -- ----------------------------
--- user_institution
--- User belongs to institution for `staff and `student` roles.
--- ----------------------------
-# CREATE TABLE IF NOT EXISTS `user_institution` (
-# 	`user_id` INT(10) UNSIGNED NOT NULL DEFAULT 0,
-# 	`institution_id` INT(10) NOT NULL DEFAULT 0,
-#   UNIQUE KEY `ui_key` (`user_id`, `institution_id`)
-# ) ENGINE=InnoDB;
-
--- ----------------------------
 --  Course Data Tables
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `course` (
@@ -88,21 +78,6 @@ CREATE TABLE IF NOT EXISTS `user_course` (
   UNIQUE KEY `user_course_key` (`user_id`, `course_id`)
 ) ENGINE=InnoDB;
 
--- --------------------------------------------------------
--- Table structure for table `data`
--- This is the replacement for the `settings` table
--- Use foreign_id = 0 and foreign_key = `system` for site settings (suggestion only)
--- Can be used for other object data using the foreign_id and foreign_key
--- foreign_key can be a class namespace or anything describing the data group
--- --------------------------------------------------------
-CREATE TABLE IF NOT EXISTS `data` (
-  `id` INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  `foreign_id` INT(10) NOT NULL DEFAULT 0,
-  `foreign_key` VARCHAR(128) NOT NULL DEFAULT '',
-  `key` VARCHAR(255) NOT NULL DEFAULT '',
-  `value` TEXT,
-  UNIQUE KEY `data_foreign_fields` (`foreign_id`, `foreign_key`, `key`)
-) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 --
@@ -149,21 +124,16 @@ VALUES
   (1, 'student@unimelb.edu.au')
 ;
 
-# INSERT INTO `user_institution` (`user_id`, `institution_id`)
-# VALUES
-#   (3, 1),
-#   (4, 1)
-# ;
-
 INSERT INTO `data` (`foreign_id`, `foreign_key`, `key`, `value`) VALUES
-  (0, 'system', 'site.title', 'Tk2Uni Site'),
-  (0, 'system', 'site.email', 'tkwiki@example.com'),
+#   (0, 'system', 'site.title', 'Tk2Uni Site'),
+#   (0, 'system', 'site.email', 'tkwiki@example.com'),
   (0, 'system', 'site.meta.keywords', ''),
   (0, 'system', 'site.meta.description', ''),
   (0, 'system', 'site.global.js', ''),
-  (0, 'system', 'site.global.css', ''),
-  (0, 'system', 'site.client.registration', 'site.client.registration'),
-  (0, 'system', 'site.client.activation', 'site.client.activation')
+  (0, 'system', 'site.global.css', '')
+#   ,
+#   (0, 'system', 'site.client.registration', 'site.client.registration'),
+#   (0, 'system', 'site.client.activation', 'site.client.activation')
 ;
 
 
