@@ -103,34 +103,6 @@ class Login extends Iface
     }
 
     /**
-     * show()
-     *
-     * @return \App\Page\Iface
-     */
-    public function show()
-    {
-        $template = $this->getTemplate();
-
-        // Render the form
-        $fren = new \Tk\Form\Renderer\Dom($this->form);
-        $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());
-
-        if ($this->institution) {
-            if ($this->institution->getLogoUrl()) {
-                $template->setChoice('instLogo');
-                $template->setAttr('instLogo', 'src', $this->institution->getLogoUrl()->toString());
-            }
-            $template->insertText('instName', $this->institution->name);
-            $template->setChoice('inst');
-        }
-        if ($this->getConfig()->get('site.client.registration')) {
-            $template->setChoice('register');
-        }
-
-        return $this->getPage()->setPageContent($template);
-    }
-
-    /**
      * doLogin()
      *
      * @param \Tk\Form $form
@@ -156,14 +128,15 @@ class Login extends Iface
             // Fire the login event to allow developing of misc auth plugins
             $event = new AuthEvent($auth, $form->getValues());
             $this->getConfig()->getEventDispatcher()->dispatch(AuthEvents::LOGIN, $event);
-            
+
             $result = $event->getResult();
             if (!$result) {
-                $form->addError('Invalid Username or password.');
+                $form->addError('Invalid username or password');
                 return;
             }
             if (!$result->isValid()) {
                 $form->addError( implode("<br/>\n", $result->getMessages()) );
+                return;
             }
 
             $this->getConfig()->getEventDispatcher()->dispatch(AuthEvents::LOGIN_SUCCESS, $event);
@@ -171,6 +144,34 @@ class Login extends Iface
         } catch (\Exception $e) {
             $form->addError($e->getMessage());
         }
+    }
+
+    /**
+     * show()
+     *
+     * @return \App\Page\Iface
+     */
+    public function show()
+    {
+        $template = $this->getTemplate();
+
+        // Render the form
+        $fren = new \Tk\Form\Renderer\Dom($this->form);
+        $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());
+
+        if ($this->institution) {
+            if ($this->institution->getLogoUrl()) {
+                $template->setChoice('instLogo');
+                $template->setAttr('instLogo', 'src', $this->institution->getLogoUrl()->toString());
+            }
+            $template->insertText('instName', $this->institution->name);
+            $template->setChoice('inst');
+        }
+        if ($this->getConfig()->get('site.client.registration')) {
+            $template->setChoice('register');
+        }
+
+        return $this->getPage()->setPageContent($template);
     }
     
     /**

@@ -57,7 +57,7 @@ class Bootstrap
         include($config->getSrcPath() . '/config/config.php');
 
         // Import settings from DB
-        $config->import(\App\Db\Data::create());
+        $config->import(\Ts\Db\Data::create());
 
         // Set system timezone
         $tz = 'Australia/Victoria';

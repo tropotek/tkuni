@@ -53,9 +53,13 @@ class Register extends Iface
     /**
      * @param Request $request
      * @return \App\Page\Iface
+     * @throws \Tk\Exception
      */
     public function doDefault(Request $request)
     {
+        if (!$this->getConfig()->get('site.client.registration')) {
+            throw new \Tk\Exception('User registration disabled.');
+        }
         if ($request->has('h')) {
             $this->doConfirmation($request);
         }

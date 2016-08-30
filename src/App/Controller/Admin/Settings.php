@@ -23,7 +23,7 @@ class Settings extends Iface
     protected $form = null;
 
     /**
-     * @var \App\Db\Data|null
+     * @var \Ts\Db\Data|null
      */
     protected $data = null;
 
@@ -34,7 +34,7 @@ class Settings extends Iface
     public function __construct()
     {
         parent::__construct('Site Settings');
-        $this->data = \App\Db\Data::create();
+        $this->data = \Ts\Db\Data::create();
     }
 
     /**
