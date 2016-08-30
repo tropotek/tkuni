@@ -5,7 +5,6 @@ use Tk\EventDispatcher\EventDispatcher;
 use Tk\Controller\ControllerResolver;
 
 
-
 /**
  * Class FrontController
  *
@@ -46,7 +45,7 @@ class FrontController extends \Tk\Kernel\HttpKernel
         $logger = $this->config->getLog();
 
         // (kernel.init)
-        $this->dispatcher->addSubscriber(new Listener\StartupHandler($logger));
+        $this->dispatcher->addSubscriber(new \Ts\Listener\StartupHandler($logger, $this->config->getRequest(), $this->config->getSession()));
 
         // (kernel.request)
         $matcher = new \Tk\Routing\UrlMatcher($this->config['site.routes']);
@@ -59,16 +58,16 @@ class FrontController extends \Tk\Kernel\HttpKernel
         // (kernel.view)
 
         // (kernel.response)
-        $this->dispatcher->addSubscriber(new Listener\ResponseHandler(Factory::getDomModifier()));
+        $this->dispatcher->addSubscriber(new \Ts\Listener\ResponseHandler(Factory::getDomModifier()));
 
         // (kernel.finish_request)
 
         // (kernel.exception)
         $this->dispatcher->addSubscriber(new \Tk\Listener\ExceptionListener($logger));
-        $this->dispatcher->addSubscriber(new \App\Listener\ExceptionEmailListener($logger));
+        $this->dispatcher->addSubscriber(new \Ts\Listener\ExceptionEmailListener($logger, $this->config->get('site.email'), $this->config->get('site.title')));
 
         // (kernel.terminate)
-        $this->dispatcher->addSubscriber(new Listener\ShutdownHandler($logger));
+        $this->dispatcher->addSubscriber(new \Ts\Listener\ShutdownHandler($logger, $this->config->getScripTime()));
 
     }
     

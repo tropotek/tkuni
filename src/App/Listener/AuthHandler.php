@@ -22,7 +22,7 @@ class AuthHandler implements SubscriberInterface
     /**
      * do any auth init setup
      *
-     * @param KernelEvent $event
+     * @param GetResponseEvent $event
      */
     public function onSystemInit(GetResponseEvent $event)
     {
