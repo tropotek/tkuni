@@ -149,7 +149,7 @@ class Factory
             $dm->add(new \Dom\Modifier\Filter\UrlPath($config->getSiteUrl()));
             $dm->add(new \Dom\Modifier\Filter\JsLast());
             $dm->add(new \Dom\Modifier\Filter\Less($config->getSitePath(), $config->getSiteUrl(), $config->getCachePath(),
-                array('dataUrl' => $config->getDataUrl(), 'templateUrl' => $config->getTemplateUrl())));
+                array('siuteUrl' => $config->getSiteUrl(), 'dataUrl' => $config->getDataUrl(), 'templateUrl' => $config->getTemplateUrl())));
             self::getConfig()->setDomModifier($dm);
         }
         return self::getConfig()->getDomModifier();
