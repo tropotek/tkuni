@@ -151,7 +151,7 @@ class Register extends Iface
         $this->dispatcher->dispatch(AuthEvents::REGISTER, $event);
 
         // Redirect with message to check their email
-        \App\Alert::addSuccess('Your New Account Has Been Created.');
+        \Ts\Alert::addSuccess('Your New Account Has Been Created.');
         $this->getConfig()->getSession()->set('h', $this->user->getHash());
 
         \Tk\Uri::create()->redirect();
@@ -176,7 +176,7 @@ class Register extends Iface
             throw new \InvalidArgumentException('Cannot locate user. Please contact administrator.');
         }
         if ($user->active == true) {
-            \App\Alert::addSuccess('Account Already Active.');
+            \Ts\Alert::addSuccess('Account Already Active.');
             \Tk\Uri::create('/login.html')->redirect();
         }
 
@@ -195,7 +195,7 @@ class Register extends Iface
         $event->set('templatePath', $this->getTemplatePath());
         $this->dispatcher->dispatch(AuthEvents::REGISTER_CONFIRM, $event);
         
-        \App\Alert::addSuccess('Account Activation Successful.');
+        \Ts\Alert::addSuccess('Account Activation Successful.');
         \Tk\Uri::create('/login.html')->redirect();
     }
 

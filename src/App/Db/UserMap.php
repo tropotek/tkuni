@@ -33,9 +33,10 @@ class UserMap extends Mapper
             $this->dbMap->addProperty(new Db\Text('name'));
             $this->dbMap->addProperty(new Db\Text('role'));
             $this->dbMap->addProperty(new Db\Text('email'));
+            $this->dbMap->addProperty(new Db\Date('lastLogin', 'last_login'));
+            $this->dbMap->addProperty(new Db\Text('notes'));
             $this->dbMap->addProperty(new Db\Boolean('active'));
             $this->dbMap->addProperty(new Db\Text('hash'));
-            $this->dbMap->addProperty(new Db\Date('lastLogin', 'last_login'));
             $this->dbMap->addProperty(new Db\Date('modified'));
             $this->dbMap->addProperty(new Db\Date('created'));
 
@@ -61,6 +62,7 @@ class UserMap extends Mapper
             $this->formMap->addProperty(new Form\Text('name'));
             $this->formMap->addProperty(new Form\Text('role'));
             $this->formMap->addProperty(new Form\Text('email'));
+            $this->formMap->addProperty(new Form\Text('notes'));
             $this->formMap->addProperty(new Form\Boolean('active'));
 
             $this->setPrimaryKey($this->formMap->currentProperty('key')->getColumnName());

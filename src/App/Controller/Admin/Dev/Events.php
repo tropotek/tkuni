@@ -54,7 +54,13 @@ class Events extends Iface
         return $this->show();
     }
 
-    protected function convertEventData($eventData) {
+    /**
+     * Convert the event data to a format suitable for the Table renderer.
+     * @param $eventData
+     * @return array
+     */
+    protected function convertEventData($eventData)
+    {
         $data = array();
         foreach ($eventData as $className => $eventArray) {
 
@@ -69,9 +75,6 @@ class Events extends Iface
         }
         return $data;
     }
-
-
-
 
     /**
      * @return \App\Page\Iface

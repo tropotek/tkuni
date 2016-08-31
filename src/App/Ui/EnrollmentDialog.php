@@ -109,13 +109,13 @@ class EnrollmentDialog extends DialogBox
             }
         }
         if (count($info)) {
-            \App\Alert::addInfo(count($info) . ' records already enrolled and ignored.');
+            \Ts\Alert::addInfo(count($info) . ' records already enrolled and ignored.');
         }
         if (count($success)) {
-            \App\Alert::addSuccess(count($success) . ' records successfully added to the enrolment list.');
+            \Ts\Alert::addSuccess(count($success) . ' records successfully added to the enrolment list.');
         }
         if (count($error)) {
-            \App\Alert::addError(count($error) . ' records contained errors.');
+            \Ts\Alert::addError(count($error) . ' records contained errors.');
         }
 
         $request->getUri()->redirect();

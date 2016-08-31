@@ -141,7 +141,7 @@ class Edit extends Iface
             \App\Db\CourseMap::create()->addUser($this->course->id, $this->getUser()->id);
         }
 
-        \App\Alert::addSuccess('Record saved!');
+        \Ts\Alert::addSuccess('Record saved!');
 
         if ($form->getTriggeredEvent()->getName() == 'update') {
             \App\Uri::createHomeUrl('/courseManager.html')->redirect();

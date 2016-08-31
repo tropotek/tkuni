@@ -16,34 +16,6 @@ class DbTable extends \Tk\Auth\Adapter\DbTable
 {
 
 
-
-    /**
-     * @param $username
-     * @return \stdClass
-     */
-//    protected function getUser($username)
-//    {
-//        $active = '';
-//        if ($this->activeColumn) {
-//            $active = 'AND '.$this->db->quoteParameter($this->activeColumn).' = 1';
-//        }
-//        $sql = sprintf('SELECT * FROM %s WHERE %s = %s %s LIMIT 1',
-//            $this->db->quoteParameter($this->tableName),
-//            $this->db->quoteParameter($this->usernameColumn),
-//            $this->db->quote($username),
-//            $active
-//        );
-//
-//        $stmt = $this->db->prepare($sql);
-//        if (!$stmt->execute()) {
-//            $errorInfo = $this->db->errorInfo();
-//            $e = new \Tk\Db\Exception($errorInfo[2]);
-//            $e->setDump('Dump: ' . print_r($this->db->getLastLog(), true));
-//        }
-//
-//        return $stmt->fetchObject();
-//    }
-
     /**
      *
      * @return Result
@@ -60,7 +32,6 @@ class DbTable extends \Tk\Auth\Adapter\DbTable
 
         try {
             $user = $this->getUser($username);
-            // TODO: The password should be modified/hashed before it is sent to the adapter for processing ???
             if ($user && $this->hashPassword($password, $user) == $user->{$this->passwordColumn}) {
                 return new Result(Result::SUCCESS, array('username' => $username, 'institutionId' => $user->institution_id));
             }

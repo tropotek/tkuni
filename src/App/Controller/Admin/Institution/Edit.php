@@ -214,7 +214,7 @@ class Edit extends Iface
         $data->save();
         $this->institution->save();
 
-        \App\Alert::addSuccess('Record saved!');
+        \Ts\Alert::addSuccess('Record saved!');
         if ($form->getTriggeredEvent()->getName() == 'update')
             \Tk\Uri::create('admin/institutionManager.html')->redirect();
         \Tk\Uri::create()->set('institutionId', $this->institution->id)->redirect();

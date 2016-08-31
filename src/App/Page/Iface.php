@@ -79,21 +79,21 @@ abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
             $template->setChoice('login');
         }
 
-        if (\App\Alert::hasMessages()) {
-            $noticeTpl = \App\Alert::getInstance()->show()->getTemplate();
+        if (\Ts\Alert::hasMessages()) {
+            $noticeTpl = \Ts\Alert::getInstance()->show()->getTemplate();
             $template->replaceTemplate('alerts', $noticeTpl)->setChoice('alerts');
             $template->setChoice('alerts');
         }
 
         $siteUrl = $this->getConfig()->getSiteUrl();
         $dataUrl = $this->getConfig()->getDataUrl();
+        $themeUrl = $this->getTemplatePath();
 
         $js = <<<JS
-
 var config = {
   siteUrl : '$siteUrl',
   dataUrl : '$dataUrl',
-  themeUrl: ''
+  themeUrl: '$themeUrl'
 };
 JS;
         $template->appendJs($js, array('data-jsl-priority' => -1000));
@@ -107,6 +107,22 @@ JS;
 
 
         return $this;
+    }
+
+    /**
+     *
+     */
+    protected function renderPageTitle()
+    {
+        $template = $this->getTemplate();
+        if ($this->getController()->getPageTitle()) {
+            $template->setTitleText(trim($this->getController()->getPageTitle() . ' - ' . $template->getTitleText(), '- '));
+            $template->insertText('pageHeading', $this->getController()->getPageTitle());
+            $template->setChoice('pageHeading');
+        }
+        if ($this->getConfig()->isDebug()) {
+            $template->setTitleText(trim('DEBUG: ' . $template->getTitleText(), '- '));
+        }
     }
 
     /**
@@ -129,19 +145,6 @@ JS;
             $this->template->insertHtml('content', $content);
         }
         return $this;
-    }
-
-    protected function renderPageTitle()
-    {
-        $template = $this->getTemplate();
-        if ($this->getController()->getPageTitle()) {
-            $template->setTitleText(trim($this->getController()->getPageTitle() . ' - ' . $template->getTitleText(), '- '));
-            $template->insertText('pageHeading', $this->getController()->getPageTitle());
-            $template->setChoice('pageHeading');
-        }
-        if ($this->getConfig()->isDebug()) {
-            $template->setTitleText(trim('DEBUG: ' . $template->getTitleText(), '- '));
-        }
     }
 
     /**

@@ -58,7 +58,7 @@ class AuthHandler implements SubscriberInterface
             if (!$user->getAcl()->hasRole($role)) {
                 // Could redirect to a authentication error page...
                 // Could cause a loop if the permissions are stuffed
-                \App\Alert::getInstance()->addWarning('You do not have access to the requested page.');
+                \Ts\Alert::getInstance()->addWarning('You do not have access to the requested page.');
                 \Tk\Uri::create($user->getHomeUrl())->redirect();
             }
         }
