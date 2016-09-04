@@ -8,7 +8,7 @@
     "time": "2015-05-01",
     "license": "MIT",
     "version": "master",
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "authors":  [
          {
             "name": "Michael Mifsud",
