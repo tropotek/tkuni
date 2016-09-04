@@ -51,7 +51,7 @@
         "ttek/tk-site": "~2.0",
         "ttek/tk-form": "~2.0",
         "ttek/tk-table": "~2.0",
-        "ttek/tk-plugin": "~1.0",
+        "ttek/tk-plugin": "~2.0",
         "ttek/tk-debug": "~2.0",
         "monolog/monolog": "^1.13@dev",
         "imsglobal/lti": "~3.0"

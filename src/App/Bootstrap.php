@@ -110,13 +110,17 @@ class Bootstrap
         Factory::getSession();
 
 
-        // initialise Dom Loader
-        \App\Factory::getDomLoader();
 
         // Initiate the default database connection
         \App\Factory::getDb();
         // Import config settings from DB
         $config->import(\Ts\Db\Data::create());
+
+        // initialise Dom Loader
+        \App\Factory::getDomLoader();
+
+        // Init the plugins
+        \Tk\Plugin\Factory::getInstance($config);
 
         // Initiate the email gateway
         \App\Factory::getEmailGateway();

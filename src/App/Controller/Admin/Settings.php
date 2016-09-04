@@ -127,7 +127,8 @@ class Settings extends Iface
         <div class="row">
           <div class="col-lg-12">
             <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
-            <a href="/admin/userManager.html" class="btn btn-default"><i class="fa fa-users"></i> <span>Admin Users</span></a>
+            <a href="/admin/plugins.html" class="btn btn-default"><i class="fa fa-plug"></i> <span>Plugins</span></a>
+            <a href="/admin/userManager.html" class="btn btn-default"><i class="fa fa-users"></i> <span>Users</span></a>
           </div>
         </div>
       </div>
