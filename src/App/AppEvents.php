@@ -16,9 +16,11 @@ class AppEvents
      * Called after the controller Controller/Iface::show() method has been called
      * Use this to modify the controller content.
      *
-     * You will need to check what the controller class is to know where you are
-     *   EG:
+     * You will need to check what the controller class is to know where you are.
+     *
+     * <code>
      *     if ($event->get('controller') instanceof \App\Controller\Index) { ... }
+     * </code>
      *
      * @event \Tk\EventDispatcher\Event
      * @var string
