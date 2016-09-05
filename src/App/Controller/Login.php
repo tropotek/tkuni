@@ -54,6 +54,7 @@ class Login extends Iface
         $this->form->addField(new Field\Password('password'));
 
         $this->form->addField(new Event\Button('login', array($this, 'doLogin')));
+        $this->form->addField(new Event\Link('forgotPassword', \Tk\Uri::create('/recover.html')));
 
     }
 
