@@ -25,7 +25,7 @@ class AppEvents
      * @event \Tk\EventDispatcher\Event
      * @var string
      */
-    const CONTROLLER_RENDER_POST = 'controller.render.post';
+    const CONTROLLER_POST_RENDER = 'controller.render.post';
 
     /**
      * Called at the end the Page/Iface::pageInit() method
@@ -34,7 +34,7 @@ class AppEvents
      * @event \Tk\EventDispatcher\Event
      * @var string
      */
-    const PAGE_INIT_POST = 'page.init.post';
+    const PAGE_POST_RENDER = 'page.render.post';
 
 
 

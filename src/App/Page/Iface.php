@@ -108,7 +108,7 @@ JS;
         $event->set('template', $template);
         $event->set('page', $this);
         $event->set('controller', $this->getController());
-        \App\Factory::getEventDispatcher()->dispatch(\App\AppEvents::CONTROLLER_RENDER_POST, $event);
+        \App\Factory::getEventDispatcher()->dispatch(\App\AppEvents::PAGE_POST_RENDER, $event);
 
         return $this;
     }
@@ -141,7 +141,7 @@ JS;
         $event = new \Tk\EventDispatcher\Event();
         $event->set('controllerContent', $content);
         $event->set('controller', $this->getController());
-        \App\Factory::getEventDispatcher()->dispatch(\App\AppEvents::CONTROLLER_RENDER_POST, $event);
+        \App\Factory::getEventDispatcher()->dispatch(\App\AppEvents::CONTROLLER_POST_RENDER, $event);
 
         $this->renderPageTitle();
         if (!$content) return $this;
