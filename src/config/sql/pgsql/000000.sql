@@ -125,13 +125,13 @@ VALUES
   (1, 'student@unimelb.edu.au')
 ;
 
-INSERT INTO data (foreign_id, foreign_key, key, value) VALUES
---   (0, 'system', 'site.title', 'Tk2Uni Site'),
---   (0, 'system', 'site.email', 'tkwiki@example.com'),
-  (0, 'system', 'site.meta.keywords', ''),
-  (0, 'system', 'site.meta.description', ''),
-  (0, 'system', 'site.global.js', ''),
-  (0, 'system', 'site.global.css', '')
+-- INSERT INTO data (foreign_id, foreign_key, key, value) VALUES
+-- --   (0, 'system', 'site.title', 'Tk2Uni Site'),
+-- --   (0, 'system', 'site.email', 'tkwiki@example.com'),
+--   (0, 'system', 'site.meta.keywords', ''),
+--   (0, 'system', 'site.meta.description', ''),
+--   (0, 'system', 'site.global.js', ''),
+--   (0, 'system', 'site.global.css', '')
 --   ,
 --   (0, 'system', 'site.client.registration', 'site.client.registration'),
 --   (0, 'system', 'site.client.activation', 'site.client.activation')

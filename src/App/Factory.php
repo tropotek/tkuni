@@ -12,7 +12,14 @@ use Tk\Db\Pdo;
  */
 class Factory
 {
-    
+    static $LTI_DB_PREFIX = '';
+
+    /**
+     * @var \Tk\Config
+     */
+    static $config = null;
+
+
     /**
      * getConfig
      *
@@ -22,19 +29,24 @@ class Factory
      */
     public static function getConfig($sitePath = '', $siteUrl = '')
     {
-        return \Tk\Config::getInstance($sitePath, $siteUrl);
+        if (!self::$config) {
+            self::$config = \Tk\Config::getInstance($sitePath, $siteUrl);
+            // Include any config overriding settings
+            include(self::$config->getVendorPath() . '/ttek/tk-site/config/default.php');
+            include(self::$config->getSrcPath() . '/config/config.php');
+        }
+        return self::$config;
     }
 
     /**
      * getRequest
      *
      * @return \IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector_pdo
-     * @todo: This may need to be moved to a factory in an Lti lib?????
      */
     public static function getLtiDataConnector()
     {
         if (!self::getConfig()->getLtiDataConnector()) {
-            $obj = \IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector::getDataConnector('', self::getDb(), 'pdo');
+            $obj = \IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector::getDataConnector(self::$LTI_DB_PREFIX, self::getDb(), 'pdo');
             self::getConfig()->setLtiDataConnector($obj);
         }
         return self::getConfig()->getLtiDataConnector();
@@ -78,8 +90,7 @@ class Factory
     {
         if (!self::getConfig()->getSession()) {
             $adapter = null;
-            //$adapter = new \Tk\Session\Adapter\Database( self::getDb(), 'session', new \Tk\Encrypt());
-            //$obj = new \Tk\Session($adapter, self::getConfig(), self::getRequest(), self::getCookie());
+            $adapter = new \Tk\Session\Adapter\Database(self::getDb(), new \Tk\Encrypt());
             $obj = \Tk\Session::getInstance($adapter, self::getConfig(), self::getRequest(), self::getCookie());
             self::getConfig()->setSession($obj);
         }
@@ -149,7 +160,7 @@ class Factory
             $dm->add(new \Dom\Modifier\Filter\UrlPath($config->getSiteUrl()));
             $dm->add(new \Dom\Modifier\Filter\JsLast());
             $dm->add(new \Dom\Modifier\Filter\Less($config->getSitePath(), $config->getSiteUrl(), $config->getCachePath(),
-                array('siuteUrl' => $config->getSiteUrl(), 'dataUrl' => $config->getDataUrl(), 'templateUrl' => $config->getTemplateUrl())));
+                array('siteUrl' => $config->getSiteUrl(), 'dataUrl' => $config->getDataUrl(), 'templateUrl' => $config->getTemplateUrl())));
             self::getConfig()->setDomModifier($dm);
         }
         return self::getConfig()->getDomModifier();
@@ -255,7 +266,7 @@ class Factory
             case '\App\Auth\Adapter\DbTable':
                 $adapter = new \App\Auth\Adapter\DbTable(
                     $config->getDb(),
-                    $config['system.auth.dbtable.tableName'],
+                    \Tk\Db\Map\Mapper::$DB_PREFIX . str_replace(\Tk\Db\Map\Mapper::$DB_PREFIX, '', $config['system.auth.dbtable.tableName']),
                     $config['system.auth.dbtable.usernameColumn'],
                     $config['system.auth.dbtable.passwordColumn'],
                     $config['system.auth.dbtable.activeColumn']);

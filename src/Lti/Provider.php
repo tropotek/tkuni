@@ -109,12 +109,13 @@ class Provider extends ToolProvider\ToolProvider
 
             // fire loginSuccess....
             if ($this->dispatcher) {    // This event should redirect the user to their homepage.
-                $event = new \App\Event\AuthEvent($auth, $_POST);
+                $event = new \Tk\Event\AuthEvent($auth, $_POST);
                 $event->set('user', $user);
-                $this->dispatcher->dispatch(\App\Auth\AuthEvents::LOGIN_SUCCESS, $event);
+                $this->dispatcher->dispatch(\Tk\Auth\AuthEvents::LOGIN_SUCCESS, $event);
             }
         } catch (\Exception $e) {
-            $this->reason = $e->getMessage();
+            vd($e->__toString());
+            $this->reason = $e->__toString();
             $this->message = $e->getMessage();  // This will be shown in the host app
             $this->ok = false;
             return;

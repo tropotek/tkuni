@@ -57,10 +57,8 @@ class Bootstrap
         include($config->getSrcPath() . '/config/config.php');
 
         // Set system timezone
-        $tz = 'Australia/Victoria';
         if (isset($config['system.timezone']))
-            $tz = $config['system.timezone'];
-        date_default_timezone_set($tz);
+            date_default_timezone_set($config['system.timezone']);
         
         \Tk\Uri::$BASE_URL_PATH = $config->getSiteUrl();
 

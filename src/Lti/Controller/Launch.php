@@ -95,13 +95,17 @@ class Launch extends Iface
     public function __makeTemplate()
     {
         $xhtml = <<<XHTML
-<div class="">
-    <div class="col-lg-12">
-      <div class="alert alert-danger" var="row">
-        <!-- button class="close noblock" data-dismiss="alert">&times;</button -->
-        <h4><i choice="icon" var="icon"></i> <strong var="title">LTI Access Error</strong></h4>
-        <span var="message">Sorry, there was an error connecting you to the application</span>
-      </div>
+<div class="content">
+    <div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+          <div class="alert alert-danger" var="row">
+            <!-- button class="close noblock" data-dismiss="alert">&times;</button -->
+            <h4><i choice="icon" var="icon"></i> <strong var="title">LTI Access Error</strong></h4>
+            <span var="message">Sorry, there was an error connecting you to the application</span>
+          </div>
+        </div>
+    </div>
     </div>
 </div>
 XHTML;

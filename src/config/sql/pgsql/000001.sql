@@ -6,7 +6,7 @@
 
 -- TODO: Have to convert this for pgsql from mysql
 
-CREATE TABLE lti2_consumer (
+CREATE TABLE _lti2_consumer (
   consumer_pk int(11) NOT NULL AUTO_INCREMENT,
   name varchar(50) NOT NULL,
   consumer_key256 varchar(256) NOT NULL,
@@ -29,10 +29,10 @@ CREATE TABLE lti2_consumer (
   PRIMARY KEY (consumer_pk)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-ALTER TABLE lti2_consumer
-  ADD UNIQUE INDEX lti2_consumer_consumer_key_UNIQUE (consumer_key256 ASC);
+ALTER TABLE _lti2_consumer
+  ADD UNIQUE INDEX _lti2_consumer_consumer_key_UNIQUE (consumer_key256 ASC);
 
-CREATE TABLE lti2_tool_proxy (
+CREATE TABLE _lti2_tool_proxy (
   tool_proxy_pk int(11) NOT NULL AUTO_INCREMENT,
   tool_proxy_id varchar(32) NOT NULL,
   consumer_pk int(11) NOT NULL,
@@ -42,28 +42,28 @@ CREATE TABLE lti2_tool_proxy (
   PRIMARY KEY (tool_proxy_pk)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-ALTER TABLE lti2_tool_proxy
-  ADD CONSTRAINT lti2_tool_proxy_lti2_consumer_FK1 FOREIGN KEY (consumer_pk)
-REFERENCES lti2_consumer (consumer_pk);
+ALTER TABLE _lti2_tool_proxy
+  ADD CONSTRAINT _lti2_tool_proxy__lti2_consumer_FK1 FOREIGN KEY (consumer_pk)
+REFERENCES _lti2_consumer (consumer_pk);
 
-ALTER TABLE lti2_tool_proxy
-  ADD INDEX lti2_tool_proxy_consumer_id_IDX (consumer_pk ASC);
+ALTER TABLE _lti2_tool_proxy
+  ADD INDEX _lti2_tool_proxy_consumer_id_IDX (consumer_pk ASC);
 
-ALTER TABLE lti2_tool_proxy
-  ADD UNIQUE INDEX lti2_tool_proxy_tool_proxy_id_UNIQUE (tool_proxy_id ASC);
+ALTER TABLE _lti2_tool_proxy
+  ADD UNIQUE INDEX _lti2_tool_proxy_tool_proxy_id_UNIQUE (tool_proxy_id ASC);
 
-CREATE TABLE lti2_nonce (
+CREATE TABLE _lti2_nonce (
   consumer_pk int(11) NOT NULL,
   value varchar(32) NOT NULL,
   expires datetime NOT NULL,
   PRIMARY KEY (consumer_pk, value)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-ALTER TABLE lti2_nonce
-  ADD CONSTRAINT lti2_nonce_lti2_consumer_FK1 FOREIGN KEY (consumer_pk)
-REFERENCES lti2_consumer (consumer_pk);
+ALTER TABLE _lti2_nonce
+  ADD CONSTRAINT _lti2_nonce__lti2_consumer_FK1 FOREIGN KEY (consumer_pk)
+REFERENCES _lti2_consumer (consumer_pk);
 
-CREATE TABLE lti2_context (
+CREATE TABLE _lti2_context (
   context_pk int(11) NOT NULL AUTO_INCREMENT,
   consumer_pk int(11) NOT NULL,
   lti_context_id varchar(255) NOT NULL,
@@ -73,14 +73,14 @@ CREATE TABLE lti2_context (
   PRIMARY KEY (context_pk)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-ALTER TABLE lti2_context
-  ADD CONSTRAINT lti2_context_lti2_consumer_FK1 FOREIGN KEY (consumer_pk)
-REFERENCES lti2_consumer (consumer_pk);
+ALTER TABLE _lti2_context
+  ADD CONSTRAINT _lti2_context__lti2_consumer_FK1 FOREIGN KEY (consumer_pk)
+REFERENCES _lti2_consumer (consumer_pk);
 
-ALTER TABLE lti2_context
-  ADD INDEX lti2_context_consumer_id_IDX (consumer_pk ASC);
+ALTER TABLE _lti2_context
+  ADD INDEX _lti2_context_consumer_id_IDX (consumer_pk ASC);
 
-CREATE TABLE lti2_resource_link (
+CREATE TABLE _lti2_resource_link (
   resource_link_pk int(11) AUTO_INCREMENT,
   context_pk int(11) DEFAULT NULL,
   consumer_pk int(11) DEFAULT NULL,
@@ -93,21 +93,21 @@ CREATE TABLE lti2_resource_link (
   PRIMARY KEY (resource_link_pk)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-ALTER TABLE lti2_resource_link
-  ADD CONSTRAINT lti2_resource_link_lti2_context_FK1 FOREIGN KEY (context_pk)
-REFERENCES lti2_context (context_pk);
+ALTER TABLE _lti2_resource_link
+  ADD CONSTRAINT _lti2_resource_link__lti2_context_FK1 FOREIGN KEY (context_pk)
+REFERENCES _lti2_context (context_pk);
 
-ALTER TABLE lti2_resource_link
-  ADD CONSTRAINT lti2_resource_link_lti2_resource_link_FK1 FOREIGN KEY (primary_resource_link_pk)
-REFERENCES lti2_resource_link (resource_link_pk);
+ALTER TABLE _lti2_resource_link
+  ADD CONSTRAINT _lti2_resource_link__lti2_resource_link_FK1 FOREIGN KEY (primary_resource_link_pk)
+REFERENCES _lti2_resource_link (resource_link_pk);
 
-ALTER TABLE lti2_resource_link
-  ADD INDEX lti2_resource_link_consumer_pk_IDX (consumer_pk ASC);
+ALTER TABLE _lti2_resource_link
+  ADD INDEX _lti2_resource_link_consumer_pk_IDX (consumer_pk ASC);
 
-ALTER TABLE lti2_resource_link
-  ADD INDEX lti2_resource_link_context_pk_IDX (context_pk ASC);
+ALTER TABLE _lti2_resource_link
+  ADD INDEX _lti2_resource_link_context_pk_IDX (context_pk ASC);
 
-CREATE TABLE lti2_user_result (
+CREATE TABLE _lti2_user_result (
   user_pk int(11) AUTO_INCREMENT,
   resource_link_pk int(11) NOT NULL,
   lti_user_id varchar(255) NOT NULL,
@@ -117,14 +117,14 @@ CREATE TABLE lti2_user_result (
   PRIMARY KEY (user_pk)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-ALTER TABLE lti2_user_result
-  ADD CONSTRAINT lti2_user_result_lti2_resource_link_FK1 FOREIGN KEY (resource_link_pk)
-REFERENCES lti2_resource_link (resource_link_pk);
+ALTER TABLE _lti2_user_result
+  ADD CONSTRAINT _lti2_user_result__lti2_resource_link_FK1 FOREIGN KEY (resource_link_pk)
+REFERENCES _lti2_resource_link (resource_link_pk);
 
-ALTER TABLE lti2_user_result
-  ADD INDEX lti2_user_result_resource_link_pk_IDX (resource_link_pk ASC);
+ALTER TABLE _lti2_user_result
+  ADD INDEX _lti2_user_result_resource_link_pk_IDX (resource_link_pk ASC);
 
-CREATE TABLE lti2_share_key (
+CREATE TABLE _lti2_share_key (
   share_key_id varchar(32) NOT NULL,
   resource_link_pk int(11) NOT NULL,
   auto_approve tinyint(1) NOT NULL,
@@ -132,9 +132,9 @@ CREATE TABLE lti2_share_key (
   PRIMARY KEY (share_key_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-ALTER TABLE lti2_share_key
-  ADD CONSTRAINT lti2_share_key_lti2_resource_link_FK1 FOREIGN KEY (resource_link_pk)
-REFERENCES lti2_resource_link (resource_link_pk);
+ALTER TABLE _lti2_share_key
+  ADD CONSTRAINT _lti2_share_key__lti2_resource_link_FK1 FOREIGN KEY (resource_link_pk)
+REFERENCES _lti2_resource_link (resource_link_pk);
 
-ALTER TABLE lti2_share_key
-  ADD INDEX lti2_share_key_resource_link_pk_IDX (resource_link_pk ASC);
+ALTER TABLE _lti2_share_key
+  ADD INDEX _lti2_share_key_resource_link_pk_IDX (resource_link_pk ASC);
