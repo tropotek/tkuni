@@ -34,10 +34,11 @@ class MasqueradeHandler implements SubscriberInterface
     public function onMasquerade(GetResponseEvent $event)
     {
         $request = $event->getRequest();
-        if (!$request->has('msq')) return;
-        $msqUser = \App\Db\UserMap::create()->find($request->get('msq'));
+        if (!$request->has('msq') || !\App\Factory::getConfig()->getUser()) return;
+
+        $msqUser = \App\Db\UserMap::create()->findByhash($request->get('msq'), \App\Factory::getConfig()->getUser()->institutionId);
         if (!$msqUser) {
-            throw new \Tk\Exception('Cannot masquerade as this user.');
+            throw new \Tk\Exception('Masquerade user not found.');
         }
 
         // TODO: Check if already masquerading, disalow nested masquerading for now.
@@ -47,7 +48,7 @@ class MasqueradeHandler implements SubscriberInterface
         }
 
         vd('TODO: Implement Masquerading...');
-        
+
     }
 
     /**
@@ -57,6 +58,7 @@ class MasqueradeHandler implements SubscriberInterface
      */
     protected function canMasquerade($user, $msqUser)
     {
+        //if ($user->id == $msqUser->id) return false;
         switch($user->role) {
             case \App\Auth\Acl::ROLE_ADMIN:
                 return true;
