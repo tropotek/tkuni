@@ -14,8 +14,8 @@ include_once(__DIR__ . '/session.php');
 include_once(__DIR__ . '/routes.php');
 
 // Template folders for pages
-$config['template.admin.path'] = '/html/admin';
-$config['template.public.path'] = '/html/admin';
+$config['template.admin.path'] = '/html/default';
+$config['template.public.path'] = '/html/default';
 
 $config['system.timezone'] = 'Australia/Victoria';
 
@@ -37,6 +37,7 @@ $config['hash.function'] = 'md5';
 \Ts\Db\Data::$DB_TABLE = '_data';
 \App\Factory::$LTI_DB_PREFIX = '_';
 \Tk\Db\Map\Mapper::$DB_PREFIX = ''; // Disabled, not used in this app
+
 
 // DbTable
 $config['system.auth.dbtable.tableName'] = 'user';

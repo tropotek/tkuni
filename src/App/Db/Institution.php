@@ -1,6 +1,7 @@
 <?php
 namespace App\Db;
 
+use Ts\Db\Data;
 
 /**
  *
@@ -150,6 +151,7 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface
             } else if ($this->getLtiConsumer()) {
                 $this->getLtiConsumer()->name = $this->name;
                 $this->getLtiConsumer()->enabled = true;
+                $this->getLtiConsumer()->setKey($this->getData()->get(self::LTI_KEY));
                 if ($this->getData()->get(self::LTI_SECRET))
                     $this->getLtiConsumer()->secret = $this->getData()->get(self::LTI_SECRET);
                 $this->getLtiConsumer()->save();
@@ -159,15 +161,6 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface
                 $this->ltiConsumer = $this->getLtiConsumer();
                 $this->ltiConsumer->enabled = false;
                 $this->ltiConsumer->save();
-
-                // Should we have a delete option?
-//                $this->getData()->remove(self::LTI_KEY);
-//                $this->getData()->remove(self::LTI_SECRET);
-//                $this->getData()->remove(self::LTI_CURRENT_KEY);
-//                $this->getData()->remove(self::LTI_CURRENT_ID);
-//                $this->getData()->save();
-//                if ($this->ltiConsumer)
-//                    $this->ltiConsumer->delete();
             }
         }
         parent::save();
@@ -277,37 +270,3 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     }
 
 }
-
-//class InstitutionValidator extends \Tk\Db\Map\Validator
-//{
-//
-//    /**
-//     * Implement the validating rules to apply.
-//     *
-//     */
-//    protected function validate()
-//    {
-//        /** @var Institution $obj */
-//        $obj = $this->getObject();
-//
-//        if (!$obj->name) {
-//            $this->addError('name', 'Invalid field value.');
-//        }
-//        if (!filter_var($obj->email, FILTER_VALIDATE_EMAIL)) {
-//            $this->addError('email', 'Please enter a valid email address');
-//        }
-//
-//        // Ensure the domain is unique if set.
-//        if ($obj->domain) {
-//            if (!preg_match('/^(?!\-)(?:[a-zA-Z\d\-]{0,62}[a-zA-Z\d]\.){1,126}(?!\d+)[a-zA-Z\d]{1,63}$/g', $obj->domain)) {
-//                $this->addError('domain', 'Please enter a valid domain name (EG: example.com.au)');
-//            } else {
-//                $dup = InstitutionMap::create()->findByDomain($obj->domain);
-//                if ($dup && $dup->getId() != $obj->getId()) {
-//                    $this->addError('domain', 'This domain name is already in use.');
-//                }
-//            }
-//        }
-//
-//    }
-//}

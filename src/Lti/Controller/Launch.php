@@ -61,6 +61,7 @@ class Launch extends Iface
             return $this->show();
         }
 
+        vd($_REQUEST);
         $tool = new \Lti\Provider(\App\Factory::getLtiDataConnector(), $this->institution, $this->getConfig()->getEventDispatcher());
         $tool->handleRequest();
 
@@ -95,8 +96,8 @@ class Launch extends Iface
     public function __makeTemplate()
     {
         $xhtml = <<<XHTML
-<div class="content">
-    <div class="container">
+<div class="">
+    <div class="">
     <div class="row">
         <div class="col-lg-12">
           <div class="alert alert-danger" var="row">

@@ -70,7 +70,8 @@ class Edit extends Iface
         $this->form->addField(new Field\File('logo', $request, $this->getConfig()->getDataPath()))->setAttr('accept', '.png,.jpg,.jpeg,.gif')->setTabGroup('Details');
         $insUrl = \Tk\Uri::create('/inst/'.$this->institution->getHash().'/login.html')->toString();
         if ($this->institution->domain)
-            $insUrl = \Tk\Uri::create('http://'.$this->institution->domain.'/login.html')->toString();
+            $insUrl = \Tk\Uri::create('/login.html')->setHost($this->institution->domain)->toString();
+
         $this->form->addField(new Field\Input('domain'))->setTabGroup('Details')->setNotes('Your Institution login URL is: <a href="'.$insUrl.'">'.$insUrl.'</a>' );
         $this->form->addField(new Field\Textarea('description'))->setTabGroup('Details');
         $this->form->addField(new Field\Checkbox('active'))->setTabGroup('Details');
@@ -92,7 +93,8 @@ class Edit extends Iface
         $this->form->addField(new Field\Checkbox(\App\Db\Institution::LTI_ENABLE))->setTabGroup('LTI')->setNotes('Enable the LTI V1 launch URL for LMS systems.');
         $lurl = \Tk\Uri::create('/lti/'.$this->institution->getHash().'/launch.html')->toString();
         if ($this->institution->domain)
-            $lurl = \Tk\Uri::create('http://'.$this->institution->domain.'/lti/launch.html')->toString();
+            $lurl = \Tk\Uri::create('/lti/launch.html')->setHos->toString();
+
         $this->form->addField(new Field\Html(\App\Db\Institution::LTI_URL, $lurl))->setLabel('Launch Url')->setTabGroup('LTI');
         $this->institution->getData()->set(\App\Db\Institution::LTI_URL, $lurl);
         $this->form->addField(new Field\Input(\App\Db\Institution::LTI_KEY))->setTabGroup('LTI');
@@ -119,37 +121,6 @@ class Edit extends Iface
         $this->form->execute();
 
         return $this->show();
-    }
-
-    /**
-     * @return \App\Page\Iface
-     */
-    public function show()
-    {
-        $template = $this->getTemplate();
-
-        if ($this->institution->id) {
-            //$courseTable = new \App\Ui\CourseTable($this->institution->id, \Tk\Uri::create('/admin/courseEdit.html')->set('institutionId', $this->institution->id));
-            $courseTable = new \App\Ui\CourseTable($this->institution->id);
-            $template->insertTemplate('courseTable', $courseTable->show());
-
-            $staffTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Acl::ROLE_STAFF, 0);
-            $template->insertTemplate('staffTable', $staffTable->show());
-
-            $studentTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Acl::ROLE_STUDENT, 0);
-            $template->insertTemplate('studentTable', $studentTable->show());
-
-            $template->addClass('editPanel', 'col-md-4');
-            $template->setChoice('showInfo');
-        } else {
-            $template->addClass('editPanel', 'col-md-12');
-        }
-
-        // Render the form
-        $fren = new \Tk\Form\Renderer\Dom($this->form);
-        $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());
-        
-        return $this->getPage()->setPageContent($template);
     }
 
     /**
@@ -218,6 +189,37 @@ class Edit extends Iface
         if ($form->getTriggeredEvent()->getName() == 'update')
             \Tk\Uri::create('admin/institutionManager.html')->redirect();
         \Tk\Uri::create()->set('institutionId', $this->institution->id)->redirect();
+    }
+
+    /**
+     * @return \App\Page\Iface
+     */
+    public function show()
+    {
+        $template = $this->getTemplate();
+
+        if ($this->institution->id) {
+            //$courseTable = new \App\Ui\CourseTable($this->institution->id, \Tk\Uri::create('/admin/courseEdit.html')->set('institutionId', $this->institution->id));
+            $courseTable = new \App\Ui\CourseTable($this->institution->id);
+            $template->insertTemplate('courseTable', $courseTable->show());
+
+            $staffTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Acl::ROLE_STAFF, 0);
+            $template->insertTemplate('staffTable', $staffTable->show());
+
+            $studentTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Acl::ROLE_STUDENT, 0);
+            $template->insertTemplate('studentTable', $studentTable->show());
+
+            $template->addClass('editPanel', 'col-md-4');
+            $template->setChoice('showInfo');
+        } else {
+            $template->addClass('editPanel', 'col-md-12');
+        }
+
+        // Render the form
+        $fren = new \Tk\Form\Renderer\Dom($this->form);
+        $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());
+        
+        return $this->getPage()->setPageContent($template);
     }
 
     /**
