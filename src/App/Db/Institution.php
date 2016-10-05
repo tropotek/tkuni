@@ -152,43 +152,6 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface
             }
         }
 
-//        $lurl = \Tk\Uri::create('/lti/'.$this->getHash().'/launch.html')->toString();
-//        if ($this->domain)
-//            $lurl = \Tk\Uri::create('http://'.$this->domain.'/lti/launch.html')->toString();
-//        $this->getData()->set(self::LTI_URL, $lurl);
-//        $this->getData()->save();
-//
-//        // Create the lti consumer
-//        // TODO: could this be simplefied?????? Using getLtiConsumer() ????
-//        if ($this->getData()->get(self::LTI_ENABLE) ) {
-//            if (!$this->getData()->has(self::LTI_CURRENT_KEY)) {
-//                $this->ltiConsumer = new \IMSGlobal\LTI\ToolProvider\ToolConsumer(null, \App\Factory::getLtiDataConnector());
-//                $this->ltiConsumer->setKey($this->getData()->get(self::LTI_KEY));
-//                if ($this->getData()->get(self::LTI_SECRET))
-//                    $this->ltiConsumer->secret = $this->getData()->get(self::LTI_SECRET);
-//                $this->ltiConsumer->enabled = true;
-//                $this->ltiConsumer->name = $this->name;
-//                $this->ltiConsumer->save();
-//                $this->getData()->set(self::LTI_CURRENT_KEY, $this->ltiConsumer->getKey());
-//                $this->getData()->set(self::LTI_CURRENT_ID, $this->ltiConsumer->getRecordId());
-//                $this->getData()->set(self::LTI_SECRET, $this->ltiConsumer->secret);
-//                $this->getData()->save();
-//            } else if ($this->getLtiConsumer()) {
-//                $this->getLtiConsumer()->name = $this->name;
-//                $this->getLtiConsumer()->enabled = true;
-//                $this->getLtiConsumer()->setKey($this->getData()->get(self::LTI_KEY));
-//                if ($this->getData()->get(self::LTI_SECRET))
-//                    $this->getLtiConsumer()->secret = $this->getData()->get(self::LTI_SECRET);
-//                $this->getLtiConsumer()->save();
-//            }
-//        } else {
-//            if ($this->getData()->has(self::LTI_CURRENT_KEY)) {
-//                $this->ltiConsumer = $this->getLtiConsumer();
-//                $this->ltiConsumer->enabled = false;
-//                $this->ltiConsumer->save();
-//            }
-//        }
-
         $this->getData()->save();
         parent::save();
     }
@@ -199,10 +162,6 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface
      */
     public function getLtiConsumer()
     {
-//        if (!$this->ltiConsumer && $this->getData()->get(self::LTI_CURRENT_KEY)) {
-//            $this->ltiConsumer = new \IMSGlobal\LTI\ToolProvider\ToolConsumer($this->getData()->get(self::LTI_CURRENT_KEY), \App\Factory::getLtiDataConnector());
-//        }
-//        return $this->ltiConsumer;
         $key = $this->getData()->get(self::LTI_CURRENT_KEY);
         if ($key === '') $key = null;
         if (!$this->ltiConsumer && $key) {

@@ -4,6 +4,7 @@ namespace App\Db;
 use Tk\Auth;
 use Tk\Auth\Exception;
 use App\Auth\Acl;
+use Ts\Db\Data;
 
 
 /**
@@ -96,6 +97,11 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
      */
     private $institution = null;
 
+    /**
+     * @var Data
+     */
+    private $data = null;
+
 
     /**
      *
@@ -113,6 +119,18 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     {
         $this->getHash();
         parent::save();
+    }
+
+    /**
+     * Get the data object
+     *
+     * @return \Ts\Db\Data
+     */
+    public function getData()
+    {
+        if (!$this->data)
+            $this->data = \Ts\Db\Data::create($this->id, get_class($this));
+        return $this->data;
     }
 
     /**

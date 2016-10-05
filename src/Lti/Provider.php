@@ -16,6 +16,8 @@ use IMSGlobal\LTI\ToolProvider;
  */
 class Provider extends ToolProvider\ToolProvider
 {
+    const LTI_LAUNCH = 'lti.launch';
+    const LTI_COURSE_ID = 'lti.courseId';
 
     /**
      * @var \App\Db\Institution
@@ -26,6 +28,11 @@ class Provider extends ToolProvider\ToolProvider
      * @var \Tk\EventDispatcher\EventDispatcher
      */
     protected $dispatcher = null;
+
+    /**
+     * @var \App\Db\Course
+     */
+    protected static $course = null;
 
     /**
      * Provider constructor.
@@ -39,6 +46,40 @@ class Provider extends ToolProvider\ToolProvider
         parent::__construct($dataConnector);
         $this->institution = $institution;
         $this->dispatcher = $dispatcher;
+    }
+
+    /**
+     * Get the LTI session data array
+     *
+     * @return array
+     */
+    public static function getLtiSession()
+    {
+        return \App\Factory::getSession()->get(self::LTI_LAUNCH);
+    }
+
+    /**
+     * Get the LTi session course
+     *
+     * @return \App\Db\Course|\Tk\Db\Map\Model
+     */
+    public static function getLtiCourse()
+    {
+        if (!self::$course) {
+            $ltiSes = self::getLtiSession();
+            self::$course = \App\Db\CourseMap::create()->find($ltiSes[self::LTI_COURSE_ID]);
+        }
+        return self::$course;
+    }
+
+    /**
+     * Get the LTi session institution
+     *
+     * @return \App\Db\Institution|\Tk\Db\Map\Model
+     */
+    public static function getLtiInstitution()
+    {
+        return self::getLtiCourse()->getInstitution();
     }
 
 
