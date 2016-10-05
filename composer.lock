@@ -1,0 +1,1143 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "a8ec7cee35508661f730a9e969cbcd8f",
+    "content-hash": "d6d07d70e2b45a90c48df19a2ac26b2c",
+    "packages": [
+        {
+            "name": "imsglobal/lti",
+            "version": "3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/IMSGlobal/LTI-Tool-Provider-Library-PHP.git",
+                "reference": "06b12f70c2803ee08da116bcda2951eefd411ac9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/IMSGlobal/LTI-Tool-Provider-Library-PHP/zipball/06b12f70c2803ee08da116bcda2951eefd411ac9",
+                "reference": "06b12f70c2803ee08da116bcda2951eefd411ac9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "IMSGlobal\\LTI\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Stephen Vickers",
+                    "email": "svickers@imsglobal.org"
+                }
+            ],
+            "description": "LTI Tool Provider Library",
+            "homepage": "https://www.imsglobal.org/lti",
+            "keywords": [
+                "LTI"
+            ],
+            "time": "2016-09-18 04:22:22"
+        },
+        {
+            "name": "monolog/monolog",
+            "version": "1.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Seldaek/monolog.git",
+                "reference": "dacec2fe1ead778f90d0149caa8f047a0856571b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/dacec2fe1ead778f90d0149caa8f047a0856571b",
+                "reference": "dacec2fe1ead778f90d0149caa8f047a0856571b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "psr/log": "~1.0"
+            },
+            "provide": {
+                "psr/log-implementation": "1.0.0"
+            },
+            "require-dev": {
+                "aws/aws-sdk-php": "^2.4.9",
+                "doctrine/couchdb": "~1.0@dev",
+                "graylog2/gelf-php": "~1.0",
+                "jakub-onderka/php-parallel-lint": "0.9",
+                "php-amqplib/php-amqplib": "~2.4",
+                "php-console/php-console": "^3.1.3",
+                "phpunit/phpunit": "~4.5",
+                "phpunit/phpunit-mock-objects": "2.3.0",
+                "ruflin/elastica": ">=0.90 <3.0",
+                "sentry/sentry": "^0.13",
+                "swiftmailer/swiftmailer": "~5.3"
+            },
+            "suggest": {
+                "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
+                "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
+                "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
+                "ext-mongo": "Allow sending log messages to a MongoDB server",
+                "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
+                "mongodb/mongodb": "Allow sending log messages to a MongoDB server via PHP Driver",
+                "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
+                "php-console/php-console": "Allow sending log messages to Google Chrome",
+                "rollbar/rollbar": "Allow sending log messages to Rollbar",
+                "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
+                "sentry/sentry": "Allow sending log messages to a Sentry server"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Monolog\\": "src/Monolog"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "http://seld.be"
+                }
+            ],
+            "description": "Sends your logs to files, sockets, inboxes, databases and various web services",
+            "homepage": "http://github.com/Seldaek/monolog",
+            "keywords": [
+                "log",
+                "logging",
+                "psr-3"
+            ],
+            "time": "2016-09-18 16:07:11"
+        },
+        {
+            "name": "oyejorge/less.php",
+            "version": "1.7.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/oyejorge/less.php.git",
+                "reference": "8f77f13bbc4d5997c76322523e1fb28376acf080"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/oyejorge/less.php/zipball/8f77f13bbc4d5997c76322523e1fb28376acf080",
+                "reference": "8f77f13bbc4d5997c76322523e1fb28376acf080",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2"
+            },
+            "bin": [
+                "bin/lessc"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Less": "lib/"
+                },
+                "classmap": [
+                    "lessc.inc.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Matt Agar",
+                    "homepage": "https://github.com/agar"
+                },
+                {
+                    "name": "Martin Jantošovič",
+                    "homepage": "https://github.com/Mordred"
+                },
+                {
+                    "name": "Josh Schmidt",
+                    "homepage": "https://github.com/oyejorge"
+                }
+            ],
+            "description": "PHP port of the Javascript version of LESS http://lesscss.org",
+            "homepage": "http://lessphp.gpeasy.com",
+            "keywords": [
+                "css",
+                "less",
+                "less.js",
+                "lesscss",
+                "php",
+                "stylesheet"
+            ],
+            "time": "2014-03-04 18:49:54"
+        },
+        {
+            "name": "phpmailer/phpmailer",
+            "version": "v5.2.16",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPMailer/PHPMailer.git",
+                "reference": "1d85f9ef3ecfc42bbc4f3c70d5e37ca9a65f629a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/1d85f9ef3ecfc42bbc4f3c70d5e37ca9a65f629a",
+                "reference": "1d85f9ef3ecfc42bbc4f3c70d5e37ca9a65f629a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.0"
+            },
+            "require-dev": {
+                "phpdocumentor/phpdocumentor": "*",
+                "phpunit/phpunit": "4.7.*"
+            },
+            "suggest": {
+                "league/oauth2-google": "Needed for Google XOAUTH2 authentication"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "class.phpmailer.php",
+                    "class.phpmaileroauth.php",
+                    "class.phpmaileroauthgoogle.php",
+                    "class.smtp.php",
+                    "class.pop3.php",
+                    "extras/EasyPeasyICS.php",
+                    "extras/ntlm_sasl_client.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "Jim Jagielski",
+                    "email": "jimjag@gmail.com"
+                },
+                {
+                    "name": "Marcus Bointon",
+                    "email": "phpmailer@synchromedia.co.uk"
+                },
+                {
+                    "name": "Andy Prevost",
+                    "email": "codeworxtech@users.sourceforge.net"
+                },
+                {
+                    "name": "Brent R. Matzelle"
+                }
+            ],
+            "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
+            "time": "2016-06-06 09:09:37"
+        },
+        {
+            "name": "psr/cache",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/cache.git",
+                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/cache/zipball/d11b50ad223250cf17b86e38383413f5a6764bf8",
+                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Cache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for caching libraries",
+            "keywords": [
+                "cache",
+                "psr",
+                "psr-6"
+            ],
+            "time": "2016-08-06 20:24:11"
+        },
+        {
+            "name": "psr/http-message",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-message.git",
+                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363",
+                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Message\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for HTTP messages",
+            "homepage": "https://github.com/php-fig/http-message",
+            "keywords": [
+                "http",
+                "http-message",
+                "psr",
+                "psr-7",
+                "request",
+                "response"
+            ],
+            "time": "2016-08-06 14:39:51"
+        },
+        {
+            "name": "psr/log",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/log.git",
+                "reference": "5277094ed527a1c4477177d102fe4c53551953e0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/5277094ed527a1c4477177d102fe4c53551953e0",
+                "reference": "5277094ed527a1c4477177d102fe4c53551953e0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Log\\": "Psr/Log/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for logging libraries",
+            "homepage": "https://github.com/php-fig/log",
+            "keywords": [
+                "log",
+                "psr",
+                "psr-3"
+            ],
+            "time": "2016-09-19 16:02:08"
+        },
+        {
+            "name": "ttek-plg/example",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tropotek/plg-example.git",
+                "reference": "99abaab7c67c24d7e00e73978019a385e7b0ab1b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tropotek/plg-example/zipball/99abaab7c67c24d7e00e73978019a385e7b0ab1b",
+                "reference": "99abaab7c67c24d7e00e73978019a385e7b0ab1b",
+                "shasum": ""
+            },
+            "require": {
+                "ttek/tk-installers": "~2.0"
+            },
+            "type": "ttek-plugin",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Ex\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Mifsud",
+                    "homepage": "http://www.tropotek.com/"
+                }
+            ],
+            "description": "Example plugin for the new Tk2 framework",
+            "homepage": "http://www.tropotek.com/",
+            "keywords": [
+                "example",
+                "plugin",
+                "tropotek"
+            ],
+            "time": "2016-09-02 06:44:28"
+        },
+        {
+            "name": "ttek/tk-auth",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tropotek/tk-auth.git",
+                "reference": "72485385e87270f0ef24886680c9c7cc5437b985"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tropotek/tk-auth/zipball/72485385e87270f0ef24886680c9c7cc5437b985",
+                "reference": "72485385e87270f0ef24886680c9c7cc5437b985",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.0",
+                "ttek/tk-framework": "~2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Tk\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Mifsud",
+                    "email": "info@tropotek.com.au",
+                    "homepage": "http://www.tropotek.com/"
+                }
+            ],
+            "description": "A base lib for authentication in websites",
+            "keywords": [
+                "auth",
+                "tropotek"
+            ],
+            "time": "2016-09-04 23:56:54"
+        },
+        {
+            "name": "ttek/tk-database",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tropotek/tk-database.git",
+                "reference": "a085e74aa33b6b140fde25bb60533982fb8e52f0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tropotek/tk-database/zipball/a085e74aa33b6b140fde25bb60533982fb8e52f0",
+                "reference": "a085e74aa33b6b140fde25bb60533982fb8e52f0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.0",
+                "ttek/tk-framework": "~2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Tk\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Mifsud",
+                    "email": "info@tropotek.com.au",
+                    "homepage": "http://www.tropotek.com/"
+                }
+            ],
+            "description": "The Tropotek Framework database libs",
+            "keywords": [
+                "Tk",
+                "database",
+                "tropotek"
+            ],
+            "time": "2016-09-04 23:57:12"
+        },
+        {
+            "name": "ttek/tk-debug",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tropotek/tk-debug.git",
+                "reference": "ced7877012d7596ccdf6a3b50ac3b83da2d13a9a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tropotek/tk-debug/zipball/ced7877012d7596ccdf6a3b50ac3b83da2d13a9a",
+                "reference": "ced7877012d7596ccdf6a3b50ac3b83da2d13a9a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.0",
+                "ttek/tk-framework": "~2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Tk\\": ""
+                },
+                "files": [
+                    "Tk/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Mifsud",
+                    "email": "info@tropotek.com.au",
+                    "homepage": "http://www.tropotek.com/"
+                }
+            ],
+            "description": "The Tropotek Framework debug libs",
+            "keywords": [
+                "Tk",
+                "debug",
+                "tropotek"
+            ],
+            "time": "2016-09-04 23:59:08"
+        },
+        {
+            "name": "ttek/tk-domtemplate",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tropotek/tk-domtemplate.git",
+                "reference": "3ac6be9b821a72521f973ca5f75cab36ab07ab81"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tropotek/tk-domtemplate/zipball/3ac6be9b821a72521f973ca5f75cab36ab07ab81",
+                "reference": "3ac6be9b821a72521f973ca5f75cab36ab07ab81",
+                "shasum": ""
+            },
+            "require": {
+                "oyejorge/less.php": "~1.5",
+                "php": ">=5.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Dom\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Mifsud",
+                    "email": "info@tropotek.com.au",
+                    "homepage": "http://www.tropotek.com/"
+                }
+            ],
+            "description": "A PHP DOM Template library using XML/HTML files for templates",
+            "keywords": [
+                "dom",
+                "dom-template",
+                "tropotek"
+            ],
+            "time": "2016-09-05 03:07:49"
+        },
+        {
+            "name": "ttek/tk-form",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tropotek/tk-form.git",
+                "reference": "b76da5df078ad0c5ddb7aa7428b7d5ffb7e7e387"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tropotek/tk-form/zipball/b76da5df078ad0c5ddb7aa7428b7d5ffb7e7e387",
+                "reference": "b76da5df078ad0c5ddb7aa7428b7d5ffb7e7e387",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.0",
+                "ttek/tk-database": "~2.0",
+                "ttek/tk-domtemplate": "~2.0",
+                "ttek/tk-framework": "~2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Tk\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Mifsud",
+                    "email": "info@tropotek.com.au",
+                    "homepage": "http://www.tropotek.com/"
+                }
+            ],
+            "description": "Create dynamic forms easily with the Tk framework",
+            "keywords": [
+                "form",
+                "tropotek"
+            ],
+            "time": "2016-09-20 02:46:17"
+        },
+        {
+            "name": "ttek/tk-framework",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tropotek/tk-framework.git",
+                "reference": "186c42c64d7f519ec3a79177c158d8e3bdc798eb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tropotek/tk-framework/zipball/186c42c64d7f519ec3a79177c158d8e3bdc798eb",
+                "reference": "186c42c64d7f519ec3a79177c158d8e3bdc798eb",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.0",
+                "psr/log": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Tk\\": ""
+                },
+                "files": [
+                    "Tk/Exception.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Mifsud",
+                    "email": "info@tropotek.com",
+                    "homepage": "http://www.tropotek.com/"
+                }
+            ],
+            "description": "Tropotek Framework V2",
+            "homepage": "http://www.tropotek.com/",
+            "keywords": [
+                "Tk",
+                "framework",
+                "tropotek"
+            ],
+            "time": "2016-09-12 23:00:57"
+        },
+        {
+            "name": "ttek/tk-http",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tropotek/tk-http.git",
+                "reference": "85cf95714ebb4258b59729ba27373efabaccd32b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tropotek/tk-http/zipball/85cf95714ebb4258b59729ba27373efabaccd32b",
+                "reference": "85cf95714ebb4258b59729ba27373efabaccd32b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.0",
+                "psr/cache": "^1.0",
+                "psr/http-message": "^1.0",
+                "psr/log": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Tk\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Mifsud",
+                    "email": "info@tropotek.com.au",
+                    "homepage": "http://www.tropotek.com/"
+                }
+            ],
+            "description": "HTTP library for the Tk lib",
+            "keywords": [
+                "Tk",
+                "http",
+                "tropotek"
+            ],
+            "time": "2016-09-04 23:56:20"
+        },
+        {
+            "name": "ttek/tk-installers",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tropotek/tk-installers.git",
+                "reference": "90b8a7961056ea060431ba3ac5a0dd419177f82d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tropotek/tk-installers/zipball/90b8a7961056ea060431ba3ac5a0dd419177f82d",
+                "reference": "90b8a7961056ea060431ba3ac5a0dd419177f82d",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0",
+                "php": ">=5.0.0"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": [
+                    "Tk\\Installer\\AssetPlugin",
+                    "Tk\\Installer\\ThemePlugin",
+                    "Tk\\Installer\\PluginPlugin"
+                ],
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Tk\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Mifsud",
+                    "email": "info@tropotek.com.au",
+                    "homepage": "http://www.tropotek.com/"
+                }
+            ],
+            "description": "Tropotek installer plugins",
+            "keywords": [
+                "installers",
+                "tools",
+                "tropotek"
+            ],
+            "time": "2016-09-04 23:55:30"
+        },
+        {
+            "name": "ttek/tk-mail",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tropotek/tk-mail.git",
+                "reference": "a54f27d3946c51f7a853f86a876824e696c90c3b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tropotek/tk-mail/zipball/a54f27d3946c51f7a853f86a876824e696c90c3b",
+                "reference": "a54f27d3946c51f7a853f86a876824e696c90c3b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "phpmailer/phpmailer": "~5.2",
+                "ttek/tk-domtemplate": "~2.0",
+                "ttek/tk-framework": "~2.0",
+                "ttek/tk-http": "~2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Tk": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Mifsud",
+                    "email": "info@tropotek.com.au",
+                    "homepage": "http://www.tropotek.com/"
+                }
+            ],
+            "description": "A mail lib using PHPMailer for the tk libs",
+            "keywords": [
+                "table",
+                "tropotek"
+            ],
+            "time": "2016-09-04 23:55:54"
+        },
+        {
+            "name": "ttek/tk-mvc",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tropotek/tk-mvc.git",
+                "reference": "4cb66d693df23d4ce6a2bdf23e01b3757c19e6d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tropotek/tk-mvc/zipball/4cb66d693df23d4ce6a2bdf23e01b3757c19e6d3",
+                "reference": "4cb66d693df23d4ce6a2bdf23e01b3757c19e6d3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.0",
+                "psr/log": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Tk\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Mifsud",
+                    "email": "info@tropotek.com.au",
+                    "homepage": "http://www.tropotek.com/"
+                }
+            ],
+            "description": "Model-View-Controller library for the Tk lib",
+            "keywords": [
+                "Tk",
+                "mvc",
+                "tropotek"
+            ],
+            "time": "2016-09-04 23:57:28"
+        },
+        {
+            "name": "ttek/tk-plugin",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tropotek/tk-plugin.git",
+                "reference": "387d1263495b0fb8d8551d585682b9ca7ee9fa79"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tropotek/tk-plugin/zipball/387d1263495b0fb8d8551d585682b9ca7ee9fa79",
+                "reference": "387d1263495b0fb8d8551d585682b9ca7ee9fa79",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Tk\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Mifsud",
+                    "email": "info@tropotek.com.au",
+                    "homepage": "http://www.tropotek.com/"
+                }
+            ],
+            "description": "Manage and add plugin functionality to a site",
+            "keywords": [
+                "plugin",
+                "tropotek"
+            ],
+            "time": "2016-09-04 23:58:50"
+        },
+        {
+            "name": "ttek/tk-routing",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tropotek/tk-routing.git",
+                "reference": "b1bc0386f90ed2947c4c58f08272aaa0df50dea6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tropotek/tk-routing/zipball/b1bc0386f90ed2947c4c58f08272aaa0df50dea6",
+                "reference": "b1bc0386f90ed2947c4c58f08272aaa0df50dea6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.0",
+                "psr/log": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Tk\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Mifsud",
+                    "email": "info@tropotek.com.au",
+                    "homepage": "http://www.tropotek.com/"
+                }
+            ],
+            "description": "A URL routing library for the Tk lib",
+            "keywords": [
+                "Tk",
+                "mvc",
+                "routing",
+                "tropotek",
+                "url"
+            ],
+            "time": "2016-09-04 23:56:37"
+        },
+        {
+            "name": "ttek/tk-site",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tropotek/tk-site.git",
+                "reference": "b186ec215982eb14adcd2bc2ab905e9cf607478c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tropotek/tk-site/zipball/b186ec215982eb14adcd2bc2ab905e9cf607478c",
+                "reference": "b186ec215982eb14adcd2bc2ab905e9cf607478c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "ttek/tk-database": "~2.0",
+                "ttek/tk-domtemplate": "~2.0",
+                "ttek/tk-framework": "~2.0",
+                "ttek/tk-http": "~2.0",
+                "ttek/tk-mvc": "~2.0",
+                "ttek/tk-routing": "~2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Ts\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Mifsud",
+                    "email": "info@tropotek.com.au",
+                    "homepage": "http://www.tropotek.com/"
+                }
+            ],
+            "description": "A collection of objects to facilitate site creation with the full stack Tk2 framework",
+            "keywords": [
+                "Site Lib",
+                "tropotek"
+            ],
+            "time": "2016-09-15 01:49:42"
+        },
+        {
+            "name": "ttek/tk-table",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tropotek/tk-table.git",
+                "reference": "e08015cdd92ccafb7787339b179dfed38b15d692"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tropotek/tk-table/zipball/e08015cdd92ccafb7787339b179dfed38b15d692",
+                "reference": "e08015cdd92ccafb7787339b179dfed38b15d692",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.0",
+                "ttek/tk-database": "~2.0",
+                "ttek/tk-domtemplate": "~2.0",
+                "ttek/tk-framework": "~2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Tk": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Mifsud",
+                    "email": "info@tropotek.com.au",
+                    "homepage": "http://www.tropotek.com/"
+                }
+            ],
+            "description": "A dynamic table lib to manage table rendering",
+            "keywords": [
+                "table",
+                "tropotek"
+            ],
+            "time": "2016-09-04 23:58:34"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "monolog/monolog": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=5.3.3"
+    },
+    "platform-dev": []
+}

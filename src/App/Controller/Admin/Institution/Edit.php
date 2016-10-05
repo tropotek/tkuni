@@ -218,7 +218,33 @@ class Edit extends Iface
         // Render the form
         $fren = new \Tk\Form\Renderer\Dom($this->form);
         $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());
-        
+
+
+
+        $js = <<<JS
+jQuery(function($) {
+  
+  function toggleFields(checkbox) {
+    var pre = checkbox.attr('name').split(/[A-Z]/)[0];
+    var list = $('input[name^='+pre+']');
+    var checked = list.slice(0 ,1).get(0).checked;
+    if (checked) {
+      list.slice(1).removeAttr('disabled', 'disabled').removeClass('disabled');
+    } else {
+      list.slice(1).attr('disabled', 'disabled').addClass('disabled');
+    }
+  }
+  
+  $('#formEdit_ltiEnable, #formEdit_ldapEnable, #formEdit_apiEnable').change(function(e) {
+    toggleFields($(this));
+  }).each(function (i) {
+    toggleFields($(this));
+  });
+  
+});
+JS;
+        $template->appendJs($js);
+
         return $this->getPage()->setPageContent($template);
     }
 
