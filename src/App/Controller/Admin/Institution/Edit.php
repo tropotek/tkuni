@@ -218,9 +218,7 @@ class Edit extends Iface
         // Render the form
         $fren = new \Tk\Form\Renderer\Dom($this->form);
         $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());
-
-
-
+        
         $js = <<<JS
 jQuery(function($) {
   

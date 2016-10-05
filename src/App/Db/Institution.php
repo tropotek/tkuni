@@ -141,8 +141,8 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface
             $this->getData()->set(self::LTI_CURRENT_ID, $consumer->getRecordId());
             $this->getData()->set(self::LTI_SECRET, $consumer->secret);
             $url = \Tk\Uri::create('/lti/'.$this->getHash().'/launch.html')->toString();
-//            if ($this->domain)
-//                $url = \Tk\Uri::create('http://'.$this->domain.'/lti/launch.html')->toString();
+            if ($this->domain)
+                $url = \Tk\Uri::create('http://'.$this->domain.'/lti/launch.html')->toString();
             $this->getData()->set(self::LTI_URL, $url);
 
         } else {
