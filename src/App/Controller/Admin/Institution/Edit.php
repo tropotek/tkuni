@@ -127,7 +127,7 @@ class Edit extends Iface
         \App\Db\InstitutionMap::create()->mapForm($form->getValues(), $this->institution);
         \App\Db\UserMap::create()->mapForm($form->getValues(), $this->owner);
         $data = $this->institution->getData();
-        $data->replace($form->getValues('/^(ldap|lti|api)/'));
+        $data->replace($form->getValues('/^(inst)/'));
 
         $form->addFieldErrors($this->institution->validate());
         $form->addFieldErrors($this->owner->validate());
