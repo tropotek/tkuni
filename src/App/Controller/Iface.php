@@ -38,9 +38,6 @@ abstract class Iface extends \Dom\Renderer\Renderer
                 case \App\Auth\Acl::ROLE_ADMIN:
                     $this->page = new \App\Page\AdminPage($this);
                     break;
-                case \App\Auth\Acl::ROLE_CLIENT:
-                    $this->page = new \App\Page\ClientPage($this);
-                    break;
                 case \App\Auth\Acl::ROLE_STAFF:
                     $this->page = new \App\Page\StaffPage($this);
                     break;

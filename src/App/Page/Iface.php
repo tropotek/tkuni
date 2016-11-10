@@ -66,8 +66,7 @@ abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
         $template->appendMetaTag('tk-author', 'http://www.tropotek.com/, http://www.phpdomtemplate.com/', $template->getTitleElement());
         $template->appendMetaTag('tk-project', 'tk2uni', $template->getTitleElement());
         $template->appendMetaTag('tk-version', '1.0', $template->getTitleElement());
-
-
+        
         if ($this->getConfig()->get('site.title')) {
             $template->setAttr('siteName', 'title', $this->getConfig()->get('site.title'));
             $template->setTitleText(trim($template->getTitleText() . ' - ' . $this->getConfig()->get('site.title'), '- '));
@@ -79,8 +78,8 @@ abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
             $template->setChoice('login');
         }
 
-        if (\Ts\Alert::hasMessages()) {
-            $noticeTpl = \Ts\Alert::getInstance()->show()->getTemplate();
+        if (\Ts\AlertCollection::hasMessages()) {
+            $noticeTpl = \Ts\AlertCollection::getInstance()->show()->getTemplate();
             $template->replaceTemplate('alerts', $noticeTpl)->setChoice('alerts');
             $template->setChoice('alerts');
         }
@@ -105,6 +104,11 @@ JS;
             $template->appendCss($this->getConfig()->get('site.global.css'));
         }
 
+        $event = new \Tk\EventDispatcher\Event();
+        $event->set('template', $template);
+        $event->set('page', $this);
+        $event->set('controller', $this->getController());
+        \App\Factory::getEventDispatcher()->dispatch(\App\AppEvents::PAGE_POST_RENDER, $event);
 
         return $this;
     }
@@ -133,6 +137,12 @@ JS;
      */
     public function setPageContent($content)
     {
+        // Allow people to hook into the controller result.
+        $event = new \Tk\EventDispatcher\Event();
+        $event->set('controllerContent', $content);
+        $event->set('controller', $this->getController());
+        \App\Factory::getEventDispatcher()->dispatch(\App\AppEvents::CONTROLLER_POST_RENDER, $event);
+
         $this->renderPageTitle();
         if (!$content) return $this;
         if ($content instanceof \Dom\Template) {

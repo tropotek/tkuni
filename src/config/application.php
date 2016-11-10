@@ -13,17 +13,19 @@ $config = \Tk\Config::getInstance();
 include_once(__DIR__ . '/session.php');
 include_once(__DIR__ . '/routes.php');
 
-$config['site.title'] = 'Tk2Uni Site';
-$config['site.email'] = 'tkwiki@example.com';
-
 // Template folders for pages
-$config['template.admin.path'] = '/html/admin';
-$config['template.public.path'] = '/html/admin';
+$config['template.admin.path'] = '/html/default';
+$config['template.public.path'] = '/html/default';
 
 $config['system.timezone'] = 'Australia/Victoria';
 
-// TODO: implement this into the base config....
-$config['system.https'] = true;
+
+// TODO: implement this
+// enable/disable https for site
+//$config['system.https'] = true;
+
+
+
 
 // -- AUTH CONFIG --
 
@@ -32,8 +34,15 @@ $config['system.https'] = true;
 // users will have to reset/recover their passwords
 $config['hash.function'] = 'md5';
 
-//$config['site.client.registration'] = false;
-//$config['site.client.activation'] = false;
+
+// Do not change after installation
+\Tk\Plugin\Factory::$DB_TABLE = '_plugin';
+\Tk\Util\SqlMigrate::$DB_TABLE = '_migration';
+\Tk\Session\Adapter\Database::$DB_TABLE = '_session';
+\Ts\Db\Data::$DB_TABLE = '_data';
+\App\Factory::$LTI_DB_PREFIX = '_';
+\Tk\Db\Map\Mapper::$DB_PREFIX = ''; // Disabled, not used in this app
+
 
 // DbTable
 $config['system.auth.dbtable.tableName'] = 'user';
@@ -49,10 +58,4 @@ $config['system.auth.adapters'] = array(
 );
 
 
-// To avoid var dump errors when debug lib not present
-// TODO: there could be a better way to handle this in the future 
-if (!class_exists('\Tk\Vd')) {
-    function vd() {}
-    function vdd() {}
-}
 

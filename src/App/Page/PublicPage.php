@@ -30,7 +30,7 @@ class PublicPage extends Iface
         $template = $this->getTemplate();
 
         if ($this->getUser()) {
-            $template->insertText('username', $this->getUser()->name);
+            $template->insertText('username', $this->getUser()->getDisplayName());
             $template->setAttr('dashUrl', 'href', \App\Uri::createHomeUrl('/index.html'));
         }
 

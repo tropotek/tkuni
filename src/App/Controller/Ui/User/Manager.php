@@ -127,7 +127,7 @@ class Manager extends Iface
      */
     public function __makeTemplate()
     {
-        $xhtml = <<<XHTML
+        $xhtml = <<<HTML
 <div class="row">
 
   <div class="col-lg-12">
@@ -170,7 +170,7 @@ class Manager extends Iface
   </div>
   
 </div>
-XHTML;
+HTML;
 
         return \Dom\Loader::load($xhtml);
     }

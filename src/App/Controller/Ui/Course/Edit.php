@@ -192,57 +192,46 @@ class Edit extends Iface
     public function __makeTemplate()
     {
 
-        $xhtml = <<<XHTML
-<div class="row">
+        $xhtml = <<<HTML
+<div class="">
 
-  <div class="col-sm-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <i class="fa fa-cogs"></i> Actions
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <i class="fa fa-cogs"></i> Actions
+    </div>
+    <div class="panel-body">
+      <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i>
+        <span>Back</span></a>
+      <a href="javascript:;" class="btn btn-default" var="enroll" choice="update"><i class="fa fa-list"></i> <span>Enrollment List</span></a>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="" var="cols">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <i class="fa fa-graduation-cap"></i> Course Edit
+        </div>
+        <div class="panel-body">
+          <div var="formEdit"></div>
+        </div>
       </div>
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-lg-12">
-            <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
-            <a href="javascript:;" class="btn btn-default" var="enroll" choice="update"><i class="fa fa-list"></i> <span>Enrollment List</span></a>
-          </div>
+    </div>
+
+    <div class="col-md-8" choice="edit">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <i class="fa fa-graduation-cap"></i> Course Enrollments
+        </div>
+        <div class="panel-body">
+          <div var="table">test</div>
         </div>
       </div>
     </div>
   </div>
-
-  <div class="" var="cols">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <i class="fa fa-graduation-cap"></i> Course Edit
-      </div>
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-lg-12">
-            <div var="formEdit"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-8" choice="edit">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <i class="fa fa-graduation-cap"></i> Course Enrollments
-      </div>
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-lg-12">
-            <div var="table">test</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
+  
 </div>
-XHTML;
+HTML;
 
         return \Dom\Loader::load($xhtml);
     }

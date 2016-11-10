@@ -16,6 +16,8 @@ use IMSGlobal\LTI\ToolProvider;
  */
 class Provider extends ToolProvider\ToolProvider
 {
+    const LTI_LAUNCH = 'lti.launch';
+    const LTI_COURSE_ID = 'lti.courseId';
 
     /**
      * @var \App\Db\Institution
@@ -26,6 +28,11 @@ class Provider extends ToolProvider\ToolProvider
      * @var \Tk\EventDispatcher\EventDispatcher
      */
     protected $dispatcher = null;
+
+    /**
+     * @var \App\Db\Course
+     */
+    protected static $course = null;
 
     /**
      * Provider constructor.
@@ -39,6 +46,40 @@ class Provider extends ToolProvider\ToolProvider
         parent::__construct($dataConnector);
         $this->institution = $institution;
         $this->dispatcher = $dispatcher;
+    }
+
+    /**
+     * Get the LTI session data array
+     *
+     * @return array
+     */
+    public static function getLtiSession()
+    {
+        return \App\Factory::getSession()->get(self::LTI_LAUNCH);
+    }
+
+    /**
+     * Get the LTi session course
+     *
+     * @return \App\Db\Course|\Tk\Db\Map\Model
+     */
+    public static function getLtiCourse()
+    {
+        if (!self::$course) {
+            $ltiSes = self::getLtiSession();
+            self::$course = \App\Db\CourseMap::create()->find($ltiSes[self::LTI_COURSE_ID]);
+        }
+        return self::$course;
+    }
+
+    /**
+     * Get the LTi session institution
+     *
+     * @return \App\Db\Institution|\Tk\Db\Map\Model
+     */
+    public static function getLtiInstitution()
+    {
+        return self::getLtiCourse()->getInstitution();
     }
 
 
@@ -88,8 +129,6 @@ class Provider extends ToolProvider\ToolProvider
                 } while ($found);
 
                 $user = \App\Factory::createNewUser($this->institution->id, $username, $this->user->email, $role, '', $this->user->fullname);
-                // TODO: Should new users should be prompted to create a new password when they enter their Dashboard through LTI....?????
-                // Maybe not they should be instructed to change their password via access through the LTI.......
             }
 
             if (!$user->active) {
@@ -101,20 +140,38 @@ class Provider extends ToolProvider\ToolProvider
             $auth->clearIdentity()->getStorage()->write(array('username' => $user->username, 'institutionId' => $user->institutionId));
 
             // Add user to course if found.
-            $course = \App\Db\CourseMap::create()->findByCode($_POST['context_label'], $this->institution->id);
-            if ($course) {
-                \App\Db\CourseMap::create()->addUser($course->id, $user->id);
+            if (empty($_POST['context_label'])) throw new \Tk\Exception('Course not available, Please contact LMS administrator.');
+
+            $courseCode = preg_replace('/[^a-z0-9_-]/i', '_', $_POST['context_label']);
+            $course = \App\Db\CourseMap::create()->findByCode($courseCode, $this->institution->id);
+            if (!$course) {
+                if (!$this->user->isStaff()) throw new \Tk\Exception('Course not available, Please contact course coordinator.');
+                $course = new \App\Db\Course();
+                $course->institutionId = $this->institution->id;
+                $course->name = $_POST['context_title'];
+                $course->code = $courseCode;
+                $course->email = empty($_POST['lis_person_contact_email_primary']) ? $_POST['lis_person_contact_email_primary'] : \Tk\Config::getInstance()->get('site.email');
+                $course->description = '';
+                $course->start = \Tk\Date::create();
+                $course->finish = \Tk\Date::create()->add(new \DateInterval('P1Y'));
+                $course->active = true;
+                $course->save();
             }
-            \Tk\Session::getInstance()->set('lti.launch', array_merge($_GET, $_POST));
+            \App\Db\CourseMap::create()->addUser($course->id, $user->id);
+
+            $arr = array_merge($_GET, $_POST);
+            $arr[self::LTI_COURSE_ID] = $course->id;
+            \Tk\Session::getInstance()->set(self::LTI_LAUNCH, $arr);
 
             // fire loginSuccess....
             if ($this->dispatcher) {    // This event should redirect the user to their homepage.
-                $event = new \App\Event\AuthEvent($auth, $_POST);
+                $event = new \Tk\Event\AuthEvent($auth, $_POST);
                 $event->set('user', $user);
-                $this->dispatcher->dispatch(\App\Auth\AuthEvents::LOGIN_SUCCESS, $event);
+                $this->dispatcher->dispatch(\Tk\Auth\AuthEvents::LOGIN_SUCCESS, $event);
             }
         } catch (\Exception $e) {
-            $this->reason = $e->getMessage();
+            vd($e->__toString());
+            $this->reason = $e->__toString();
             $this->message = $e->getMessage();  // This will be shown in the host app
             $this->ok = false;
             return;
@@ -153,8 +210,13 @@ class Provider extends ToolProvider\ToolProvider
      */
     function onError()
     {
-        vd('LTI: onError', $this->reason, $this->message);
-        //return true;        // Stops redirect back to app, incase you want to show an error messages locally
+        vd('LTI: onError');
+        /** @var \Psr\Log\LoggerInterface $log */
+        $log = \App\Factory::getConfig()->getLog();
+        if ($log) {
+            $log->error($this->reason . ' ' . $this->message);
+        }
+        return true;        // Stops redirect back to app, in-case you want to show an error messages locally
     }
 
 }

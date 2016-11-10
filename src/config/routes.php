@@ -48,28 +48,11 @@ $routes->add('admin-user-edit', new \Tk\Routing\Route('/admin/userEdit.html', 'A
 $routes->add('admin-user-profile', new \Tk\Routing\Route('/admin/profile.html', 'App\Controller\Ui\Profile::doDefault', $params));
 
 $routes->add('admin-settings', new \Tk\Routing\Route('/admin/settings.html', 'App\Controller\Admin\Settings::doDefault', $params));
+$routes->add('admin-plugin-manager', new \Tk\Routing\Route('/admin/plugins.html', 'App\Controller\Admin\PluginManager::doDefault', $params));
 
 
 // Dev pages
 $routes->add('dev-events', new \Tk\Routing\Route('/admin/dev/events.html', 'App\Controller\Admin\Dev\Events::doDefault', $params));
-
-
-
-
-// Client Pages
-$params = array('access' => \App\Auth\Acl::ROLE_CLIENT);
-$routes->add('client-home', new \Tk\Routing\Route('/client/index.html', 'App\Controller\Client\Index::doDefault', $params));
-$routes->add('client-home-base', new \Tk\Routing\Route('/client/', 'App\Controller\Client\Index::doDefault', $params));
-
-$routes->add('client-institution-edit', new \Tk\Routing\Route('/client/institutionEdit.html', 'App\Controller\Client\Institution\Edit::doDefault', $params));
-
-$routes->add('client-course-manager', new \Tk\Routing\Route('/client/courseManager.html', 'App\Controller\Ui\Course\Manager::doDefault', $params));
-$routes->add('client-course-edit', new \Tk\Routing\Route('/client/courseEdit.html', 'App\Controller\Ui\Course\Edit::doDefault', $params));
-$routes->add('client-course-enrollment', new \Tk\Routing\Route('/client/courseEnrollment.html', 'App\Controller\Ui\Course\Enrollment::doDefault', $params));
-
-$routes->add('client-user-manager', new \Tk\Routing\Route('/client/userManager.html', 'App\Controller\Ui\User\Manager::doDefault', $params));
-$routes->add('client-user-edit', new \Tk\Routing\Route('/client/userEdit.html', 'App\Controller\Ui\User\Edit::doDefault', $params));
-
 
 
 // Staff Pages

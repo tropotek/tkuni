@@ -57,12 +57,13 @@ class Bootstrap
         include($config->getSrcPath() . '/config/config.php');
 
         // Set system timezone
-        $tz = 'Australia/Victoria';
         if (isset($config['system.timezone']))
-            $tz = $config['system.timezone'];
-        date_default_timezone_set($tz);
+            date_default_timezone_set($config['system.timezone']);
         
         \Tk\Uri::$BASE_URL_PATH = $config->getSiteUrl();
+        if ($config->isDebug()) {
+            \Dom\Template::$enableTracer = true;
+        }
 
         /**
          * This makes our life easier when dealing with paths. Everything is relative
@@ -77,7 +78,7 @@ class Bootstrap
             $logger = new Logger('system');
             $handler = new StreamHandler($config['system.log.path'], $config['system.log.level']);
             $formatter = new \Tk\Log\MonologLineFormatter();
-            $formatter->setScripTime($config->getScripTime());
+            $formatter->setScriptTime($config->getScripTime());
             $handler->setFormatter($formatter);
             $logger->pushHandler($handler);
             $config['log'] = $logger;
@@ -90,6 +91,8 @@ class Bootstrap
         if ($config->isCli()) {
             return $config;
         }
+
+        // --- HTTP only bootstrapping from here ---
         
         if ($config->isDebug()) {
             error_reporting(-1);
@@ -99,8 +102,6 @@ class Bootstrap
             error_reporting(0);
             ini_set('display_errors', 'Off');
         }
-
-        // --- HTTP only bootstrapping from here ---
         
         // * Request
         Factory::getRequest();
@@ -110,13 +111,17 @@ class Bootstrap
         Factory::getSession();
 
 
-        // initialise Dom Loader
-        \App\Factory::getDomLoader();
 
         // Initiate the default database connection
         \App\Factory::getDb();
         // Import config settings from DB
-        $config->import(\Ts\Db\Data::create());
+        $config->replace(\Ts\Db\Data::create()->toArray());
+
+        // initialise Dom Loader
+        \App\Factory::getDomLoader();
+
+        // Init the plugins
+        \Tk\Plugin\Factory::getInstance($config);
 
         // Initiate the email gateway
         \App\Factory::getEmailGateway();

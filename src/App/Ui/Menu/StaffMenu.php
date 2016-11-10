@@ -51,7 +51,7 @@ class StaffMenu extends \Dom\Renderer\Renderer
     {
         $template = $this->getTemplate();
 
-        $template->insertText('username', $this->getUser()->name);
+        $template->insertText('username', $this->getUser()->getDisplayName());
 
         return $template;
     }

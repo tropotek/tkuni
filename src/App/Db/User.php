@@ -4,6 +4,7 @@ namespace App\Db;
 use Tk\Auth;
 use Tk\Auth\Exception;
 use App\Auth\Acl;
+use Ts\Db\Data;
 
 
 /**
@@ -54,6 +55,11 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     /**
      * @var string
      */
+    public $displayName = '';
+
+    /**
+     * @var string
+     */
     public $email = '';
 
     /**
@@ -96,6 +102,11 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
      */
     private $institution = null;
 
+    /**
+     * @var Data
+     */
+    private $data = null;
+
 
     /**
      *
@@ -111,8 +122,24 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
      */
     public function save()
     {
+        if (!$this->displayName) {
+            $this->displayName = $this->name;
+        }
         $this->getHash();
+        $this->getData()->save();
         parent::save();
+    }
+
+    /**
+     * Get the data object
+     *
+     * @return \Ts\Db\Data
+     */
+    public function getData()
+    {
+        if (!$this->data)
+            $this->data = \Ts\Db\Data::create($this->id, get_class($this));
+        return $this->data;
     }
 
     /**
@@ -210,6 +237,17 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     }
 
     /**
+     * Get a valid display name
+     */
+    public function getDisplayName()
+    {
+        if (!$this->displayName) {
+            return $this->name;
+        }
+        return $this->displayName;
+    }
+
+    /**
      * Return the users home|dashboard relative url
      *
      * @note \App\Uri::createHomeUrl() uses this method to get the home path
@@ -268,44 +306,3 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     }
 
 }
-
-
-//class UserValidator extends \Tk\Db\Map\Validator
-//{
-//
-//    /**
-//     * Implement the validating rules to apply.
-//     *
-//     */
-//    protected function validate()
-//    {
-//        /** @var User $obj */
-//        $obj = $this->getObject();
-//
-//        if (!$obj->name) {
-//            $this->addError('name', 'Invalid field name value.');
-//        }
-//        if (!$obj->role) {
-//            $this->addError('role', 'Invalid field role value.');
-//        }
-//        if (!$obj->username) {
-//            $this->addError('username', 'Invalid field username value.');
-//        } else {
-//            //$dup = UserMap::create()->findByUsername($obj->username, $obj->role);
-//            $dup = UserMap::create()->findByUsername($obj->username, $obj->institutionId);
-//            if ($dup && $dup->getId() != $obj->getId()) {
-//                $this->addError('username', 'This username is already in use.');
-//            }
-//        }
-//        if (!filter_var($obj->email, FILTER_VALIDATE_EMAIL)) {
-//            $this->addError('email', 'Please enter a valid email address');
-//        } else {
-//            //$dup = UserMap::create()->findByEmail($obj->email, $obj->role);
-//            $dup = UserMap::create()->findByEmail($obj->email, $obj->institutionId);
-//            if ($dup && $dup->getId() != $obj->getId()) {
-//                $this->addError('email', 'This email is already in use.');
-//            }
-//        }
-//
-//    }
-//}

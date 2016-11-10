@@ -53,21 +53,17 @@ class FrontController extends \Tk\Kernel\HttpKernel
         $this->dispatcher->addSubscriber(new \App\Listener\AuthHandler());
         $this->dispatcher->addSubscriber(new \App\Listener\MasqueradeHandler());
 
-        // (kernel.controller)
-        
-        // (kernel.view)
-
         // (kernel.response)
         $this->dispatcher->addSubscriber(new \Ts\Listener\ResponseHandler(Factory::getDomModifier()));
 
-        // (kernel.finish_request)
-
         // (kernel.exception)
         $this->dispatcher->addSubscriber(new \Tk\Listener\ExceptionListener($logger));
-        $this->dispatcher->addSubscriber(new \Ts\Listener\ExceptionEmailListener($logger, $this->config->get('site.email'), $this->config->get('site.title')));
+        $this->dispatcher->addSubscriber(new \Ts\Listener\ExceptionEmailListener(\App\Factory::getEmailGateway(), $logger, $this->config->get('site.email'), $this->config->get('site.title')));
 
         // (kernel.terminate)
-        $this->dispatcher->addSubscriber(new \Ts\Listener\ShutdownHandler($logger, $this->config->getScripTime()));
+        $sh = new \Ts\Listener\ShutdownHandler($logger, $this->config->getScriptTime());
+        $sh->setPageBytes(\App\Factory::getDomFilterPageBytes());
+        $this->dispatcher->addSubscriber($sh);
 
     }
     

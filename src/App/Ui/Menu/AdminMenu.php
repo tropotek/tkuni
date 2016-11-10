@@ -51,7 +51,7 @@ class AdminMenu extends \Dom\Renderer\Renderer
     {
         $template = $this->getTemplate();
 
-        $template->insertText('username', $this->getUser()->name);
+        $template->insertText('username', $this->getUser()->getDisplayName());
 
         if ($this->getConfig()->isDebug()) {
             $template->setChoice('debug');
@@ -88,8 +88,8 @@ class AdminMenu extends \Dom\Renderer\Renderer
           <i class="fa fa-user fa-fw"></i> <span var="username">Admin</span> <i class="fa fa-caret-down"></i>
         </a>
         <ul class="dropdown-menu dropdown-user">
-          <li><a href="/admin/profile.html"><i class="fa fa-user fa-fw"></i> My Profile</a></li>
           <li><a href="/index.html"><i class="fa fa-home fa-fw"></i> Site Home</a></li>
+          <li><a href="/admin/profile.html"><i class="fa fa-user fa-fw"></i> My Profile</a></li>
           <li><a href="/admin/settings.html"><i class="fa fa-gear fa-fw"></i> Settings</a></li>
           <li class="divider"></li>
           <li><a href="/logout.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>

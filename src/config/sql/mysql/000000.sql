@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   -- ROLES: 'admin', 'client', 'staff', 'student
   `role` VARCHAR(255) NOT NULL DEFAULT '',
   `name` VARCHAR(255) NOT NULL DEFAULT '',
+  `displayName` VARCHAR(255) NOT NULL DEFAULT '',
   `email` VARCHAR(255) NOT NULL DEFAULT '',
   `notes` TEXT,
   `last_login` TIMESTAMP,
@@ -123,17 +124,4 @@ INSERT INTO `enrollment` (`course_id`, `email`)
 VALUES
   (1, 'student@unimelb.edu.au')
 ;
-
-INSERT INTO `data` (`foreign_id`, `foreign_key`, `key`, `value`) VALUES
-#   (0, 'system', 'site.title', 'Tk2Uni Site'),
-#   (0, 'system', 'site.email', 'tkwiki@example.com'),
-  (0, 'system', 'site.meta.keywords', ''),
-  (0, 'system', 'site.meta.description', ''),
-  (0, 'system', 'site.global.js', ''),
-  (0, 'system', 'site.global.css', '')
-#   ,
-#   (0, 'system', 'site.client.registration', 'site.client.registration'),
-#   (0, 'system', 'site.client.activation', 'site.client.activation')
-;
-
 

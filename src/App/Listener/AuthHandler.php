@@ -58,7 +58,7 @@ class AuthHandler implements SubscriberInterface
             if (!$user->getAcl()->hasRole($role)) {
                 // Could redirect to a authentication error page...
                 // Could cause a loop if the permissions are stuffed
-                \Ts\Alert::getInstance()->addWarning('You do not have access to the requested page.');
+                \Ts\Alert::addWarning('You do not have access to the requested page.');
                 \Tk\Uri::create($user->getHomeUrl())->redirect();
             }
         }
@@ -126,7 +126,6 @@ class AuthHandler implements SubscriberInterface
         }
 
         \Tk\Uri::create($user->getHomeUrl())->redirect();
-
     }
 
     /**
@@ -140,8 +139,6 @@ class AuthHandler implements SubscriberInterface
         // check if we are in an lti session then return to the LMS
 
     }
-
-
 
     public function onRegister(\Tk\EventDispatcher\Event $event)
     {
@@ -157,7 +154,8 @@ class AuthHandler implements SubscriberInterface
         $subject = 'Account Registration Request.';
 
         $message = new \Tk\Mail\Message($body->toString(), $subject, $user->email, \App\Factory::getConfig()->get('site.email'));
-        $message->send();
+        \App\Factory::getEmailGateway()->send($message);
+
 
     }
 
@@ -175,7 +173,7 @@ class AuthHandler implements SubscriberInterface
         $subject = 'Account Registration Activation.';
 
         $message = new \Tk\Mail\Message($body->toString(), $subject, $user->email, \App\Factory::getConfig()->get('site.email'));
-        $message->send();
+        \App\Factory::getEmailGateway()->send($message);
 
     }
 
@@ -195,7 +193,7 @@ class AuthHandler implements SubscriberInterface
         $subject = 'Account Password Recovery.';
 
         $message = new \Tk\Mail\Message($body->toString(), $subject, $user->email, \App\Factory::getConfig()->get('site.email'));
-        $message->send();
+        \App\Factory::getEmailGateway()->send($message);
 
     }
 

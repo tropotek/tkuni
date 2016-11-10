@@ -96,39 +96,30 @@ class Events extends Iface
      */
     public function __makeTemplate()
     {
-        $xhtml = <<<XHTML
-<div class="row">
+        $xhtml = <<<HTML
+<div class="">
 
-  <div class="col-lg-12">
-    <div class="panel panel-default">
+  <div class="panel panel-default">
       <div class="panel-heading">
         <i class="fa fa-cogs fa-fw"></i> Actions
       </div>
-      <div class="panel-body ">
-        <div class="row">
-          <div class="col-lg-12">
+      <div class="panel-body">
             <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
-          </div>
-        </div>
       </div>
     </div>
-  </div>
   
-  <div class="col-lg-12">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <i class="fa fa-empire fa-fw"></i>
-        Available Events
+        <i class="fa fa-empire fa-fw"></i> Available Events
       </div>
       <div class="panel-body">
         <p>The events are available for use with plugins or when adding to the system codebase.</p>
-      
-         <div var="table"></div>
+        <div var="table"></div>
       </div>
     </div>
-  </div>
+    
 </div>
-XHTML;
+HTML;
 
         return \Dom\Loader::load($xhtml);
     }

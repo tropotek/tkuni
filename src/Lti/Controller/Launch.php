@@ -61,7 +61,16 @@ class Launch extends Iface
             return $this->show();
         }
 
+        if (!$this->institution->getData()->get(\App\Db\InstitutionData::LTI_ENABLE)) {
+            \Ts\Alert::addError('`' . $this->institution->name . '` is not activated, please register or contact your administrator.');
+            \Tk\Uri::create('/index.html')->redirect();
+            return;
+        }
+
         $tool = new \Lti\Provider(\App\Factory::getLtiDataConnector(), $this->institution, $this->getConfig()->getEventDispatcher());
+        // There is a major pause here on the sandbox due to the postback to the LMS
+        //   looks like the LMS is taking some time to post back however prev version of LTI did not have to postback and was faster
+        // TODO: See how the live LMS handles this. Maybe we will need to set the API to LTI V1 somehow????
         $tool->handleRequest();
 
         // TODO: Is this the best place for this error
@@ -96,12 +105,16 @@ class Launch extends Iface
     {
         $xhtml = <<<XHTML
 <div class="">
-    <div class="col-lg-12">
-      <div class="alert alert-danger" var="row">
-        <!-- button class="close noblock" data-dismiss="alert">&times;</button -->
-        <h4><i choice="icon" var="icon"></i> <strong var="title">LTI Access Error</strong></h4>
-        <span var="message">Sorry, there was an error connecting you to the application</span>
-      </div>
+    <div class="">
+    <div class="row">
+        <div class="col-lg-12">
+          <div class="alert alert-danger" var="row">
+            <!-- button class="close noblock" data-dismiss="alert">&times;</button -->
+            <h4><i choice="icon" var="icon"></i> <strong var="title">LTI Access Error</strong></h4>
+            <span var="message">Sorry, there was an error connecting you to the application</span>
+          </div>
+        </div>
+    </div>
     </div>
 </div>
 XHTML;

@@ -7,6 +7,9 @@
 
   <title>SB Admin 2 - Bootstrap Admin Theme</title>
 
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="icon" type="image/png" href="favicon_64.png" />
+
   <!-- Bootstrap Core CSS -->
   <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <!-- Jquery UI -->

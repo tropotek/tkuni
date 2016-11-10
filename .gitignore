@@ -8,6 +8,5 @@
 /data
 /assets
 /vendor
-composer.lock
 /src/config/config.php
 

@@ -1,6 +1,7 @@
 <?php
 namespace App\Db;
 
+use Ts\Db\Data;
 
 /**
  *
@@ -66,6 +67,16 @@ class Course extends \Tk\Db\Map\Model
      */
     public $created = null;
 
+    /**
+     * @var \App\Db\Institution
+     */
+    private $institution = null;
+
+    /**
+     * @var Data
+     */
+    private $data = null;
+
 
     /**
      * Course constructor.
@@ -74,6 +85,38 @@ class Course extends \Tk\Db\Map\Model
     {
         $this->modified = \Tk\Date::create();
         $this->created = \Tk\Date::create();
+    }
+
+    /**
+     *
+     */
+    public function save()
+    {
+        $this->getData()->save();
+        parent::save();
+    }
+
+    /**
+     * Get the institution related to this user
+     */
+    public function getInstitution()
+    {
+        if (!$this->institution) {
+            $this->institution = \App\Db\InstitutionMap::create()->find($this->institutionId);
+        }
+        return $this->institution;
+    }
+
+    /**
+     * Get the data object
+     *
+     * @return \Ts\Db\Data
+     */
+    public function getData()
+    {
+        if (!$this->data)
+            $this->data = \Ts\Db\Data::create($this->id, get_class($this));
+        return $this->data;
     }
 
     /**
@@ -125,46 +168,8 @@ class Course extends \Tk\Db\Map\Model
         
         if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
             $errors['email'] = 'Please enter a valid email address';
-            $this->addError('email', 'Please enter a valid email address');
         }
         
         return $errors;
     }
 }
-
-//class CourseValidator extends \Tk\Db\Map\Validator
-//{
-//
-//    /**
-//     * Implement the validating rules to apply.
-//     *
-//     */
-//    protected function validate()
-//    {
-//        /** @var Course $obj */
-//        $obj = $this->getObject();
-//
-//        if ((int)$obj->institutionId <= 0) {
-//            $this->addError('institutionId', 'Invalid field value.');
-//        }
-//        if (!$obj->name) {
-//            $this->addError('name', 'Invalid field value.');
-//        }
-//        if (!$obj->code) {
-//            $this->addError('code', 'Invalid field value.');
-//        } else {
-//            // Look for existing courses with same code
-//            $c = \App\Db\CourseMap::create()->findByCode($obj->code, $obj->institutionId);
-//            if ($c && $c->id != $obj->id) {
-//                $this->addError('code', 'Code already exists.');
-//            }
-//        }
-//
-//        if (!filter_var($obj->email, FILTER_VALIDATE_EMAIL)) {
-//            $this->addError('email', 'Please enter a valid email address');
-//        }
-//
-//        // TODO: Validate start and end dates
-//
-//    }
-//}

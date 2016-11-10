@@ -85,7 +85,6 @@ class Edit extends Iface
             }
         }
 
-
         $this->form = new Form('formEdit');
 
         $this->form->addField(new Field\Input('name'))->setRequired(true)->setTabGroup('Details');
@@ -108,15 +107,12 @@ class Edit extends Iface
         if (!$this->user->getId())
             $f->setRequired(true);
 
-
         if ($this->user->id && ($this->getUser()->hasRole(\App\Auth\Acl::ROLE_STAFF) || $this->getUser()->hasRole(\App\Auth\Acl::ROLE_CLIENT)) ) {
             $list = \Tk\Form\Field\Option\ArrayObjectIterator::create(\App\Db\CourseMap::create()->findActive($this->institution->id));
             $this->form->addField(new Field\Select('selCourse[]', $list))->setLabel('Course Selection')->setNotes('This list only shows active and enrolled courses. Use the enrollment form in the edit course page if your course is not visible.')->setTabGroup('Courses')->addCssClass('tk-dualSelect')->setAttr('data-title', 'Courses');
             $arr = \App\Db\CourseMap::create()->findByUserId($this->user->id)->toArray('id');
             $this->form->setFieldValue('selCourse', $arr);
-
         }
-
 
         $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
         $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
@@ -212,10 +208,11 @@ class Edit extends Iface
         $fren = new \Tk\Form\Renderer\Dom($this->form);
         $template->appendTemplate($this->form->getId(), $fren->show()->getTemplate());
 
-
-        $template->setAttr('msq', 'href', \App\Uri::create()->reset()->set('msq', $this->user->id));
-
-
+        //if ($this->user->id && $this->user->id != $this->getUser()->id) {
+        if ($this->user->id) {
+            $template->setAttr('msq', 'href', \App\Uri::create()->reset()->set('msq', $this->user->hash));
+            $template->setChoice('msq');
+        }
 
         return $this->getPage()->setPageContent($this->getTemplate());
     }
@@ -229,42 +226,31 @@ class Edit extends Iface
     public function __makeTemplate()
     {
 
-        $xhtml = <<<XHTML
-<div class="row">
+        $xhtml = <<<HTML
+<div class="">
 
-  <div class="col-lg-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <i class="fa fa-cogs fa-fw"></i> Actions
-      </div>
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-lg-12">
-            <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
-            <a href="javascript:;" class="btn btn-default" choice="update" var="msq"><i class="fa fa-user-secret"></i> <span>Masquerade</span></a>
-          </div>
-        </div>
-      </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <i class="fa fa-cogs fa-fw"></i> Actions
+    </div>
+    <div class="panel-body">
+      <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i>
+        <span>Back</span></a>
+      <a href="javascript:;" class="btn btn-default" choice="msq" var="msq"><i class="fa fa-user-secret"></i> <span>Masquerade</span></a>
     </div>
   </div>
-  
-  <div class="col-lg-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <i class="fa fa-user fa-fw"></i>
-        <span var="username"></span>
-      </div>
-      
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-lg-12" var="formEdit">
-          </div>
-        </div>
-      </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <i class="fa fa-user fa-fw"></i> <span var="username"></span>
+    </div>
+    <div class="panel-body">
+      <div var="formEdit"></div>
     </div>
   </div>
+
 </div>
-XHTML;
+HTML;
 
         return \Dom\Loader::load($xhtml);
     }
