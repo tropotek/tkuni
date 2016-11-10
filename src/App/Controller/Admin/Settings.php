@@ -72,10 +72,10 @@ class Settings extends Iface
         $values = $form->getValues();
         $this->data->replace($values);
         
-        if (empty($values['site.title']) || strlen($values['site.title']) < 3) {
-            $form->addFieldError('site.title', 'Please enter your name');
+        if (!$form->getFieldValue('site.title')) {
+            $form->addFieldError('site.title', 'Please enter the sites title');
         }
-        if (empty($values['site.email']) || !filter_var($values['site.email'], \FILTER_VALIDATE_EMAIL)) {
+        if ($form->getFieldValue('site.email') || !filter_var($form->getFieldValue('site.email'), \FILTER_VALIDATE_EMAIL)) {
             $form->addFieldError('site.email', 'Please enter a valid email address');
         }
         
@@ -115,43 +115,32 @@ class Settings extends Iface
      */
     public function __makeTemplate()
     {
-        $xhtml = <<<XHTML
-<div class="row" var="content">
+        $xhtml = <<<HTML
+<div>
 
-  <div class="col-lg-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <i class="fa fa-cogs fa-fw"></i> Actions
-      </div>
-      <div class="panel-body ">
-        <div class="row">
-          <div class="col-lg-12">
-            <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
-            <a href="/admin/plugins.html" class="btn btn-default"><i class="fa fa-plug"></i> <span>Plugins</span></a>
-            <a href="/admin/userManager.html" class="btn btn-default"><i class="fa fa-users"></i> <span>Users</span></a>
-          </div>
-        </div>
-      </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <i class="fa fa-cogs fa-fw"></i> Actions
+    </div>
+    <div class="panel-body">
+      <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i>
+        <span>Back</span></a>
+      <a href="/admin/plugins.html" class="btn btn-default"><i class="fa fa-plug"></i> <span>Plugins</span></a>
+      <a href="/admin/userManager.html" class="btn btn-default"><i class="fa fa-users"></i> <span>Users</span></a>
     </div>
   </div>
-  
-  <div class="col-lg-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <i class="glyphicon glyphicon-cog"></i>
-        Site Settings
-      </div>
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-lg-12">
-            <div var="formEdit"></div>
-          </div>
-        </div>
-      </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <i class="glyphicon glyphicon-cog"></i> Site Settings
+    </div>
+    <div class="panel-body">
+      <div var="formEdit"></div>
     </div>
   </div>
+
 </div>
-XHTML;
+HTML;
 
         return \Dom\Loader::load($xhtml);
     }

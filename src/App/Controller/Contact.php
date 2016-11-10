@@ -104,11 +104,11 @@ class Contact extends Iface
             return;
         }
         if ($attach->hasFile()) {
-            //$attach->moveUploadedFile($this->getConfig()->getDataPath() . '/contact/' . date('d-m-Y') . '-' . str_replace('@', '_', $values['email']));
+            //$attach->moveTo($this->getConfig()->getDataPath() . '/contact/' . date('d-m-Y') . '-' . str_replace('@', '_', $values['email']));
         }
 
         if ($this->sendEmail($form)) {
-            \Ts\Alert::getInstance()->addSuccess('<strong>Success!</strong> Your form has been sent.');
+            \Ts\Alert::addSuccess('<strong>Success!</strong> Your form has been sent.');
         }
 
         \Tk\Uri::create()->redirect();
@@ -138,8 +138,8 @@ class Contact extends Iface
 
         $body = <<<MSG
 <div>
-<p>Dear $name,</p>
 <p>
+<b>Name:</b> $name<br/>
 <b>Email:</b> $email<br/>
 <b>Type:</b> $type<br/>
 </p>
@@ -155,7 +155,7 @@ MSG;
 
         $message = new \Tk\Mail\Message(\App\Factory::createMailTemplate($body), $this->getConfig()->get('site.name') . ':'. $name .' Contact Form Submission', $this->getConfig()->get('site.email'), $email);
         $message->addAttachment($field->getUploadedFile()->getFile(), $field->getUploadedFile()->getFilename());
-        $message->send();
+        \App\Factory::getEmailGateway()->send($message);
 
         return true;
     }

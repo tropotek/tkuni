@@ -52,7 +52,7 @@ class Profile extends Iface
         $this->form->setAttr('autocomplete', 'off');
 
         $this->form->addField(new Field\Input('username'))->setRequired(true)->setTabGroup('Details');
-        $this->form->addField(new Field\Input('name'))->setRequired(true)->setTabGroup('Details');
+        $this->form->addField(new Field\Input('displayName'))->setRequired(true)->setTabGroup('Details');
         $emailF = $this->form->addField(new Field\Input('email'))->setRequired(true)->setTabGroup('Details');
         //$emailF->setAttr('readonly', 'readonly');
 
@@ -66,7 +66,7 @@ class Profile extends Iface
 
         $this->form->load(\App\Db\UserMap::create()->unmapForm($this->user));
         $this->form->execute();
-        
+
         return $this->show();
     }
 
@@ -89,7 +89,7 @@ class Profile extends Iface
             $form->addFieldError('newPassword', 'Please enter a new password.');
         }
 
-        $form->addFieldErrors(\App\Db\UserValidator::create($this->user)->getErrors());
+        $form->addFieldErrors($this->user->validate());
 
         if ($form->hasErrors()) {
             return;
@@ -97,7 +97,7 @@ class Profile extends Iface
 
         // Hash the password correctly
         if ($this->form->getFieldValue('newPassword')) {
-            $this->user->password = \App\Factory::hashPassword($this->form->getFieldValue('newPassword'), $this->user);
+            $this->user->setPassword($this->form->getFieldValue('newPassword'));
         }
 
         $this->user->save();
@@ -115,7 +115,7 @@ class Profile extends Iface
     public function show()
     {
         $template = $this->getTemplate();
-        
+
         $template->insertText('username', $this->user->name . ' - [UID ' . $this->user->id . ']');
 
         // Render the form
@@ -134,27 +134,22 @@ class Profile extends Iface
     public function __makeTemplate()
     {
 
-        $xhtml = <<<XHTML
-<div class="row">
-  <div class="col-lg-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <i class="fa fa-user fa-fw"></i>
-        <span var="username"></span>
-      </div>
-      
-      <div class="panel-body ">
-        <div class="row">
-          <div class="col-lg-12" var="formEdit">
-          </div>
-        </div>
-      </div>
+        $html = <<<HTML
+<div class="">
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <i class="fa fa-user fa-fw"></i> <span var="username"></span>
+    </div>
+    <div class="panel-body">
+      <div var="formEdit"></div>
     </div>
   </div>
-</div>
-XHTML;
 
-        return \Dom\Loader::load($xhtml);
+</div>
+HTML;
+
+        return \Dom\Loader::load($html);
     }
 
 }

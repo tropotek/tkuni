@@ -147,9 +147,10 @@ class CourseCell extends \Tk\Table\Cell\Text
 
     /**
      * @param mixed $obj
+     * @param null $rowIdx
      * @return string
      */
-    public function getCellHtml($obj)
+    public function getCellHtml($obj, $rowIdx = null)
     {
         $propValue = parent::getCellHtml($obj);
         $str = '<small>' . $propValue . '</small>';

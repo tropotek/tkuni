@@ -56,30 +56,24 @@ class Index extends Iface
      */
     public function __makeTemplate()
     {
-        $xhtml = <<<XHTML
-<div class="row">
+        $xhtml = <<<HTML
+<div class="">
 
-  <div class="" var="editPanel">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <i class="fa fa-university fa-fw"></i> TODO
-      </div>
-      <div class="panel-body ">
-        <div class="row">
-          <div class="col-lg-12">
-            Things the institution student member should be able to do:
-            <ul>
-              <li>Edit profile</li>
-              <li>Manage student course data</li>
-            </ul>
-          </div>
-        </div>
-      </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <i class="fa fa-university fa-fw"></i> TODO
+    </div>
+    <div class="panel-body">
+      Things the institution student member should be able to do:
+      <ul>
+        <li>Edit profile</li>
+        <li>Manage student course data</li>
+      </ul>
     </div>
   </div>
-  
+
 </div>
-XHTML;
+HTML;
 
         return \Dom\Loader::load($xhtml);
     }

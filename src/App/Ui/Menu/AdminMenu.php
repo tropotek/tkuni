@@ -51,7 +51,7 @@ class AdminMenu extends \Dom\Renderer\Renderer
     {
         $template = $this->getTemplate();
 
-        $template->insertText('username', $this->getUser()->name);
+        $template->insertText('username', $this->getUser()->getDisplayName());
 
         if ($this->getConfig()->isDebug()) {
             $template->setChoice('debug');

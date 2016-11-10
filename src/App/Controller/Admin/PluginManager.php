@@ -19,7 +19,6 @@ use Tk\Form\Event;
 class PluginManager extends Iface
 {
 
-
     /**
      * @var Form
      */
@@ -253,7 +252,7 @@ JS;
      */
     public function __makeTemplate()
     {
-        $xhtml = <<<XHTML
+        $xhtml = <<<HTML
 <div class="row">
   <div class="col-md-8 col-sm-12">
     <div class="panel panel-default">
@@ -311,7 +310,7 @@ JS;
   </div>
 
 </div>
-XHTML;
+HTML;
 
         return \Dom\Loader::load($xhtml);
     }

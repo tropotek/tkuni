@@ -88,6 +88,15 @@ class Course extends \Tk\Db\Map\Model
     }
 
     /**
+     *
+     */
+    public function save()
+    {
+        $this->getData()->save();
+        parent::save();
+    }
+
+    /**
      * Get the institution related to this user
      */
     public function getInstitution()

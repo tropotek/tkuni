@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS "user" (
   -- ROLES: 'admin', 'client', 'staff', 'student
   role VARCHAR(64) NOT NULL DEFAULT '',
   name VARCHAR(255) NOT NULL DEFAULT '',
+  displayName VARCHAR(255) NOT NULL DEFAULT '',
   email VARCHAR(255) NOT NULL DEFAULT '',
   active NUMERIC(1) NOT NULL DEFAULT 1,
   hash VARCHAR(255) NOT NULL DEFAULT '',

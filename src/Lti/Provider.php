@@ -129,8 +129,6 @@ class Provider extends ToolProvider\ToolProvider
                 } while ($found);
 
                 $user = \App\Factory::createNewUser($this->institution->id, $username, $this->user->email, $role, '', $this->user->fullname);
-                // TODO: Should new users should be prompted to create a new password when they enter their Dashboard through LTI....?????
-                // Maybe not they should be instructed to change their password via access through the LTI.......
             }
 
             if (!$user->active) {
@@ -161,7 +159,9 @@ class Provider extends ToolProvider\ToolProvider
             }
             \App\Db\CourseMap::create()->addUser($course->id, $user->id);
 
-            \Tk\Session::getInstance()->set('lti.launch', array_merge($_GET, $_POST));
+            $arr = array_merge($_GET, $_POST);
+            $arr[self::LTI_COURSE_ID] = $course->id;
+            \Tk\Session::getInstance()->set(self::LTI_LAUNCH, $arr);
 
             // fire loginSuccess....
             if ($this->dispatcher) {    // This event should redirect the user to their homepage.
@@ -210,8 +210,13 @@ class Provider extends ToolProvider\ToolProvider
      */
     function onError()
     {
-        vd('LTI: onError', $this->reason, $this->message);
-        return true;        // Stops redirect back to app, incase you want to show an error messages locally
+        vd('LTI: onError');
+        /** @var \Psr\Log\LoggerInterface $log */
+        $log = \App\Factory::getConfig()->getLog();
+        if ($log) {
+            $log->error($this->reason . ' ' . $this->message);
+        }
+        return true;        // Stops redirect back to app, in-case you want to show an error messages locally
     }
 
 }

@@ -105,7 +105,7 @@ class Factory
     public static function getEmailGateway()
     {
         if (!self::getConfig()->getEmailGateway()) {
-            $gateway = \Tk\Mail\Gateway::getInstance(self::getConfig());
+            $gateway = new \Tk\Mail\Gateway(self::getConfig());
             $gateway->setDispatcher(self::getEventDispatcher());
             self::getConfig()->setEmailGateway($gateway);
         }
@@ -161,9 +161,24 @@ class Factory
             $dm->add(new \Dom\Modifier\Filter\JsLast());
             $dm->add(new \Dom\Modifier\Filter\Less($config->getSitePath(), $config->getSiteUrl(), $config->getCachePath(),
                 array('siteUrl' => $config->getSiteUrl(), 'dataUrl' => $config->getDataUrl(), 'templateUrl' => $config->getTemplateUrl())));
+            if (self::getConfig()->isDebug()) {
+                $dm->add(self::getDomFilterPageBytes());
+            }
             self::getConfig()->setDomModifier($dm);
         }
         return self::getConfig()->getDomModifier();
+    }
+
+    /**
+     * @return \Dom\Modifier\Filter\PageBytes
+     */
+    public static function getDomFilterPageBytes()
+    {
+        if (!self::getConfig()->getDomFilterPageBytes()) {
+            $obj = new \Dom\Modifier\Filter\PageBytes(self::getConfig()->getSitePath());
+            self::getConfig()->setDomFilterPageBytes($obj);
+        }
+        return self::getConfig()->getDomFilterPageBytes();
     }
 
     /**
@@ -260,7 +275,7 @@ class Factory
             case '\App\Auth\Adapter\UnimelbLdap':
                 if (!isset($submittedData['instHash'])) return null;
                 $institution = \App\Db\InstitutionMap::create()->findByHash($submittedData['instHash']);
-                if (!$institution || !$institution->getData()->get('ldapHost')) return null;
+                if (!$institution || !$institution->getData()->get(\App\Db\InstitutionData::LDAP_ENABLE)) return null;
                 $adapter = new \App\Auth\Adapter\UnimelbLdap($institution);
                 break;
             case '\App\Auth\Adapter\DbTable':

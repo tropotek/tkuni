@@ -104,37 +104,31 @@ class Manager extends Iface
      */
     public function __makeTemplate()
     {
-        $xhtml = <<<XHTML
-<div class="row">
+        $xhtml = <<<HTML
+<div class="">
 
-  <div class="col-lg-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <i class="fa fa-cogs fa-fw"></i> Actions
-      </div>
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-lg-12">
-            <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
-            <a href="/client/courseEdit.html" class="btn btn-default" var="new"><i class="fa fa-graduation-cap"></i> <span>New Course</span></a>
-          </div>
-        </div>
-      </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <i class="fa fa-cogs fa-fw"></i> Actions
+    </div>
+    <div class="panel-body">
+      <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i>
+        <span>Back</span></a>
+      <a href="/client/courseEdit.html" class="btn btn-default" var="new"><i class="fa fa-graduation-cap"></i> <span>New Course</span></a>
     </div>
   </div>
-  
-  <div class="col-lg-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <i class="fa fa-graduation-cap fa-fw"></i> Course
-      </div>
-      <div class="panel-body">
-        <div var="table"></div>
-      </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <i class="fa fa-graduation-cap fa-fw"></i> Course
+    </div>
+    <div class="panel-body">
+      <div var="table"></div>
     </div>
   </div>
+    
 </div>
-XHTML;
+HTML;
 
         return \Dom\Loader::load($xhtml);
     }

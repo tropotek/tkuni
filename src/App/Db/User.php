@@ -55,6 +55,11 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     /**
      * @var string
      */
+    public $displayName = '';
+
+    /**
+     * @var string
+     */
     public $email = '';
 
     /**
@@ -117,7 +122,11 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
      */
     public function save()
     {
+        if (!$this->displayName) {
+            $this->displayName = $this->name;
+        }
         $this->getHash();
+        $this->getData()->save();
         parent::save();
     }
 
@@ -225,6 +234,17 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
             }
         }
         return $this->institution;
+    }
+
+    /**
+     * Get a valid display name
+     */
+    public function getDisplayName()
+    {
+        if (!$this->displayName) {
+            return $this->name;
+        }
+        return $this->displayName;
     }
 
     /**

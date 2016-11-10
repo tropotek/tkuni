@@ -19,8 +19,13 @@ $config['template.public.path'] = '/html/default';
 
 $config['system.timezone'] = 'Australia/Victoria';
 
-// TODO: implement this into the base config....
-$config['system.https'] = true;
+
+// TODO: implement this
+// enable/disable https for site
+//$config['system.https'] = true;
+
+
+
 
 // -- AUTH CONFIG --
 

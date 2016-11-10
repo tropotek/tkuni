@@ -16,13 +16,11 @@ $config['db.name'] = 'dev_tk2base';
 $config['db.user'] = 'dev';
 $config['db.pass'] = 'dev007';
 
-// enable/disable https for site and force secure pages to use it.
-// TODO: implement this in the base config
-//$config['system.https'] = true;
+
 
 // Debug settings
 $config['debug'] = false;
 $config['system.log.path'] = '/home/user/log/error.log';
 $config['system.log.level'] = \Psr\Log\LogLevel::INFO;
-$config['system.debug.email'] = 'info@domain.com';
+$config['system.debug.email'] = 'info@localhost';
 

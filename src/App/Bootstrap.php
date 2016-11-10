@@ -61,6 +61,9 @@ class Bootstrap
             date_default_timezone_set($config['system.timezone']);
         
         \Tk\Uri::$BASE_URL_PATH = $config->getSiteUrl();
+        if ($config->isDebug()) {
+            \Dom\Template::$enableTracer = true;
+        }
 
         /**
          * This makes our life easier when dealing with paths. Everything is relative
@@ -88,6 +91,8 @@ class Bootstrap
         if ($config->isCli()) {
             return $config;
         }
+
+        // --- HTTP only bootstrapping from here ---
         
         if ($config->isDebug()) {
             error_reporting(-1);
@@ -97,8 +102,6 @@ class Bootstrap
             error_reporting(0);
             ini_set('display_errors', 'Off');
         }
-
-        // --- HTTP only bootstrapping from here ---
         
         // * Request
         Factory::getRequest();

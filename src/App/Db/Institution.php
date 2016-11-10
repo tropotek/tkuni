@@ -13,22 +13,22 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface
 {
 
     // Data fields
-    const LTI_ENABLE = 'ltiEnable';
-    const LTI_KEY = 'ltiKey';
-    const LTI_SECRET = 'ltiSecret';
-    const LTI_URL = 'ltiUrl';
-    const LTI_CURRENT_KEY = 'ltiCurrentKey';
-    const LTI_CURRENT_ID = 'ltiCurrentId';
-
-    const LDAP_ENABLE = 'ldapEnable';
-    const LDAP_HOST = 'ldapHost';
-    const LDAP_TLS = 'ldapTls';
-    const LDAP_PORT = 'ldapPort';
-    const LDAP_BASE_DN = 'ldapBaseDn';
-    const LDAP_FILTER = 'ldapFilter';
-
-    const API_ENABLE = 'apiEnable';
-    const API_KEY = 'apiKey';
+//    const LTI_ENABLE = 'ltiEnable';
+//    const LTI_KEY = 'ltiKey';
+//    const LTI_SECRET = 'ltiSecret';
+//    const LTI_URL = 'ltiUrl';
+//    const LTI_CURRENT_KEY = 'ltiCurrentKey';
+//    const LTI_CURRENT_ID = 'ltiCurrentId';
+//
+//    const LDAP_ENABLE = 'ldapEnable';
+//    const LDAP_HOST = 'ldapHost';
+//    const LDAP_TLS = 'ldapTls';
+//    const LDAP_PORT = 'ldapPort';
+//    const LDAP_BASE_DN = 'ldapBaseDn';
+//    const LDAP_FILTER = 'ldapFilter';
+//
+//    const API_ENABLE = 'apiEnable';
+//    const API_KEY = 'apiKey';
 
 
     /**
