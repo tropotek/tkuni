@@ -127,19 +127,19 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface
         // unimelb_00002
         // 1f72a0bac401a3e375e737185817463c
         $consumer = $this->getLtiConsumer();
-        if ($this->getData()->get(self::LTI_ENABLE)) {
+        if ($this->getData()->get(InstitutionData::LTI_ENABLE)) {
             if (!$consumer) {
                 $consumer = new \IMSGlobal\LTI\ToolProvider\ToolConsumer(null, \App\Factory::getLtiDataConnector());
             }
-            $consumer->setKey($this->getData()->get(self::LTI_KEY));
-            $consumer->secret = $this->getData()->get(self::LTI_SECRET);
+            $consumer->setKey($this->getData()->get(InstitutionData::LTI_KEY));
+            $consumer->secret = $this->getData()->get(InstitutionData::LTI_SECRET);
             $consumer->enabled = true;
             $consumer->name = $this->name;
             $consumer->save();
 
-            $this->getData()->set(self::LTI_CURRENT_KEY, $consumer->getKey());
-            $this->getData()->set(self::LTI_CURRENT_ID, $consumer->getRecordId());
-            $this->getData()->set(self::LTI_SECRET, $consumer->secret);
+            $this->getData()->set(InstitutionData::LTI_CURRENT_KEY, $consumer->getKey());
+            $this->getData()->set(InstitutionData::LTI_CURRENT_ID, $consumer->getRecordId());
+            $this->getData()->set(InstitutionData::LTI_SECRET, $consumer->secret);
             $url = \Tk\Uri::create('/lti/'.$this->getHash().'/launch.html')->toString();
             if ($this->domain)
                 $url = \Tk\Uri::create('http://'.$this->domain.'/lti/launch.html')->toString();
@@ -162,7 +162,7 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface
      */
     public function getLtiConsumer()
     {
-        $key = $this->getData()->get(self::LTI_CURRENT_KEY);
+        $key = $this->getData()->get(InstitutionData::LTI_CURRENT_KEY);
         if ($key === '') $key = null;
         if (!$this->ltiConsumer && $key) {
             $this->ltiConsumer = new \IMSGlobal\LTI\ToolProvider\ToolConsumer($key, \App\Factory::getLtiDataConnector());
