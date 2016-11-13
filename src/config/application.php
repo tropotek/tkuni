@@ -53,7 +53,6 @@ $config['template.public.path'] = '/html/default';
 \App\Factory::$LTI_DB_PREFIX = '_';
 \Tk\Db\Map\Mapper::$DB_PREFIX = ''; // Disabled, not used in this app
 
-
 /*
  * Config for the \Tk\Auth\Adapter\DbTable
  */
