@@ -321,17 +321,15 @@ class Factory
      * Hash a string using the system config set algorithm
      *
      * @link http://php.net/manual/en/function.hash.php
-     * @param $str
+     * @param string $pwd
+     * @param \App\Db\User $user (optional)
      * @return string
      */
-    static public function hash($str)
+    static public function hash($pwd, $user = null)
     {
-        $hf = 'md5';    //  (e.g. "md5", "sha256", "haval160,4", etc..) see hash_algos()
-        if (self::getConfig()->has('hash.function')) {
-            $hf = self::getConfig()->get('hash.function');
-        }
-        $r = hash($hf, $str);
-        return $r;
+        if (self::getConfig()->get('hash.function'))
+            return hash(self::getConfig()->get('hash.function'), $pwd);
+        return hash('md5', $pwd);
     }
     
     /**
