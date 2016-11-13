@@ -22,5 +22,5 @@ $config['db.pass'] = 'dev007';
 $config['debug'] = false;
 $config['system.log.path'] = '/home/user/log/error.log';
 $config['system.log.level'] = \Psr\Log\LogLevel::INFO;
-$config['system.debug.email'] = 'info@localhost';
+$config['system.debug.email'] = 'user@localhost';
 
