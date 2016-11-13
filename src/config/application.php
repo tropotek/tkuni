@@ -13,29 +13,48 @@ $config = \Tk\Config::getInstance();
 include_once(__DIR__ . '/session.php');
 include_once(__DIR__ . '/routes.php');
 
-// Template folders for pages
+/*
+ * Setup any default app config values
+ */
+
+/*
+ * Template folders for pages
+ */
 $config['template.admin.path'] = '/html/default';
 $config['template.public.path'] = '/html/default';
 
-$config['system.timezone'] = 'Australia/Victoria';
+/*
+ * Change the system timezone
+ */
+//$config['date.timezone'] = 'Australia/Victoria';
+
+/*
+ * If you use sub folders in your URL's you 
+ * must define the site root paths manually.
+ */
+//$config['site.path'] = dirname(dirname(dirname(__FILE__)));
+//$config['site.url'] = dirname($_SERVER['PHP_SELF']);
 
 
-// TODO: implement this
-// enable/disable https for site
-//$config['system.https'] = true;
 
 
 
 
-// -- AUTH CONFIG --
+/*  
+ * ---- AUTH CONFIG ----
+ */
 
-// The hash function to use for passwords and general hashing
-// Warning if you change this after user account creation
-// users will have to reset/recover their passwords
-$config['hash.function'] = 'md5';
+/*
+ * The hash function to use for passwords and general hashing
+ * Warning if you change this after user account creation
+ * users will have to reset/recover their passwords
+ */
+//$config['hash.function'] = 'md5';
 
 
-// Do not change after installation
+/*
+ * Set the default table names in the DB
+ */
 \Tk\Plugin\Factory::$DB_TABLE = '_plugin';
 \Tk\Util\SqlMigrate::$DB_TABLE = '_migration';
 \Tk\Session\Adapter\Database::$DB_TABLE = '_session';
@@ -44,14 +63,18 @@ $config['hash.function'] = 'md5';
 \Tk\Db\Map\Mapper::$DB_PREFIX = ''; // Disabled, not used in this app
 
 
-// DbTable
+/*
+ * Config for the \Tk\Auth\Adapter\DbTable
+ */
 $config['system.auth.dbtable.tableName'] = 'user';
 $config['system.auth.dbtable.usernameColumn'] = 'username';
 $config['system.auth.dbtable.passwordColumn'] = 'password';
 $config['system.auth.dbtable.saltColumn'] = 'hash';
 $config['system.auth.dbtable.activeColumn'] = 'active';
 
-
+/*
+ * Auth adapters to use in logging into the site
+ */
 $config['system.auth.adapters'] = array(
     'LDAP' => '\App\Auth\Adapter\UnimelbLdap',
     'DbTable' => '\App\Auth\Adapter\DbTable'
