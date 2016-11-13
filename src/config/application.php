@@ -18,13 +18,6 @@ include_once(__DIR__ . '/routes.php');
  **************************************/
 
 /*
- * If you use sub folders in your URL's you
- * must define the site root paths manually.
- */
-//$config['site.path'] = dirname(dirname(dirname(__FILE__)));
-//$config['site.url'] = dirname($_SERVER['PHP_SELF']);
-
-/*
  * Template folders for pages
  */
 $config['template.admin.path'] = '/html/default';
