@@ -17,7 +17,20 @@ class Acl
     const ROLE_STAFF = 'staff';
     const ROLE_STUDENT = 'student';
 
-    
+
+    /**
+     * The order of role permissions
+     * @var array
+     */
+    public static $roleOrder = array(
+        self::ROLE_ADMIN,           // Highest
+        self::ROLE_CLIENT,
+        self::ROLE_STAFF,
+        self::ROLE_STUDENT          // Lowest
+    );
+
+
+
     /**
      * @var \App\Db\User
      */

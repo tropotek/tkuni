@@ -66,8 +66,8 @@ class Manager extends Iface
 
         // Actions
         //$this->table->addAction(\Tk\Table\Action\Button::getInstance('New Course', 'fa fa-plus', \Tk\Uri::create('/client/courseEdit.html')));
-        $this->table->addAction(\Tk\Table\Action\Delete::getInstance());
-        $this->table->addAction(\Tk\Table\Action\Csv::getInstance($this->getConfig()->getDb()));
+        $this->table->addAction(\Tk\Table\Action\Delete::create());
+        $this->table->addAction(\Tk\Table\Action\Csv::create($this->getConfig()->getDb()));
 
         $filter = $this->table->getFilterValues();
         $filter['institutionId'] = $this->institution->id;       // <------- ??????? For new institution still shows other courses????

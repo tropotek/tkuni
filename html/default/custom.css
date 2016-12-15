@@ -128,3 +128,7 @@ body.public {
 .tk-form select[multiple] {
   min-height: 150px;
 }
+
+#contactForm div.text-danger {
+  margin: 5px 0 5px 27.5%;
+}

@@ -55,8 +55,8 @@ class Manager extends Iface
 
         // Actions
         //$this->table->addAction(\Tk\Table\Action\Button::getInstance('New Institution', 'fa fa-plus', \Tk\Uri::create('admin/institutionEdit.html')));
-        $this->table->addAction(\Tk\Table\Action\Delete::getInstance());
-        $this->table->addAction(\Tk\Table\Action\Csv::getInstance($this->getConfig()->getDb()));
+        $this->table->addAction(\Tk\Table\Action\Delete::create());
+        $this->table->addAction(\Tk\Table\Action\Csv::create($this->getConfig()->getDb()));
 
         $users = \App\Db\InstitutionMap::create()->findFiltered($this->table->getFilterValues(), $this->table->makeDbTool('a.id'));
         $this->table->setList($users);

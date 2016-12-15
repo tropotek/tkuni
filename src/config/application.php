@@ -49,7 +49,7 @@ $config['template.public.path'] = '/html/default';
 \Tk\Plugin\Factory::$DB_TABLE = '_plugin';
 \Tk\Util\SqlMigrate::$DB_TABLE = '_migration';
 \Tk\Session\Adapter\Database::$DB_TABLE = '_session';
-\Ts\Db\Data::$DB_TABLE = '_data';
+\Tk\Db\Data::$DB_TABLE = '_data';
 \App\Factory::$LTI_DB_PREFIX = '_';
 \Tk\Db\Map\Mapper::$DB_PREFIX = ''; // Disabled, not used in this app
 

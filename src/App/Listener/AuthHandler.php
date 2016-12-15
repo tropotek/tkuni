@@ -32,7 +32,8 @@ class AuthHandler implements SubscriberInterface
         $auth = \App\Factory::getAuth();
         if ($auth->getIdentity()) {
             $ident = $auth->getIdentity();
-            $user = \App\Db\User::getMapper()->findByUsername($ident['username'], $ident['institutionId']);
+            //$user = \App\Db\User::getMapper()->findByUsername($ident['username'], $ident['institutionId']);
+            $user = \App\Db\UserMap::create()->find($ident);
             $config->setUser($user);
         }
     }
@@ -92,7 +93,8 @@ class AuthHandler implements SubscriberInterface
 
         /** @var \App\Db\User $user */
         $ident = $result->getIdentity();
-        $user = \App\Db\UserMap::create()->findByUsername($ident['username'], $ident['institutionId']);
+        //$user = \App\Db\UserMap::create()->findByUsername($ident['username'], $ident['institutionId']);
+        $user = \App\Db\UserMap::create()->find($ident);
         if (!$user) {
             throw new \Tk\Auth\Exception('User not found: Contact Your Administrator.');
         }
@@ -124,7 +126,6 @@ class AuthHandler implements SubscriberInterface
                 \App\Db\CourseMap::create()->addUser($course->id, $user->id);
             }
         }
-
         \Tk\Uri::create($user->getHomeUrl())->redirect();
     }
 

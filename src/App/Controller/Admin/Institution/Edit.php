@@ -88,7 +88,7 @@ class Edit extends Iface
         $this->form->addField(new Field\Checkbox(\App\Db\InstitutionData::LTI_ENABLE))->setTabGroup('LTI')->setNotes('Enable the LTI V1 launch URL for LMS systems.');
         $lurl = \Tk\Uri::create('/lti/'.$this->institution->getHash().'/launch.html')->toString();
         if ($this->institution->domain)
-            $lurl = \Tk\Uri::create('/lti/launch.html')->setHos->toString();
+            $lurl = \Tk\Uri::create('/lti/launch.html')->setHost($this->institution->domain)->toString();
 
         $this->form->addField(new Field\Html(\App\Db\InstitutionData::LTI_URL, $lurl))->setLabel('Launch Url')->setTabGroup('LTI');
         $this->institution->getData()->set(\App\Db\InstitutionData::LTI_URL, $lurl);
@@ -206,6 +206,13 @@ class Edit extends Iface
 
             $template->addClass('editPanel', 'col-md-4');
             $template->setChoice('showInfo');
+
+            // No Client pages to log into...
+            $template->setAttr('msq', 'href', \App\Uri::create()->reset()->set(\App\Listener\MasqueradeHandler::MSQ, $this->institution->getOwner()->hash));
+            //$template->setChoice('msq');
+
+
+
         } else {
             $template->addClass('editPanel', 'col-md-12');
         }
@@ -264,7 +271,7 @@ JS;
         <div class="row">
           <div class="col-lg-12">
             <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
-            <a href="javascript:;" class="btn btn-default"><i class="fa fa-user-secret"></i> <span>Masquerade</span></a>
+            <a href="javascript:;" class="btn btn-default" choice="msq" var="msq"><i class="fa fa-user-secret"></i> <span>Masquerade</span></a>
           </div>
         </div>
       </div>

@@ -59,7 +59,6 @@ class UnimelbLdap extends \Tk\Auth\Adapter\Ldap
         // Update the user record with ldap data
         $iid = $this->institution->id;
 
-
         /** @var \App\Db\User $user */
         $user = \App\Db\User::getMapper()->findByUsername($r->getIdentity(), $iid);
         if (!$user && isset($ldapData[0]['mail'][0])) {
@@ -96,7 +95,8 @@ class UnimelbLdap extends \Tk\Auth\Adapter\Ldap
             $user->save();
         }
 
-        $r = new Result(Result::SUCCESS, array('username' => $username, 'institutionId' => $iid), 'User Found!');
+        #$r = new Result(Result::SUCCESS, array('username' => $username, 'institutionId' => $iid), 'User Found!');
+        $r = new Result(Result::SUCCESS, $user->id, 'User Found!');
         return $r;
     }
 

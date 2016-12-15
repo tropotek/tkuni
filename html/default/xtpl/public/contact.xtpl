@@ -70,7 +70,7 @@
                   <b>Attach</b>
                 </label>
                 <div class="col-sm-9">
-                  <input type="file" name="attach" id="attach" />
+                  <input type="file" name="attach" id="attach" multiple="true"/>
                 </div>
               </div>
 

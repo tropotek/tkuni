@@ -231,12 +231,12 @@ class Factory
     /**
      * getControllerResolver
      *
-     * @return \Tk\Controller\ControllerResolver
+     * @return \Tk\Controller\Resolver
      */
     public static function getControllerResolver()
     {
         if (!self::getConfig()->getControllerResolver()) {
-            $obj = new \Tk\Controller\ControllerResolver(self::getConfig()->getLog());
+            $obj = new \Tk\Controller\Resolver(self::getConfig()->getLog());
             self::getConfig()->setControllerResolver($obj);
         }
         return self::getConfig()->getControllerResolver();

@@ -1,10 +1,9 @@
 <?php
 namespace App\Db;
 
-use Tk\Auth;
 use Tk\Auth\Exception;
 use App\Auth\Acl;
-use Ts\Db\Data;
+use Tk\Db\Data;
 
 
 /**
@@ -95,7 +94,7 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     /**
      * @var \App\Auth\Acl
      */
-    private $access = null;
+    private $acl = null;
 
     /**
      * @var \App\Db\Institution
@@ -133,12 +132,12 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     /**
      * Get the data object
      *
-     * @return \Ts\Db\Data
+     * @return \Tk\Db\Data
      */
     public function getData()
     {
         if (!$this->data)
-            $this->data = \Ts\Db\Data::create($this->id, get_class($this));
+            $this->data = \Tk\Db\Data::create($this->id, get_class($this));
         return $this->data;
     }
 
@@ -147,10 +146,10 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
      */
     public function getAcl()
     {
-        if (!$this->access) {
-            $this->access = new Acl($this);
+        if (!$this->acl) {
+            $this->acl = new Acl($this);
         }
-        return $this->access;
+        return $this->acl;
     }
 
     /**

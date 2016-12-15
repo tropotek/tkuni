@@ -115,7 +115,7 @@ class Bootstrap
         // Initiate the default database connection
         \App\Factory::getDb();
         // Import config settings from DB
-        $config->replace(\Ts\Db\Data::create()->toArray());
+        $config->replace(\Tk\Db\Data::create()->toArray());
 
         // initialise Dom Loader
         \App\Factory::getDomLoader();

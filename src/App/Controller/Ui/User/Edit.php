@@ -210,7 +210,7 @@ class Edit extends Iface
 
         //if ($this->user->id && $this->user->id != $this->getUser()->id) {
         if ($this->user->id) {
-            $template->setAttr('msq', 'href', \App\Uri::create()->reset()->set('msq', $this->user->hash));
+            $template->setAttr('msq', 'href', \App\Uri::create()->reset()->set(\App\Listener\MasqueradeHandler::MSQ, $this->user->hash));
             $template->setChoice('msq');
         }
 

@@ -1,7 +1,7 @@
 <?php
 namespace App\Db;
 
-use Ts\Db\Data;
+use Tk\Db\Data;
 
 /**
  *

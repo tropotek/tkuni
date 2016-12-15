@@ -7,7 +7,7 @@
  */
 
 $config = \Tk\Config::getInstance();
-$data = \Ts\Db\Data::create();
+$data = \Tk\Db\Data::create();
 $data->set('site.title', 'tk2uni');
 $data->set('site.email', 'fvas-elearning@unimelb.edu.au');
 //$data->set('site.client.registration', 'site.client.registration');

@@ -23,7 +23,7 @@ class Settings extends Iface
     protected $form = null;
 
     /**
-     * @var \Ts\Db\Data|null
+     * @var \Tk\Db\Data
      */
     protected $data = null;
 
@@ -34,14 +34,14 @@ class Settings extends Iface
     public function __construct()
     {
         parent::__construct('Site Settings');
-        $this->data = \Ts\Db\Data::create();
+        $this->data = \Tk\Db\Data::create();
     }
 
     /**
      * doDefault
      *
      * @param Request $request
-     * @return \App\Page\PublicPage
+     * @return \App\Page\Iface
      */
     public function doDefault(Request $request)
     {
@@ -75,7 +75,7 @@ class Settings extends Iface
         if (!$form->getFieldValue('site.title')) {
             $form->addFieldError('site.title', 'Please enter the sites title');
         }
-        if ($form->getFieldValue('site.email') || !filter_var($form->getFieldValue('site.email'), \FILTER_VALIDATE_EMAIL)) {
+        if ($form->getFieldValue('site.email') && !filter_var($form->getFieldValue('site.email'), \FILTER_VALIDATE_EMAIL)) {
             $form->addFieldError('site.email', 'Please enter a valid email address');
         }
         
@@ -95,7 +95,7 @@ class Settings extends Iface
     /**
      * show()
      *
-     * @return \App\Page\PublicPage
+     * @return \App\Page\Iface
      */
     public function show()
     {

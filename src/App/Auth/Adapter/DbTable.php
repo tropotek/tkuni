@@ -33,7 +33,8 @@ class DbTable extends \Tk\Auth\Adapter\DbTable
         try {
             $user = $this->getUser($username);
             if ($user && $this->hashPassword($password, $user) == $user->{$this->passwordColumn}) {
-                return new Result(Result::SUCCESS, array('username' => $username, 'institutionId' => $user->institution_id));
+                //return new Result(Result::SUCCESS, array('username' => $username, 'institutionId' => $user->institution_id));
+                return new Result(Result::SUCCESS, $user->id);
             }
         } catch (\Exception $e) {
             throw new \Tk\Auth\Exception('The supplied parameters failed to produce a valid sql statement, please check table and column names for validity.', 0, $e);

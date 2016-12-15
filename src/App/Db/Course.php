@@ -1,7 +1,7 @@
 <?php
 namespace App\Db;
 
-use Ts\Db\Data;
+use Tk\Db\Data;
 
 /**
  *
@@ -110,12 +110,12 @@ class Course extends \Tk\Db\Map\Model
     /**
      * Get the data object
      *
-     * @return \Ts\Db\Data
+     * @return \Tk\Db\Data
      */
     public function getData()
     {
         if (!$this->data)
-            $this->data = \Ts\Db\Data::create($this->id, get_class($this));
+            $this->data = \Tk\Db\Data::create($this->id, get_class($this));
         return $this->data;
     }
 
