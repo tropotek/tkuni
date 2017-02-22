@@ -98,6 +98,19 @@ class Factory
     }
 
     /**
+     * getPluginFactory
+     *
+     * @return \Tk\Plugin\Factory
+     */
+    public static function getPluginFactory()
+    {
+        if (!self::getConfig()->getPluginFactory()) {
+            self::getConfig()->setPluginFactory(\Tk\Plugin\Factory::getInstance(self::getDb(), self::getConfig()->getPluginPath(), self::getEventDispatcher()));
+        }
+        return self::getConfig()->getPluginFactory();
+    }
+
+    /**
      * getEmailGateway
      *
      * @return \Tk\Mail\Gateway
