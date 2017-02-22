@@ -57,7 +57,7 @@ class Enrollment extends Iface
         $this->table = new \Tk\Table('tableOne');
 
         $this->table->addCell(new \Tk\Table\Cell\Checkbox('email'));
-        $this->table->addCell(new \Tk\Table\Cell\Text('email'))->addCellCss('key');
+        $this->table->addCell(new \Tk\Table\Cell\Text('email'))->addCss('key');
         //$this->table->addCell(new \Tk\Table\Cell\Text('uid'))->setLabel('UID');
         $this->table->addCell(new NameCell('name'));
         //$this->table->addCell(new \Tk\Table\Cell\Date('created'));

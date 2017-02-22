@@ -3,11 +3,10 @@ namespace App\Controller\Admin;
 
 use Tk\Request;
 use Dom\Template;
-use App\Controller\Iface;
-use Tk\Plugin\Factory;
 use Tk\Form;
 use Tk\Form\Field;
 use Tk\Form\Event;
+use \App\Controller\Iface;
 
 /**
  *
@@ -20,28 +19,22 @@ class PluginManager extends Iface
 {
 
     /**
+     * @var \Tk\Table
+     */
+    protected $table = null;
+
+    /**
      * @var Form
      */
     protected $form = null;
 
-    /**
-     * @var Factory
-     */
-    protected $pluginFactory = null;
-
-    /**
-     * @var \Tk\EventDispatcher\EventDispatcher
-     */
-    private $dispatcher = null;
-    
 
     /**
      *
      */
     public function __construct()
     {
-        parent::__construct('Plugin Manager');
-        $this->dispatcher = $this->getConfig()->getEventDispatcher();
+        parent::__construct();
     }
 
     /**
@@ -51,25 +44,45 @@ class PluginManager extends Iface
      */
     public function doDefault(Request $request)
     {
-        $this->pluginFactory = Factory::getInstance($this->getConfig());
+        $this->pluginFactory = \App\Factory::getPluginFactory();
 
-        if ($request->has('act')) {
-            $this->doActivatePlugin($request);
-        } else if ($request->has('del')) {
-            $this->doDeletePlugin($request);
-        } else if ($request->has('deact')) {
-            $this->doDeactivatePlugin($request);
-        }
+        $this->setPageTitle('Plugin Manager');
 
+        // Upload plugin
         $this->form = new Form('formEdit');
-        $this->form->addField(new Field\File('package', $request))->setRequired(true)->setAttr('accept', 'png,jpeg,jpg,gif');
-        $this->form->addField(new Event\Button('upload', array($this, 'doUpload')))->addCssClass('btn-primary');
-
+        $this->form->addField(new Field\File('package', $request))->setRequired(true)->addCss('tkFileinput');
+        $this->form->addField(new Event\Button('upload', array($this, 'doUpload')))->addCss('btn-primary');
         $this->form->execute();
 
+        // Plugin manager table
+        $this->table = new \Tk\Table('PluginList');
+        $this->table->setParam('renderer', \Tk\Table\Renderer\Dom\Table::create($this->table));
 
+        $this->table->addCell(new IconCell('icon'))->setLabel('');
+        $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCss('key')->setOrderProperty('');
+        $this->table->addCell(new \Tk\Table\Cell\Text('version'))->setOrderProperty('');
+        //$this->table->addCell(new AccessCell('access'));
+        $this->table->addCell(new \Tk\Table\Cell\Date('time'))->setLabel('Created')->setOrderProperty('');
+        $this->table->addCell(new ActionsCell('actions'));
+
+        $this->table->setList($this->getPluginList());
 
         return $this->show();
+    }
+
+    /**
+     * @return array
+     */
+    private function getPluginList()
+    {
+        $pluginFactory = \App\Factory::getPluginFactory();
+        $list = array();
+        $names = $pluginFactory->getAvailablePlugins();
+        foreach ($names as $pluginName) {
+            $info = $pluginFactory->getPluginInfo($pluginName);
+            $list[$pluginName] = $info;
+        }
+        return $list;
     }
 
     /**
@@ -77,7 +90,7 @@ class PluginManager extends Iface
      */
     public function doUpload($form)
     {
-        /** @var Field\File $package */
+        /* @var Field\File $package */
         $package = $form->getField('package');
         if (!$package->isValid()) {
             return;
@@ -97,32 +110,305 @@ class PluginManager extends Iface
 
         $package->moveTo($dest);
         $cmd = '';
-        vd(\Tk\File::getExtension($dest));
+
         if (\Tk\File::getExtension($dest) == 'zip') {
             $cmd  = sprintf('cd %s && unzip %s', escapeshellarg(dirname($dest)), escapeshellarg(basename($dest)));
         } else if (\Tk\File::getExtension($dest) == 'gz' || \Tk\File::getExtension($dest) == 'tgz') {
             $cmd  = sprintf('cd %s && tar zxf %s', escapeshellarg(dirname($dest)), escapeshellarg(basename($dest)));
         }
         if ($cmd) {
-            $msg = exec($cmd);
-            vd($msg);
+            exec($cmd);
         }
 
-        \Ts\Alert::addSuccess('Plugin sucessfully uploaded.');
+        \Ts\Alert::addSuccess('Plugin successfully uploaded.');
         \Tk\Uri::create()->reset()->redirect();
     }
 
+    /**
+     * @return \App\Page\Iface
+     */
+    public function show()
+    {
+        $template = $this->getTemplate();
+
+        // Render the form
+        $fren = new \Tk\Form\Renderer\Dom($this->form);
+        $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());
+
+        // render Table
+        $template->replaceTemplate('PluginList', $this->table->getParam('renderer')->show());
+
+        return $this->getPage()->setPageContent($template);
+    }
+
+    /**
+     * DomTemplate magic method
+     *
+     * @return Template
+     */
+    public function __makeTemplate()
+    {
+        $xhtml = <<<HTML
+<div>
+
+  <div class="panel panel-default panel-shortcut">
+    <div class="panel-heading">
+      <h4 class="panel-title"><i class="fa fa-cogs"></i> Actions</h4>
+    </div>
+    <div class="panel-body">
+      <a href="javascript: window.history.back();" class="btn btn-default back" var="back"><i class="fa fa-arrow-left"></i>
+        <span>Back</span></a>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8 col-sm-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title"><i class="glyphicon glyphicon-compressed"></i> Available Plugins</h4>
+        </div>
+        <div class="panel-body">
+          <div class="pluginList" var="PluginList"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-sm-12">
+      <div class="panel panel-default" id="uploadForm">
+        <div class="panel-heading">
+          <h3 class="panel-title"><span class="glyphicon glyphicon-log-out"></span> Upload Plugin</h3>
+        </div>
+        <div class="panel-body">
+          <p>Select A zip/tgz plugin package to upload.</p>
+          <div var="formEdit"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+HTML;
+        return \Dom\Loader::load($xhtml);
+    }
+
+}
+
+
+class AccessCell extends \Tk\Table\Cell\Text
+{
+
+    /**
+     * OwnerCell constructor.
+     *
+     * @param string $property
+     * @param null $label
+     */
+    public function __construct($property, $label = null)
+    {
+        parent::__construct($property, $label);
+        $this->setOrderProperty('');
+    }
+
+    /**
+     * Get the property value from the object
+     * This should be the clean property data with no HTML or rendering attached,
+     * unless the rendering code is part of the value as it will be called for
+     * outputting to other files like XML or CSV.
+     *
+     * @param object $obj
+     * @param string $property
+     * @return mixed
+     */
+    public function getPropertyValue($obj, $property)
+    {
+        if (!empty($obj->access))
+            return $obj->access;
+        return 'system';
+
+    }
+}
+
+
+class IconCell extends \Tk\Table\Cell\Text
+{
+
+    /**
+     * OwnerCell constructor.
+     *
+     * @param string $property
+     * @param null $label
+     */
+    public function __construct($property, $label = null)
+    {
+        parent::__construct($property, $label);
+        $this->setOrderProperty('');
+    }
+
+    /**
+     * @param \StdClass $info
+     * @param int|null $rowIdx The current row being rendered (0-n) If null no rowIdx available.
+     * @return string|\Dom\Template
+     */
+    public function getCellHtml($info, $rowIdx = null)
+    {
+        $template = $this->__makeTemplate();
+
+        $pluginName = \App\Factory::getPluginFactory()->cleanPluginName($info->name);
+
+        if (is_file(\Tk\Config::getInstance()->getPluginPath().'/'.$pluginName.'/icon.png')) {
+            $template->setAttr('icon', 'src', \Tk\Config::getInstance()->getPluginUrl() . '/' . $pluginName . '/icon.png');
+            $template->setChoice('icon');
+        }
+
+        return $template;
+    }
+
+    /**
+     * makeTemplate
+     *
+     * @return \Dom\Template
+     */
+    public function __makeTemplate()
+    {
+        $html = <<<HTML
+<div>
+  <img class="media-object" src="#" var="icon" style="width: 20px;" choice="icon"/>
+</div>
+HTML;
+        return \Dom\Loader::load($html);
+    }
+}
+
+
+
+class ActionsCell extends \Tk\Table\Cell\Text
+{
+
+    /**
+     * OwnerCell constructor.
+     *
+     * @param string $property
+     * @param null $label
+     */
+    public function __construct($property, $label = null)
+    {
+        parent::__construct($property, $label);
+        $this->setOrderProperty('');
+    }
+
+
+    /**
+     * Called when the Table::execute is called
+     */
+    public function execute() {
+        /** @var \Tk\Request $request */
+        $request = \Tk\Config::getInstance()->getRequest();
+
+        if ($request->has('act')) {
+            $this->doActivatePlugin($request);
+        } else if ($request->has('del')) {
+            $this->doDeletePlugin($request);
+        } else if ($request->has('deact')) {
+            $this->doDeactivatePlugin($request);
+        }
+
+    }
+
+    /**
+     * @param \StdClass $info
+     * @param int|null $rowIdx The current row being rendered (0-n) If null no rowIdx available.
+     * @return string|\Dom\Template
+     */
+    public function getCellHtml($info, $rowIdx = null)
+    {
+        $template = $this->__makeTemplate();
+        $pluginFactory = \App\Factory::getPluginFactory();
+
+        $pluginName = $pluginFactory->cleanPluginName($info->name);
+
+        if ($pluginFactory->isActive($pluginName)) {
+            $plugin = $pluginFactory->getPlugin($pluginName);
+            $template->setChoice('active');
+            $template->setAttr('deact', 'href', \Tk\Uri::create()->reset()->set('deact', $pluginName));
+
+            $template->setAttr('title', 'href', $plugin->getSettingsUrl());
+            $template->setAttr('setup', 'href', $plugin->getSettingsUrl());
+        } else {
+            $template->setChoice('inactive');
+            $template->setAttr('act', 'href', \Tk\Uri::create()->reset()->set('act', $pluginName));
+
+            // Dissable deletion of plugins that are installed via composer
+            $result = call_user_func_array('array_merge', \Tk\Config::getInstance()->getComposer()->getPrefixes());
+            $isComposer = false;
+            foreach ($result as $item) {
+                if (preg_match('/'.preg_quote($pluginName).'$/', $item)) {
+                    $isComposer = true;
+                    break;
+                }
+            }
+            if (!$isComposer) {
+                $template->setAttr('del', 'href', \Tk\Uri::create()->reset()->set('del', $pluginName));
+            } else {
+                $template->addCss('del', 'disabled');
+                $template->setAttr('del', 'title', 'Cannot delete a composer plugin. See site administrator.');
+            }
+
+        }
+
+        $js = <<<JS
+jQuery(function ($) {
+    $('.act').click(function (e) {
+        return confirm('Are you sure you want to install this plugin?');
+    });
+    $('.del').click(function (e) {
+        return confirm('Are you sure you want to delete this plugin?');
+    });
+    $('.deact').click(function (e) {
+        return confirm('Are you sure you want to uninstall this plugin?');
+    });
+});
+JS;
+        $template->appendJs($js);
+
+        return $template;
+    }
+
+
+
+    /**
+     * makeTemplate
+     *
+     * @return \Dom\Template
+     */
+    public function __makeTemplate()
+    {
+        $html = <<<HTML
+<div>
+<a href="#" class="btn btn-success btn-xs noblock act" choice="inactive" var="act" title="Install Plugin"><i class="glyphicon glyphicon-log-in"></i></a>
+<a href="#" class="btn btn-danger btn-xs noblock del" choice="inactive" var="del" title="Delete Plugin"><i class="glyphicon glyphicon-remove-circle"></i></a>
+<a href="#" class="btn btn-primary btn-xs noblock setup" choice="active" var="setup" title="Configure Plugin"><i class="glyphicon glyphicon-cog"></i></a>
+<a href="#" class="btn btn-warning btn-xs noblock deact" choice="active" var="deact" title="Uninstall Plugin"><i class="glyphicon glyphicon-log-out"></i></a>
+</div>
+HTML;
+        return \Dom\Loader::load($html);
+    }
 
     protected function doActivatePlugin(Request $request)
     {
+        $pluginFactory = \App\Factory::getPluginFactory();
         $pluginName = strip_tags(trim($request->get('act')));
         if (!$pluginName) {
             \Ts\Alert::addWarning('Cannot locate Plugin: ' . $pluginName);
             return;
         }
-        $this->pluginFactory->activatePlugin($pluginName);
-        \Ts\Alert::addSuccess('Plugin `' . $pluginName . '` activated successfully');
-        \Tk\Url::create()->reset()->redirect();
+        try {
+            $pluginFactory->activatePlugin($pluginName);
+            \Ts\Alert::addSuccess('Plugin `' . $pluginName . '` activated successfully');
+        }catch (\Exception $e) {
+            \Ts\Alert::addError('Plugin `' . $pluginName . '` activation error. Check the plugin version.');
+            // TODO: delete any DB entries.
+        }
+        \Tk\Uri::create()->reset()->redirect();
     }
 
     protected function doDeactivatePlugin(Request $request)
@@ -132,10 +418,9 @@ class PluginManager extends Iface
             \Ts\Alert::addWarning('Cannot locate Plugin: ' . $pluginName);
             return;
         }
-        $this->pluginFactory->deactivatePlugin($pluginName);
+        \App\Factory::getPluginFactory()->deactivatePlugin($pluginName);
         \Ts\Alert::addSuccess('Plugin `' . $pluginName . '` deactivated successfully');
-
-        \Tk\Url::create()->reset()->redirect();
+        \Tk\Uri::create()->reset()->redirect();
     }
 
     protected function doDeletePlugin(Request $request)
@@ -145,7 +430,7 @@ class PluginManager extends Iface
             \Ts\Alert::addWarning('Cannot locate Plugin: ' . $pluginName);
             return;
         }
-        $pluginPath = $this->pluginFactory->makePluginPath($pluginName);
+        $pluginPath = \App\Factory::getPluginFactory()->getPluginPath($pluginName);
 
         if (!is_dir($pluginPath)) {
             \Ts\Alert::addWarning('Plugin `' . $pluginName . '` path not found');
@@ -164,155 +449,11 @@ class PluginManager extends Iface
         if (is_file($pluginPath.'.tgz'))  unlink($pluginPath.'.tgz');
         \Ts\Alert::addSuccess('Plugin `' . $pluginName . '` deleted successfully');
 
-        \Tk\Url::create()->reset()->redirect();
+        \Tk\Uri::create()->reset()->redirect();
     }
-
-
-    /**
-     * @return \App\Page\Iface
-     */
-    public function show()
-    {
-        $template = $this->getTemplate();
-
-        // Render the form
-        $fren = new \Tk\Form\Renderer\Dom($this->form);
-        $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());
-
-        $list = $this->pluginFactory->getAvailablePlugins();
-        foreach ($list as $pluginName) {
-            $repeat = $template->getRepeat('row');
-            $repeat->insertText('title', ucfirst($pluginName));
-            if (is_file($this->getConfig()->getPluginPath().'/'.$pluginName.'/icon.png')) {
-                $repeat->setAttr('icon', 'src', $this->getConfig()->getPluginUrl() . '/' . $pluginName . '/icon.png');
-                $repeat->setChoice('icon');
-            }
-
-            if ($this->pluginFactory->isActive($pluginName)) {
-                $repeat->setChoice('active');
-                $repeat->setAttr('deact', 'href', \Tk\Url::create()->reset()->set('deact', $pluginName));
-            } else {
-                $repeat->setChoice('inactive');
-                $repeat->setAttr('act', 'href', \Tk\Url::create()->reset()->set('act', $pluginName));
-                $repeat->setAttr('del', 'href', \Tk\Url::create()->reset()->set('del', $pluginName));
-            }
-
-            $info = $this->pluginFactory->getPluginInfo($pluginName);
-            if ($info) {
-                $repeat->insertText('name', substr($info->name, strrpos($info->name, '/')+1) );
-                $repeat->insertText('package', $info->name);
-                if (!empty($info->version)) {
-                    $repeat->insertText('version', $info->version);
-                    $repeat->setChoice('version');
-                }
-                if (!empty($info->description)) {
-                    $repeat->insertText('desc', $info->description);
-                    $repeat->setChoice('desc');
-                }
-                if (!empty($info->authors)) {
-                    $repeat->insertText('author', $info->authors[0]->name);
-                    $repeat->setChoice('author');
-                }
-                if (!empty($info->homepage)) {
-                    $repeat->setAttr('www', 'href', $info->homepage);
-                    $repeat->insertText('www', $info->homepage);
-                    $repeat->setChoice('www');
-                }
-                $repeat->setChoice('info');
-            } else {
-                $repeat->insertText('desc', 'Err: No metadata file found!');
-            }
-
-            $repeat->appendRepeat();
-        }
-
-        $js = <<<JS
-jQuery(function ($) {
-    $('.act').click(function (e) {
-        return confirm('Are you sure you want to install this plugin?');
-    });
-    $('.del').click(function (e) {
-        return confirm('Are you sure you want to delete this plugin?');
-    });
-    $('.deact').click(function (e) {
-        return confirm('Are you sure you want to uninstall this plugin?');
-    });
-});
-JS;
-        $template->appendJs($js);
-
-        return $this->getPage()->setPageContent($template);
-    }
-
-    /**
-     * DomTemplate magic method
-     *
-     * @return Template
-     */
-    public function __makeTemplate()
-    {
-        $xhtml = <<<HTML
-<div class="row">
-  <div class="col-md-8 col-sm-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title"><i class="glyphicon glyphicon-compressed"></i> Available Plugins</h3>
-      </div>
-      <div class="panel-body">
-
-        <ul class="list-group">
-          <li class="list-group-item" repeat="row">
-            <div class="row">
-              <div class="col-xs-2 col-md-1">
-                <img class="media-object" src="#" var="icon" style="width: 100%; " choice="icon"/>
-              </div>
-              <div class="col-xs-10 col-md-11">
-                <div>
-                  <h4><a href="#" var="title"></a></h4>
-                  <p choice="info">
-                    <span><strong>Name:</strong> <span var="name"></span></span> <br/>
-                    <span><strong>Package:</strong> <span var="package"></span></span> <br/>
-                    <span choice="version"><strong>Version:</strong> <span var="version"></span></span> <br choice="version" />
-                    <span choice="author"><strong>Author:</strong> <span var="author"></span></span> <br />
-                    <span choice="www"><strong>Homepage:</strong> <a href="#" var="www" target="_blank">View Website</a></span>
-                  </p>
-                </div>
-                <p class="comment-text" var="desc" choice="desc"></p>
-                <div class="action pull-right">
-                  
-                  <!-- a href="#" class="btn btn-success btn-xs" choice="active" var="cfg"><i class="glyphicon glyphicon-edit"></i> Config</a -->
-                  <span var="pluginHtml" choice="pluginHtml"></span>
-                  <a href="#" class="btn btn-primary btn-xs noblock act" choice="inactive" var="act"><i class="glyphicon glyphicon-log-in"></i> Install</a>
-                  <a href="#" class="btn btn-danger btn-xs noblock del" choice="inactive" var="del"><i class="glyphicon glyphicon-remove-circle"></i> Delete</a>
-                  <a href="#" class="btn btn-warning btn-xs noblock deact" choice="active" var="deact"><i class="glyphicon glyphicon-log-out"></i> Uninstall</a>
-                  
-                </div>
-              </div>
-            </div>
-          </li>
-        </ul>
-
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-4 col-sm-12">
-    <div class="panel panel-default" id="uploadForm">
-      <div class="panel-heading">
-        <h3 class="panel-title"><span class="glyphicon glyphicon-log-out"></span> Upload Plugin</h3>
-      </div>
-      <div class="panel-body">
-        <p>Select A zip/tgz plugin package to upload.</p>
-        <div var="formEdit"></div>
-      </div>
-    </div>
-  </div>
-
-</div>
-HTML;
-
-        return \Dom\Loader::load($xhtml);
-    }
-
 
 }
+
+
+
+

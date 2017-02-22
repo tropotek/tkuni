@@ -62,7 +62,7 @@ class Contact extends Iface
     /**
      * show()
      *
-     * @return \App\Page\PublicPage
+     * @return mixed
      */
     public function show()
     {
@@ -154,7 +154,10 @@ MSG;
         
 
         $message = new \Tk\Mail\Message(\App\Factory::createMailTemplate($body), $this->getConfig()->get('site.name') . ':'. $name .' Contact Form Submission', $this->getConfig()->get('site.email'), $email);
-        $message->addAttachment($field->getUploadedFile()->getFile(), $field->getUploadedFile()->getFilename());
+
+        if ($field->hasFile()) {
+            $message->addAttachment($field->getUploadedFile()->getFile(), $field->getUploadedFile()->getFilename());
+        }
         \App\Factory::getEmailGateway()->send($message);
 
         return true;

@@ -68,9 +68,7 @@ class Launch extends Iface
         }
 
         $tool = new \Lti\Provider(\App\Factory::getLtiDataConnector(), $this->institution, $this->getConfig()->getEventDispatcher());
-        // There is a major pause here on the sandbox due to the postback to the LMS
-        //   looks like the LMS is taking some time to post back however prev version of LTI did not have to postback and was faster
-        // TODO: See how the live LMS handles this. Maybe we will need to set the API to LTI V1 somehow????
+        $_POST['custom_tc_profile_url'] = '';   // Hack to speed up the launch as we do not need this url
         $tool->handleRequest();
 
         // TODO: Is this the best place for this error

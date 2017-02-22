@@ -111,7 +111,6 @@ class Bootstrap
         Factory::getSession();
 
 
-
         // Initiate the default database connection
         \App\Factory::getDb();
         // Import config settings from DB
@@ -121,7 +120,7 @@ class Bootstrap
         \App\Factory::getDomLoader();
 
         // Init the plugins
-        \Tk\Plugin\Factory::getInstance($config);
+        \App\Factory::getPluginFactory();
 
         // Initiate the email gateway
         \App\Factory::getEmailGateway();

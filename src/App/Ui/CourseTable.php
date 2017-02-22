@@ -57,7 +57,7 @@ class CourseTable extends \Dom\Renderer\Renderer
         $this->table->setParam('renderer', \Tk\Table\Renderer\Dom\Table::create($this->table));
 
         //$this->table->addCell(new \Tk\Table\Cell\Checkbox('id'));
-        $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCellCss('key')->setUrl($this->editUrl);
+        $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCss('key')->setUrl($this->editUrl);
         $this->table->addCell(new \Tk\Table\Cell\Text('code'));
         //$this->table->addCell(new \Tk\Table\Cell\Text('email'));
         //$this->table->addCell(new \Tk\Table\Cell\Date('start'));

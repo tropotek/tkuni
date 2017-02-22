@@ -16,8 +16,8 @@ use IMSGlobal\LTI\ToolProvider;
  */
 class Provider extends ToolProvider\ToolProvider
 {
-    const LTI_LAUNCH = 'lti.launch';
-    const LTI_COURSE_ID = 'lti.courseId';
+    const LTI_LAUNCH = 'lti_launch';
+    const LTI_COURSE_ID = 'lti_courseId';
 
     /**
      * @var \App\Db\Institution
@@ -134,23 +134,25 @@ class Provider extends ToolProvider\ToolProvider
             if (!$user->active) {
                 throw new \Tk\Exception('User has no permission to access this resource. Contact your administrator.');
             }
+            $ltiSesh = array_merge($_GET, $_POST);
 
             // Add user to auth
             $auth = \App\Factory::getAuth();
-            $auth->clearIdentity()->getStorage()->write(array('username' => $user->username, 'institutionId' => $user->institutionId));
+            $auth->clearIdentity()->getStorage()->write($user->id);
 
             // Add user to course if found.
-            if (empty($_POST['context_label'])) throw new \Tk\Exception('Course not available, Please contact LMS administrator.');
+            if (empty($ltiSesh['context_label'])) throw new \Tk\Exception('Course not available, Please contact LMS administrator.');
 
-            $courseCode = preg_replace('/[^a-z0-9_-]/i', '_', $_POST['context_label']);
+            $courseCode = preg_replace('/[^a-z0-9_-]/i', '_', $ltiSesh['context_label']);
             $course = \App\Db\CourseMap::create()->findByCode($courseCode, $this->institution->id);
+
             if (!$course) {
                 if (!$this->user->isStaff()) throw new \Tk\Exception('Course not available, Please contact course coordinator.');
                 $course = new \App\Db\Course();
                 $course->institutionId = $this->institution->id;
-                $course->name = $_POST['context_title'];
+                $course->name = $ltiSesh['context_title'];
                 $course->code = $courseCode;
-                $course->email = empty($_POST['lis_person_contact_email_primary']) ? $_POST['lis_person_contact_email_primary'] : \Tk\Config::getInstance()->get('site.email');
+                $course->email = empty($ltiSesh['lis_person_contact_email_primary']) ? $ltiSesh['lis_person_contact_email_primary'] : \Tk\Config::getInstance()->get('site.email');
                 $course->description = '';
                 $course->start = \Tk\Date::create();
                 $course->finish = \Tk\Date::create()->add(new \DateInterval('P1Y'));
@@ -159,13 +161,13 @@ class Provider extends ToolProvider\ToolProvider
             }
             \App\Db\CourseMap::create()->addUser($course->id, $user->id);
 
-            $arr = array_merge($_GET, $_POST);
-            $arr[self::LTI_COURSE_ID] = $course->id;
-            \Tk\Session::getInstance()->set(self::LTI_LAUNCH, $arr);
+
+            $ltiSesh[self::LTI_COURSE_ID] = $course->id;
+            \Tk\Session::getInstance()->set(self::LTI_LAUNCH, $ltiSesh);
 
             // fire loginSuccess....
             if ($this->dispatcher) {    // This event should redirect the user to their homepage.
-                $event = new \Tk\Event\AuthEvent($auth, $_POST);
+                $event = new \Tk\Event\AuthEvent($auth, $ltiSesh);
                 $event->set('user', $user);
                 $this->dispatcher->dispatch(\Tk\Auth\AuthEvents::LOGIN_SUCCESS, $event);
             }

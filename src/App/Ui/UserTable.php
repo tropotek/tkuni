@@ -70,7 +70,7 @@ class UserTable extends \Dom\Renderer\Renderer
         $this->table = new \Tk\Table('StaffList');
         $this->table->setParam('renderer', \Tk\Table\Renderer\Dom\Table::create($this->table));
 
-        $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCellCss('key')->setUrl($this->editUrl);
+        $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCss('key')->setUrl($this->editUrl);
 
         if ($this->institutionId)
             $this->table->addCell(new CourseCell('course', $this->institutionId));

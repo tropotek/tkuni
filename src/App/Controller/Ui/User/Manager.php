@@ -50,7 +50,7 @@ class Manager extends Iface
         $this->table = new \Tk\Table('tableOne');
 
         $this->table->addCell(new \Tk\Table\Cell\Checkbox('id'));
-        $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCellCss('key')->setUrl(\App\Uri::createHomeUrl('/userEdit.html'));
+        $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCss('key')->setUrl(\App\Uri::createHomeUrl('/userEdit.html'));
         $this->table->addCell(new \Tk\Table\Cell\Text('username'));
         $this->table->addCell(new \Tk\Table\Cell\Text('email'));
         $this->table->addCell(new \Tk\Table\Cell\Text('role'));
@@ -69,7 +69,7 @@ class Manager extends Iface
         // Actions
         //$this->table->addAction(\Tk\Table\Action\Button::getInstance('New User', 'fa fa-plus', \App\Uri::createHomeUrl('/userEdit.html'));
         $this->table->addAction(\Tk\Table\Action\Delete::create());
-        $this->table->addAction(\Tk\Table\Action\Csv::create($this->getConfig()->getDb()));
+        $this->table->addAction(\Tk\Table\Action\Csv::create());
 
         $filter = $this->table->getFilterValues();
         if ($this->getUser()->getInstitution())

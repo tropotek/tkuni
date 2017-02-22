@@ -89,7 +89,7 @@ class Edit extends Iface
             $this->table = new \Tk\Table('tableOne');
 
             $this->table->addCell(new \Tk\Table\Cell\Checkbox('id'));
-            $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCellCss('key');
+            $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCss('key');
             //$this->table->addCell(new \Tk\Table\Cell\Text('username'));
             $this->table->addCell(new \Tk\Table\Cell\Text('email'));
             $this->table->addCell(new \Tk\Table\Cell\Text('role'));
