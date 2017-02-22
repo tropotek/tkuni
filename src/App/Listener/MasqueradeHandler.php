@@ -175,6 +175,15 @@ class MasqueradeHandler implements SubscriberInterface
     }
 
 
+    /**
+     * masqueradeLogout
+     *
+     */
+    public static function masqueradeClear()
+    {
+        \App\Factory::getSession()->remove(self::SID);
+    }
+
 
 
     /**

@@ -204,7 +204,7 @@ class Edit extends Iface
             $studentTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Acl::ROLE_STUDENT, 0);
             $template->insertTemplate('studentTable', $studentTable->show());
 
-            $template->addClass('editPanel', 'col-md-4');
+            $template->addCss('editPanel', 'col-md-4');
             $template->setChoice('showInfo');
 
             // No Client pages to log into...
@@ -214,12 +214,14 @@ class Edit extends Iface
 
 
         } else {
-            $template->addClass('editPanel', 'col-md-12');
+            $template->addCss('editPanel', 'col-md-12');
         }
 
         // Render the form
         $fren = new \Tk\Form\Renderer\Dom($this->form);
         $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());
+
+        $formId = $this->form->getId();
 
         $js = <<<JS
 jQuery(function($) {
@@ -227,6 +229,7 @@ jQuery(function($) {
   function toggleFields(checkbox) {
     var pre = checkbox.attr('name').substring(0, checkbox.attr('name').lastIndexOf('.'));
     var list = $('input[name^="'+pre+'"]').not('.ignore');
+    if (!list.length) return;
     var checked = list.slice(0 ,1).get(0).checked;
     if (checked) {
       list.slice(1).removeAttr('disabled', 'disabled').removeClass('disabled');
@@ -234,8 +237,7 @@ jQuery(function($) {
       list.slice(1).attr('disabled', 'disabled').addClass('disabled');
     }
   }
-  
-  $('#formEdit_inst\\\\.lti\\\\.enable, #formEdit_inst\\\\.ldap\\\\.enable, #formEdit_inst\\\\.api\\\\.enable').change(function(e) {
+  $('#$formId').find('.tk-checkbox .checkbox input').change(function(e) {
     toggleFields($(this));
   }).each(function (i) {
     toggleFields($(this));

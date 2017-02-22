@@ -138,6 +138,7 @@ class Provider extends ToolProvider\ToolProvider
 
             // Add user to auth
             $auth = \App\Factory::getAuth();
+            \App\Listener\MasqueradeHandler::masqueradeClear();
             $auth->clearIdentity()->getStorage()->write($user->id);
 
             // Add user to course if found.
