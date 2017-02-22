@@ -78,8 +78,8 @@ abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
             $template->setChoice('login');
         }
 
-        if (\Ts\AlertCollection::hasMessages()) {
-            $noticeTpl = \Ts\AlertCollection::getInstance()->show()->getTemplate();
+        if (\Tk\AlertCollection::hasMessages()) {
+            $noticeTpl = \Tk\AlertCollection::getInstance()->show()->getTemplate();
             $template->replaceTemplate('alerts', $noticeTpl)->setChoice('alerts');
             $template->setChoice('alerts');
         }

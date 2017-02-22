@@ -180,7 +180,7 @@ class Edit extends Iface
         $this->institution->ownerId = $this->owner->id;
         $this->institution->save();
 
-        \Ts\Alert::addSuccess('Record saved!');
+        \Tk\Alert::addSuccess('Record saved!');
         if ($form->getTriggeredEvent()->getName() == 'update')
             \Tk\Uri::create('admin/institutionManager.html')->redirect();
         \Tk\Uri::create()->set('institutionId', $this->institution->id)->redirect();

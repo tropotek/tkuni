@@ -120,7 +120,7 @@ class PluginManager extends Iface
             exec($cmd);
         }
 
-        \Ts\Alert::addSuccess('Plugin successfully uploaded.');
+        \Tk\Alert::addSuccess('Plugin successfully uploaded.');
         \Tk\Uri::create()->reset()->redirect();
     }
 
@@ -398,14 +398,14 @@ HTML;
         $pluginFactory = \App\Factory::getPluginFactory();
         $pluginName = strip_tags(trim($request->get('act')));
         if (!$pluginName) {
-            \Ts\Alert::addWarning('Cannot locate Plugin: ' . $pluginName);
+            \Tk\Alert::addWarning('Cannot locate Plugin: ' . $pluginName);
             return;
         }
         try {
             $pluginFactory->activatePlugin($pluginName);
-            \Ts\Alert::addSuccess('Plugin `' . $pluginName . '` activated successfully');
+            \Tk\Alert::addSuccess('Plugin `' . $pluginName . '` activated successfully');
         }catch (\Exception $e) {
-            \Ts\Alert::addError('Plugin `' . $pluginName . '` activation error. Check the plugin version.');
+            \Tk\Alert::addError('Plugin `' . $pluginName . '` activation error. Check the plugin version.');
             // TODO: delete any DB entries.
         }
         \Tk\Uri::create()->reset()->redirect();
@@ -415,11 +415,11 @@ HTML;
     {
         $pluginName = strip_tags(trim($request->get('deact')));
         if (!$pluginName) {
-            \Ts\Alert::addWarning('Cannot locate Plugin: ' . $pluginName);
+            \Tk\Alert::addWarning('Cannot locate Plugin: ' . $pluginName);
             return;
         }
         \App\Factory::getPluginFactory()->deactivatePlugin($pluginName);
-        \Ts\Alert::addSuccess('Plugin `' . $pluginName . '` deactivated successfully');
+        \Tk\Alert::addSuccess('Plugin `' . $pluginName . '` deactivated successfully');
         \Tk\Uri::create()->reset()->redirect();
     }
 
@@ -427,19 +427,19 @@ HTML;
     {
         $pluginName = strip_tags(trim($request->get('del')));
         if (!$pluginName) {
-            \Ts\Alert::addWarning('Cannot locate Plugin: ' . $pluginName);
+            \Tk\Alert::addWarning('Cannot locate Plugin: ' . $pluginName);
             return;
         }
         $pluginPath = \App\Factory::getPluginFactory()->getPluginPath($pluginName);
 
         if (!is_dir($pluginPath)) {
-            \Ts\Alert::addWarning('Plugin `' . $pluginName . '` path not found');
+            \Tk\Alert::addWarning('Plugin `' . $pluginName . '` path not found');
             return;
         }
 
         // So when we install plugins the archive must be left in the main plugin folder
         if ((!is_file($pluginPath.'.zip') && !is_file($pluginPath.'.tar.gz') && !is_file($pluginPath.'.tgz'))) {
-            \Ts\Alert::addWarning('Plugin is protected and must be deleted manually.');
+            \Tk\Alert::addWarning('Plugin is protected and must be deleted manually.');
             return;
         }
 
@@ -447,7 +447,7 @@ HTML;
         if (is_file($pluginPath.'.zip'))  unlink($pluginPath.'.zip');
         if (is_file($pluginPath.'.tar.gz'))  unlink($pluginPath.'.tar.gz');
         if (is_file($pluginPath.'.tgz'))  unlink($pluginPath.'.tgz');
-        \Ts\Alert::addSuccess('Plugin `' . $pluginName . '` deleted successfully');
+        \Tk\Alert::addSuccess('Plugin `' . $pluginName . '` deleted successfully');
 
         \Tk\Uri::create()->reset()->redirect();
     }

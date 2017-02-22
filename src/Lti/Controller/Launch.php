@@ -62,7 +62,7 @@ class Launch extends Iface
         }
 
         if (!$this->institution->getData()->get(\App\Db\InstitutionData::LTI_ENABLE)) {
-            \Ts\Alert::addError('`' . $this->institution->name . '` is not activated, please register or contact your administrator.');
+            \Tk\Alert::addError('`' . $this->institution->name . '` is not activated, please register or contact your administrator.');
             \Tk\Uri::create('/index.html')->redirect();
             return;
         }

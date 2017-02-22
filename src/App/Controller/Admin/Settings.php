@@ -85,7 +85,7 @@ class Settings extends Iface
         
         $this->data->save();
         
-        \Ts\Alert::addSuccess('Site settings saved.');
+        \Tk\Alert::addSuccess('Site settings saved.');
         if ($form->getTriggeredEvent()->getName() == 'update') {
             \Tk\Uri::create('/admin/index.html')->redirect();
         }

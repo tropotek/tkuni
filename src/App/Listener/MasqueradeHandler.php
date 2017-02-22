@@ -47,7 +47,7 @@ class MasqueradeHandler implements SubscriberInterface
             if (!$msqUser) throw new \Tk\Exception('Invalid User');
             self::masqueradeLogin($user, $msqUser);
         } catch (\Exception $e) {
-            \Ts\Alert::addWarning($e->getMessage());
+            \Tk\Alert::addWarning($e->getMessage());
         }
     }
 
