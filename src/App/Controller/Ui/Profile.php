@@ -97,7 +97,7 @@ class Profile extends Iface
 
         // Hash the password correctly
         if ($this->form->getFieldValue('newPassword')) {
-            $this->user->setPassword($this->form->getFieldValue('newPassword'));
+            $this->user->setNewPassword($this->form->getFieldValue('newPassword'));
         }
 
         $this->user->save();

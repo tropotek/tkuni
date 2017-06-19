@@ -22,7 +22,7 @@ class AppEvents
      *     if ($event->get('controller') instanceof \App\Controller\Index) { ... }
      * </code>
      *
-     * @event \Tk\EventDispatcher\Event
+     * @event \Tk\Event\Event
      * @var string
      */
     const CONTROLLER_POST_RENDER = 'controller.render.post';
@@ -31,7 +31,7 @@ class AppEvents
      * Called at the end the Page/Iface::pageInit() method
      * Use this modify the main page template
      *
-     * @event \Tk\EventDispatcher\Event
+     * @event \Tk\Event\Event
      * @var string
      */
     const PAGE_POST_RENDER = 'page.render.post';

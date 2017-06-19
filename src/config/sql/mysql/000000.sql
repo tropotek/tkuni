@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `role` VARCHAR(255) NOT NULL DEFAULT '',
   `name` VARCHAR(255) NOT NULL DEFAULT '',
   `displayName` VARCHAR(255) NOT NULL DEFAULT '',
-  `email` VARCHAR(255) NOT NULL DEFAULT '',
+  `email` VARCHAR(168) NOT NULL DEFAULT '',
   `notes` TEXT,
   `last_login` TIMESTAMP,
   `active` TINYINT(1) NOT NULL DEFAULT 1,
@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `user_course` (
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `enrollment` (
   `course_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `email` VARCHAR(255) NOT NULL DEFAULT '',
+  `email` VARCHAR(168) NOT NULL DEFAULT '',
   `uid` varchar(64) NOT NULL DEFAULT '',
   PRIMARY KEY (`course_id`, `email`)
 ) ENGINE=InnoDB;
@@ -99,10 +99,10 @@ CREATE TABLE IF NOT EXISTS `enrollment` (
 -- ----------------------------
 INSERT INTO `user` (`institution_id`, `username`, `password` ,`role` ,`name`, `email`, `active`, `hash`, `modified`, `created`)
 VALUES
-  (NULL, 'admin', MD5(CONCAT('password', MD5('adminadminadmin@example.com'))), 'admin', 'Administrator', 'admin@example.com', 1, MD5('adminadminadmin@example.com'), NOW() , NOW() ),
-  (NULL, 'unimelb', MD5(CONCAT('password', MD5('unimelbclientfvas@unimelb.edu.au'))), 'client', 'Unimelb Client', 'fvas@unimelb.edu.au', 1, MD5('unimelbclientfvas@unimelb.edu.au'), NOW() , NOW()  ),
-  (1, 'staff', MD5(CONCAT('password', MD5('staffstaffstaff@unimelb.edu.au'))), 'staff', 'Unimelb Staff', 'staff@unimelb.edu.au', 1, MD5('staffstaffstaff@unimelb.edu.au'), NOW() , NOW()  ),
-  (1, 'student', MD5(CONCAT('password', MD5('studentstudentstudent@unimelb.edu.au'))), 'student', 'Unimelb Student', 'student@unimelb.edu.au', 1, MD5('studentstudentstudent@unimelb.edu.au'), NOW() , NOW()  )
+  (NULL, 'admin', MD5(CONCAT('password', MD5('0adminadminadmin@example.com'))), 'admin', 'Administrator', 'admin@example.com', 1, MD5('0adminadminadmin@example.com'), NOW() , NOW() ),
+  (NULL, 'unimelb', MD5(CONCAT('password', MD5('0unimelbclientfvas@unimelb.edu.au'))), 'client', 'Unimelb Client', 'fvas@unimelb.edu.au', 1, MD5('0unimelbclientfvas@unimelb.edu.au'), NOW() , NOW()  ),
+  (1, 'staff', MD5(CONCAT('password', MD5('1staffstaffstaff@unimelb.edu.au'))), 'staff', 'Unimelb Staff', 'staff@unimelb.edu.au', 1, MD5('1staffstaffstaff@unimelb.edu.au'), NOW() , NOW()  ),
+  (1, 'student', MD5(CONCAT('password', MD5('1studentstudentstudent@unimelb.edu.au'))), 'student', 'Unimelb Student', 'student@unimelb.edu.au', 1, MD5('1studentstudentstudent@unimelb.edu.au'), NOW() , NOW()  )
 ;
 
 INSERT INTO `institution` (`owner_id`, `name`, `email`, `description`, `logo`, `active`, `hash`, `modified`, `created`)

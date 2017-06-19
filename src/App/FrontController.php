@@ -1,7 +1,7 @@
 <?php
 namespace App;
 
-use Tk\EventDispatcher\EventDispatcher;
+use Tk\Event\Dispatcher;
 use Tk\Controller\Resolver;
 
 
@@ -24,11 +24,11 @@ class FrontController extends \Tk\Kernel\HttpKernel
     /**
      * Constructor.
      *
-     * @param EventDispatcher $dispatcher
+     * @param Dispatcher $dispatcher
      * @param Resolver $resolver
      * @param $config
      */
-    public function __construct(EventDispatcher $dispatcher, Resolver $resolver, $config)
+    public function __construct(Dispatcher $dispatcher, Resolver $resolver, $config)
     {
         parent::__construct($dispatcher, $resolver);
         $this->config = $config;

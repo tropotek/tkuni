@@ -132,7 +132,7 @@ class OwnerCell extends \Tk\Table\Cell\Text
     {
         //$val =  parent::getPropertyValue($obj, $property);
         $val =  '';
-        $owner = $obj->getOwner();
+        $owner = $obj->getOwnerUser();
         if ($owner) {
             $val = $owner->name;
         }

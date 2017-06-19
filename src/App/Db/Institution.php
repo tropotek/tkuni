@@ -12,25 +12,6 @@ use Tk\Db\Data;
 class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface
 {
 
-    // Data fields
-//    const LTI_ENABLE = 'ltiEnable';
-//    const LTI_KEY = 'ltiKey';
-//    const LTI_SECRET = 'ltiSecret';
-//    const LTI_URL = 'ltiUrl';
-//    const LTI_CURRENT_KEY = 'ltiCurrentKey';
-//    const LTI_CURRENT_ID = 'ltiCurrentId';
-//
-//    const LDAP_ENABLE = 'ldapEnable';
-//    const LDAP_HOST = 'ldapHost';
-//    const LDAP_TLS = 'ldapTls';
-//    const LDAP_PORT = 'ldapPort';
-//    const LDAP_BASE_DN = 'ldapBaseDn';
-//    const LDAP_FILTER = 'ldapFilter';
-//
-//    const API_ENABLE = 'apiEnable';
-//    const API_KEY = 'apiKey';
-
-
     /**
      * @var int
      */
@@ -195,6 +176,16 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     }
 
     /**
+     * Get the path for all file associated to this object
+     *
+     * @return string
+     */
+    public function getDataPath()
+    {
+        return sprintf('/institution/%s', $this->getVolatileId());
+    }
+
+    /**
      * Get the institution data object
      *
      * @return Data
@@ -222,7 +213,7 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface
      *
      * @return User
      */
-    public function getOwner()
+    public function getOwnerUser()
     {
         if (!$this->owner)
             $this->owner = \App\Db\UserMap::create()->find($this->ownerId);

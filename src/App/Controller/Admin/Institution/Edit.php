@@ -59,7 +59,7 @@ class Edit extends Iface
 
         if ($request->get('institutionId')) {
             $this->institution = \App\Db\InstitutionMap::create()->find($request->get('institutionId'));
-            $this->owner = $this->institution->getOwner();
+            $this->owner = $this->institution->getOwnerUser();
         }
 
         $this->form = new Form('formEdit');
@@ -67,7 +67,10 @@ class Edit extends Iface
         $this->form->addField(new Field\Input('name'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\Input('username'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\Input('email'))->setRequired(true)->setTabGroup('Details');
-        $this->form->addField(new Field\File('logo', $request, $this->getConfig()->getDataPath()))->setAttr('accept', '.png,.jpg,.jpeg,.gif')->setTabGroup('Details');
+        $this->form->addField(new Field\File('logo', $this->institution->getDataPath().'/logo/'))
+            ->setAttr('accept', '.png,.jpg,.jpeg,.gif')->setTabGroup('Details')->addCss('tk-imageinput');
+//        $this->form->addField(new Field\File('logo', $request, $this->getConfig()->getDataPath()))->setAttr('accept', '.png,.jpg,.jpeg,.gif')->setTabGroup('Details');
+
         $insUrl = \Tk\Uri::create('/inst/'.$this->institution->getHash().'/login.html')->toString();
         if ($this->institution->domain)
             $insUrl = \Tk\Uri::create('/login.html')->setHost($this->institution->domain)->toString();
@@ -132,6 +135,12 @@ class Edit extends Iface
         $form->addFieldErrors($this->institution->validate());
         $form->addFieldErrors($this->owner->validate());
 
+        /** @var \Tk\Form\Field\File $logo */
+        $logo = $form->getField('logo');
+        if ($logo->hasFile() && !preg_match('/\.(gif|jpe?g|png)$/i', $logo->getValue())) {
+            $form->addFieldError('logo', 'Please Select a valid image file. (jpg, png, gif only)');
+        }
+
         // Password validation needs to be here
         if ($this->form->getFieldValue('newPassword')) {
             if ($this->form->getFieldValue('newPassword') != $this->form->getFieldValue('confPassword')) {
@@ -142,8 +151,6 @@ class Edit extends Iface
         if (!$this->owner->id && !$this->form->getFieldValue('newPassword')) {
             $form->addFieldError('newPassword', 'Please enter a new password.');
         }
-
-        $form->getField('logo')->isValid();
 
         // validate LTI consumer key
         $lid = (int)$data->get(\App\Db\InstitutionData::LTI_CURRENT_ID);
@@ -163,17 +170,25 @@ class Edit extends Iface
             return;
         }
 
-        if ($form->getField('logo')->hasFile()) {
-            $rel = '/institution/logo/' . $this->institution->getVolatileId() . '/' . $form->getField('logo')->getUploadedFile()->getFilename();
-            $form->getField('logo')->moveTo($rel);
-            // Get the relative file path from the field
-            $this->institution->logo = $form->getField('logo')->getValue();
+        $logo->saveFile();
+
+        // resize the image if needed
+        if ($logo->hasFile()) {
+            $fullPath = $this->getConfig()->getDataPath() . $this->institution->logo;
+            \Tk\Image::create($fullPath)->bestFit(256, 256)->save();
         }
+
+//        if ($form->getField('logo')->hasFile()) {
+//            $rel = '/institution/logo/' . $this->institution->getVolatileId() . '/' . $form->getField('logo')->getUploadedFile()->getFilename();
+//            $form->getField('logo')->moveTo($rel);
+//            // Get the relative file path from the field
+//            $this->institution->logo = $form->getField('logo')->getValue();
+//        }
 
         // Hash the password correctly
         if ($this->form->getFieldValue('newPassword')) {
             $pwd = \App\Db\User::createPassword();
-            $this->owner->setPassword($pwd);
+            $this->owner->setNewPassword($pwd);
         }
 
         $this->owner->save();
@@ -208,7 +223,7 @@ class Edit extends Iface
             $template->setChoice('showInfo');
 
             // No Client pages to log into...
-            $template->setAttr('msq', 'href', \App\Uri::create()->reset()->set(\App\Listener\MasqueradeHandler::MSQ, $this->institution->getOwner()->hash));
+            $template->setAttr('msq', 'href', \App\Uri::create()->reset()->set(\App\Listener\MasqueradeHandler::MSQ, $this->institution->getOwnerUser()->hash));
             //$template->setChoice('msq');
 
 

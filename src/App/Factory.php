@@ -32,7 +32,7 @@ class Factory
         if (!self::$config) {
             self::$config = \Tk\Config::getInstance($sitePath, $siteUrl);
             // Include any config overriding settings
-            include(self::$config->getVendorPath() . '/ttek/tk-site/config/default.php');
+            //include(self::$config->getVendorPath() . '/ttek/tk-site/config/default.php');
             include(self::$config->getSrcPath() . '/config/config.php');
         }
         return self::$config;
@@ -138,12 +138,12 @@ class Factory
      * @param string $name
      * @return mixed|Pdo
      */
-    public static function getDb($name = 'default')
+    public static function getDb($name = 'db')
     {
         $config = self::getConfig();
-        if (!$config->getDb() && $config->has('db.type')) {
+        if (!$config->getDb() && $config->has($name.'.type')) {
             try {
-                $pdo = Pdo::getInstance($name, $config->getGroup('db'));
+                $pdo = Pdo::getInstance($name, $config->getGroup($name, true));
 //                $logger = $config->getLog();
 //                if ($config->getLog() && $config->isDebug()) {
 //                    $pdo->setOnLogListener(function ($entry) use ($config->getLog()) {
@@ -152,7 +152,7 @@ class Factory
 //                }
                 $config->setDb($pdo);
             } catch (\Exception $e) {
-                error_log('<p>' . $e->getMessage() . '</p>');
+                error_log('<p>\App\Factory::getDb(): ' . $e->getMessage() . '</p>');
                 exit;
             }
             self::getConfig()->setDb($pdo);
@@ -172,8 +172,11 @@ class Factory
             $config = self::getConfig();
             $dm->add(new \Dom\Modifier\Filter\UrlPath($config->getSiteUrl()));
             $dm->add(new \Dom\Modifier\Filter\JsLast());
-            $dm->add(new \Dom\Modifier\Filter\Less($config->getSitePath(), $config->getSiteUrl(), $config->getCachePath(),
+
+            $less = $dm->add(new \Dom\Modifier\Filter\Less($config->getSitePath(), $config->getSiteUrl(), $config->getCachePath(),
                 array('siteUrl' => $config->getSiteUrl(), 'dataUrl' => $config->getDataUrl(), 'templateUrl' => $config->getTemplateUrl())));
+            $less->setCompress(!$config->isDebug());
+
             if (self::getConfig()->isDebug()) {
                 $dm->add(self::getDomFilterPageBytes());
             }
@@ -230,12 +233,12 @@ class Factory
     /**
      * getEventDispatcher
      *
-     * @return \Tk\EventDispatcher\EventDispatcher
+     * @return \Tk\Event\Dispatcher
      */
     public static function getEventDispatcher()
     {
         if (!self::getConfig()->getEventDispatcher()) {
-            $obj = new \Tk\EventDispatcher\EventDispatcher(self::getConfig()->getLog());
+            $obj = new \Tk\Event\Dispatcher(self::getConfig()->getLog());
             self::getConfig()->setEventDispatcher($obj);
         }
         return self::getConfig()->getEventDispatcher();
@@ -368,7 +371,7 @@ class Factory
         $user->name = $name;
         $user->email = $email;
         $user->role = $role;
-        $user->setPassword($password);
+        $user->setNewPassword($password);
         $user->active = $active;
         $user->save();
 

@@ -204,7 +204,8 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
             throw new \Tk\Exception('The username, role and email must be set before generating a valid hash');
         }
         // TODO: We should really add the institutionId to this hash
-        return \App\Factory::hash(sprintf('%s%s%s', $this->username, $this->role, $this->email));
+        //return \App\Factory::hash(sprintf('%s%s%s', $this->username, $this->role, $this->email));
+        return \App\Factory::hash(sprintf('%s%s%s%s', $this->getVolatileId(), $this->institutionId, $this->username, $this->email));
     }
 
     /**
@@ -213,7 +214,7 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
      * @param string $pwd
      * @throws Exception
      */
-    public function setPassword($pwd = '')
+    public function setNewPassword($pwd = '')
     {
         if (!$pwd) {
             $pwd = self::createPassword(10);

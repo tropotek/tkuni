@@ -36,7 +36,7 @@ class Register extends Iface
     private $institution = null;
 
     /**
-     * @var \Tk\EventDispatcher\EventDispatcher
+     * @var \Tk\Event\Dispatcher
      */
     private $dispatcher = null;
     
@@ -134,7 +134,7 @@ class Register extends Iface
         // Create a user and make a temp hash until the user activates the account
         $this->user->role = \App\Auth\Acl::ROLE_CLIENT;
         $this->user->active = false;
-        $this->user->setPassword($pass);
+        $this->user->setNewPassword($pass);
         $this->user->save();
 
         $this->institution->ownerId = $this->user->id;
@@ -142,7 +142,7 @@ class Register extends Iface
         $this->institution->save();
 
         // Fire the login event to allow developing of misc auth plugins
-        $event = new \Tk\EventDispatcher\Event();
+        $event = new \Tk\Event\Event();
         $event->set('form', $form);
         $event->set('user', $this->user);
         $event->set('pass', $this->form->getFieldValue('password'));
@@ -188,7 +188,7 @@ class Register extends Iface
         $institution->active = true;
         $institution->save();
         
-        $event = new \Tk\EventDispatcher\Event();
+        $event = new \Tk\Event\Event();
         $event->set('request', $request);
         $event->set('user', $user);
         $event->set('institution', $institution);

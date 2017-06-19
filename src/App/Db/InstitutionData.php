@@ -11,6 +11,8 @@ namespace App\Db;
 class InstitutionData
 {
 
+    // TODO: Use the plugin system as the new ems does.
+
     const LTI_ENABLE = 'inst.lti.enable';
     const LTI_KEY = 'inst.lti.key';
     const LTI_SECRET = 'inst.lti.secret';

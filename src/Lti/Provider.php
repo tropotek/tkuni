@@ -25,7 +25,7 @@ class Provider extends ToolProvider\ToolProvider
     protected $institution = null;
 
     /**
-     * @var \Tk\EventDispatcher\EventDispatcher
+     * @var \Tk\Event\Dispatcher
      */
     protected $dispatcher = null;
 
@@ -39,7 +39,7 @@ class Provider extends ToolProvider\ToolProvider
      *
      * @param \IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector $dataConnector
      * @param \App\Db\Institution $institution
-     * @param \Tk\EventDispatcher\EventDispatcher $dispatcher
+     * @param \\Tk\Event\Dispatcher $dispatcher
      */
     public function __construct(\IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector $dataConnector, $institution = null, $dispatcher = null)
     {

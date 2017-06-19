@@ -26,20 +26,16 @@ class CourseMap extends Mapper
     {
         if (!$this->dbMap) {
             $this->dbMap = new \Tk\DataMap\DataMap();
-            $this->dbMap->addProperty(new Db\Number('id'), 'key');
-            $this->dbMap->addProperty(new Db\Number('institutionId', 'institution_id'));
-            $this->dbMap->addProperty(new Db\Text('name'));
-            $this->dbMap->addProperty(new Db\Text('code'));
-            $this->dbMap->addProperty(new Db\Text('email'));
-            $this->dbMap->addProperty(new Db\Text('description'));
-
-            $this->dbMap->addProperty(new Db\Date('start'));
-            $this->dbMap->addProperty(new Db\Date('finish'));
-            $this->dbMap->addProperty(new Db\Date('modified'));
-            $this->dbMap->addProperty(new Db\Date('created'));
-
-            $this->setMarkDeleted('del');
-            $this->setPrimaryKey($this->dbMap->currentProperty('key')->getColumnName());
+            $this->dbMap->addPropertyMap(new Db\Integer('id'), 'key');
+            $this->dbMap->addPropertyMap(new Db\Integer('institutionId', 'institution_id'));
+            $this->dbMap->addPropertyMap(new Db\Text('name'));
+            $this->dbMap->addPropertyMap(new Db\Text('code'));
+            $this->dbMap->addPropertyMap(new Db\Text('email'));
+            $this->dbMap->addPropertyMap(new Db\Text('description'));
+            $this->dbMap->addPropertyMap(new Db\Date('start'));
+            $this->dbMap->addPropertyMap(new Db\Date('finish'));
+            $this->dbMap->addPropertyMap(new Db\Date('modified'));
+            $this->dbMap->addPropertyMap(new Db\Date('created'));
         }
         return $this->dbMap;
     }
@@ -52,16 +48,14 @@ class CourseMap extends Mapper
     {
         if (!$this->formMap) {
             $this->formMap = new \Tk\DataMap\DataMap();
-            $this->formMap->addProperty(new Form\Number('id'), 'key');
-            $this->formMap->addProperty(new Form\Number('institutionId'));
-            $this->formMap->addProperty(new Form\Text('name'));
-            $this->formMap->addProperty(new Form\Text('code'));
-            $this->formMap->addProperty(new Form\Text('email'));
-            $this->formMap->addProperty(new Form\Text('description'));
-            $this->formMap->addProperty(new Form\Date('start'));
-            $this->formMap->addProperty(new Form\Date('finish'));
-
-            $this->setPrimaryKey($this->formMap->currentProperty('key')->getColumnName());
+            $this->formMap->addPropertyMap(new Form\Integer('id'), 'key');
+            $this->formMap->addPropertyMap(new Form\Integer('institutionId'));
+            $this->formMap->addPropertyMap(new Form\Text('name'));
+            $this->formMap->addPropertyMap(new Form\Text('code'));
+            $this->formMap->addPropertyMap(new Form\Text('email'));
+            $this->formMap->addPropertyMap(new Form\Text('description'));
+            $this->formMap->addPropertyMap(new Form\Date('start'));
+            $this->formMap->addPropertyMap(new Form\Date('finish'));
         }
         return $this->formMap;
     }

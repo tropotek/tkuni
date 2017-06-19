@@ -1,7 +1,7 @@
 <?php
 namespace App\Listener;
 
-use Tk\EventDispatcher\SubscriberInterface;
+use Tk\Event\Subscriber;
 use Tk\Kernel\KernelEvents;
 use Tk\Event\GetResponseEvent;
 use App\Db\User;
@@ -14,7 +14,7 @@ use Tk\Auth\AuthEvents;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class MasqueradeHandler implements SubscriberInterface
+class MasqueradeHandler implements Subscriber
 {
     /**
      * Session ID
