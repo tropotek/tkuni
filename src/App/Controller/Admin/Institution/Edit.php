@@ -69,7 +69,6 @@ class Edit extends Iface
         $this->form->addField(new Field\Input('email'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\File('logo', $this->institution->getDataPath().'/logo/'))
             ->setAttr('accept', '.png,.jpg,.jpeg,.gif')->setTabGroup('Details')->addCss('tk-imageinput');
-//        $this->form->addField(new Field\File('logo', $request, $this->getConfig()->getDataPath()))->setAttr('accept', '.png,.jpg,.jpeg,.gif')->setTabGroup('Details');
 
         $insUrl = \Tk\Uri::create('/inst/'.$this->institution->getHash().'/login.html')->toString();
         if ($this->institution->domain)
@@ -87,7 +86,7 @@ class Edit extends Iface
         if (!$this->owner->getId())
             $f->setRequired(true);
 
-
+        // TODO: Move to plugin
         $this->form->addField(new Field\Checkbox(\App\Db\InstitutionData::LTI_ENABLE))->setTabGroup('LTI')->setNotes('Enable the LTI V1 launch URL for LMS systems.');
         $lurl = \Tk\Uri::create('/lti/'.$this->institution->getHash().'/launch.html')->toString();
         if ($this->institution->domain)
@@ -105,8 +104,6 @@ class Edit extends Iface
         $this->form->addField(new Field\Input(\App\Db\InstitutionData::LDAP_BASE_DN))->setTabGroup('LDAP');
         $this->form->addField(new Field\Input(\App\Db\InstitutionData::LDAP_FILTER))->setTabGroup('LDAP')->setNotes('`{username}` will be replaced with the login request username.');
 
-//        $this->form->addField(new Field\Checkbox(\App\Db\Institution::API_ENABLE))->setTabGroup('API')->setNotes('Enable the system API key for this Institution.');
-//        $this->form->addField(new Field\Input(\App\Db\Institution::API_KEY))->setTabGroup('API');
 
         $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
         $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
@@ -177,13 +174,6 @@ class Edit extends Iface
             $fullPath = $this->getConfig()->getDataPath() . $this->institution->logo;
             \Tk\Image::create($fullPath)->bestFit(256, 256)->save();
         }
-
-//        if ($form->getField('logo')->hasFile()) {
-//            $rel = '/institution/logo/' . $this->institution->getVolatileId() . '/' . $form->getField('logo')->getUploadedFile()->getFilename();
-//            $form->getField('logo')->moveTo($rel);
-//            // Get the relative file path from the field
-//            $this->institution->logo = $form->getField('logo')->getValue();
-//        }
 
         // Hash the password correctly
         if ($this->form->getFieldValue('newPassword')) {

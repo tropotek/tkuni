@@ -31,9 +31,7 @@ class Factory
     {
         if (!self::$config) {
             self::$config = \Tk\Config::getInstance($sitePath, $siteUrl);
-            // Include any config overriding settings
-            //include(self::$config->getVendorPath() . '/ttek/tk-site/config/default.php');
-            include(self::$config->getSrcPath() . '/config/config.php');
+            include(self::$config->getSrcPath() . '/config/application.php');
         }
         return self::$config;
     }
@@ -281,7 +279,7 @@ class Factory
      * @return \Tk\Auth\Adapter\Iface
      * @throws \Tk\Auth\Exception
      */
-    static function getAuthAdapter($class, $submittedData = array())
+    public static function getAuthAdapter($class, $submittedData = array())
     {
         $config = self::getConfig();
         
@@ -321,31 +319,34 @@ class Factory
      * @param \App\Db\User $user (optional)
      * @return string
      */
-    static public function hashPassword($pwd, $user = null)
+    public static function hashPassword($pwd, $user = null)
     {
+        $salt = '';
         if ($user) {    // Use salted password
             if (method_exists($user, 'getHash'))
-                $pwd = $pwd . $user->getHash();
+                $salt = $user->getHash();
             else if ($user->hash)
-                $pwd = $pwd . $user->hash;
+                $salt = $user->hash;
         }
-        $h = self::hash($pwd);
-        return $h;
+        return self::hash($pwd, $salt);
     }
 
     /**
      * Hash a string using the system config set algorithm
      *
      * @link http://php.net/manual/en/function.hash.php
-     * @param string $pwd
-     * @param \App\Db\User $user (optional)
+     * @param string $str
+     * @param string $salt (optional)
+     * @param string $algo Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..)
+     *
      * @return string
      */
-    static public function hash($pwd, $user = null)
+    public static function hash($str, $salt = '', $algo = 'md5')
     {
+        if ($salt) $str .= $salt;
         if (self::getConfig()->get('hash.function'))
-            return hash(self::getConfig()->get('hash.function'), $pwd);
-        return hash('md5', $pwd);
+            $algo = self::getConfig()->get('hash.function');
+        return hash($algo, $str);
     }
     
     /**
@@ -360,9 +361,8 @@ class Factory
      * @param string $uid
      * @param bool $active
      * @return Db\User
-     * @todo Save any extra required data, IE: `auedupersonid` (Student/Staff Number)
      */
-    static function createNewUser($institutionId, $username, $email, $role, $password, $name = '', $uid = '', $active = true)
+    public static function createNewUser($institutionId, $username, $email, $role, $password = '', $name = '', $uid = '', $active = true)
     {
         $user = new \App\Db\User();
         $user->institutionId = $institutionId;
@@ -371,7 +371,8 @@ class Factory
         $user->name = $name;
         $user->email = $email;
         $user->role = $role;
-        $user->setNewPassword($password);
+        if ($password)
+            $user->setNewPassword($password);
         $user->active = $active;
         $user->save();
 
@@ -389,7 +390,7 @@ class Factory
      * @return string
      * @todo: Probably not the best place for this..... Dependant on the App
      */
-    static function createMailTemplate($body, $showFooter = true)
+    public static function createMailTemplate($body, $showFooter = true)
     {
         $request = self::getRequest();
 
