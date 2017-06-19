@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "693fa8b0eb9a78d31208ec62f3476502",
+    "content-hash": "bfcdbc7b730b431a93a3a898ec24faea",
     "packages": [
         {
             "name": "imsglobal/lti",
@@ -52,12 +52,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "d6be96bc3c570597c67b5a83ca7968de392a75ac"
+                "reference": "fd8c787753b3a2ad11bc60c063cff1358a32a3b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/d6be96bc3c570597c67b5a83ca7968de392a75ac",
-                "reference": "d6be96bc3c570597c67b5a83ca7968de392a75ac",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/fd8c787753b3a2ad11bc60c063cff1358a32a3b4",
+                "reference": "fd8c787753b3a2ad11bc60c063cff1358a32a3b4",
                 "shasum": ""
             },
             "require": {
@@ -122,7 +122,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2017-06-19 01:13:01"
+            "time": "2017-06-19 01:22:40"
         },
         {
             "name": "oyejorge/less.php",
@@ -403,6 +403,103 @@
             "time": "2016-10-10 12:19:37"
         },
         {
+            "name": "ttek-plg/ems-ldap",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tropotek/ems-ldap.git",
+                "reference": "f9edca37534bac7cb0e1a99b5b70792fd093d5ac"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tropotek/ems-ldap/zipball/f9edca37534bac7cb0e1a99b5b70792fd093d5ac",
+                "reference": "f9edca37534bac7cb0e1a99b5b70792fd093d5ac",
+                "shasum": ""
+            },
+            "require": {
+                "ttek/tk-installers": "~2.0"
+            },
+            "type": "ttek-plugin",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Ldap\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Mifsud",
+                    "homepage": "http://www.tropotek.com/"
+                }
+            ],
+            "description": "LDAP Plugin for the EMS III",
+            "homepage": "http://www.tropotek.com/",
+            "keywords": [
+                "EMS III",
+                "ldap",
+                "plugin",
+                "tropotek"
+            ],
+            "time": "2017-06-19 21:39:09"
+        },
+        {
+            "name": "ttek-plg/ems-lti",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tropotek/ems-lti.git",
+                "reference": "998e1e1e00fa3a2df28670bc2451ebd6ef1c1499"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tropotek/ems-lti/zipball/998e1e1e00fa3a2df28670bc2451ebd6ef1c1499",
+                "reference": "998e1e1e00fa3a2df28670bc2451ebd6ef1c1499",
+                "shasum": ""
+            },
+            "require": {
+                "imsglobal/lti": "~3.0",
+                "ttek/tk-installers": "~2.0"
+            },
+            "type": "ttek-plugin",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Lti\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Mifsud",
+                    "homepage": "http://www.tropotek.com/"
+                }
+            ],
+            "description": "LTI Plugin for the EMS III",
+            "homepage": "http://www.tropotek.com/",
+            "keywords": [
+                "EMS III",
+                "LTI",
+                "plugin",
+                "tropotek"
+            ],
+            "time": "2017-06-19 21:39:15"
+        },
+        {
             "name": "ttek/tk-auth",
             "version": "dev-master",
             "source": {
@@ -503,12 +600,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tropotek/tk-domtemplate.git",
-                "reference": "bdcacc69cc7bec92fe31b2d079179f866cfb9a5d"
+                "reference": "ff7243ff8952ad9ea7e0bba1fd4aedd49e21a116"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tropotek/tk-domtemplate/zipball/bdcacc69cc7bec92fe31b2d079179f866cfb9a5d",
-                "reference": "bdcacc69cc7bec92fe31b2d079179f866cfb9a5d",
+                "url": "https://api.github.com/repos/tropotek/tk-domtemplate/zipball/ff7243ff8952ad9ea7e0bba1fd4aedd49e21a116",
+                "reference": "ff7243ff8952ad9ea7e0bba1fd4aedd49e21a116",
                 "shasum": ""
             },
             "require": {
@@ -543,7 +640,7 @@
                 "dom-template",
                 "tropotek"
             ],
-            "time": "2017-05-26 00:34:03"
+            "time": "2017-06-19 21:34:05"
         },
         {
             "name": "ttek/tk-form",
@@ -854,12 +951,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tropotek/tk-plugin.git",
-                "reference": "d37f103ce50f9d820eeedfd966ade89766ad04be"
+                "reference": "04129b1eab31ea35a02ab2752de26ed4df049362"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tropotek/tk-plugin/zipball/d37f103ce50f9d820eeedfd966ade89766ad04be",
-                "reference": "d37f103ce50f9d820eeedfd966ade89766ad04be",
+                "url": "https://api.github.com/repos/tropotek/tk-plugin/zipball/04129b1eab31ea35a02ab2752de26ed4df049362",
+                "reference": "04129b1eab31ea35a02ab2752de26ed4df049362",
                 "shasum": ""
             },
             "require": {
@@ -892,7 +989,7 @@
                 "plugin",
                 "tropotek"
             ],
-            "time": "2017-05-26 00:37:58"
+            "time": "2017-06-19 03:57:23"
         },
         {
             "name": "ttek/tk-routing",

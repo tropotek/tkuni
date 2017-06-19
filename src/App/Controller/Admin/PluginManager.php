@@ -6,7 +6,7 @@ use Dom\Template;
 use Tk\Form;
 use Tk\Form\Field;
 use Tk\Form\Event;
-use \App\Controller\Iface;
+use App\Controller\Iface;
 
 /**
  *

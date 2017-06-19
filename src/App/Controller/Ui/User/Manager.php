@@ -4,7 +4,7 @@ namespace App\Controller\Ui\User;
 use Tk\Request;
 use Dom\Template;
 use Tk\Form\Field;
-use \App\Controller\Iface;
+use App\Controller\Iface;
 
 /**
  *

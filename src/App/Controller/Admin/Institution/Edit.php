@@ -6,7 +6,7 @@ use Tk\Form;
 use Tk\Form\Event;
 use Tk\Form\Field;
 use Tk\Request;
-use \App\Controller\Iface;
+use App\Controller\Iface;
 
 /**
  *
@@ -62,7 +62,8 @@ class Edit extends Iface
             $this->owner = $this->institution->getOwnerUser();
         }
 
-        $this->form = new Form('formEdit');
+        $this->form = \App\Factory::createForm('institutionEdit');
+        $this->form->setParam('renderer', \App\Factory::createFormRenderer($this->form));
 
         $this->form->addField(new Field\Input('name'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\Input('username'))->setRequired(true)->setTabGroup('Details');
@@ -198,8 +199,10 @@ class Edit extends Iface
     {
         $template = $this->getTemplate();
 
+        // Render the form
+        $template->insertTemplate('form', $this->form->getParam('renderer')->show()->getTemplate());
+
         if ($this->institution->id) {
-            //$courseTable = new \App\Ui\CourseTable($this->institution->id, \Tk\Uri::create('/admin/courseEdit.html')->set('institutionId', $this->institution->id));
             $courseTable = new \App\Ui\CourseTable($this->institution->id);
             $template->insertTemplate('courseTable', $courseTable->show());
 
@@ -214,20 +217,13 @@ class Edit extends Iface
 
             // No Client pages to log into...
             $template->setAttr('msq', 'href', \App\Uri::create()->reset()->set(\App\Listener\MasqueradeHandler::MSQ, $this->institution->getOwnerUser()->hash));
-            //$template->setChoice('msq');
-
-
 
         } else {
             $template->addCss('editPanel', 'col-md-12');
         }
 
-        // Render the form
-        $fren = new \Tk\Form\Renderer\Dom($this->form);
-        $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());
 
         $formId = $this->form->getId();
-
         $js = <<<JS
 jQuery(function($) {
 

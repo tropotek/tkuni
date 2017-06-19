@@ -3,7 +3,7 @@ namespace App\Controller\Student;
 
 use Tk\Request;
 use Dom\Template;
-use \App\Controller\Iface;
+use App\Controller\Iface;
 
 /**
  *
@@ -12,7 +12,7 @@ use \App\Controller\Iface;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Index extends Iface
+class Dashboard extends Iface
 {
     
     /**

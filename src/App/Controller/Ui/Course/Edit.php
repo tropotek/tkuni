@@ -6,7 +6,7 @@ use Tk\Form;
 use Tk\Form\Event;
 use Tk\Form\Field;
 use Tk\Request;
-use \App\Controller\Iface;
+use App\Controller\Iface;
 
 /**
  *

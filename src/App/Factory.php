@@ -348,6 +348,54 @@ class Factory
             $algo = self::getConfig()->get('hash.function');
         return hash($algo, $str);
     }
+
+    /**
+     * @param string $formId
+     * @param string $method
+     * @param string|null $action
+     * @return \Tk\Form
+     */
+    public static function createForm($formId, $method = \Tk\Form::METHOD_POST, $action = null)
+    {
+        $form = \Tk\Form::create($formId, $method, $action);
+        $form->addCss('form-horizontal');
+        return $form;
+    }
+
+    /**
+     * @param $form
+     * @return \Tk\Form\Renderer\Dom
+     */
+    public static function createFormRenderer($form)
+    {
+        $obj = new \Tk\Form\Renderer\Dom($form);
+        $obj->setFieldGroupClass(\App\Form\Renderer\HorizontalFieldGroup::class);
+        return $obj;
+    }
+
+    /**
+     *
+     * @param string $id
+     * @param array $params
+     * @param null|\Tk\Request $request
+     * @param null|\Tk\Session $session
+     * @return \Tk\Table
+     */
+    public static function createTable($id, $params = array(), $request = null, $session = null)
+    {
+        $form = \Tk\Table::create($id, $params, $request, $session);
+        return $form;
+    }
+
+    /**
+     * @param \Tk\Table $table
+     * @return \Tk\Table\Renderer\Dom\Table
+     */
+    public static function createTableRenderer($table)
+    {
+        $obj = \Tk\Table\Renderer\Dom\Table::create($table);
+        return $obj;
+    }
     
     /**
      * Create a new user

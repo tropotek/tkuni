@@ -3,7 +3,7 @@ namespace App\Controller\Ui\Course;
 
 use Tk\Request;
 use Dom\Template;
-use \App\Controller\Iface;
+use App\Controller\Iface;
 
 /**
  *

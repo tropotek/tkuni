@@ -37,8 +37,8 @@ $routes->add('institution-lti-launch', new \Tk\Routing\Route('/lti/{instHash}/la
 
 // Admin Pages
 $params = array('access' => \App\Auth\Acl::ROLE_ADMIN);
-$routes->add('admin-home', new \Tk\Routing\Route('/admin/index.html', 'App\Controller\Admin\Index::doDefault', $params));
-$routes->add('admin-home-base', new \Tk\Routing\Route('/admin/', 'App\Controller\Admin\Index::doDefault', $params));
+$routes->add('admin-home', new \Tk\Routing\Route('/admin/index.html', 'App\Controller\Admin\Dashboard::doDefault', $params));
+$routes->add('admin-home-base', new \Tk\Routing\Route('/admin/', 'App\Controller\Admin\Dashboard::doDefault', $params));
 
 $routes->add('admin-institution-manager', new \Tk\Routing\Route('/admin/institutionManager.html', 'App\Controller\Admin\Institution\Manager::doDefault', $params));
 $routes->add('admin-institution-edit', new \Tk\Routing\Route('/admin/institutionEdit.html', 'App\Controller\Admin\Institution\Edit::doDefault', $params));
@@ -52,13 +52,13 @@ $routes->add('admin-plugin-manager', new \Tk\Routing\Route('/admin/plugins.html'
 
 
 // Dev pages
-$routes->add('dev-events', new \Tk\Routing\Route('/admin/dev/events.html', 'App\Controller\Admin\Dev\Events::doDefault', $params));
+$routes->add('dev-events', new \Tk\Routing\Route('/admin/dev/events.html', 'App\Controller\Admin\Dev\SystemEvents::doDefault', $params));
 
 
 // Staff Pages
 $params = array('access' => \App\Auth\Acl::ROLE_STAFF);
-$routes->add('staff-home', new \Tk\Routing\Route('/staff/index.html', 'App\Controller\Staff\Index::doDefault', $params));
-$routes->add('staff-home-base', new \Tk\Routing\Route('/staff/', 'App\Controller\Staff\Index::doDefault', $params));
+$routes->add('staff-home', new \Tk\Routing\Route('/staff/index.html', 'App\Controller\Staff\Dashboard::doDefault', $params));
+$routes->add('staff-home-base', new \Tk\Routing\Route('/staff/', 'App\Controller\Staff\Dashboard::doDefault', $params));
 
 $routes->add('staff-course-manager', new \Tk\Routing\Route('/staff/courseManager.html', 'App\Controller\Ui\Course\Manager::doDefault', $params));
 $routes->add('staff-course-edit', new \Tk\Routing\Route('/staff/courseEdit.html', 'App\Controller\Ui\Course\Edit::doDefault', $params));
@@ -72,8 +72,8 @@ $routes->add('staff-user-profile', new \Tk\Routing\Route('/staff/profile.html', 
 
 // Student Pages
 $params = array('access' => \App\Auth\Acl::ROLE_STUDENT);
-$routes->add('student-home', new \Tk\Routing\Route('/student/index.html', 'App\Controller\Student\Index::doDefault', $params));
-$routes->add('student-home-base', new \Tk\Routing\Route('/student/', 'App\Controller\Student\Index::doDefault', $params));
+$routes->add('student-home', new \Tk\Routing\Route('/student/index.html', 'App\Controller\Student\Dashboard::doDefault', $params));
+$routes->add('student-home-base', new \Tk\Routing\Route('/student/', 'App\Controller\Student\Dashboard::doDefault', $params));
 
 $routes->add('student-user-profile', new \Tk\Routing\Route('/student/profile.html', 'App\Controller\Ui\Profile::doDefault', $params));
 

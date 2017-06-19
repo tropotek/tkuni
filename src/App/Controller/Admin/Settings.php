@@ -5,7 +5,7 @@ use Tk\Request;
 use Tk\Form;
 use Tk\Form\Event;
 use Tk\Form\Field;
-use \App\Controller\Iface;
+use App\Controller\Iface;
 
 /**
  * Class Contact
@@ -45,7 +45,8 @@ class Settings extends Iface
      */
     public function doDefault(Request $request)
     {
-        $this->form = new Form('formEdit', $request);
+        $this->form = \App\Factory::createForm('settingsEdit');
+        $this->form->setParam('renderer', \App\Factory::createFormRenderer($this->form));
 
         $this->form->addField(new Field\Input('site.title'))->setLabel('Site Title')->setRequired(true);
         $this->form->addField(new Field\Input('site.email'))->setLabel('Site Email')->setRequired(true);
@@ -100,10 +101,9 @@ class Settings extends Iface
     public function show()
     {
         $template = $this->getTemplate();
-        
+
         // Render the form
-        $fren = new \Tk\Form\Renderer\Dom($this->form);
-        $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());
+        $template->insertTemplate('form', $this->form->getParam('renderer')->show()->getTemplate());
 
         return $this->getPage()->setPageContent($template);
     }
@@ -135,7 +135,7 @@ class Settings extends Iface
       <i class="glyphicon glyphicon-cog"></i> Site Settings
     </div>
     <div class="panel-body">
-      <div var="formEdit"></div>
+      <div var="form"></div>
     </div>
   </div>
 

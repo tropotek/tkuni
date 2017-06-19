@@ -3,7 +3,7 @@ namespace App\Controller\Admin\Dev;
 
 use Tk\Request;
 use Dom\Template;
-use \App\Controller\Iface;
+use App\Controller\Iface;
 
 /**
  *
@@ -12,7 +12,7 @@ use \App\Controller\Iface;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Events extends Iface
+class SystemEvents extends Iface
 {
 
     /**
@@ -37,8 +37,8 @@ class Events extends Iface
     public function doDefault(Request $request)
     {
 
-        $this->table = new \Tk\Table('EventList');
-        $this->table->setParam('renderer', \Tk\Table\Renderer\Dom\Table::create($this->table));
+        $this->table = \App\Factory::createTable(\Tk\Object::basename($this).'PluEventList');
+        $this->table->setParam('renderer', \App\Factory::createTableRenderer($this->table));
 
         $this->table->addCell(new \Tk\Table\Cell\Text('name'));
         $this->table->addCell(new \Tk\Table\Cell\Text('value'));
