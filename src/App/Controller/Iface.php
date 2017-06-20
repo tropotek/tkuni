@@ -32,10 +32,11 @@ abstract class Iface extends \Dom\Renderer\Renderer
      */
     public function getPage()
     {
-        $pageAccess = $this->getConfig()->getRequest()->getAttribute('access');
+        $role = $this->getConfig()->getRequest()->getAttribute('role');
         if (!$this->page) {
-            switch($pageAccess) {
+            switch($role) {
                 case \App\Auth\Acl::ROLE_ADMIN:
+                case 'client':
                     $this->page = new \App\Page\AdminPage($this);
                     break;
                 case \App\Auth\Acl::ROLE_STAFF:

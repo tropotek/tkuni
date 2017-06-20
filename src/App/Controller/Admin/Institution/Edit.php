@@ -71,9 +71,9 @@ class Edit extends Iface
         $this->form->addField(new Field\File('logo', $this->institution->getDataPath().'/logo/'))
             ->setAttr('accept', '.png,.jpg,.jpeg,.gif')->setTabGroup('Details')->addCss('tk-imageinput');
 
-        $insUrl = \Tk\Uri::create('/inst/'.$this->institution->getHash().'/login.html')->toString();
+        $insUrl = \Tk\Uri::create('/inst/'.$this->institution->getHash().'/login.html')->setScheme('https')->toString();
         if ($this->institution->domain)
-            $insUrl = \Tk\Uri::create('/login.html')->setHost($this->institution->domain)->toString();
+            $insUrl = \Tk\Uri::create('/login.html')->setHost($this->institution->domain)->setScheme('https')->toString();
 
         $this->form->addField(new Field\Input('domain'))->setTabGroup('Details')->setNotes('Your Institution login URL is: <a href="'.$insUrl.'">'.$insUrl.'</a>' );
         $this->form->addField(new Field\Textarea('description'))->setTabGroup('Details');
@@ -88,22 +88,22 @@ class Edit extends Iface
             $f->setRequired(true);
 
         // TODO: Move to plugin
-        $this->form->addField(new Field\Checkbox(\App\Db\InstitutionData::LTI_ENABLE))->setTabGroup('LTI')->setNotes('Enable the LTI V1 launch URL for LMS systems.');
-        $lurl = \Tk\Uri::create('/lti/'.$this->institution->getHash().'/launch.html')->toString();
-        if ($this->institution->domain)
-            $lurl = \Tk\Uri::create('/lti/launch.html')->setHost($this->institution->domain)->toString();
-
-        $this->form->addField(new Field\Html(\App\Db\InstitutionData::LTI_URL, $lurl))->setLabel('Launch Url')->setTabGroup('LTI');
-        $this->institution->getData()->set(\App\Db\InstitutionData::LTI_URL, $lurl);
-        $this->form->addField(new Field\Input(\App\Db\InstitutionData::LTI_KEY))->setTabGroup('LTI');
-        $this->form->addField(new Field\Input(\App\Db\InstitutionData::LTI_SECRET))->setTabGroup('LTI');
-
-        $this->form->addField(new Field\Checkbox(\App\Db\InstitutionData::LDAP_ENABLE))->setTabGroup('LDAP')->setNotes('Enable LDAP authentication for the institution staff and student login.');
-        $this->form->addField(new Field\Input(\App\Db\InstitutionData::LDAP_HOST))->setTabGroup('LDAP');
-        $this->form->addField(new Field\Checkbox(\App\Db\InstitutionData::LDAP_TLS))->setTabGroup('LDAP');
-        $this->form->addField(new Field\Input(\App\Db\InstitutionData::LDAP_PORT))->setTabGroup('LDAP');
-        $this->form->addField(new Field\Input(\App\Db\InstitutionData::LDAP_BASE_DN))->setTabGroup('LDAP');
-        $this->form->addField(new Field\Input(\App\Db\InstitutionData::LDAP_FILTER))->setTabGroup('LDAP')->setNotes('`{username}` will be replaced with the login request username.');
+//        $this->form->addField(new Field\Checkbox(\App\Db\InstitutionData::LTI_ENABLE))->setTabGroup('LTI')->setNotes('Enable the LTI V1 launch URL for LMS systems.');
+//        $lurl = \Tk\Uri::create('/lti/'.$this->institution->getHash().'/launch.html')->toString();
+//        if ($this->institution->domain)
+//            $lurl = \Tk\Uri::create('/lti/launch.html')->setHost($this->institution->domain)->toString();
+//
+//        $this->form->addField(new Field\Html(\App\Db\InstitutionData::LTI_URL, $lurl))->setLabel('Launch Url')->setTabGroup('LTI');
+//        $this->institution->getData()->set(\App\Db\InstitutionData::LTI_URL, $lurl);
+//        $this->form->addField(new Field\Input(\App\Db\InstitutionData::LTI_KEY))->setTabGroup('LTI');
+//        $this->form->addField(new Field\Input(\App\Db\InstitutionData::LTI_SECRET))->setTabGroup('LTI');
+//
+//        $this->form->addField(new Field\Checkbox(\App\Db\InstitutionData::LDAP_ENABLE))->setTabGroup('LDAP')->setNotes('Enable LDAP authentication for the institution staff and student login.');
+//        $this->form->addField(new Field\Input(\App\Db\InstitutionData::LDAP_HOST))->setTabGroup('LDAP');
+//        $this->form->addField(new Field\Checkbox(\App\Db\InstitutionData::LDAP_TLS))->setTabGroup('LDAP');
+//        $this->form->addField(new Field\Input(\App\Db\InstitutionData::LDAP_PORT))->setTabGroup('LDAP');
+//        $this->form->addField(new Field\Input(\App\Db\InstitutionData::LDAP_BASE_DN))->setTabGroup('LDAP');
+//        $this->form->addField(new Field\Input(\App\Db\InstitutionData::LDAP_FILTER))->setTabGroup('LDAP')->setNotes('`{username}` will be replaced with the login request username.');
 
 
         $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
@@ -151,25 +151,24 @@ class Edit extends Iface
         }
 
         // validate LTI consumer key
-        $lid = (int)$data->get(\App\Db\InstitutionData::LTI_CURRENT_ID);
-        if ($form->getFieldValue(\App\Db\InstitutionData::LTI_ENABLE)) {
-            if (!$form->getFieldValue(\App\Db\InstitutionData::LTI_KEY)) {
-                $form->addFieldError(\App\Db\InstitutionData::LTI_KEY, 'Please enter a valid LTI Key');
-            }
-            if (!$form->getFieldValue(\App\Db\InstitutionData::LTI_SECRET) && $lid > 0) {
-                $form->addFieldError(\App\Db\InstitutionData::LTI_SECRET, 'Please enter a valid LTI secret code');
-            }
-            if (\App\Db\InstitutionMap::create()->ltiKeyExists($form->getFieldValue(\App\Db\InstitutionData::LTI_KEY), $lid)) {
-                $form->addFieldError(\App\Db\InstitutionData::LTI_KEY, 'This LTI key already exists for another Institution.');
-            }
-        }
+//        $lid = (int)$data->get(\App\Db\InstitutionData::LTI_CURRENT_ID);
+//        if ($form->getFieldValue(\App\Db\InstitutionData::LTI_ENABLE)) {
+//            if (!$form->getFieldValue(\App\Db\InstitutionData::LTI_KEY)) {
+//                $form->addFieldError(\App\Db\InstitutionData::LTI_KEY, 'Please enter a valid LTI Key');
+//            }
+//            if (!$form->getFieldValue(\App\Db\InstitutionData::LTI_SECRET) && $lid > 0) {
+//                $form->addFieldError(\App\Db\InstitutionData::LTI_SECRET, 'Please enter a valid LTI secret code');
+//            }
+//            if (\App\Db\InstitutionMap::create()->ltiKeyExists($form->getFieldValue(\App\Db\InstitutionData::LTI_KEY), $lid)) {
+//                $form->addFieldError(\App\Db\InstitutionData::LTI_KEY, 'This LTI key already exists for another Institution.');
+//            }
+//        }
 
         if ($form->hasErrors()) {
             return;
         }
 
         $logo->saveFile();
-
         // resize the image if needed
         if ($logo->hasFile()) {
             $fullPath = $this->getConfig()->getDataPath() . $this->institution->logo;
@@ -212,45 +211,19 @@ class Edit extends Iface
             $studentTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Acl::ROLE_STUDENT, 0);
             $template->insertTemplate('studentTable', $studentTable->show());
 
-            $template->addCss('editPanel', 'col-md-4');
+            $template->addCss('editPanel', 'col-md-5');
             $template->setChoice('showInfo');
+            $template->setChoice('update');
 
             // No Client pages to log into...
             $template->setAttr('msq', 'href', \App\Uri::create()->reset()->set(\App\Listener\MasqueradeHandler::MSQ, $this->institution->getOwnerUser()->hash));
+            $template->setAttr('plugin', 'href', \App\Uri::create('/admin/institution/'.$this->institution->getId().'/plugins.html'));
 
         } else {
             $template->addCss('editPanel', 'col-md-12');
         }
 
 
-        $formId = $this->form->getId();
-        $js = <<<JS
-jQuery(function($) {
-
-  function toggleFields(checkbox) {
-    var pre = checkbox.attr('name').substring(0, checkbox.attr('name').lastIndexOf('.'));
-    var list = $('input[name^="'+pre+'"]').not('.ignore');
-    if (!list.length) return;
-    var checked = list.slice(0 ,1).get(0).checked;
-    if (checked) {
-      list.slice(1).removeAttr('disabled', 'disabled').removeClass('disabled');
-    } else {
-      list.slice(1).attr('disabled', 'disabled').addClass('disabled');
-    }
-  }
-  $('#$formId').find('.tk-checkbox .checkbox input').change(function(e) {
-    toggleFields($(this));
-  }).each(function (i) {
-    toggleFields($(this));
-  });
-  
-  $('#delToken').click(function(e) {
-    return confirm('Are you sure you want to remove this token?');
-  });
-  
-});
-JS;
-        $template->appendJs($js);
 
         return $this->getPage()->setPageContent($template);
     }
@@ -275,6 +248,7 @@ JS;
           <div class="col-lg-12">
             <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
             <a href="javascript:;" class="btn btn-default" choice="msq" var="msq"><i class="fa fa-user-secret"></i> <span>Masquerade</span></a>
+            <a href="/admin/institution/1/plugins.html" class="btn btn-default" title="Manage Institution Plugins" var="plugin" choice="update"><i class="fa fa-plug"></i> <span>Plugins</span></a>
           </div>
         </div>
       </div>
@@ -289,14 +263,14 @@ JS;
       <div class="panel-body ">
         <div class="row">
           <div class="col-lg-12">
-            <div var="formEdit"></div>
+            <div var="form"></div>
           </div>
         </div>
       </div>
     </div>
   </div>
   
-  <div class="col-lg-8" choice="showInfo">
+  <div class="col-lg-7" choice="showInfo">
     <div class="panel panel-default">
       <div class="panel-heading">
         <i class="fa fa-university fa-fw"></i> Institution

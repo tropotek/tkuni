@@ -28,4 +28,78 @@ $(document).ready(function() {
 
   $('select.tk-dualSelect').DualListBox();
 
+
+  // setup tab pain input checkbox trigger
+  $('.tk-form input.tk-input-toggle').tkTabCheckboxToggle();
+
 });
+
+
+
+
+
+
+// This plugin will toggle all the input elements in a tabPane to disabled or enabled
+// Plugin: tkTabCheckboxToggle
+(function($) {
+  var tkTabCheckboxToggle = function(checkbox, options) {
+    // plugin vars
+    var defaults = {
+      tabPaneSelector: '.tab-pane, .tk-form-fields',
+      inputSelector: 'input, textarea, select',
+      disableAttr: 'disabled',
+      disableCss: 'disabled',
+      disableOnSelected: false,
+      onToggle: function(tabPane, list) {}
+    };
+    var plugin = this;
+    plugin.settings = {};
+
+    // constructor method
+    plugin.init = function() {
+      plugin.settings = $.extend({}, defaults, options);
+      checkbox = $(checkbox);
+
+      // setup events
+      checkbox.on('change', function(e) {
+        toggle.apply(checkbox);
+      });
+      toggle.apply(checkbox);
+
+    };  // END init()
+
+    // private methods
+    var toggle = function() {
+      var name = $(this).get(0).name;
+      var tabPane = $(this).closest(plugin.settings.tabPaneSelector);
+      var list = tabPane.find(plugin.settings.inputSelector).not('input[name="'+name+'"]');
+      if (!list.length) return;
+      if ($(this).prop('checked')) {
+        if (plugin.settings.disableAttr)
+          list.removeAttr(plugin.settings.disableAttr, plugin.settings.disableAttr);
+        if (plugin.settings.disableCss)
+          list.removeClass(plugin.settings.disableCss);
+      } else {
+        if (plugin.settings.disableAttr)
+          list.attr(plugin.settings.disableAttr, plugin.settings.disableAttr);
+        if (plugin.settings.disableCss)
+          list.addClass(plugin.settings.disableCss);
+      }
+      if (undefined !== plugin.settings.onToggle) plugin.settings.onToggle.apply($(this), [tabPane, list])
+    };
+
+    plugin.init();
+  };
+  $.fn.tkTabCheckboxToggle = function(options) {
+    return this.each(function() {
+      if (undefined === $(this).data('tkTabCheckboxToggle')) {
+        var plugin = new tkTabCheckboxToggle(this, options);
+        $(this).data('tkTabCheckboxToggle', plugin);
+      }
+    });
+  }
+})(jQuery);
+
+
+
+

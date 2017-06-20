@@ -100,16 +100,19 @@ class Edit extends Iface
         $this->form->addField(new Field\Checkbox('active'))->setTabGroup('Details');
 
         $this->form->setAttr('autocomplete', 'off');
-        $f = $this->form->addField(new Field\Password('newPassword'))->setAttr('placeholder', 'Click to edit')->setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setTabGroup('Password');
+        $f = $this->form->addField(new Field\Password('newPassword'))->setAttr('placeholder', 'Click to edit')->
+            setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setTabGroup('Password');
         if (!$this->user->getId())
             $f->setRequired(true);
-        $f = $this->form->addField(new Field\Password('confPassword'))->setAttr('placeholder', 'Click to edit')->setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setNotes('Change this users password.')->setTabGroup('Password');
+        $f = $this->form->addField(new Field\Password('confPassword'))->setAttr('placeholder', 'Click to edit')->
+            setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setNotes('Change this users password.')->setTabGroup('Password');
         if (!$this->user->getId())
             $f->setRequired(true);
 
         if ($this->user->id && ($this->getUser()->hasRole(\App\Auth\Acl::ROLE_STAFF) || $this->getUser()->hasRole(\App\Auth\Acl::ROLE_CLIENT)) ) {
             $list = \Tk\Form\Field\Option\ArrayObjectIterator::create(\App\Db\CourseMap::create()->findActive($this->institution->id));
-            $this->form->addField(new Field\Select('selCourse[]', $list))->setLabel('Course Selection')->setNotes('This list only shows active and enrolled courses. Use the enrollment form in the edit course page if your course is not visible.')->setTabGroup('Courses')->addCssClass('tk-dualSelect')->setAttr('data-title', 'Courses');
+            $this->form->addField(new Field\Select('selCourse[]', $list))->setLabel('Course Selection')->setNotes('This list only shows active and enrolled courses. Use the enrollment form in the edit course page if your course is not visible.')->
+                setTabGroup('Courses')->addCss('tk-dualSelect')->setAttr('data-title', 'Courses');
             $arr = \App\Db\CourseMap::create()->findByUserId($this->user->id)->toArray('id');
             $this->form->setFieldValue('selCourse', $arr);
         }

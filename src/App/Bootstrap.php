@@ -126,6 +126,9 @@ class Bootstrap
         // Initiate the email gateway
         \App\Factory::getEmailGateway();
 
+        // Initiate the plugin API object
+        \App\Factory::getPluginApi();
+
 
         return $config;
     }

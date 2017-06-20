@@ -45,12 +45,12 @@ class Course extends \Tk\Db\Map\Model
     /**
      * @var \DateTime
      */
-    public $start = null;
+    public $dateStart = null;
 
     /**
      * @var \DateTime
      */
-    public $finish = null;
+    public $dateEnd = null;
 
     /**
      * @var boolean

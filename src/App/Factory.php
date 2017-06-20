@@ -12,7 +12,7 @@ use Tk\Db\Pdo;
  */
 class Factory
 {
-    static $LTI_DB_PREFIX = '';
+    //static $LTI_DB_PREFIX = '';
 
     /**
      * @var \Tk\Config
@@ -254,6 +254,17 @@ class Factory
             self::getConfig()->setControllerResolver($obj);
         }
         return self::getConfig()->getControllerResolver();
+    }
+
+    /**
+     * @return PluginApi
+     */
+    public static function getPluginApi()
+    {
+        if (!self::getConfig()->getPluginApi()) {
+            self::getConfig()->setPluginApi(new PluginApi());
+        }
+        return self::getConfig()->getPluginApi();
     }
     
     

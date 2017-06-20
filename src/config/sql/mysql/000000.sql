@@ -61,8 +61,8 @@ CREATE TABLE IF NOT EXISTS `course` (
   `code` VARCHAR(64) NOT NULL DEFAULT '',
   `email` VARCHAR(255) NOT NULL DEFAULT '',
   `description` TEXT,
-  `start` TIMESTAMP NOT NULL,
-  `finish` TIMESTAMP NOT NULL,
+  `date_start` TIMESTAMP NOT NULL,
+  `date_end` TIMESTAMP NOT NULL,
   `del` TINYINT(1) NOT NULL DEFAULT 0,
   `modified` TIMESTAMP NOT NULL,
   `created` TIMESTAMP NOT NULL,
@@ -110,7 +110,7 @@ INSERT INTO `institution` (`owner_id`, `name`, `email`, `description`, `logo`, `
     (2, 'The University Of Melbourne', 'admin@unimelb.edu.au', 'This is a test institution for this app', '', 1, MD5('1'), NOW() , NOW())
 ;
 
-INSERT INTO `course` (`institution_id`, `name`, `code`, `email`, `description`, `start`, `finish`, `modified`, `created`)
+INSERT INTO `course` (`institution_id`, `name`, `code`, `email`, `description`, `date_start`, `date_end`, `modified`, `created`)
     VALUES (1, 'Poultry Industry Field Work', 'VETS50001_2014_SM1', 'course@unimelb.edu.au', '',  NOW(), DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 190 DAY), NOW() , NOW() )
 ;
 

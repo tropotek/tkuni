@@ -1,5 +1,5 @@
 <?php
-namespace Lti;
+namespace Lti_old;
 
 use IMSGlobal\LTI\ToolProvider;
 
@@ -155,8 +155,8 @@ class Provider extends ToolProvider\ToolProvider
                 $course->code = $courseCode;
                 $course->email = empty($ltiSesh['lis_person_contact_email_primary']) ? $ltiSesh['lis_person_contact_email_primary'] : \Tk\Config::getInstance()->get('site.email');
                 $course->description = '';
-                $course->start = \Tk\Date::create();
-                $course->finish = \Tk\Date::create()->add(new \DateInterval('P1Y'));
+                $course->dateStart = \Tk\Date::create();
+                $course->dateEnd = \Tk\Date::create()->add(new \DateInterval('P1Y'));
                 $course->active = true;
                 $course->save();
             }

@@ -44,26 +44,27 @@ class PluginManager extends Iface
      */
     public function doDefault(Request $request)
     {
-        $this->pluginFactory = \App\Factory::getPluginFactory();
-
         $this->setPageTitle('Plugin Manager');
 
+        $this->pluginFactory = \App\Factory::getPluginFactory();
+
         // Upload plugin
-        $this->form = new Form('formEdit');
-        $this->form->addField(new Field\File('package', $request))->setRequired(true)->addCss('tkFileinput');
+        $this->form = \App\Factory::createForm('pluginEdit');
+        $this->form->setParam('renderer', \App\Factory::createFormRenderer($this->form));
+        $this->form->addField(new Field\File('package', '', $this->getConfig()->getPluginPath()))->addCss('tk-fileinput');
         $this->form->addField(new Event\Button('upload', array($this, 'doUpload')))->addCss('btn-primary');
         $this->form->execute();
 
         // Plugin manager table
-        $this->table = new \Tk\Table('PluginList');
-        $this->table->setParam('renderer', \Tk\Table\Renderer\Dom\Table::create($this->table));
+        $this->table = \App\Factory::createTable('PluginList');
+        $this->table->setParam('renderer', \App\Factory::createTableRenderer($this->table));
 
         $this->table->addCell(new IconCell('icon'))->setLabel('');
-        $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCss('key')->setOrderProperty('');
-        $this->table->addCell(new \Tk\Table\Cell\Text('version'))->setOrderProperty('');
-        //$this->table->addCell(new AccessCell('access'));
-        $this->table->addCell(new \Tk\Table\Cell\Date('time'))->setLabel('Created')->setOrderProperty('');
         $this->table->addCell(new ActionsCell('actions'));
+        $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCss('key')->setOrderProperty('');
+        $this->table->addCell(new \Tk\Table\Cell\Text('access'))->setOrderProperty('');
+        $this->table->addCell(new \Tk\Table\Cell\Text('version'))->setOrderProperty('');
+        $this->table->addCell(new \Tk\Table\Cell\Date('time'))->setFormat(\Tk\Date::FORMAT_MED_DATE)->setLabel('Created')->setOrderProperty('');
 
         $this->table->setList($this->getPluginList());
 
@@ -80,6 +81,11 @@ class PluginManager extends Iface
         $names = $pluginFactory->getAvailablePlugins();
         foreach ($names as $pluginName) {
             $info = $pluginFactory->getPluginInfo($pluginName);
+            $info->name = str_replace('ttek-plg/', '', $info->name);
+            if (empty($info->access)) {
+                $info->access = 'admin';
+            }
+            $info->time = \Tk\Date::create($info->time);
             $list[$pluginName] = $info;
         }
         return $list;
@@ -92,14 +98,11 @@ class PluginManager extends Iface
     {
         /* @var Field\File $package */
         $package = $form->getField('package');
-        if (!$package->isValid()) {
-            return;
-        }
-        if (!preg_match('/\.(zip|gz|tgz)$/i', $package->getUploadedFile()->getFilename())) {
+
+        if (!preg_match('/\.(zip|gz|tgz)$/i', $package->getValue())) {
             $form->addFieldError('package', 'Please Select a valid plugin file. (zip/tar.gz/tgz only)');
         }
-
-        $dest = $this->getConfig()->getPluginPath() . '/' . $package->getUploadedFile()->getFilename();
+        $dest = $this->getConfig()->getPluginPath() . $package->getValue();
         if (is_dir(str_replace(array('.zip', '.tgz', '.tar.gz'), '', $dest))) {
             $form->addFieldError('package', 'A plugin with that name already exists');
         }
@@ -108,17 +111,20 @@ class PluginManager extends Iface
             return;
         }
 
-        $package->moveTo($dest);
-        $cmd = '';
+        $package->saveFile();
 
+        $cmd = '';
         if (\Tk\File::getExtension($dest) == 'zip') {
             $cmd  = sprintf('cd %s && unzip %s', escapeshellarg(dirname($dest)), escapeshellarg(basename($dest)));
         } else if (\Tk\File::getExtension($dest) == 'gz' || \Tk\File::getExtension($dest) == 'tgz') {
             $cmd  = sprintf('cd %s && tar zxf %s', escapeshellarg(dirname($dest)), escapeshellarg(basename($dest)));
         }
         if ($cmd) {
-            exec($cmd);
+            exec($cmd, $output);
         }
+
+        // TODO: check the plugin is a valid Tk plugin, if not remove the archive and files and throw an error
+        // Look for a Plugin.php file and Class maybe????
 
         \Tk\Alert::addSuccess('Plugin successfully uploaded.');
         \Tk\Uri::create()->reset()->redirect();
@@ -132,8 +138,7 @@ class PluginManager extends Iface
         $template = $this->getTemplate();
 
         // Render the form
-        $fren = new \Tk\Form\Renderer\Dom($this->form);
-        $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());
+        $template->insertTemplate('form', $this->form->getParam('renderer')->show()->getTemplate());
 
         // render Table
         $template->replaceTemplate('PluginList', $this->table->getParam('renderer')->show());
@@ -156,8 +161,7 @@ class PluginManager extends Iface
       <h4 class="panel-title"><i class="fa fa-cogs"></i> Actions</h4>
     </div>
     <div class="panel-body">
-      <a href="javascript: window.history.back();" class="btn btn-default back" var="back"><i class="fa fa-arrow-left"></i>
-        <span>Back</span></a>
+      <a href="javascript: window.history.back();" class="btn btn-default back" var="back"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
     </div>
   </div>
 
@@ -191,41 +195,6 @@ HTML;
         return \Dom\Loader::load($xhtml);
     }
 
-}
-
-
-class AccessCell extends \Tk\Table\Cell\Text
-{
-
-    /**
-     * OwnerCell constructor.
-     *
-     * @param string $property
-     * @param null $label
-     */
-    public function __construct($property, $label = null)
-    {
-        parent::__construct($property, $label);
-        $this->setOrderProperty('');
-    }
-
-    /**
-     * Get the property value from the object
-     * This should be the clean property data with no HTML or rendering attached,
-     * unless the rendering code is part of the value as it will be called for
-     * outputting to other files like XML or CSV.
-     *
-     * @param object $obj
-     * @param string $property
-     * @return mixed
-     */
-    public function getPropertyValue($obj, $property)
-    {
-        if (!empty($obj->access))
-            return $obj->access;
-        return 'system';
-
-    }
 }
 
 
@@ -323,30 +292,25 @@ class ActionsCell extends \Tk\Table\Cell\Text
     {
         $template = $this->__makeTemplate();
         $pluginFactory = \App\Factory::getPluginFactory();
-
         $pluginName = $pluginFactory->cleanPluginName($info->name);
 
         if ($pluginFactory->isActive($pluginName)) {
             $plugin = $pluginFactory->getPlugin($pluginName);
             $template->setChoice('active');
             $template->setAttr('deact', 'href', \Tk\Uri::create()->reset()->set('deact', $pluginName));
+            $this->getRow()->addCss('plugin-active');
 
-            $template->setAttr('title', 'href', $plugin->getSettingsUrl());
-            $template->setAttr('setup', 'href', $plugin->getSettingsUrl());
+            if ($plugin->getSettingsUrl()) {
+                $template->setAttr('setup', 'href', $plugin->getSettingsUrl());
+            } else {
+                $template->addCss('setup', 'disabled');
+            }
         } else {
             $template->setChoice('inactive');
             $template->setAttr('act', 'href', \Tk\Uri::create()->reset()->set('act', $pluginName));
+            $this->getRow()->addCss('plugin-inactive');
 
-            // Dissable deletion of plugins that are installed via composer
-            $result = call_user_func_array('array_merge', \Tk\Config::getInstance()->getComposer()->getPrefixes());
-            $isComposer = false;
-            foreach ($result as $item) {
-                if (preg_match('/'.preg_quote($pluginName).'$/', $item)) {
-                    $isComposer = true;
-                    break;
-                }
-            }
-            if (!$isComposer) {
+            if (!\Tk\Plugin\Factory::isComposer($pluginName, \Tk\Config::getInstance()->getComposer())) {
                 $template->setAttr('del', 'href', \Tk\Uri::create()->reset()->set('del', $pluginName));
             } else {
                 $template->addCss('del', 'disabled');
@@ -364,11 +328,21 @@ jQuery(function ($) {
         return confirm('Are you sure you want to delete this plugin?');
     });
     $('.deact').click(function (e) {
-        return confirm('Are you sure you want to uninstall this plugin?');
+        return confirm('Are you sure you want to uninstall this plugin?\\nThis will delete all data relating to the plugin.');
     });
 });
 JS;
         $template->appendJs($js);
+
+        $css = <<<CSS
+#PluginList .plugin-inactive td {
+  opacity: 0.5;
+}
+#PluginList .plugin-inactive td.mActions {
+  opacity: 1;  
+}
+CSS;
+        $template->appendCss($css);
 
         return $template;
     }
@@ -383,11 +357,11 @@ JS;
     public function __makeTemplate()
     {
         $html = <<<HTML
-<div>
-<a href="#" class="btn btn-success btn-xs noblock act" choice="inactive" var="act" title="Install Plugin"><i class="glyphicon glyphicon-log-in"></i></a>
-<a href="#" class="btn btn-danger btn-xs noblock del" choice="inactive" var="del" title="Delete Plugin"><i class="glyphicon glyphicon-remove-circle"></i></a>
+<div class="text-right">
+<a href="#" class="btn btn-success btn-xs noblock act" choice="inactive" var="act" title="Activate Plugin"><i class="glyphicon glyphicon-log-in"></i></a>
+<a href="#" class="btn btn-danger btn-xs noblock del" choice="inactive" var="del" title="Delete Plugin Files"><i class="glyphicon glyphicon-remove-circle"></i></a>
 <a href="#" class="btn btn-primary btn-xs noblock setup" choice="active" var="setup" title="Configure Plugin"><i class="glyphicon glyphicon-cog"></i></a>
-<a href="#" class="btn btn-warning btn-xs noblock deact" choice="active" var="deact" title="Uninstall Plugin"><i class="glyphicon glyphicon-log-out"></i></a>
+<a href="#" class="btn btn-danger btn-xs noblock deact" choice="active" var="deact" title="Deactivate Plugin"><i class="glyphicon glyphicon-off"></i></a>
 </div>
 HTML;
         return \Dom\Loader::load($html);
@@ -405,8 +379,7 @@ HTML;
             $pluginFactory->activatePlugin($pluginName);
             \Tk\Alert::addSuccess('Plugin `' . $pluginName . '` activated successfully');
         }catch (\Exception $e) {
-            \Tk\Alert::addError('Plugin `' . $pluginName . '` activation error. Check the plugin version.');
-            // TODO: delete any DB entries.
+            \Tk\Alert::addError('Activate Failed: ' . $e->getMessage());
         }
         \Tk\Uri::create()->reset()->redirect();
     }
@@ -418,8 +391,12 @@ HTML;
             \Tk\Alert::addWarning('Cannot locate Plugin: ' . $pluginName);
             return;
         }
-        \App\Factory::getPluginFactory()->deactivatePlugin($pluginName);
-        \Tk\Alert::addSuccess('Plugin `' . $pluginName . '` deactivated successfully');
+        try {
+            \App\Factory::getPluginFactory()->deactivatePlugin($pluginName);
+            \Tk\Alert::addSuccess('Plugin `' . $pluginName . '` deactivated successfully');
+        }catch (\Exception $e) {
+            \Tk\Alert::addError('Deactivate Failed: ' . $e->getMessage());
+        }
         \Tk\Uri::create()->reset()->redirect();
     }
 
@@ -453,7 +430,4 @@ HTML;
     }
 
 }
-
-
-
 

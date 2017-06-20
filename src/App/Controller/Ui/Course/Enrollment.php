@@ -63,10 +63,10 @@ class Enrollment extends Iface
         //$this->table->addCell(new \Tk\Table\Cell\Date('created'));
 
         // Actions
-        //$this->table->addAction(\Tk\Table\Action\Button::getInstance('New User', 'fa fa-plus', \App\Uri::createHomeUrl('/userEdit.html'));
-        //$this->table->addAction(\Tk\Table\Action\Delete::getInstance());
+        //$this->table->addAction(\Tk\Table\Action\Button::create('New User', 'fa fa-plus', \App\Uri::createHomeUrl('/userEdit.html'));
+        //$this->table->addAction(\Tk\Table\Action\Delete::create());
         $this->table->addAction(new ActionUnenroll('unenroll', 'email'));
-        $this->table->addAction(\Tk\Table\Action\Csv::getInstance($this->getConfig()->getDb()));
+        $this->table->addAction(\Tk\Table\Action\Csv::create());
 
         $filter = $this->table->getFilterValues();
         $filter['institutionId'] = $this->getUser()->getInstitution()->id;

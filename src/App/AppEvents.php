@@ -23,20 +23,16 @@ class AppEvents
      * </code>
      *
      * @event \Tk\Event\Event
-     * @var string
      */
-    const CONTROLLER_POST_RENDER = 'controller.render.post';
+    const SHOW = 'controller.show';
 
     /**
-     * Called at the end the Page/Iface::pageInit() method
-     * Use this modify the main page template
+     * Called at the end the Page/Iface::doPageInit() method
+     * Use this modify the main page template before the controller is rendered to it
      *
      * @event \Tk\Event\Event
-     * @var string
      */
-    const PAGE_POST_RENDER = 'page.render.post';
-
-
+    const PAGE_INIT = 'page.init';
 
 
 }

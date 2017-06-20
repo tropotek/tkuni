@@ -53,8 +53,8 @@ class Manager extends Iface
         $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCss('key')->setUrl(\App\Uri::createHomeUrl('/courseEdit.html'));
         $this->table->addCell(new \Tk\Table\Cell\Text('code'));
         $this->table->addCell(new \Tk\Table\Cell\Text('email'));
-        $this->table->addCell(new \Tk\Table\Cell\Date('start'));
-        $this->table->addCell(new \Tk\Table\Cell\Date('finish'));
+        $this->table->addCell(new \Tk\Table\Cell\Date('dateStart'));
+        $this->table->addCell(new \Tk\Table\Cell\Date('dateEnd'));
         $this->table->addCell(new \Tk\Table\Cell\Date('created'));
 
         // Filters

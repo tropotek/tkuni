@@ -71,8 +71,8 @@ class Edit extends Iface
         $this->form->addField(new Field\Input('name'))->setRequired(true);
         $this->form->addField(new Field\Input('code'))->setRequired(true);
         $this->form->addField(new Field\Input('email'))->setRequired(true);
-        $this->form->addField(new Field\Input('start'))->addCssClass('date')->setRequired(true);
-        $this->form->addField(new Field\Input('finish'))->addCssClass('date')->setRequired(true);
+        $this->form->addField(new Field\Input('dateStart'))->addCss('date')->setRequired(true);
+        $this->form->addField(new Field\Input('dateEnd'))->addCss('date')->setRequired(true);
         $this->form->addField(new Field\Textarea('description'));
 
         $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
@@ -104,7 +104,7 @@ class Edit extends Iface
             $this->table->addFilter(new Field\Select('role', $list))->setLabel('');
 
             // Actions
-            $this->table->addAction(\Tk\Table\Action\Csv::getInstance($this->getConfig()->getDb()));
+            $this->table->addAction(\Tk\Table\Action\Csv::create());
 
             $filter = $this->table->getFilterValues();
             $filter['institutionId'] = $this->getUser()->getInstitution()->id;
@@ -163,10 +163,10 @@ class Edit extends Iface
 
         if ($this->course->id == 0) {
             $template->setChoice('new');
-            $template->addClass('cols', 'col-md-12');
+            $template->addCss('cols', 'col-md-12');
         } else {
             $template->setChoice('edit');
-            $template->addClass('cols', 'col-md-4');
+            $template->addCss('cols', 'col-md-4');
 
             $ren = \Tk\Table\Renderer\Dom\Table::create($this->table);
             $ren->show();

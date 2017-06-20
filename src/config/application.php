@@ -18,6 +18,7 @@ include_once(__DIR__ . '/session.php');
 
 $config['site.title'] = 'New UNI Site';
 $config['site.email'] = 'fvas-elearning@unimelb.edu.au';
+
 $config['google.map.apikey'] = 'AIzaSyCSGICa1zdV6i2LV5GKLymRwjix03qYIeM';
 $config['google.recaptcha.publicKey'] = '6Ldg2wsUAAAAALpMHPiHEtZJ_SGycdDa11Kt_IOh';
 $config['google.recaptcha.privateKey'] = '6Ldg2wsUAAAAANCLllmQfCg5jSWUbJD6rSjEmtSL';
@@ -49,17 +50,6 @@ $config['date.timezone'] = 'Australia/Victoria';
  * users will have to reset/recover their passwords
  */
 //$config['hash.function'] = 'md5';
-
-
-/*
- * Set the default table names in the DB
- */
-\Tk\Plugin\Factory::$DB_TABLE = '_plugin';
-\Tk\Util\SqlMigrate::$DB_TABLE = '_migration';
-\Tk\Session\Adapter\Database::$DB_TABLE = '_session';
-\Tk\Db\Data::$DB_TABLE = '_data';
-\App\Factory::$LTI_DB_PREFIX = '_';
-//\Tk\Db\Map\Mapper::$DB_PREFIX = ''; // Disabled, not used in this app
 
 /*
  * Config for the \Tk\Auth\Adapter\DbTable

@@ -32,8 +32,8 @@ class CourseMap extends Mapper
             $this->dbMap->addPropertyMap(new Db\Text('code'));
             $this->dbMap->addPropertyMap(new Db\Text('email'));
             $this->dbMap->addPropertyMap(new Db\Text('description'));
-            $this->dbMap->addPropertyMap(new Db\Date('start'));
-            $this->dbMap->addPropertyMap(new Db\Date('finish'));
+            $this->dbMap->addPropertyMap(new Db\Date('dateStart', 'date_start'));
+            $this->dbMap->addPropertyMap(new Db\Date('dateEnd', 'date_end'));
             $this->dbMap->addPropertyMap(new Db\Date('modified'));
             $this->dbMap->addPropertyMap(new Db\Date('created'));
         }
@@ -54,8 +54,8 @@ class CourseMap extends Mapper
             $this->formMap->addPropertyMap(new Form\Text('code'));
             $this->formMap->addPropertyMap(new Form\Text('email'));
             $this->formMap->addPropertyMap(new Form\Text('description'));
-            $this->formMap->addPropertyMap(new Form\Date('start'));
-            $this->formMap->addPropertyMap(new Form\Date('finish'));
+            $this->formMap->addPropertyMap(new Form\Date('dateStart'));
+            $this->formMap->addPropertyMap(new Form\Date('dateEnd'));
         }
         return $this->formMap;
     }
@@ -67,12 +67,11 @@ class CourseMap extends Mapper
      *
      * @param string $code
      * @param int $institutionId
-     * @return Course
+     * @return Course|\Tk\Db\ModelInterface
      */
     public function findByCode($code, $institutionId)
     {
-        $where = sprintf('code = %s AND  institution_id = %d', $this->getDb()->quote($code), (int)$institutionId);
-        return $this->select($where)->current();
+        return $this->findFiltered(array('code' => $code, 'institutionId' => $institutionId))->current();
     }
 
     /**
@@ -103,7 +102,7 @@ class CourseMap extends Mapper
     {
         $now = \Tk\Date::create()->format(\Tk\Date::ISO_DATE);
         // `now >= start && now <= finish`          =>      active
-        $where = sprintf('%s >= start AND %s <= finish ', $this->getDb()->quote($now), $this->getDb()->quote($now));
+        $where = sprintf('%s >= date_start AND %s <= date_end ', $this->getDb()->quote($now), $this->getDb()->quote($now));
         if ($institutionId) {
             $where .= sprintf(' AND a.institution_id = %d', (int)$institutionId);
         }
@@ -154,6 +153,17 @@ class CourseMap extends Mapper
         if (!empty($filter['userId'])) {
             $from .= sprintf(', user_course b');
             $where .= sprintf('a.id = b.course_id AND b.user_id = %s AND ', (int)$filter['userId']);
+        }
+
+        if (!empty($filter['exclude'])) {
+            if (!is_array($filter['exclude'])) $filter['exclude'] = array($filter['exclude']);
+            $w = '';
+            foreach ($filter['exclude'] as $v) {
+                $w .= sprintf('a.id != %d AND ', (int)$v);
+            }
+            if ($w) {
+                $where .= ' ('. rtrim($w, ' AND ') . ') AND ';
+            }
         }
 
         if ($where) {
@@ -212,7 +222,8 @@ class CourseMap extends Mapper
         $query = sprintf('DELETE FROM user_course WHERE course_id = %d ', (int)$courseId);
         return $this->getDb()->exec($query);
     }
-    
+
+
 
     //  Enrolment Pending List Queries - The enrollment table holds emails of users that are to be enrolled on their next login.
 
@@ -236,9 +247,8 @@ class CourseMap extends Mapper
      */
     public function findEnrollmentByCourseId($courseId, $tool = null)
     {
-        $sql = sprintf('SELECT a.* FROM enrollment a LEFT JOIN %s b ON (a.email = b.email) WHERE a.course_id = %d', $this->getDb()->quoteParameter('user'), (int)$courseId);
-//        if ($tool)
-//            $sql .= $tool->toSql();
+        $sql = sprintf('SELECT a.* FROM enrollment a LEFT JOIN %s b ON (a.email = b.email) WHERE a.course_id = %d',
+            $this->getDb()->quoteParameter('user'), (int)$courseId);
         $res = $this->getDb()->query($sql);
         $arr = $res->fetchAll();
         return $arr;
@@ -264,7 +274,6 @@ class CourseMap extends Mapper
         // Do not add the user to the user_course table as this will be added automatically the next time the user logs in
         // This part should be implemented in a auth.onLogin listener
     }
-
 
     /**
      * @param int $courseId

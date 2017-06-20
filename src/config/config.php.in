@@ -14,6 +14,15 @@ $config['db.user'] = 'username';
 $config['db.pass'] = 'password';
 
 
+/*
+ * Set the default table names in the DB
+ */
+\Tk\Plugin\Factory::$DB_TABLE = '_plugin';
+\Tk\Util\SqlMigrate::$DB_TABLE = '_migration';
+\Tk\Session\Adapter\Database::$DB_TABLE = '_session';
+\Tk\Db\Data::$DB_TABLE = '_data';
+\App\Factory::$LTI_DB_PREFIX = '_';
+//\Tk\Db\Map\Mapper::$DB_PREFIX = ''; // Disabled, not used in this app
 
 // Debug settings
 $config['debug'] = false;

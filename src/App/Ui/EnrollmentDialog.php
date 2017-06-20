@@ -185,7 +185,7 @@ class EnrollmentDialog extends DialogBox
       <div class="form-group form-group-sm">
         <label for="fid-csvFile" class="control-label">* Csv File:</label>
         <div>
-        <input type="file" class="form-control" id="fid-csvFile" name="csvFile"/>
+        <input type="file" class="form-control tk-fileinput" id="fid-csvFile" name="csvFile" accept="text/csv"/>
         </div>
       </div>
       <div class=""><p>The CSV file should contain the users email address per line</p></div>

@@ -1,5 +1,5 @@
 <?php
-namespace Lti\Controller;
+namespace Lti_old\Controller;
 
 use Tk\Request;
 use Dom\Template;
@@ -67,7 +67,7 @@ class Launch extends Iface
             return;
         }
 
-        $tool = new \Lti\Provider(\App\Factory::getLtiDataConnector(), $this->institution, $this->getConfig()->getEventDispatcher());
+        $tool = new \Lti_old\Provider(\App\Factory::getLtiDataConnector(), $this->institution, $this->getConfig()->getEventDispatcher());
         $_POST['custom_tc_profile_url'] = '';   // Hack to speed up the launch as we do not need this url
         $tool->handleRequest();
 
