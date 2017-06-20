@@ -63,10 +63,9 @@ $config['system.auth.dbtable.activeColumn'] = 'active';
 /*
  * Auth adapters to use in logging into the site
  */
-$config['system.auth.adapters'] = array(
-    'LDAP' => '\App\Auth\Adapter\UnimelbLdap',
-    'DbTable' => '\App\Auth\Adapter\DbTable'
-);
+//$config['system.auth.adapters'] = array(
+//    'DbTable' => '\App\Auth\Adapter\DbTable'
+//);
 
 
 

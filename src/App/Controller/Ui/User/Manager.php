@@ -61,8 +61,8 @@ class Manager extends Iface
         // Filters
         $this->table->addFilter(new Field\Input('keywords'))->setLabel('')->setAttr('placeholder', 'Keywords');
 
-        if ($this->getUser()->hasRole(array(\App\Auth\Acl::ROLE_CLIENT, \App\Auth\Acl::ROLE_STAFF))) {
-            $list = array('-- Role --' => '', 'Staff' => \App\Auth\Acl::ROLE_STAFF, 'Student' => \App\Auth\Acl::ROLE_STUDENT);
+        if ($this->getUser()->hasRole(array(\App\Db\User::ROLE_CLIENT, \App\Db\User::ROLE_STAFF))) {
+            $list = array('-- Role --' => '', 'Staff' => \App\Db\User::ROLE_STAFF, 'Student' => \App\Db\User::ROLE_STUDENT);
             $this->table->addFilter(new Field\Select('role', $list))->setLabel('');
         }
 
@@ -76,8 +76,8 @@ class Manager extends Iface
             $filter['institutionId'] = $this->getUser()->getInstitution()->id;
         if (empty($filter['role'])) {
             $filter['role'] = $this->getUser()->role;
-            if ($this->getUser()->hasRole(array(\App\Auth\Acl::ROLE_CLIENT, \App\Auth\Acl::ROLE_STAFF))) {
-                $filter['role'] = array(\App\Auth\Acl::ROLE_STAFF, \App\Auth\Acl::ROLE_STUDENT);
+            if ($this->getUser()->hasRole(array(\App\Db\User::ROLE_CLIENT, \App\Db\User::ROLE_STAFF))) {
+                $filter['role'] = array(\App\Db\User::ROLE_STAFF, \App\Db\User::ROLE_STUDENT);
             }
         }
 
@@ -93,11 +93,11 @@ class Manager extends Iface
     protected function setPageHeading()
     {
         switch($this->getUser()->role) {
-            case \App\Auth\Acl::ROLE_ADMIN:
+            case \App\Db\User::ROLE_ADMIN:
                 $this->setPageTitle('Administration Manager');
                 break;
-            case \App\Auth\Acl::ROLE_CLIENT:
-            case \App\Auth\Acl::ROLE_STAFF:
+            case \App\Db\User::ROLE_CLIENT:
+            case \App\Db\User::ROLE_STAFF:
                 $this->setPageTitle('Staff/Student Manager');
                 break;
         }

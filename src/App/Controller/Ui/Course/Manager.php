@@ -59,7 +59,7 @@ class Manager extends Iface
 
         // Filters
         $this->table->addFilter(new Field\Input('keywords'))->setLabel('')->setAttr('placeholder', 'Keywords');
-        if ($this->getUser()->hasRole(\App\Auth\Acl::ROLE_STAFF)) {
+        if ($this->getUser()->hasRole(\App\Db\User::ROLE_STAFF)) {
             $list = array('-- Show All --' => '', 'My Courses' => '1');
             $this->table->addFilter(new Field\Select('userId', $list))->setLabel('')->setValue('1');
         }

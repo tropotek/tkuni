@@ -69,7 +69,7 @@ class Register extends Iface
         }
 
         $this->user = new \App\Db\User();
-        $this->user->role = \App\Auth\Acl::ROLE_CLIENT;
+        $this->user->role = \App\Db\User::ROLE_CLIENT;
 
         $this->institution = new \App\Db\Institution();
         
@@ -132,7 +132,7 @@ class Register extends Iface
         }
 
         // Create a user and make a temp hash until the user activates the account
-        $this->user->role = \App\Auth\Acl::ROLE_CLIENT;
+        $this->user->role = \App\Db\User::ROLE_CLIENT;
         $this->user->active = false;
         $this->user->setNewPassword($pass);
         $this->user->save();
@@ -172,7 +172,7 @@ class Register extends Iface
         }
         /** @var \App\Db\User $user */
         $user = \App\Db\UserMap::create()->findByHash($hash);
-        if (!$user || $user->role != \App\Auth\Acl::ROLE_CLIENT) {
+        if (!$user || $user->role != \App\Db\User::ROLE_CLIENT) {
             throw new \InvalidArgumentException('Cannot locate user. Please contact administrator.');
         }
         if ($user->active == true) {

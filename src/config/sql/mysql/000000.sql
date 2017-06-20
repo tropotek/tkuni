@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `displayName` VARCHAR(255) NOT NULL DEFAULT '',
   `email` VARCHAR(168) NOT NULL DEFAULT '',
   `notes` TEXT,
+  `session_id` VARCHAR(70) NOT NULL DEFAULT '',
   `last_login` TIMESTAMP,
   `active` TINYINT(1) NOT NULL DEFAULT 1,
   `hash` VARCHAR(128) NOT NULL DEFAULT '',

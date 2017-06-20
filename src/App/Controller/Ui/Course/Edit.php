@@ -100,7 +100,7 @@ class Edit extends Iface
             // Filters
             $this->table->addFilter(new Field\Input('keywords'))->setLabel('')->setAttr('placeholder', 'Keywords');
 
-            $list = array('-- Role --' => '', 'Staff' => \App\Auth\Acl::ROLE_STAFF, 'Student' => \App\Auth\Acl::ROLE_STUDENT);
+            $list = array('-- Role --' => '', 'Staff' => \App\Db\User::ROLE_STAFF, 'Student' => \App\Db\User::ROLE_STUDENT);
             $this->table->addFilter(new Field\Select('role', $list))->setLabel('');
 
             // Actions
@@ -110,7 +110,7 @@ class Edit extends Iface
             $filter['institutionId'] = $this->getUser()->getInstitution()->id;
             $filter['courseId'] = $this->course->id;
             if (empty($filter['role']))
-                $filter['role'] = array(\App\Auth\Acl::ROLE_STAFF, \App\Auth\Acl::ROLE_STUDENT);
+                $filter['role'] = array(\App\Db\User::ROLE_STAFF, \App\Db\User::ROLE_STUDENT);
 
             $users = \App\Db\UserMap::create()->findFiltered($filter, $this->table->makeDbTool('a.name'));
             $this->table->setList($users);
@@ -137,7 +137,7 @@ class Edit extends Iface
         $this->course->save();
 
         // If this is a staff member add them to the course
-        if ($this->getUser()->hasRole(\App\Auth\Acl::ROLE_STAFF)) {
+        if ($this->getUser()->hasRole(\App\Db\User::ROLE_STAFF)) {
             \App\Db\CourseMap::create()->addUser($this->course->id, $this->getUser()->id);
         }
 

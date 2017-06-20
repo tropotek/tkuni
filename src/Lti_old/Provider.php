@@ -109,9 +109,9 @@ class Provider extends ToolProvider\ToolProvider
 
             if (!$user) {
                 // Create new user
-                $role = \App\Auth\Acl::ROLE_STUDENT;
+                $role = \App\Db\User::ROLE_STUDENT;
                 if ($this->user->isLearner() || $this->user->isStaff()) {
-                    $role = \App\Auth\Acl::ROLE_STAFF;
+                    $role = \App\Db\User::ROLE_STAFF;
                 }
 
                 list($username, $domain) = explode('@', $this->user->email);

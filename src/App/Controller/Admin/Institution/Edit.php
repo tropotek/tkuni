@@ -71,10 +71,10 @@ class Edit extends Iface
         $this->form->addField(new Field\File('logo', $this->institution->getDataPath().'/logo/'))
             ->setAttr('accept', '.png,.jpg,.jpeg,.gif')->setTabGroup('Details')->addCss('tk-imageinput');
 
-        $insUrl = \Tk\Uri::create('/inst/'.$this->institution->getHash().'/login.html')->setScheme('https')->toString();
+        $insUrl = \Tk\Uri::create('/inst/'.$this->institution->getHash().'/login.html');
         if ($this->institution->domain)
-            $insUrl = \Tk\Uri::create('/login.html')->setHost($this->institution->domain)->setScheme('https')->toString();
-
+            $insUrl = \Tk\Uri::create('/login.html')->setHost($this->institution->domain);
+        $insUrl = $insUrl->setScheme('https')->toString();
         $this->form->addField(new Field\Input('domain'))->setTabGroup('Details')->setNotes('Your Institution login URL is: <a href="'.$insUrl.'">'.$insUrl.'</a>' );
         $this->form->addField(new Field\Textarea('description'))->setTabGroup('Details');
         $this->form->addField(new Field\Checkbox('active'))->setTabGroup('Details');
@@ -205,10 +205,10 @@ class Edit extends Iface
             $courseTable = new \App\Ui\CourseTable($this->institution->id);
             $template->insertTemplate('courseTable', $courseTable->show());
 
-            $staffTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Acl::ROLE_STAFF, 0);
+            $staffTable = new \App\Ui\UserTable($this->institution->id, \App\Db\User::ROLE_STAFF, 0);
             $template->insertTemplate('staffTable', $staffTable->show());
 
-            $studentTable = new \App\Ui\UserTable($this->institution->id, \App\Auth\Acl::ROLE_STUDENT, 0);
+            $studentTable = new \App\Ui\UserTable($this->institution->id, \App\Db\User::ROLE_STUDENT, 0);
             $template->insertTemplate('studentTable', $studentTable->show());
 
             $template->addCss('editPanel', 'col-md-5');

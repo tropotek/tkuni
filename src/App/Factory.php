@@ -281,6 +281,33 @@ class Factory
         }
         return self::getConfig()->getAuth();
     }
+
+    /**
+     * A helper method to create an instance of an Auth adapter
+     *
+     * @param array $submittedData
+     * @return \Tk\Auth\Adapter\Iface
+     * @throws \Tk\Auth\Exception
+     */
+    public static function getAuthDbTableAdapter($submittedData = array())
+    {
+        $config = self::getConfig();
+        $adapter = new \App\Auth\Adapter\DbTable(
+            $config->getDb(),
+            \Tk\Db\Map\Mapper::$DB_PREFIX . str_replace(\Tk\Db\Map\Mapper::$DB_PREFIX, '', $config['system.auth.dbtable.tableName']),
+            $config['system.auth.dbtable.usernameColumn'],
+            $config['system.auth.dbtable.passwordColumn'],
+            $config['system.auth.dbtable.activeColumn']);
+        if (isset($submittedData['instHash'])) {
+            $institution = \App\Db\InstitutionMap::create()->findByHash($submittedData['instHash']);
+            $adapter->setInstitution($institution);
+        }
+        $adapter->setHashCallback(array(__CLASS__, 'hashPassword'));
+
+        $adapter->replace($submittedData);
+        return $adapter;
+
+    }
     
     /**
      * A helper method to create an instance of an Auth adapter
@@ -290,38 +317,39 @@ class Factory
      * @return \Tk\Auth\Adapter\Iface
      * @throws \Tk\Auth\Exception
      */
-    public static function getAuthAdapter($class, $submittedData = array())
-    {
-        $config = self::getConfig();
-        
-        /** @var \Tk\Auth\Adapter\Iface $adapter */
-        $adapter = null;
-        switch ($class) {
-            case '\App\Auth\Adapter\UnimelbLdap':
-                if (!isset($submittedData['instHash'])) return null;
-                $institution = \App\Db\InstitutionMap::create()->findByHash($submittedData['instHash']);
-                if (!$institution || !$institution->getData()->get(\App\Db\InstitutionData::LDAP_ENABLE)) return null;
-                $adapter = new \App\Auth\Adapter\UnimelbLdap($institution);
-                break;
-            case '\App\Auth\Adapter\DbTable':
-                $adapter = new \App\Auth\Adapter\DbTable(
-                    $config->getDb(),
-                    \Tk\Db\Map\Mapper::$DB_PREFIX . str_replace(\Tk\Db\Map\Mapper::$DB_PREFIX, '', $config['system.auth.dbtable.tableName']),
-                    $config['system.auth.dbtable.usernameColumn'],
-                    $config['system.auth.dbtable.passwordColumn'],
-                    $config['system.auth.dbtable.activeColumn']);
-                $adapter->setHashCallback(array(__CLASS__, 'hashPassword'));
-                break;
-            default:
-                if (class_exists($class))
-                    $adapter = new $class();
-        }
-        if (!$adapter) {
-            throw new \Tk\Auth\Exception('Cannot locate adapter class: ' . $class);
-        }
-        $adapter->replace($submittedData);
-        return $adapter;
-    }
+//    public static function getAuthAdapter($class, $submittedData = array())
+//    {
+//        $config = self::getConfig();
+//
+//        /** @var \Tk\Auth\Adapter\Iface $adapter */
+//        $adapter = null;
+//        switch ($class) {
+////            case '\App\Auth\Adapter\UnimelbLdap':
+////                if (!isset($submittedData['instHash'])) return null;
+////                $institution = \App\Db\InstitutionMap::create()->findByHash($submittedData['instHash']);
+////                if (!$institution || !$institution->getData()->get(\App\Db\InstitutionData::LDAP_ENABLE)) return null;
+////                $adapter = new \App\Auth\Adapter\UnimelbLdap($institution);
+////                break;
+//            case '\App\Auth\Adapter\DbTable':
+//                $adapter = new \App\Auth\Adapter\DbTable(
+//                    $config->getDb(),
+//                    \Tk\Db\Map\Mapper::$DB_PREFIX . str_replace(\Tk\Db\Map\Mapper::$DB_PREFIX, '', $config['system.auth.dbtable.tableName']),
+//                    $config['system.auth.dbtable.usernameColumn'],
+//                    $config['system.auth.dbtable.passwordColumn'],
+//                    $config['system.auth.dbtable.activeColumn']);
+//                $adapter->setHashCallback(array(__CLASS__, 'hashPassword'));
+//                break;
+//            default:
+//                if (class_exists($class))
+//                    $adapter = new $class();
+//        }
+//        if (!$adapter) {
+//            throw new \Tk\Auth\Exception('Cannot locate adapter class: ' . $class);
+//        }
+//        $adapter->replace($submittedData);
+//        return $adapter;
+//    }
+
 
     /**
      * hashPassword

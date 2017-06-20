@@ -13,8 +13,9 @@
 *.swp
 *.bak
 ~*
-*.iml
 .DS_Store
 
 
 
+!/src/App/Listener/AuthHandler.php
+!/src/App/Db/User.php

@@ -32,9 +32,9 @@ class AuthHandler implements Subscriber
         $auth = \App\Factory::getAuth();
         if ($auth->getIdentity()) {
             $ident = $auth->getIdentity();
-            //$user = \App\Db\User::getMapper()->findByUsername($ident['username'], $ident['institutionId']);
             $user = \App\Db\UserMap::create()->find($ident);
-            $config->setUser($user);
+            if ($user)
+                $config->setUser($user);
         }
     }
 
@@ -42,25 +42,32 @@ class AuthHandler implements Subscriber
      * Check the user has access to this controller
      *
      * @param ControllerEvent $event
+     * @throws \Tk\Auth\Exception
      */
     public function onControllerAccess(ControllerEvent $event)
     {
         /** @var \App\Controller\Iface $controller */
         $controller = $event->getController();
+        /** @var \App\Db\User $user */
         $user = $controller->getUser();
-        if ($controller instanceof \App\Controller\Iface) {
 
-            // Get page access permission from route params (see config/routes.php)
-            $role = $event->getRequest()->getAttribute('access');
-            // Check the user has access to the controller in question
-            if (!$role || empty($role)) return;
+        $role = $event->getRequest()->getAttribute('role');
 
-            if (!$user) \Tk\Uri::create('/login.html')->redirect();
-            if (!$user->getAcl()->hasRole($role)) {
-                // Could redirect to a authentication error page...
-                // Could cause a loop if the permissions are stuffed
+        if (!$role || empty($role)) return;
+        if (!$user) {
+            if ($controller instanceof \App\Controller\Iface) {
+                \Tk\Uri::create('/login.html')->redirect();
+            } else {
+                throw new \Tk\Auth\Exception('Invalid access permissions');
+            }
+        } else {
+            if ($user->sessionId != \App\Factory::getSession()->getId()) {
+                $user->sessionId = \App\Factory::getSession()->getId();
+                $user->save();
+            }
+            if (!$user->hasRole($role) && $user->active) {
                 \Tk\Alert::addWarning('You do not have access to the requested page.');
-                \Tk\Uri::create($user->getHomeUrl())->redirect();
+                $user->getHomeUrl()->redirect();
             }
         }
     }
@@ -71,35 +78,12 @@ class AuthHandler implements Subscriber
      */
     public function onLogin(AuthEvent $event)
     {
-        $config = \App\Factory::getConfig();
-        $result = null;
-        $adapterList = $config->get('system.auth.adapters');
+        $adapter = \App\Factory::getAuthDbTableAdapter($event->all());
+        $result = $event->getAuth()->authenticate($adapter);
 
-        foreach($adapterList as $name => $class) {
-            $adapter = \App\Factory::getAuthAdapter($class, $event->all());
-            if (!$adapter) continue;
-            $result = $event->getAuth()->authenticate($adapter);
-            $event->setResult($result);
-            if ($result && $result->getCode() == \Tk\Auth\Result::SUCCESS) {
-                break;
-            }
-        }
-        if (!$result) {
-            throw new \Tk\Auth\Exception('Invalid login credentials');
-        }
-        if (!$result->isValid()) {
-            return;
-        }
+        $event->setResult($result);
+        $event->set('auth.password.access', true);   // Can modify their own password
 
-        /** @var \App\Db\User $user */
-        $ident = $result->getIdentity();
-        //$user = \App\Db\UserMap::create()->findByUsername($ident['username'], $ident['institutionId']);
-        $user = \App\Db\UserMap::create()->find($ident);
-        if (!$user) {
-            throw new \Tk\Auth\Exception('User not found: Contact Your Administrator.');
-        }
-
-        $event->set('user', $user);
     }
 
     /**
@@ -108,25 +92,33 @@ class AuthHandler implements Subscriber
      */
     public function onLoginSuccess(AuthEvent $event)
     {
-
-        /** @var \App\Db\User $user */
-        $user = $event->get('user');
-        if (!$user) {
-            throw new \Tk\Exception('No user found.');
+        $result = $event->getResult();
+        if (!$result) {
+            throw new \Tk\Auth\Exception('Invalid login credentials');
+        }
+        if (!$result->isValid()) {
+            return;
         }
 
+        /* @var \App\Db\User $user */
+        $user = \App\Db\UserMap::create()->find($result->getIdentity());
+        if (!$user) {
+            throw new \Tk\Auth\Exception('Invalid user login credentials');
+        }
+        if (!$user->active) {
+            throw new \Tk\Auth\Exception('Inactive account, please contact your administrator.');
+        }
+
+        if($user && $event->getRedirect() == null) {
+            $event->setRedirect($user->getHomeUrl());
+        }
+
+        //store the type of adapter for allowing the staff student to modify their password
+        \App\Factory::getSession()->set('auth.password.access', ($event->get('auth.password.access') === true) );
+
+        // Update the user record.
         $user->lastLogin = \Tk\Date::create();
         $user->save();
-
-        $institution = $user->getInstitution();
-        if ($institution && ($user->hasRole(\App\Auth\Acl::ROLE_STUDENT) || $user->hasRole(\App\Auth\Acl::ROLE_STAFF)) ) {
-            $courseList = \App\Db\CourseMap::create()->findPendingEnrollment($institution->id, $user->email);
-            /** @var \App\Db\Course $course */
-            foreach ($courseList as $course) {
-                \App\Db\CourseMap::create()->addUser($course->id, $user->id);
-            }
-        }
-        \Tk\Uri::create($user->getHomeUrl())->redirect();
     }
 
     /**
@@ -135,9 +127,21 @@ class AuthHandler implements Subscriber
      */
     public function onLogout(AuthEvent $event)
     {
-        $event->getAuth()->clearIdentity();
-
-        // check if we are in an lti session then return to the LMS
+        /** @var \App\Db\User $user */
+        $user = \Tk\Config::getInstance()->getUser();
+        if ($user) {
+            if (!$event->getRedirect()) {
+                $event->setRedirect(\Tk\Uri::create('/index.html'));
+                if ($user->getInstitution()) {
+                    $event->setRedirect(\Tk\Uri::create('/inst/' . $user->getInstitution()->getHash() . '/login.html'));
+                }
+            }
+            $user->sessionId = '';
+            $user->save();
+            $auth = $event->getAuth();
+            $auth->clearIdentity();
+            \App\Factory::getSession()->destroy();
+        }
 
     }
 

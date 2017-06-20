@@ -15,6 +15,11 @@ use Tk\Db\Data;
  */
 class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
 {
+    const ROLE_ADMIN = 'admin';
+    const ROLE_CLIENT= 'client';
+    const ROLE_STAFF = 'staff';
+    const ROLE_STUDENT = 'student';
+
 
     /**
      * @var int
@@ -77,6 +82,11 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     public $notes = '';
 
     /**
+     * @var string
+     */
+    public $sessionId = '';
+
+    /**
      * @var \DateTime
      */
     public $lastLogin = null;
@@ -90,11 +100,6 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
      * @var \DateTime
      */
     public $created = null;
-
-    /**
-     * @var \App\Auth\Acl
-     */
-    private $acl = null;
 
     /**
      * @var \App\Db\Institution
@@ -141,25 +146,6 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
         return $this->data;
     }
 
-    /**
-     * @return Acl
-     */
-    public function getAcl()
-    {
-        if (!$this->acl) {
-            $this->acl = new Acl($this);
-        }
-        return $this->acl;
-    }
-
-    /**
-     * @param string|array $role
-     * @return bool
-     */
-    public function hasRole($role)
-    {
-        return $this->getAcl()->hasRole($role);
-    }
 
     /**
      * Create a random password
@@ -227,7 +213,7 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     {
         if (!$this->institution) {
             $this->institution = \App\Db\InstitutionMap::create()->find($this->institutionId);
-            if (!$this->institution && $this->hasRole(\App\Auth\Acl::ROLE_CLIENT)) {
+            if (!$this->institution && $this->hasRole(\App\Db\User::ROLE_CLIENT)) {
                 $this->institution = \App\Db\InstitutionMap::create()->findByOwnerId($this->id);
             }
         }
@@ -250,20 +236,71 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
      *
      * @note \App\Uri::createHomeUrl() uses this method to get the home path
      *
-     * @return string
+     * @return \Tk\Uri
      * @throws \Exception
      */
     public function getHomeUrl()
     {
-        if ($this->getAcl()->isAdmin())
-            return '/admin/index.html';
-        if ($this->getAcl()->isClient())
-            return '/client/index.html';
-        if ($this->getAcl()->isStaff())
-            return '/staff/index.html';
-        if ($this->getAcl()->isStudent())
-            return '/student/index.html';
-        return '/index.html';   // Should not get here unless their is no roles
+        if ($this->isAdmin())
+            return \Tk\Uri::create('/admin/index.html');
+        if ($this->isClient())
+            return \Tk\Uri::create('/client/index.html');
+        if ($this->isStaff())
+            return \Tk\Uri::create('/staff/index.html');
+        if ($this->isStudent())
+            return \Tk\Uri::create('/student/index.html');
+        return \Tk\Uri::create('/index.html');   // Should not get here unless their is no roles
+    }
+
+    /**
+     * @param string|array $role
+     * @return boolean
+     */
+    public function hasRole($role)
+    {
+        if (!is_array($role)) $role = array($role);
+        foreach ($role as $r) {
+            if ($r == $this->role || preg_match('/'.preg_quote($r).'/', $this->role)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function isAdmin()
+    {
+        return $this->hasRole(self::ROLE_ADMIN);
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function isClient()
+    {
+        return $this->hasRole(self::ROLE_CLIENT);
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function isStaff()
+    {
+        return $this->hasRole(self::ROLE_STAFF);
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function isStudent()
+    {
+        return $this->hasRole(self::ROLE_STUDENT);
     }
 
 
@@ -281,7 +318,8 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
         if (!$this->name) {
             $errors['name'] = 'Invalid field name value';
         }
-        if (!$this->role) {
+        
+        if (!$this->role || !in_array($this->role, \Tk\Object::getClassConstants($this, 'ROLE_'))) {
             $errors['role'] = 'Invalid field role value';
         }
         if (!$this->username) {

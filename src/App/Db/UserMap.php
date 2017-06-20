@@ -35,6 +35,7 @@ class UserMap extends Mapper
             $this->dbMap->addPropertyMap(new Db\Text('email'));
             $this->dbMap->addPropertyMap(new Db\Date('lastLogin', 'last_login'));
             $this->dbMap->addPropertyMap(new Db\Text('notes'));
+            //$this->dbMap->addPropertyMap(new Db\Text('sessionId', 'session_id'));
             $this->dbMap->addPropertyMap(new Db\Boolean('active'));
             $this->dbMap->addPropertyMap(new Db\Text('hash'));
             $this->dbMap->addPropertyMap(new Db\Date('modified'));
@@ -153,51 +154,6 @@ class UserMap extends Mapper
         $res = $this->selectFrom($from, $where)->current();
         return $res;
     }
-
-    /**
-     *
-     * @param $role
-     * @param null $tool
-     * @return Model
-     */
-//    public function findByRole($role, $tool = null)
-//    {
-//        if (!is_array($role)) $role = array($role);
-//
-//        $from = sprintf('%s a', $this->getDb()->quoteParameter($this->getTable()));
-//        $where = '';
-//        foreach ($role as $r) {
-//            $where .= sprintf('a.role = %s OR ', $this->getDb()->quote($r));
-//        }
-//        $where = rtrim($where, ' OR ');
-//
-//        $res = $this->selectFrom($from, $where, $tool);
-//        return $res;
-//    }
-
-    /**
-     *
-     * @param $courseId
-     * @param string|array $role
-     * @param \Tk\Db\Tool|null $tool
-     * @return ArrayObject
-     */
-//    public function findByCourseId($courseId, $role = null, $tool = null)
-//    {
-//        $from = sprintf('%s a, user_course b', $this->getDb()->quoteParameter($this->getTable()));
-//        $where = sprintf('a.id = b.user_id AND b.course_id = %d', (int)$courseId);
-//
-//        if ($role) {
-//            if (!is_array($role)) $role = array($role);
-//            $w = '';
-//            foreach ($role as $r) {
-//                $w .= sprintf('a.role = %s OR ', $this->getDb()->quote($r));
-//            }
-//            if ($w)
-//                $where .= ' AND (' . rtrim($w, ' OR ') . ')';
-//        }
-//        return $this->selectFrom($from, $where, $tool);
-//    }
 
     /**
      *

@@ -46,7 +46,7 @@ class Login extends Iface
     {
         /** @var Auth $auth */
         if ($this->getUser()) {
-            \Tk\Url::create($this->getUser()->getHomeUrl())->redirect();
+            \Tk\Uri::create($this->getUser()->getHomeUrl())->redirect();
         }
         if (!$this->form)
             $this->form = new Form('loginForm');
@@ -54,8 +54,6 @@ class Login extends Iface
         $this->form->addField(new Field\Password('password'));
 
         $this->form->addField(new Event\Button('login', array($this, 'doLogin')));
-        $this->form->addField(new Event\Link('forgotPassword', \Tk\Uri::create('/recover.html')));
-
     }
 
     /**
@@ -114,13 +112,12 @@ class Login extends Iface
         /** @var Auth $auth */
         $auth = \App\Factory::getAuth();
 
-        if (!$form->getFieldValue('username') || !preg_match('/[a-z0-9_ -]{3,32}/i', $form->getFieldValue('username'))) {
+        if (!$form->getFieldValue('username')) {
             $form->addFieldError('username', 'Please enter a valid username');
         }
-        if (!$form->getFieldValue('password') || !preg_match('/[a-z0-9_ -]{6,32}/i', $form->getFieldValue('password'))) {
+        if (!$form->getFieldValue('password')) {
             $form->addFieldError('password', 'Please enter a valid password');
         }
-
         if ($form->hasErrors()) {
             return;
         }
@@ -129,19 +126,25 @@ class Login extends Iface
             // Fire the login event to allow developing of misc auth plugins
             $event = new AuthEvent($auth, $form->getValues());
             $this->getConfig()->getEventDispatcher()->dispatch(AuthEvents::LOGIN, $event);
-
             $result = $event->getResult();
             if (!$result) {
                 $form->addError('Invalid username or password');
                 return;
             }
-
             if (!$result->isValid()) {
                 $form->addError( implode("<br/>\n", $result->getMessages()) );
                 return;
             }
 
-            $this->getConfig()->getEventDispatcher()->dispatch(AuthEvents::LOGIN_SUCCESS, $event);
+            // Copy the event to avoid propagation
+            $sEvent = new AuthEvent($auth, $form->getValues());
+            $sEvent->setResult($event->getResult());
+            $sEvent->setRedirect($event->getRedirect());
+            $sEvent->replace($event->all());
+            $this->getConfig()->getEventDispatcher()->dispatch(AuthEvents::LOGIN_SUCCESS, $sEvent);
+
+            if ($sEvent->getRedirect())
+                $sEvent->getRedirect()->redirect();
 
         } catch (\Exception $e) {
             $form->addError($e->getMessage());
@@ -168,8 +171,11 @@ class Login extends Iface
             }
             $template->insertText('instName', $this->institution->name);
             $template->setChoice('inst');
+        } else {
+            $template->setChoice('noinst');
+            $template->setChoice('recover');
         }
-        if ($this->getConfig()->get('site.client.registration')) {
+        if ($this->getConfig()->get('site.client.registration') && !$this->institution) {
             $template->setChoice('register');
         }
 

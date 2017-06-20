@@ -46,13 +46,13 @@ class Edit extends Iface
     public function setPageHeading()
     {
         switch($this->getUser()->role) {
-            case \App\Auth\Acl::ROLE_ADMIN:
+            case \App\Db\User::ROLE_ADMIN:
                 $this->setPageTitle('Administration User Edit');
                 break;
-            case \App\Auth\Acl::ROLE_CLIENT:
+            case \App\Db\User::ROLE_CLIENT:
                 $this->setPageTitle('Staff/Student Edit');
                 break;
-            case \App\Auth\Acl::ROLE_STAFF:
+            case \App\Db\User::ROLE_STAFF:
                 $this->setPageTitle('Staff/Student Edit');
                 break;
         }
@@ -71,8 +71,8 @@ class Edit extends Iface
 
         $this->user = new \App\Db\User();
         $this->user->role = $this->getUser()->role;
-        if ($this->user->hasRole(\App\Auth\Acl::ROLE_CLIENT)) {
-            $this->user->role = \App\Auth\Acl::ROLE_STAFF;
+        if ($this->user->hasRole(\App\Db\User::ROLE_CLIENT)) {
+            $this->user->role = \App\Db\User::ROLE_STAFF;
         }
 
         if ($request->has('userId')) {
@@ -90,11 +90,11 @@ class Edit extends Iface
         $this->form->addField(new Field\Input('name'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\Input('username'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\Input('email'))->setRequired(true)->setTabGroup('Details');
-        if ($this->user->hasRole(array(\App\Auth\Acl::ROLE_STAFF, \App\Auth\Acl::ROLE_STUDENT))) {
+        if ($this->user->hasRole(array(\App\Db\User::ROLE_STAFF, \App\Db\User::ROLE_STUDENT))) {
             $this->form->addField(new Field\Input('uid'))->setLabel('UID')->setTabGroup('Details')->setNotes('The student or staff number assigned by the institution.');
         }
-        if ($this->getUser()->hasRole(array(\App\Auth\Acl::ROLE_STAFF, \App\Auth\Acl::ROLE_CLIENT))) {
-            $list = array('-- Select --' => '', 'Staff' => \App\Auth\Acl::ROLE_STAFF, 'Student' => \App\Auth\Acl::ROLE_STUDENT);
+        if ($this->getUser()->hasRole(array(\App\Db\User::ROLE_STAFF, \App\Db\User::ROLE_CLIENT))) {
+            $list = array('-- Select --' => '', 'Staff' => \App\Db\User::ROLE_STAFF, 'Student' => \App\Db\User::ROLE_STUDENT);
             $this->form->addField(new Field\Select('role', $list))->setNotes('Select the access level for this user')->setTabGroup('Details')->setRequired(true);
         }
         $this->form->addField(new Field\Checkbox('active'))->setTabGroup('Details');
@@ -109,7 +109,7 @@ class Edit extends Iface
         if (!$this->user->getId())
             $f->setRequired(true);
 
-        if ($this->user->id && ($this->getUser()->hasRole(\App\Auth\Acl::ROLE_STAFF) || $this->getUser()->hasRole(\App\Auth\Acl::ROLE_CLIENT)) ) {
+        if ($this->user->id && ($this->getUser()->hasRole(\App\Db\User::ROLE_STAFF) || $this->getUser()->hasRole(\App\Db\User::ROLE_CLIENT)) ) {
             $list = \Tk\Form\Field\Option\ArrayObjectIterator::create(\App\Db\CourseMap::create()->findActive($this->institution->id));
             $this->form->addField(new Field\Select('selCourse[]', $list))->setLabel('Course Selection')->setNotes('This list only shows active and enrolled courses. Use the enrollment form in the edit course page if your course is not visible.')->
                 setTabGroup('Courses')->addCss('tk-dualSelect')->setAttr('data-title', 'Courses');

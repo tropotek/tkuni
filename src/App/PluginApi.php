@@ -118,4 +118,17 @@ class PluginApi
         return $authResult;
     }
 
+    /**
+     * Return the Uri to redirect to on successful LTI login
+     *
+     * @param \App\Db\User $user
+     * @param \App\Db\Course $course
+     * @return \Tk\Uri
+     */
+    public function getLtiHome($user, $course)
+    {
+        return $user->getHomeUrl();
+    }
+
+
 }
