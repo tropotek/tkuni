@@ -27,7 +27,9 @@ body.public {
   border-top: 1px solid #CCC;
 }
 
-
+#page-wrapper {
+  padding-bottom: 20px;
+}
 
 
 
@@ -43,6 +45,10 @@ body.public {
 
 /*************************************/
 /**  \Tk\Table\Renderer\Dom\Table   **/
+.tab-pane .tk-table {
+  padding-top: 20px;
+}
+
 
 .tk-table th {
   white-space: nowrap;

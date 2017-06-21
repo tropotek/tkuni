@@ -45,9 +45,9 @@ class Manager extends Iface
         $this->institution = $this->getUser()->getInstitution();
         if (!$this->institution)
             throw new \Tk\Exception('Institution Not Found.');
-        
-        $this->table = new \Tk\Table('CourseList');
-        $this->table->setParam('renderer', \Tk\Table\Renderer\Dom\Table::create($this->table));
+
+        $this->table = \App\Factory::createTable('CourseList');
+        $this->table->setParam('renderer', \App\Factory::createTableRenderer($this->table));
 
         $this->table->addCell(new \Tk\Table\Cell\Checkbox('id'));
         $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCss('key')->setUrl(\App\Uri::createHomeUrl('/courseEdit.html'));

@@ -29,11 +29,6 @@ $routes->add('logout', new \Tk\Routing\Route('/logout.html', 'App\Controller\Log
 $routes->add('recover', new \Tk\Routing\Route('/recover.html', 'App\Controller\Recover::doDefault', $params));
 $routes->add('register', new \Tk\Routing\Route('/register.html', 'App\Controller\Register::doDefault', $params));
 
-// LTI launch
-//$routes->add('lti-launch', new \Tk\Routing\Route('/lti/launch.html', 'Lti\Controller\Launch::doLaunch', $params));
-//$routes->add('institution-lti-launch', new \Tk\Routing\Route('/lti/{instHash}/launch.html', 'Lti\Controller\Launch::doInsLaunch', $params));
-
-
 
 // Admin Pages
 $params = array('role' => \App\Db\User::ROLE_ADMIN);
@@ -64,7 +59,7 @@ $routes->add('staff-home-base', new \Tk\Routing\Route('/staff/', 'App\Controller
 
 $routes->add('staff-course-manager', new \Tk\Routing\Route('/staff/courseManager.html', 'App\Controller\Course\Manager::doDefault', $params));
 $routes->add('staff-course-edit', new \Tk\Routing\Route('/staff/courseEdit.html', 'App\Controller\Course\Edit::doDefault', $params));
-$routes->add('staff-course-enrollment', new \Tk\Routing\Route('/staff/courseEnrollment.html', 'App\Controller\Course\EnrolmentManager::doDefault', $params));
+$routes->add('staff-course-enrollment', new \Tk\Routing\Route('/staff/courseEnrollment.html', 'App\Controller\Course\EnrollmentManager::doDefault', $params));
 
 $routes->add('staff-user-manager', new \Tk\Routing\Route('/staff/userManager.html', 'App\Controller\User\Manager::doDefault', $params));
 $routes->add('staff-user-edit', new \Tk\Routing\Route('/staff/userEdit.html', 'App\Controller\User\Edit::doDefault', $params));

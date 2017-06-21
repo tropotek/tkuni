@@ -1,7 +1,7 @@
 <?php
 namespace App\Ui\Dialog;
 
-use Dom\Template;
+
 use Tk\Request;
 
 /**

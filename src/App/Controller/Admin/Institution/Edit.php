@@ -87,25 +87,6 @@ class Edit extends Iface
         if (!$this->owner->getId())
             $f->setRequired(true);
 
-        // TODO: Move to plugin
-//        $this->form->addField(new Field\Checkbox(\App\Db\InstitutionData::LTI_ENABLE))->setTabGroup('LTI')->setNotes('Enable the LTI V1 launch URL for LMS systems.');
-//        $lurl = \Tk\Uri::create('/lti/'.$this->institution->getHash().'/launch.html')->toString();
-//        if ($this->institution->domain)
-//            $lurl = \Tk\Uri::create('/lti/launch.html')->setHost($this->institution->domain)->toString();
-//
-//        $this->form->addField(new Field\Html(\App\Db\InstitutionData::LTI_URL, $lurl))->setLabel('Launch Url')->setTabGroup('LTI');
-//        $this->institution->getData()->set(\App\Db\InstitutionData::LTI_URL, $lurl);
-//        $this->form->addField(new Field\Input(\App\Db\InstitutionData::LTI_KEY))->setTabGroup('LTI');
-//        $this->form->addField(new Field\Input(\App\Db\InstitutionData::LTI_SECRET))->setTabGroup('LTI');
-//
-//        $this->form->addField(new Field\Checkbox(\App\Db\InstitutionData::LDAP_ENABLE))->setTabGroup('LDAP')->setNotes('Enable LDAP authentication for the institution staff and student login.');
-//        $this->form->addField(new Field\Input(\App\Db\InstitutionData::LDAP_HOST))->setTabGroup('LDAP');
-//        $this->form->addField(new Field\Checkbox(\App\Db\InstitutionData::LDAP_TLS))->setTabGroup('LDAP');
-//        $this->form->addField(new Field\Input(\App\Db\InstitutionData::LDAP_PORT))->setTabGroup('LDAP');
-//        $this->form->addField(new Field\Input(\App\Db\InstitutionData::LDAP_BASE_DN))->setTabGroup('LDAP');
-//        $this->form->addField(new Field\Input(\App\Db\InstitutionData::LDAP_FILTER))->setTabGroup('LDAP')->setNotes('`{username}` will be replaced with the login request username.');
-
-
         $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
         $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
         $this->form->addField(new Event\Link('cancel', \Tk\Uri::create('/admin/institutionManager.html')));
@@ -150,19 +131,6 @@ class Edit extends Iface
             $form->addFieldError('newPassword', 'Please enter a new password.');
         }
 
-        // validate LTI consumer key
-//        $lid = (int)$data->get(\App\Db\InstitutionData::LTI_CURRENT_ID);
-//        if ($form->getFieldValue(\App\Db\InstitutionData::LTI_ENABLE)) {
-//            if (!$form->getFieldValue(\App\Db\InstitutionData::LTI_KEY)) {
-//                $form->addFieldError(\App\Db\InstitutionData::LTI_KEY, 'Please enter a valid LTI Key');
-//            }
-//            if (!$form->getFieldValue(\App\Db\InstitutionData::LTI_SECRET) && $lid > 0) {
-//                $form->addFieldError(\App\Db\InstitutionData::LTI_SECRET, 'Please enter a valid LTI secret code');
-//            }
-//            if (\App\Db\InstitutionMap::create()->ltiKeyExists($form->getFieldValue(\App\Db\InstitutionData::LTI_KEY), $lid)) {
-//                $form->addFieldError(\App\Db\InstitutionData::LTI_KEY, 'This LTI key already exists for another Institution.');
-//            }
-//        }
 
         if ($form->hasErrors()) {
             return;

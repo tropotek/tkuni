@@ -74,7 +74,6 @@ class Manager extends Iface
         return $this->getPage()->setPageContent($template);
     }
 
-
     /**
      * DomTemplate magic method
      *

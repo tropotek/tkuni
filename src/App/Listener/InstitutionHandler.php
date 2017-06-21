@@ -4,8 +4,6 @@ namespace App\Listener;
 use Tk\Event\Subscriber;
 use Tk\Kernel\KernelEvents;
 use Tk\Event\GetResponseEvent;
-use Tk\Event\KernelEvent;
-
 
 
 /**

@@ -48,8 +48,6 @@ class Enrolled extends \Dom\Renderer\Renderer
      */
     public function doDefault()
     {
-        $request = \App\Factory::getRequest();
-
         $this->table = \App\Factory::createTable('enrolledUsers');
         $this->table->setParam('renderer', \App\Factory::createTableRenderer($this->table));
         $this->table->addCss('tk-enrolled-users');
@@ -262,6 +260,6 @@ class DeleteUser extends \Tk\Table\Action\Delete
      */
     protected function getConfirmStr()
     {
-        return "'Delete ' + selected.length + ' selected records?\\nNote: Users will be removed from this course and the pending-enrolment list.'";
+        return "'Delete ' + selected.length + ' selected records?\\nNote: Users will be removed from this course and the pending-enrollment list.'";
     }
 }

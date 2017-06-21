@@ -14,6 +14,7 @@
   <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <!-- Jquery UI -->
   <link href="bower_components/jquery-ui/jquery-ui.min.css" rel="stylesheet"/>
+  <link href="bower_components/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet" type="text/css"/>
   <!-- MetisMenu CSS -->
   <link href="bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet"/>
   <!-- Custom CSS -->
@@ -105,6 +106,7 @@
 <script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
 <!-- Bootstrap Core JavaScript -->
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
 <!-- Metis Menu Plugin JavaScript -->
 <script src="bower_components/metisMenu/dist/metisMenu.min.js"></script>
 <!-- Custom Theme JavaScript -->

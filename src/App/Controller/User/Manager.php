@@ -47,7 +47,8 @@ class Manager extends Iface
         if ($request->has('courseId'))
             $this->course = \App\Db\CourseMap::create()->find($request->get('courseId'));
 
-        $this->table = new \Tk\Table('tableOne');
+        $this->table = \App\Factory::createTable('UserList');
+        $this->table->setParam('renderer', \App\Factory::createTableRenderer($this->table));
 
         $this->table->addCell(new \Tk\Table\Cell\Checkbox('id'));
         $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCss('key')->setUrl(\App\Uri::createHomeUrl('/userEdit.html'));
@@ -110,9 +111,7 @@ class Manager extends Iface
     {
         $template = $this->getTemplate();
 
-        $ren = \Tk\Table\Renderer\Dom\Table::create($this->table);
-        $ren->show();
-        $template->replaceTemplate('table', $ren->getTemplate());
+        $template->replaceTemplate('table', $this->table->getParam('renderer')->show());
 
         $template->setAttr('new', 'href', \App\Uri::createHomeUrl('/userEdit.html'));
         $template->setChoice($this->getUser()->role);

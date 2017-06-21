@@ -22,15 +22,38 @@ $(document).ready(function() {
 
   $('a[role=tab]').click(function() { $(this).blur(); });
 
-  $('input.date').datepicker({
-    dateFormat: 'dd/mm/yy'
-  });
 
   $('select.tk-dualSelect').DualListBox();
 
 
   // setup tab pain input checkbox trigger
   $('.tk-form input.tk-input-toggle').tkTabCheckboxToggle();
+
+
+
+  $('input.date').datepicker({
+    dateFormat: 'dd/mm/yy'
+  });
+
+  if ($.fn.datepicker !== undefined) {
+    if(!config.datepickerFormat)
+      config.datepickerFormat = 'dd/mm/yyyy';
+
+    // single date
+    $('.date').datepicker({
+      format: config.datepickerFormat
+    });
+
+    // date-range
+    $('.input-daterange').datepicker({
+      format: config.datepickerFormat,
+      todayBtn: 'linked'
+    });
+    // $('.input-daterange input').each(function() {
+    //   //$(this).datepicker('clearDates');
+    // });
+
+  }
 
 });
 

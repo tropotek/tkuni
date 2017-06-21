@@ -48,13 +48,15 @@ class Profile extends Iface
         $this->user = $this->getUser();
 
 
-        $this->form = new Form('formEdit');
+
+        $this->form = \App\Factory::createForm('userEdit');
+        $this->form->setParam('renderer', \App\Factory::createFormRenderer($this->form));
         $this->form->setAttr('autocomplete', 'off');
 
         $this->form->addField(new Field\Input('username'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\Input('displayName'))->setRequired(true)->setTabGroup('Details');
-        $emailF = $this->form->addField(new Field\Input('email'))->setRequired(true)->setTabGroup('Details');
-        //$emailF->setAttr('readonly', 'readonly');
+        $this->form->addField(new Field\Input('email'))->setRequired(true)->setTabGroup('Details');
+
 
         $this->form->addField(new Field\Password('newPassword'))->setAttr('placeholder', 'Click to edit')->setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setTabGroup('Password');
         $this->form->addField(new Field\Password('confPassword'))->setAttr('placeholder', 'Click to edit')->setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setNotes('Change this users password.')->setTabGroup('Password');
@@ -119,8 +121,7 @@ class Profile extends Iface
         $template->insertText('username', $this->user->name . ' - [UID ' . $this->user->id . ']');
 
         // Render the form
-        $fren = new \Tk\Form\Renderer\Dom($this->form);
-        $template->appendTemplate($this->form->getId(), $fren->show()->getTemplate());
+        $template->insertTemplate('form', $this->form->getParam('renderer')->show()->getTemplate());
 
         return $this->getPage()->setPageContent($this->getTemplate());
     }
@@ -142,7 +143,7 @@ class Profile extends Iface
       <i class="fa fa-user fa-fw"></i> <span var="username"></span>
     </div>
     <div class="panel-body">
-      <div var="formEdit"></div>
+      <div var="form"></div>
     </div>
   </div>
 

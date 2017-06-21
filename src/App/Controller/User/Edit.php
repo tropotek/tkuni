@@ -85,7 +85,8 @@ class Edit extends Iface
             }
         }
 
-        $this->form = new Form('formEdit');
+        $this->form = \App\Factory::createForm('userEdit');
+        $this->form->setParam('renderer', \App\Factory::createFormRenderer($this->form));
 
         $this->form->addField(new Field\Input('name'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\Input('username'))->setRequired(true)->setTabGroup('Details');
@@ -208,8 +209,7 @@ class Edit extends Iface
         }
 
         // Render the form
-        $fren = new \Tk\Form\Renderer\Dom($this->form);
-        $template->appendTemplate($this->form->getId(), $fren->show()->getTemplate());
+        $template->insertTemplate('form', $this->form->getParam('renderer')->show()->getTemplate());
 
         //if ($this->user->id && $this->user->id != $this->getUser()->id) {
         if ($this->user->id) {
@@ -248,7 +248,7 @@ class Edit extends Iface
       <i class="fa fa-user fa-fw"></i> <span var="username"></span>
     </div>
     <div class="panel-body">
-      <div var="formEdit"></div>
+      <div var="form"></div>
     </div>
   </div>
 
