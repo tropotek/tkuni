@@ -74,10 +74,10 @@ CREATE TABLE IF NOT EXISTS `course` (
 -- For now we will assume that one user has one role in a course, ie: coordinator, lecturer, student
 -- User is enrolled in course or coordinator of course
 -- ----------------------------
-CREATE TABLE IF NOT EXISTS `user_course` (
+CREATE TABLE IF NOT EXISTS `course_has_user` (
   `user_id` INT(10) UNSIGNED NOT NULL DEFAULT 0,
   `course_id` INT(10) UNSIGNED NOT NULL DEFAULT 0,
-  UNIQUE KEY `user_course_key` (`user_id`, `course_id`)
+  UNIQUE KEY `course_has_user_key` (`user_id`, `course_id`)
 ) ENGINE=InnoDB;
 
 
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `user_course` (
 --
 --
 -- --------------------------------------------------------
-CREATE TABLE IF NOT EXISTS `enrollment` (
+CREATE TABLE IF NOT EXISTS `course_pre_enrollment` (
   `course_id` int(10) unsigned NOT NULL DEFAULT '0',
   `email` VARCHAR(168) NOT NULL DEFAULT '',
   `uid` varchar(64) NOT NULL DEFAULT '',
@@ -115,13 +115,13 @@ INSERT INTO `course` (`institution_id`, `name`, `code`, `email`, `description`, 
     VALUES (1, 'Poultry Industry Field Work', 'VETS50001_2014_SM1', 'course@unimelb.edu.au', '',  NOW(), DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 190 DAY), NOW() , NOW() )
 ;
 
-INSERT INTO `user_course` (`user_id`, `course_id`)
+INSERT INTO `course_has_user` (`user_id`, `course_id`)
 VALUES
   (3, 1),
   (4, 1)
 ;
 
-INSERT INTO `enrollment` (`course_id`, `email`)
+INSERT INTO `course_pre_enrollment` (`course_id`, `email`)
 VALUES
   (1, 'student@unimelb.edu.au')
 ;

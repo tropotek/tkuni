@@ -202,13 +202,13 @@ class Edit extends Iface
         $template->insertTemplate('form', $this->form->getParam('renderer')->show()->getTemplate());
 
         if ($this->institution->id) {
-            $courseTable = new \App\Ui\CourseTable($this->institution->id);
+            $courseTable = new \App\Ui\Table\Course($this->institution->id);
             $template->insertTemplate('courseTable', $courseTable->show());
 
-            $staffTable = new \App\Ui\UserTable($this->institution->id, \App\Db\User::ROLE_STAFF, 0);
+            $staffTable = new \App\Ui\Table\User($this->institution->id, \App\Db\User::ROLE_STAFF, 0);
             $template->insertTemplate('staffTable', $staffTable->show());
 
-            $studentTable = new \App\Ui\UserTable($this->institution->id, \App\Db\User::ROLE_STUDENT, 0);
+            $studentTable = new \App\Ui\Table\User($this->institution->id, \App\Db\User::ROLE_STUDENT, 0);
             $template->insertTemplate('studentTable', $studentTable->show());
 
             $template->addCss('editPanel', 'col-md-5');

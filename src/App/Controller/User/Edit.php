@@ -1,5 +1,5 @@
 <?php
-namespace App\Controller\Ui\User;
+namespace App\Controller\User;
 
 use Tk\Request;
 use Dom\Template;
@@ -178,7 +178,7 @@ class Edit extends Iface
                     if (in_array($course->id, $selected)) {
                         \App\Db\CourseMap::create()->addUser($course->id, $this->user->id);
                     } else {
-                        \App\Db\CourseMap::create()->deleteUser($course->id, $this->user->id);
+                        \App\Db\CourseMap::create()->removeUser($course->id, $this->user->id);
                     }
                 }
             }

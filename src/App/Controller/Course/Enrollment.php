@@ -1,5 +1,5 @@
 <?php
-namespace App\Controller\Ui\Course;
+namespace App\Controller\Course;
 
 use Tk\Request;
 use Dom\Template;
@@ -26,7 +26,7 @@ class Enrollment extends Iface
     protected $course = null;
 
     /**
-     * @var \App\Ui\EnrollmentDialog
+     * @var \App\Ui\Dialog\EnrollmentDialog
      */
     protected $dialog = null;
     
@@ -51,7 +51,7 @@ class Enrollment extends Iface
         if (!$this->course)
             throw new \Tk\Exception('Invalid course details');
 
-        $this->dialog = new \App\Ui\EnrollmentDialog('Enroll User');
+        $this->dialog = new \App\Ui\Dialog\EnrollmentDialog('Enroll User');
         $this->dialog->execute($request);
 
         $this->table = new \Tk\Table('tableOne');

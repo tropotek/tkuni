@@ -303,6 +303,16 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
         return $this->hasRole(self::ROLE_STUDENT);
     }
 
+    /**
+     * Returns true if the user is enrolled fully into the course
+     *
+     * @param $courseId
+     * @return bool
+     */
+    public function isEnrolled($courseId)
+    {
+        return \App\Db\CourseMap::create()->hasUser($courseId, $this->getVolatileId());
+    }
 
     /**
      * Validate this object's current state and return an array

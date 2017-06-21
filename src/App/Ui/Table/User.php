@@ -1,11 +1,7 @@
 <?php
-namespace App\Ui;
+namespace App\Ui\Table;
 
 use Dom\Template;
-use Tk\Form;
-use Tk\Form\Event;
-use Tk\Form\Field;
-use Tk\Request;
 
 /**
  * Class CourseTable
@@ -14,7 +10,7 @@ use Tk\Request;
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  */
-class UserTable extends \Dom\Renderer\Renderer
+class User extends \Dom\Renderer\Renderer
 {
 
     /**
@@ -73,7 +69,7 @@ class UserTable extends \Dom\Renderer\Renderer
         $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCss('key')->setUrl($this->editUrl);
 
         if ($this->institutionId)
-            $this->table->addCell(new CourseCell('course', $this->institutionId));
+            $this->table->addCell(new \App\Table\Cell\UserCourses('course', $this->institutionId));
 
         $this->table->addCell(new \Tk\Table\Cell\Text('email'));
 
@@ -109,53 +105,5 @@ class UserTable extends \Dom\Renderer\Renderer
         $this->setTemplate($this->table->getParam('renderer')->getTemplate());
         return $this->table->getParam('renderer')->getTemplate();
     }
-
-}
-
-class CourseCell extends \Tk\Table\Cell\Text
-{
-
-    protected $institutionId = 0;
-
-
-    public function __construct($property, $institutionId = 0)
-    {
-        parent::__construct($property);
-        $this->institutionId = $institutionId;
-        $this->setOrderProperty('');
-        $this->setCharacterLimit(120);
-    }
-
-    /**
-     * @param \App\Db\User $obj
-     * @param string $property
-     * @return mixed
-     */
-    public function getPropertyValue($obj, $property)
-    {
-        //$val =  parent::getPropertyValue($obj, $property);
-        $courseList = \App\Db\CourseMap::create()->findByUserId($obj->id, $this->institutionId, \Tk\Db\Tool::create('a.name'));
-        $val =  '';
-        foreach ($courseList as $course) {
-            $val .= $course->code. ', ';
-        }
-        $val = rtrim($val, ', ');
-
-        return $val;
-    }
-
-
-    /**
-     * @param mixed $obj
-     * @param null $rowIdx
-     * @return string
-     */
-    public function getCellHtml($obj, $rowIdx = null)
-    {
-        $propValue = parent::getCellHtml($obj);
-        $str = '<small>' . $propValue . '</small>';
-        return $str;
-    }
-
 
 }

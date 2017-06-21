@@ -1,5 +1,5 @@
 <?php
-namespace App\Controller\Ui;
+namespace App\Controller\User;
 
 use Tk\Request;
 use Dom\Template;

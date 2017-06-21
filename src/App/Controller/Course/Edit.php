@@ -1,5 +1,5 @@
 <?php
-namespace App\Controller\Ui\Course;
+namespace App\Controller\Course;
 
 use Dom\Template;
 use Tk\Form;
@@ -200,8 +200,7 @@ class Edit extends Iface
       <i class="fa fa-cogs"></i> Actions
     </div>
     <div class="panel-body">
-      <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i>
-        <span>Back</span></a>
+      <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
       <a href="javascript:;" class="btn btn-default" var="enroll" choice="update"><i class="fa fa-list"></i> <span>Enrollment List</span></a>
     </div>
   </div>

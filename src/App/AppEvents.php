@@ -35,4 +35,18 @@ class AppEvents
     const PAGE_INIT = 'page.init';
 
 
+    /**
+     * This event is called when a user is migrated from one course to another.
+     * In this event all student course data from the source course should be moved
+     * to the destination course.
+     *
+     * Event Data:
+     *  'courseFromId', 'courseToId', 'userId
+     *
+     * @event \Tk\Event\Event
+     */
+    const COURSE_MIGRATE_USER = 'course.migrate.user';
+
+
+
 }

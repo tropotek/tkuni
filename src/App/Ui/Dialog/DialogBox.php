@@ -1,8 +1,7 @@
 <?php
-namespace App\Ui;
+namespace App\Ui\Dialog;
 
 use Dom\Template;
-use Tk\Request;
 
 /**
  * This class uses the bootstrap dialog box model

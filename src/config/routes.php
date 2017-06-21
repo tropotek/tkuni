@@ -45,9 +45,9 @@ $routes->add('admin-institution-edit', new \Tk\Routing\Route('/admin/institution
 $routes->add('admin-institution-plugin-manager', new \Tk\Routing\Route('/admin/{zoneName}/{zoneId}/plugins.html', 'App\Controller\PluginZoneManager::doDefault',
     array('role' => \App\Db\User::ROLE_ADMIN, 'zoneName' => 'institution', 'zoneId' => '0') ));
 
-$routes->add('admin-user-manager', new \Tk\Routing\Route('/admin/userManager.html', 'App\Controller\Ui\User\Manager::doDefault', $params));
-$routes->add('admin-user-edit', new \Tk\Routing\Route('/admin/userEdit.html', 'App\Controller\Ui\User\Edit::doDefault', $params));
-$routes->add('admin-user-profile', new \Tk\Routing\Route('/admin/profile.html', 'App\Controller\Ui\Profile::doDefault', $params));
+$routes->add('admin-user-manager', new \Tk\Routing\Route('/admin/userManager.html', 'App\Controller\User\Manager::doDefault', $params));
+$routes->add('admin-user-edit', new \Tk\Routing\Route('/admin/userEdit.html', 'App\Controller\User\Edit::doDefault', $params));
+$routes->add('admin-user-profile', new \Tk\Routing\Route('/admin/profile.html', 'App\Controller\User\Profile::doDefault', $params));
 
 $routes->add('admin-settings', new \Tk\Routing\Route('/admin/settings.html', 'App\Controller\Admin\Settings::doDefault', $params));
 $routes->add('admin-plugin-manager', new \Tk\Routing\Route('/admin/plugins.html', 'App\Controller\Admin\PluginManager::doDefault', $params));
@@ -62,13 +62,13 @@ $params = array('role' => \App\Db\User::ROLE_STAFF);
 $routes->add('staff-home', new \Tk\Routing\Route('/staff/index.html', 'App\Controller\Staff\Dashboard::doDefault', $params));
 $routes->add('staff-home-base', new \Tk\Routing\Route('/staff/', 'App\Controller\Staff\Dashboard::doDefault', $params));
 
-$routes->add('staff-course-manager', new \Tk\Routing\Route('/staff/courseManager.html', 'App\Controller\Ui\Course\Manager::doDefault', $params));
-$routes->add('staff-course-edit', new \Tk\Routing\Route('/staff/courseEdit.html', 'App\Controller\Ui\Course\Edit::doDefault', $params));
-$routes->add('staff-course-enrollment', new \Tk\Routing\Route('/staff/courseEnrollment.html', 'App\Controller\Ui\Course\Enrollment::doDefault', $params));
+$routes->add('staff-course-manager', new \Tk\Routing\Route('/staff/courseManager.html', 'App\Controller\Course\Manager::doDefault', $params));
+$routes->add('staff-course-edit', new \Tk\Routing\Route('/staff/courseEdit.html', 'App\Controller\Course\Edit::doDefault', $params));
+$routes->add('staff-course-enrollment', new \Tk\Routing\Route('/staff/courseEnrollment.html', 'App\Controller\Course\EnrolmentManager::doDefault', $params));
 
-$routes->add('staff-user-manager', new \Tk\Routing\Route('/staff/userManager.html', 'App\Controller\Ui\User\Manager::doDefault', $params));
-$routes->add('staff-user-edit', new \Tk\Routing\Route('/staff/userEdit.html', 'App\Controller\Ui\User\Edit::doDefault', $params));
-$routes->add('staff-user-profile', new \Tk\Routing\Route('/staff/profile.html', 'App\Controller\Ui\Profile::doDefault', $params));
+$routes->add('staff-user-manager', new \Tk\Routing\Route('/staff/userManager.html', 'App\Controller\User\Manager::doDefault', $params));
+$routes->add('staff-user-edit', new \Tk\Routing\Route('/staff/userEdit.html', 'App\Controller\User\Edit::doDefault', $params));
+$routes->add('staff-user-profile', new \Tk\Routing\Route('/staff/profile.html', 'App\Controller\User\Profile::doDefault', $params));
 
 
 
@@ -77,7 +77,13 @@ $params = array('role' => \App\Db\User::ROLE_STUDENT);
 $routes->add('student-home', new \Tk\Routing\Route('/student/index.html', 'App\Controller\Student\Dashboard::doDefault', $params));
 $routes->add('student-home-base', new \Tk\Routing\Route('/student/', 'App\Controller\Student\Dashboard::doDefault', $params));
 
-$routes->add('student-user-profile', new \Tk\Routing\Route('/student/profile.html', 'App\Controller\Ui\Profile::doDefault', $params));
+$routes->add('student-user-profile', new \Tk\Routing\Route('/student/profile.html', 'App\Controller\User\Profile::doDefault', $params));
+
+
+// Ajax Urls
+$params = array('role' => array(\App\Db\User::ROLE_ADMIN, \App\Db\User::ROLE_CLIENT, \App\Db\User::ROLE_STAFF, \App\Db\User::ROLE_STUDENT));
+$routes->add('ajax-user-findFiltered', new \Tk\Routing\Route('/ajax/user/findFiltered.html', 'App\Ajax\User::doFindFiltered', $params));
+$routes->add('ajax-course-findFiltered', new \Tk\Routing\Route('/ajax/course/findFiltered.html', 'App\Ajax\Course::doFindFiltered', $params));
 
 
 

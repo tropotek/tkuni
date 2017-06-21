@@ -1,11 +1,7 @@
 <?php
-namespace App\Ui;
+namespace App\Ui\Table;
 
 use Dom\Template;
-use Tk\Form;
-use Tk\Form\Event;
-use Tk\Form\Field;
-use Tk\Request;
 
 /**
  * Class CourseTable
@@ -14,7 +10,7 @@ use Tk\Request;
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  */
-class CourseTable extends \Dom\Renderer\Renderer
+class Course extends \Dom\Renderer\Renderer
 {
 
     /**
@@ -60,8 +56,8 @@ class CourseTable extends \Dom\Renderer\Renderer
         $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCss('key')->setUrl($this->editUrl);
         $this->table->addCell(new \Tk\Table\Cell\Text('code'));
         //$this->table->addCell(new \Tk\Table\Cell\Text('email'));
-        //$this->table->addCell(new \Tk\Table\Cell\Date('start'));
-        $this->table->addCell(new \Tk\Table\Cell\Date('finish'));
+        //$this->table->addCell(new \Tk\Table\Cell\Date('dateStart'));
+        $this->table->addCell(new \Tk\Table\Cell\Date('dateEnd'));
 
         $this->table->addCell(new \Tk\Table\Cell\Boolean('active'));
         //$this->table->addCell(new \Tk\Table\Cell\Date('created'))->setFormat(\Tk\Table\Cell\Date::FORMAT_RELATIVE);

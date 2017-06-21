@@ -84,22 +84,16 @@ class PluginApi
     {
         $course = null;
         switch($params['type']) {
-            case 'ldap':
             case 'lti':
+            case 'ldap':
                 $course = new \App\Db\Course();
                 \App\Db\CourseMap::create()->mapForm($params, $course);
                 $course->save();
+                /** @var \App\Db\User $user */
+                $user = $params['user'];
+                \App\Db\CourseMap::create()->addUser($course->id, $user->id);
         }
         return $course;
-    }
-
-    /**
-     * @param \App\Db\User $user
-     * @param \App\Db\Course $course
-     */
-    public function addUserToCourse($user, $course)
-    {
-        \App\Db\CourseMap::create()->addUser($course->id, $user->id);
     }
 
     /**

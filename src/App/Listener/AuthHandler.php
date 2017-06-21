@@ -18,7 +18,6 @@ use Tk\Auth\AuthEvents;
 class AuthHandler implements Subscriber
 {
 
-
     /**
      * do any auth init setup
      *
@@ -49,10 +48,8 @@ class AuthHandler implements Subscriber
         /** @var \App\Controller\Iface $controller */
         $controller = $event->getController();
         /** @var \App\Db\User $user */
-        $user = $controller->getUser();
-
+        $user = \App\Factory::getConfig()->getUser();
         $role = $event->getRequest()->getAttribute('role');
-
         if (!$role || empty($role)) return;
         if (!$user) {
             if ($controller instanceof \App\Controller\Iface) {

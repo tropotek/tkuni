@@ -1,7 +1,6 @@
 <?php
-namespace App\Ui;
+namespace App\Ui\Dialog;
 
-use Dom\Template;
 use Tk\Request;
 
 /**
@@ -11,7 +10,7 @@ use Tk\Request;
  *
  * <code>
  * // doDefault()
- * $this->dialog = new \App\Ui\EnrollmentDialog('Enroll Student');
+ * $this->dialog = new \App\Ui\Dialog\PreEnrolment('Enroll Student');
  * $this->dialog->execute($request);
  *
  * ...
@@ -26,7 +25,7 @@ use Tk\Request;
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  */
-class EnrollmentDialog extends DialogBox
+class PreEnrolment extends Iface
 {
 
     /**
@@ -45,9 +44,16 @@ class EnrollmentDialog extends DialogBox
         $this->addButton('Enroll', array('class' => 'btn btn-primary'));
     }
 
+    /**
+     * @return string
+     */
+    public function getEnrollButtonId()
+    {
+        return $this->getId().'-Enroll';
+    }
 
     /**
-     * Process the enrollments as submitted from the dialog
+     * Process the enrolments as submitted from the dialog
      *
      * @param Request $request
      * @throws \Tk\Exception
@@ -57,6 +63,7 @@ class EnrollmentDialog extends DialogBox
         if (!$request->has('enroll')) {
             return;
         }
+        //$this->course = \App\Factory::getCourse();
         $this->course = \App\Db\CourseMap::create()->find($request->get('courseId'));
         if (!$this->course)
             throw new \Tk\Exception('Invalid course details');
@@ -65,7 +72,7 @@ class EnrollmentDialog extends DialogBox
 
         // Check file list
         if ($request->getUploadedFile('csvFile') && $request->getUploadedFile('csvFile')->getError() == \UPLOAD_ERR_OK) {
-            /** @var \Tk\UploadedFile $file */
+            /* @var \Tk\UploadedFile $file */
             $file = $request->getUploadedFile('csvFile');
             if (($handle = fopen($file->getFile(), 'r')) !== FALSE) {
                 $list = $this->processCsv($handle);
@@ -76,13 +83,8 @@ class EnrollmentDialog extends DialogBox
             if (($handle = fopen('data://text/plain,'.$csvList, 'r')) !== FALSE) {
                 $list = $this->processCsv($handle);
             }
-        } else if ($request->get('email')) {
-            $list[] = array(
-                'email' => $request->get('email'),
-                'uid' => $request->get('uid')
-            );
         }
-
+        
         $error = array();
         $success = array();
         $info = array();
@@ -92,24 +94,25 @@ class EnrollmentDialog extends DialogBox
             if (isset($arr['uid']))
                 $uid = trim(strip_tags($arr['uid']));
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $error[$email] = $i . ' - Cannot locate student enrollment email';
+                $error[$email] = $i . ' - Cannot locate student enrolment email';
                 $request->getUri()->redirect();
             }
 
-            if (!\App\Db\CourseMap::create()->hasEnrollment($this->course->id, $email)) {
-                \App\Db\CourseMap::create()->enrollUser($this->course->id, $email, $uid);
+            // Add users if found
+            if (!\App\Db\CourseMap::create()->hasPreEnrollment($this->course->getId(), $email)) {
+                \App\Db\CourseMap::create()->addPreEnrollment($this->course->getId(), $email, $uid);
                 $user = \App\Db\UserMap::create()->findByEmail($email, $this->course->institutionId);
                 if ($user) {
-                    \App\Db\CourseMap::create()->addUser($this->course->id, $user->id);
+                    \App\Db\CourseMap::create()->addUser($this->course->getId(), $user->getId());
                 }
 
-                $success[] = $i . ' - Added ' . $email . ' to the course enrollment list';
+                $success[] = $i . ' - Added ' . $email . ' to the course enrolment list';
             } else {
-                $info[] = $i . ' - User ' . $email . ' already enrolled, nothing done.';
+                $info[] = $i . ' - User ' . $email . ' already enroled, nothing done.';
             }
         }
         if (count($info)) {
-            \Tk\Alert::addInfo(count($info) . ' records already enrolled and ignored.');
+            \Tk\Alert::addInfo(count($info) . ' records already enroled and ignored.');
         }
         if (count($success)) {
             \Tk\Alert::addSuccess(count($success) . ' records successfully added to the enrolment list.');
@@ -147,7 +150,6 @@ class EnrollmentDialog extends DialogBox
             $row++;
         }
         fclose($stream);
-
         return $list;
     }
 
@@ -158,67 +160,52 @@ class EnrollmentDialog extends DialogBox
     public function show()
     {
         $template = $this->getTemplate();
-        $url = \App\Factory::getRequest()->getUri()->toString();
-        $html = <<<HTML
-<form id="addEnromentForm" method="POST" action="$url" enctype="multipart/form-data">
-
-  <!-- Nav tabs -->
-  <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#add" aria-controls="add" role="tab" data-toggle="tab">Add User</a></li>
-    <li role="presentation"><a href="#files" aria-controls="files" role="tab" data-toggle="tab">Upload CSV List</a></li>
-    <li role="presentation"><a href="#list" aria-controls="list" role="tab" data-toggle="tab">Paste CSV List</a></li>
-  </ul>
-
-  <!-- Tab panes -->
-  <div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="add">
-      <div class="form-group form-group-sm">
-        <label for="fid-email" class="control-label">* Email:</label>
-        <input type="email" class="form-control" id="fid-email" name="email" />
-      </div>
-      <!-- div class="form-group form-group-sm">
-        <label for="fid-uid" class="control-label">Student Number:</label>
-        <input type="text" class="form-control" id="fid-uid" name="uid" />
-      </div -->
-    </div>
-    <div role="tabpanel" class="tab-pane" id="files">
-      <div class="form-group form-group-sm">
-        <label for="fid-csvFile" class="control-label">* Csv File:</label>
-        <div>
-        <input type="file" class="form-control tk-fileinput" id="fid-csvFile" name="csvFile" accept="text/csv"/>
-        </div>
-      </div>
-      <div class=""><p>The CSV file should contain the users email address per line</p></div>
-    </div>
-    <div role="tabpanel" class="tab-pane" id="list">
-      <div class="form-group form-group-sm">
-        <label for="fid-csvList" class="control-label">* CSV List:</label>
-        <textarea class="form-control" id="fid-csvList" name="csvList" style="height: 90px;"></textarea>
-      </div>
-      <div class=""><p>The CSV List should contain the users email address per line</p></div>
-    </div>
-    
-  </div>
-    
-</form>
-HTML;
-        $this->setBody($html);
-
-
+        $this->setBody($this->makeBodyHtml());
+        $dialogId = $this->getId();
+        $buttonId = $this->getEnrollButtonId();
+        
         $js = <<<JS
 jQuery(function($) {
-  $('#fid-Enroll').on('click', function(e) {
-    var form = $('#addEnromentForm');
+  var dialog = $('#$dialogId');
+  
+  $('#$buttonId').on('click', function(e) {
+    var form = $('#addEnrolmentForm');
     $('<input type="submit" name="enroll" value="Enroll" />').hide().appendTo(form).click().remove();
   });
 });
 JS;
         $template->appendJs($js);
-
-
-
-
+        
         return parent::show();
     }
 
+    /**
+     * DomTemplate magic method
+     *
+     * @return string
+     */
+    public function makeBodyHtml()
+    {
+        $url = \App\Factory::getRequest()->getUri()->toString();
+        $xhtml = <<<HTML
+<form id="addEnrolmentForm" method="POST" action="$url" enctype="multipart/form-data">
+
+  <div class="form-group form-group-sm">
+    <label for="fid-csvFile" class="control-label">* Csv File:</label>
+    <div>
+    <input type="file" class="form-control tk-fileinput" id="fid-csvFile" name="csvFile"/>
+    </div>
+  </div>
+  <p>OR</p>
+  <div class="form-group form-group-sm">
+    <label for="fid-csvList" class="control-label">* CSV List:</label>
+    <textarea class="form-control" id="fid-csvList" name="csvList" style="height: 90px;"></textarea>
+  </div>
+
+  <p>NOTE: The CSV List should contain one email address per line</p>
+    
+</form>
+HTML;
+        return $xhtml;
+    }
 }

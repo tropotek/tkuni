@@ -147,7 +147,8 @@ class Login extends Iface
                 $sEvent->getRedirect()->redirect();
 
         } catch (\Exception $e) {
-            $form->addError($e->getMessage());
+            \Tk\Log::error($e->__toString());
+            $form->addError('Login Error: ' . $e->getMessage());
         }
     }
 
