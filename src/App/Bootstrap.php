@@ -52,9 +52,6 @@ class Bootstrap
         
         // Do not call \Tk\Config::getInstance() before this point
         $config = Factory::getConfig();
-        
-        // Include any config overriding settings
-        include($config->getSrcPath() . '/config/config.php');
 
         // Set system timezone
         if (isset($config['system.timezone']))
@@ -78,10 +75,11 @@ class Bootstrap
             $logger = new Logger('system');
             $handler = new StreamHandler($config['system.log.path'], $config['system.log.level']);
             $formatter = new \Tk\Log\MonologLineFormatter();
-            $formatter->setScriptTime($config->getScripTime());
+            $formatter->setScriptTime($config->getScriptTime());
             $handler->setFormatter($formatter);
             $logger->pushHandler($handler);
-            $config['log'] = $logger;
+            $config->setLog($logger);
+            \Tk\Log::getInstance($logger);
         }
         
         // * Logger [use error_log()]
@@ -93,6 +91,9 @@ class Bootstrap
         }
 
         // --- HTTP only bootstrapping from here ---
+
+        // Include all URL routes
+        include($config->getSrcPath() . '/config/routes.php');
         
         if ($config->isDebug()) {
             error_reporting(-1);
@@ -124,6 +125,9 @@ class Bootstrap
 
         // Initiate the email gateway
         \App\Factory::getEmailGateway();
+
+        // Initiate the plugin API object
+        \App\Factory::getPluginApi();
 
 
         return $config;

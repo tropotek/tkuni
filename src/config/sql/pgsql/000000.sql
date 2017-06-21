@@ -76,10 +76,10 @@ CREATE TABLE IF NOT EXISTS course (
 -- For now we will assume that one user has one role in a course, ie: coordinator, lecturer, student
 -- User is enrolled in course or coordinator of course
 -- ----------------------------
-CREATE TABLE IF NOT EXISTS user_course (
+CREATE TABLE IF NOT EXISTS course_has_user (
   user_id INTEGER NOT NULL,
   course_id INTEGER NOT NULL,
-  CONSTRAINT user_course_key UNIQUE (user_id, course_id),
+  CONSTRAINT course_has_user_key UNIQUE (user_id, course_id),
   FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE,
   FOREIGN KEY (course_id) REFERENCES course(id) ON DELETE CASCADE
 );
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS user_course (
 -- --------------------------------------------------------
 --
 -- --------------------------------------------------------
-CREATE TABLE IF NOT EXISTS enrollment (
+CREATE TABLE IF NOT EXISTS course_pre_enrollment (
   course_id INTEGER NOT NULL DEFAULT '0',
   email VARCHAR(255) NOT NULL DEFAULT '',
   uid VARCHAR(64) NOT NULL DEFAULT '',
@@ -115,13 +115,13 @@ INSERT INTO course (institution_id, name, code, email, description, start, finis
     VALUES (1, 'Poultry Industry Field Work', 'VETS50001_2014_SM1', 'course@unimelb.edu.au', '',  date_trunc('seconds', NOW()), date_trunc('seconds', (CURRENT_TIMESTAMP + (190 * interval '1 day')) ), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW()) )
 ;
 
-INSERT INTO user_course (user_id, course_id)
+INSERT INTO course_has_user (user_id, course_id)
 VALUES
   (3, 1),
   (4, 1)
 ;
 
-INSERT INTO enrollment (course_id, email)
+INSERT INTO course_pre_enrollment (course_id, email)
 VALUES
   (1, 'student@unimelb.edu.au')
 ;

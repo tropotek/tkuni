@@ -25,23 +25,21 @@ class UserMap extends Mapper
     {
         if (!$this->dbMap) {
             $this->dbMap = new \Tk\DataMap\DataMap();
-            $this->dbMap->addProperty(new Db\Number('id'), 'key');
-            $this->dbMap->addProperty(new Db\Number('institutionId', 'institution_id'));
-            $this->dbMap->addProperty(new Db\Text('uid'));
-            $this->dbMap->addProperty(new Db\Text('username'));
-            $this->dbMap->addProperty(new Db\Text('password'));
-            $this->dbMap->addProperty(new Db\Text('name'));
-            $this->dbMap->addProperty(new Db\Text('role'));
-            $this->dbMap->addProperty(new Db\Text('email'));
-            $this->dbMap->addProperty(new Db\Date('lastLogin', 'last_login'));
-            $this->dbMap->addProperty(new Db\Text('notes'));
-            $this->dbMap->addProperty(new Db\Boolean('active'));
-            $this->dbMap->addProperty(new Db\Text('hash'));
-            $this->dbMap->addProperty(new Db\Date('modified'));
-            $this->dbMap->addProperty(new Db\Date('created'));
-
-            $this->setMarkDeleted('del');
-            $this->setPrimaryKey($this->dbMap->currentProperty('key')->getColumnName());
+            $this->dbMap->addPropertyMap(new Db\Integer('id'), 'key');
+            $this->dbMap->addPropertyMap(new Db\Integer('institutionId', 'institution_id'));
+            $this->dbMap->addPropertyMap(new Db\Text('uid'));
+            $this->dbMap->addPropertyMap(new Db\Text('username'));
+            $this->dbMap->addPropertyMap(new Db\Text('password'));
+            $this->dbMap->addPropertyMap(new Db\Text('name'));
+            $this->dbMap->addPropertyMap(new Db\Text('role'));
+            $this->dbMap->addPropertyMap(new Db\Text('email'));
+            $this->dbMap->addPropertyMap(new Db\Date('lastLogin', 'last_login'));
+            $this->dbMap->addPropertyMap(new Db\Text('notes'));
+            //$this->dbMap->addPropertyMap(new Db\Text('sessionId', 'session_id'));
+            $this->dbMap->addPropertyMap(new Db\Boolean('active'));
+            $this->dbMap->addPropertyMap(new Db\Text('hash'));
+            $this->dbMap->addPropertyMap(new Db\Date('modified'));
+            $this->dbMap->addPropertyMap(new Db\Date('created'));
         }
         return $this->dbMap;
     }
@@ -54,18 +52,16 @@ class UserMap extends Mapper
     {
         if (!$this->formMap) {
             $this->formMap = new \Tk\DataMap\DataMap();
-            $this->formMap->addProperty(new Form\Number('id'), 'key');
-            $this->formMap->addProperty(new Form\Number('institutionId'));
-            $this->formMap->addProperty(new Form\Text('uid'));
-            $this->formMap->addProperty(new Form\Text('username'));
-            $this->formMap->addProperty(new Form\Text('password'));
-            $this->formMap->addProperty(new Form\Text('name'));
-            $this->formMap->addProperty(new Form\Text('role'));
-            $this->formMap->addProperty(new Form\Text('email'));
-            $this->formMap->addProperty(new Form\Text('notes'));
-            $this->formMap->addProperty(new Form\Boolean('active'));
-
-            $this->setPrimaryKey($this->formMap->currentProperty('key')->getColumnName());
+            $this->formMap->addPropertyMap(new Form\Integer('id'), 'key');
+            $this->formMap->addPropertyMap(new Form\Integer('institutionId'));
+            $this->formMap->addPropertyMap(new Form\Text('uid'));
+            $this->formMap->addPropertyMap(new Form\Text('username'));
+            $this->formMap->addPropertyMap(new Form\Text('password'));
+            $this->formMap->addPropertyMap(new Form\Text('name'));
+            $this->formMap->addPropertyMap(new Form\Text('role'));
+            $this->formMap->addPropertyMap(new Form\Text('email'));
+            $this->formMap->addPropertyMap(new Form\Text('notes'));
+            $this->formMap->addPropertyMap(new Form\Boolean('active'));
         }
         return $this->formMap;
     }
@@ -161,51 +157,6 @@ class UserMap extends Mapper
 
     /**
      *
-     * @param $role
-     * @param null $tool
-     * @return Model
-     */
-//    public function findByRole($role, $tool = null)
-//    {
-//        if (!is_array($role)) $role = array($role);
-//
-//        $from = sprintf('%s a', $this->getDb()->quoteParameter($this->getTable()));
-//        $where = '';
-//        foreach ($role as $r) {
-//            $where .= sprintf('a.role = %s OR ', $this->getDb()->quote($r));
-//        }
-//        $where = rtrim($where, ' OR ');
-//
-//        $res = $this->selectFrom($from, $where, $tool);
-//        return $res;
-//    }
-
-    /**
-     *
-     * @param $courseId
-     * @param string|array $role
-     * @param \Tk\Db\Tool|null $tool
-     * @return ArrayObject
-     */
-//    public function findByCourseId($courseId, $role = null, $tool = null)
-//    {
-//        $from = sprintf('%s a, user_course b', $this->getDb()->quoteParameter($this->getTable()));
-//        $where = sprintf('a.id = b.user_id AND b.course_id = %d', (int)$courseId);
-//
-//        if ($role) {
-//            if (!is_array($role)) $role = array($role);
-//            $w = '';
-//            foreach ($role as $r) {
-//                $w .= sprintf('a.role = %s OR ', $this->getDb()->quote($r));
-//            }
-//            if ($w)
-//                $where .= ' AND (' . rtrim($w, ' OR ') . ')';
-//        }
-//        return $this->selectFrom($from, $where, $tool);
-//    }
-
-    /**
-     *
      * @param int $institutionId
      * @param string|array $role
      * @param \Tk\Db\Tool|null $tool
@@ -264,7 +215,7 @@ class UserMap extends Mapper
         }
 
         if (!empty($filter['courseId'])) {
-            $from .= sprintf(', user_course c');
+            $from .= sprintf(', course_has_user c');
             $where .= sprintf('a.id = c.user_id AND c.course_id = %d AND ', (int)$filter['courseId']);
         }
 

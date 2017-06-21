@@ -27,7 +27,7 @@ class Recover extends Iface
     protected $form = null;
 
     /**
-     * @var \Tk\EventDispatcher\EventDispatcher
+     * @var \Tk\Event\Dispatcher
      */
     private $dispatcher = null;
 
@@ -93,7 +93,7 @@ class Recover extends Iface
         $user->save();
         
         // Fire the login event to allow developing of misc auth plugins
-        $event = new \Tk\EventDispatcher\Event();
+        $event = new \Tk\Event\Event();
         $event->set('form', $form);
         $event->set('user', $user);
         $event->set('password', $newPass);

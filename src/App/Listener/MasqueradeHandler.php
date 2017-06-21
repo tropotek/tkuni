@@ -1,7 +1,7 @@
 <?php
 namespace App\Listener;
 
-use Tk\EventDispatcher\SubscriberInterface;
+use Tk\Event\Subscriber;
 use Tk\Kernel\KernelEvents;
 use Tk\Event\GetResponseEvent;
 use App\Db\User;
@@ -14,7 +14,7 @@ use Tk\Auth\AuthEvents;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class MasqueradeHandler implements SubscriberInterface
+class MasqueradeHandler implements Subscriber
 {
     /**
      * Session ID
@@ -26,6 +26,17 @@ class MasqueradeHandler implements SubscriberInterface
      * Eg: `index.html?msq=23`
      */
     const MSQ = 'msq';
+
+    /**
+     * The order of role permissions
+     * @var array
+     */
+    public static $roleOrder = array(
+        User::ROLE_ADMIN,           // Highest
+        User::ROLE_CLIENT,
+        User::ROLE_STAFF,
+        User::ROLE_STUDENT          // Lowest
+    );
 
     /**
      * Add any headers to the final response.
@@ -75,16 +86,16 @@ class MasqueradeHandler implements SubscriberInterface
         }
 
         // Get the users role precedence order index
-        $userRoleIdx = array_search($user->role, \App\Auth\Acl::$roleOrder);
-        $msqRoleIdx = array_search($msqUser->role, \App\Auth\Acl::$roleOrder);
+        $userRoleIdx = array_search($user->role, self::$roleOrder);
+        $msqRoleIdx = array_search($msqUser->role, self::$roleOrder);
 
         // If not admin their role must be higher in precedence see \App\Db\User::$roleOrder
-        if (!$user->hasRole(\App\Auth\Acl::ROLE_ADMIN) && $userRoleIdx >= $msqRoleIdx) {
+        if (!$user->hasRole(\App\Db\User::ROLE_ADMIN) && $userRoleIdx >= $msqRoleIdx) {
             return false;
         }
 
         // If not admins they must be of the same institution
-        if (!$user->hasRole(\App\Auth\Acl::ROLE_ADMIN) && $user->getInstitution()->id != $msqUser->institutionId) {
+        if (!$user->hasRole(\App\Db\User::ROLE_ADMIN) && $user->getInstitution()->id != $msqUser->institutionId) {
             return false;
         }
         return true;
@@ -103,6 +114,22 @@ class MasqueradeHandler implements SubscriberInterface
         if (!\App\Factory::getSession()->has(self::SID)) return 0;
         $msqArr = \App\Factory::getSession()->get(self::SID);
         return count($msqArr);
+    }
+
+    /**
+     * Get the user who is masquerading, ignoring any nested masqueraded users
+     *
+     * @return \App\Db\User|null
+     */
+    public static function getMasqueradingUser()
+    {
+        $user = null;
+        if (\App\Factory::getSession()->has(self::SID)) {
+            $msqArr = current(\App\Factory::getSession()->get(self::SID));
+            /** @var \App\Db\User $user */
+            $user = \App\Db\UserMap::create()->find($msqArr['userId']);
+        }
+        return $user;
     }
 
     /**
@@ -164,6 +191,15 @@ class MasqueradeHandler implements SubscriberInterface
     }
 
     /**
+     * masqueradeLogout
+     *
+     */
+    public static function masqueradeClear()
+    {
+        \App\Factory::getSession()->remove(self::SID);
+    }
+
+    /**
      * @param AuthEvent $event
      * @throws \Exception
      */
@@ -173,18 +209,6 @@ class MasqueradeHandler implements SubscriberInterface
             self::masqueradeLogout();
         }
     }
-
-
-    /**
-     * masqueradeLogout
-     *
-     */
-    public static function masqueradeClear()
-    {
-        \App\Factory::getSession()->remove(self::SID);
-    }
-
-
 
     /**
      * getSubscribedEvents

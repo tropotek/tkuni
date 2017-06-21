@@ -6,9 +6,6 @@
  */
 $config = \Tk\Config::getInstance();
 
-//Default config setup
-include_once(__DIR__ . '/application.php');
-
 // Database access
 $config['db.type'] = 'mysql';
 $config['db.host'] = 'localhost';
@@ -17,10 +14,16 @@ $config['db.user'] = 'username';
 $config['db.pass'] = 'password';
 
 
+/*
+ * Set the default table names in the DB
+ */
+\Tk\Plugin\Factory::$DB_TABLE = '_plugin';
+\Tk\Util\SqlMigrate::$DB_TABLE = '_migration';
+\Tk\Session\Adapter\Database::$DB_TABLE = '_session';
 
 // Debug settings
 $config['debug'] = false;
-$config['system.log.path'] = '/home/user/log/error.log';
-$config['system.log.level'] = \Psr\Log\LogLevel::INFO;
-$config['system.debug.email'] = 'root@localhost';
+//$config['system.log.path'] = '/home/user/log/error.log';
+//$config['system.log.level'] = \Psr\Log\LogLevel::DEBUG;
+//$config['system.debug.email'] = 'root@localhost';
 

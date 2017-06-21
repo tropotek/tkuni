@@ -24,20 +24,17 @@ class InstitutionMap extends Mapper
     {
         if (!$this->dbMap) {
             $this->dbMap = new \Tk\DataMap\DataMap();
-            $this->dbMap->addProperty(new Db\Number('id'), 'key');
-            $this->dbMap->addProperty(new Db\Number('ownerId', 'owner_id'));
-            $this->dbMap->addProperty(new Db\Text('name'));
-            $this->dbMap->addProperty(new Db\Text('domain'));
-            $this->dbMap->addProperty(new Db\Text('email'));
-            $this->dbMap->addProperty(new Db\Text('description'));
-            $this->dbMap->addProperty(new Db\Text('logo'));
-            $this->dbMap->addProperty(new Db\Boolean('active'));
-            $this->dbMap->addProperty(new Db\Text('hash'));
-            $this->dbMap->addProperty(new Db\Date('modified'));
-            $this->dbMap->addProperty(new Db\Date('created'));
-
-            $this->setMarkDeleted('del');
-            $this->setPrimaryKey($this->dbMap->currentProperty('key')->getColumnName());
+            $this->dbMap->addPropertyMap(new Db\Integer('id'), 'key');
+            $this->dbMap->addPropertyMap(new Db\Integer('ownerId', 'owner_id'));
+            $this->dbMap->addPropertyMap(new Db\Text('name'));
+            $this->dbMap->addPropertyMap(new Db\Text('domain'));
+            $this->dbMap->addPropertyMap(new Db\Text('email'));
+            $this->dbMap->addPropertyMap(new Db\Text('description'));
+            $this->dbMap->addPropertyMap(new Db\Text('logo'));
+            $this->dbMap->addPropertyMap(new Db\Boolean('active'));
+            $this->dbMap->addPropertyMap(new Db\Text('hash'));
+            $this->dbMap->addPropertyMap(new Db\Date('modified'));
+            $this->dbMap->addPropertyMap(new Db\Date('created'));
         }
         return $this->dbMap;
     }
@@ -50,16 +47,14 @@ class InstitutionMap extends Mapper
     {
         if (!$this->formMap) {
             $this->formMap = new \Tk\DataMap\DataMap();
-            $this->formMap->addProperty(new Form\Number('id'), 'key');
-            $this->formMap->addProperty(new Form\Number('ownerId'));
-            $this->formMap->addProperty(new Form\Text('name'));
-            $this->formMap->addProperty(new Form\Text('domain'));
-            $this->formMap->addProperty(new Form\Text('email'));
-            $this->formMap->addProperty(new Form\Text('description'));
-            $this->formMap->addProperty(new Form\Text('logo'));
-            $this->formMap->addProperty(new Form\Boolean('active'));
-
-            $this->setPrimaryKey($this->formMap->currentProperty('key')->getColumnName());
+            $this->formMap->addPropertyMap(new Form\Integer('id'), 'key');
+            $this->formMap->addPropertyMap(new Form\Integer('ownerId'));
+            $this->formMap->addPropertyMap(new Form\Text('name'));
+            $this->formMap->addPropertyMap(new Form\Text('domain'));
+            $this->formMap->addPropertyMap(new Form\Text('email'));
+            $this->formMap->addPropertyMap(new Form\Text('description'));
+            $this->formMap->addPropertyMap(new Form\Text('logo'));
+            $this->formMap->addPropertyMap(new Form\Boolean('active'));
         }
         return $this->formMap;
     }

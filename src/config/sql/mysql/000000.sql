@@ -18,8 +18,9 @@ CREATE TABLE IF NOT EXISTS `user` (
   `role` VARCHAR(255) NOT NULL DEFAULT '',
   `name` VARCHAR(255) NOT NULL DEFAULT '',
   `displayName` VARCHAR(255) NOT NULL DEFAULT '',
-  `email` VARCHAR(255) NOT NULL DEFAULT '',
+  `email` VARCHAR(168) NOT NULL DEFAULT '',
   `notes` TEXT,
+  `session_id` VARCHAR(70) NOT NULL DEFAULT '',
   `last_login` TIMESTAMP,
   `active` TINYINT(1) NOT NULL DEFAULT 1,
   `hash` VARCHAR(128) NOT NULL DEFAULT '',
@@ -61,8 +62,8 @@ CREATE TABLE IF NOT EXISTS `course` (
   `code` VARCHAR(64) NOT NULL DEFAULT '',
   `email` VARCHAR(255) NOT NULL DEFAULT '',
   `description` TEXT,
-  `start` TIMESTAMP NOT NULL,
-  `finish` TIMESTAMP NOT NULL,
+  `date_start` TIMESTAMP NOT NULL,
+  `date_end` TIMESTAMP NOT NULL,
   `del` TINYINT(1) NOT NULL DEFAULT 0,
   `modified` TIMESTAMP NOT NULL,
   `created` TIMESTAMP NOT NULL,
@@ -73,10 +74,10 @@ CREATE TABLE IF NOT EXISTS `course` (
 -- For now we will assume that one user has one role in a course, ie: coordinator, lecturer, student
 -- User is enrolled in course or coordinator of course
 -- ----------------------------
-CREATE TABLE IF NOT EXISTS `user_course` (
+CREATE TABLE IF NOT EXISTS `course_has_user` (
   `user_id` INT(10) UNSIGNED NOT NULL DEFAULT 0,
   `course_id` INT(10) UNSIGNED NOT NULL DEFAULT 0,
-  UNIQUE KEY `user_course_key` (`user_id`, `course_id`)
+  UNIQUE KEY `course_has_user_key` (`user_id`, `course_id`)
 ) ENGINE=InnoDB;
 
 
@@ -84,9 +85,9 @@ CREATE TABLE IF NOT EXISTS `user_course` (
 --
 --
 -- --------------------------------------------------------
-CREATE TABLE IF NOT EXISTS `enrollment` (
+CREATE TABLE IF NOT EXISTS `course_pre_enrollment` (
   `course_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `email` VARCHAR(255) NOT NULL DEFAULT '',
+  `email` VARCHAR(168) NOT NULL DEFAULT '',
   `uid` varchar(64) NOT NULL DEFAULT '',
   PRIMARY KEY (`course_id`, `email`)
 ) ENGINE=InnoDB;
@@ -99,10 +100,10 @@ CREATE TABLE IF NOT EXISTS `enrollment` (
 -- ----------------------------
 INSERT INTO `user` (`institution_id`, `username`, `password` ,`role` ,`name`, `email`, `active`, `hash`, `modified`, `created`)
 VALUES
-  (NULL, 'admin', MD5(CONCAT('password', MD5('adminadminadmin@example.com'))), 'admin', 'Administrator', 'admin@example.com', 1, MD5('adminadminadmin@example.com'), NOW() , NOW() ),
-  (NULL, 'unimelb', MD5(CONCAT('password', MD5('unimelbclientfvas@unimelb.edu.au'))), 'client', 'Unimelb Client', 'fvas@unimelb.edu.au', 1, MD5('unimelbclientfvas@unimelb.edu.au'), NOW() , NOW()  ),
-  (1, 'staff', MD5(CONCAT('password', MD5('staffstaffstaff@unimelb.edu.au'))), 'staff', 'Unimelb Staff', 'staff@unimelb.edu.au', 1, MD5('staffstaffstaff@unimelb.edu.au'), NOW() , NOW()  ),
-  (1, 'student', MD5(CONCAT('password', MD5('studentstudentstudent@unimelb.edu.au'))), 'student', 'Unimelb Student', 'student@unimelb.edu.au', 1, MD5('studentstudentstudent@unimelb.edu.au'), NOW() , NOW()  )
+  (NULL, 'admin', MD5(CONCAT('password', MD5('0adminadminadmin@example.com'))), 'admin', 'Administrator', 'admin@example.com', 1, MD5('0adminadminadmin@example.com'), NOW() , NOW() ),
+  (NULL, 'unimelb', MD5(CONCAT('password', MD5('0unimelbclientfvas@unimelb.edu.au'))), 'client', 'Unimelb Client', 'fvas@unimelb.edu.au', 1, MD5('0unimelbclientfvas@unimelb.edu.au'), NOW() , NOW()  ),
+  (1, 'staff', MD5(CONCAT('password', MD5('1staffstaffstaff@unimelb.edu.au'))), 'staff', 'Unimelb Staff', 'staff@unimelb.edu.au', 1, MD5('1staffstaffstaff@unimelb.edu.au'), NOW() , NOW()  ),
+  (1, 'student', MD5(CONCAT('password', MD5('1studentstudentstudent@unimelb.edu.au'))), 'student', 'Unimelb Student', 'student@unimelb.edu.au', 1, MD5('1studentstudentstudent@unimelb.edu.au'), NOW() , NOW()  )
 ;
 
 INSERT INTO `institution` (`owner_id`, `name`, `email`, `description`, `logo`, `active`, `hash`, `modified`, `created`)
@@ -110,17 +111,17 @@ INSERT INTO `institution` (`owner_id`, `name`, `email`, `description`, `logo`, `
     (2, 'The University Of Melbourne', 'admin@unimelb.edu.au', 'This is a test institution for this app', '', 1, MD5('1'), NOW() , NOW())
 ;
 
-INSERT INTO `course` (`institution_id`, `name`, `code`, `email`, `description`, `start`, `finish`, `modified`, `created`)
+INSERT INTO `course` (`institution_id`, `name`, `code`, `email`, `description`, `date_start`, `date_end`, `modified`, `created`)
     VALUES (1, 'Poultry Industry Field Work', 'VETS50001_2014_SM1', 'course@unimelb.edu.au', '',  NOW(), DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 190 DAY), NOW() , NOW() )
 ;
 
-INSERT INTO `user_course` (`user_id`, `course_id`)
+INSERT INTO `course_has_user` (`user_id`, `course_id`)
 VALUES
   (3, 1),
   (4, 1)
 ;
 
-INSERT INTO `enrollment` (`course_id`, `email`)
+INSERT INTO `course_pre_enrollment` (`course_id`, `email`)
 VALUES
   (1, 'student@unimelb.edu.au')
 ;

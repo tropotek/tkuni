@@ -1,6 +1,11 @@
 <?php
 namespace App\Db;
 
+use Tk\Db\Map\Model;
+use App\Event\DbEvent;
+use App\DbEvents;
+
+
 /**
  * Class Mapper
  *
@@ -8,106 +13,124 @@ namespace App\Db;
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  */
-abstract class Mapper extends \Tk\Db\Map\Mapper
+abstract class Mapper extends \Tk\Db\Mapper
 {
 
-    /**
-     * @var \Tk\DataMap\DataMap
+    /***
+     * @var \Tk\Event\Dispatcher
      */
-    protected $dbMap = null;
-
-    /**
-     * @var \Tk\DataMap\DataMap
-     */
-    protected $formMap = null;
-
+    protected $dispatcher = null;
 
 
     /**
+     * Mapper constructor.
      *
-     * @return \Tk\DataMap\DataMap
+     * @param \Tk\Db\Pdo|null $db
      */
-    abstract public function getDbMap();
-
-    /**
-     *
-     * @return \Tk\DataMap\DataMap
-     */
-    abstract public function getFormMap();
-
-
-    /**
-     * Map the data from a DB row to the required object
-     *
-     * Input: array (
-     *   'tblColumn' => 'columnValue'
-     * )
-     *
-     * Output: Should return an \stdClass or \Tk\Model object
-     *
-     * @param array $row
-     * @param null|mixed $obj If null then \stdClass will be returned
-     * @return \stdClass|\Tk\Db\Map\Model
-     * @since 2.0.0
-     */
-    public function map($row, $obj = null)
+    public function __construct($db = null)
     {
-        if (!$obj) {
-            $class = $this->getModelClass();
-            $obj = new $class();
+        parent::__construct($db);
+        $this->setMarkDeleted('del');           // Default to have a del field (This will only mark the record deleted)
+        $this->dispatcher = \App\Factory::getEventDispatcher();
+    }
+
+    /**
+     * Insert
+     *
+     * @param Model $obj
+     * @return int Returns the new insert id
+     */
+    public function insert($obj)
+    {
+        $stop = false;
+        if ($this->getDispatcher()) {
+            $e = new DbEvent($obj, $this);
+            $this->getDispatcher()->dispatch(DbEvents::MODEL_INSERT, $e);
+            $stop = $e->isQueryStopped();
         }
-        return $this->getDbMap()->loadObject($row, $obj);
-    }
-
-    /**
-     * Un-map an object to an array ready for DB insertion.
-     * All fields and types must match the required DB types.
-     *
-     * Input: This requires a \Tk\Model or \stdClass object as input
-     *
-     * Output: array (
-     *   'tblColumn' => 'columnValue'
-     * )
-     *
-     * @param \Tk\Db\Map\Model|\stdClass $obj
-     * @param array $array
-     * @return array
-     * @since 2.0.0
-     */
-    public function unmap($obj, $array = array())
-    {
-        return $this->getDbMap()->loadArray($obj, $array);
-    }
-
-
-    /**
-     * Map the form fields data to the object
-     *
-     * @param array $row
-     * @param mixed $obj
-     * @param string $ignore
-     * @return mixed
-     */
-    public function mapForm($row, $obj = null, $ignore = 'key')
-    {
-        if (!$obj) {
-            $class = $this->getModelClass();
-            $obj = new $class();
+        if (!$stop) {
+            $r = parent::insert($obj);
+            return $r;
         }
-        return $this->getFormMap()->loadObject($row, $obj, $ignore);
+        return 0;
     }
 
     /**
-     * Unmap the object to an array for the form fields
      *
-     * @param mixed $obj
-     * @param array $array
-     * @return array
+     * @param Model $obj
+     * @return int
      */
-    public function unmapForm($obj, $array = array())
+    public function update($obj)
     {
-        return $this->getFormMap()->loadArray($obj, $array);
+        $stop = false;
+        if ($this->getDispatcher()) {
+            $e = new DbEvent($obj, $this);
+            $this->getDispatcher()->dispatch(DbEvents::MODEL_UPDATE, $e);
+            $stop = $e->isQueryStopped();
+        }
+        if (!$stop) {
+            $r = parent::update($obj);
+            return $r;
+        }
+        return 0;
     }
 
+    /**
+     * Save the object, let the code decide weather to insert or update the db.
+     *
+     * @param Model $obj
+     * @throws \Exception
+     */
+    public function save($obj)
+    {
+        $stop = false;
+        if ($this->getDispatcher()) {
+            $e = new DbEvent($obj, $this);
+            $this->getDispatcher()->dispatch(DbEvents::MODEL_SAVE, $e);
+            $stop = $e->isQueryStopped();
+        }
+        if (!$stop) {
+            parent::save($obj);
+        }
+    }
+
+    /**
+     * Delete object
+     *
+     * @param Model $obj
+     * @return int
+     */
+    public function delete($obj)
+    {
+        $stop = false;
+        if ($this->getDispatcher()) {
+            $e = new DbEvent($obj, $this);
+            $this->getDispatcher()->dispatch(DbEvents::MODEL_DELETE, $e);
+            $stop = $e->isQueryStopped();
+        }
+        if (!$stop) {
+            $r = parent::delete($obj);
+            return $r;
+        }
+        return 0;
+    }
+
+    /**
+     * @return \Tk\Event\Dispatcher
+     */
+    public function getDispatcher()
+    {
+        return $this->dispatcher;
+    }
+
+    /**
+     * @param \Tk\Event\Dispatcher $dispatcher
+     * @return $this
+     */
+    public function setDispatcher($dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+        return $this;
+    }
 
 }

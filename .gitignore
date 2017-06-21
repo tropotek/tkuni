@@ -1,12 +1,21 @@
+
+/_notes
+/data
+/assets
+/vendor
+/plugin
+/docs/api
+/src/config/config.php
+
 /.htaccess
 .idea
 .directory
 *.swp
 *.bak
-*.iml
-/_notes
-/data
-/assets
-/vendor
-/src/config/config.php
+~*
+.DS_Store
 
+
+
+!/src/App/Listener/AuthHandler.php
+!/src/App/Db/User.php

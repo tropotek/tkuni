@@ -4,7 +4,7 @@ namespace App\Controller\Admin\Institution;
 use Dom\Template;
 use Tk\Form\Field;
 use Tk\Request;
-use \App\Controller\Iface;
+use App\Controller\Iface;
 
 /**
  *
@@ -38,9 +38,9 @@ class Manager extends Iface
     public function doDefault(Request $request)
     {
         //$this->getBreadcrumbs()->reset()->init();
-        
-        $this->table = new \Tk\Table('InstitutionList');
-        $this->table->setParam('renderer', \Tk\Table\Renderer\Dom\Table::create($this->table));
+
+        $this->table = \App\Factory::createTable('InstitutionList');
+        $this->table->setParam('renderer', \App\Factory::createTableRenderer($this->table));
 
         $this->table->addCell(new \Tk\Table\Cell\Checkbox('id'));
         $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCss('key')->setUrl(\Tk\Uri::create('admin/institutionEdit.html'));
@@ -74,7 +74,6 @@ class Manager extends Iface
         return $this->getPage()->setPageContent($template);
     }
 
-
     /**
      * DomTemplate magic method
      *
@@ -91,7 +90,7 @@ class Manager extends Iface
     </div>
     <div class="panel-body">
       <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
-      <a href="/admin/userEdit.html" class="btn btn-default"><i class="fa fa-university"></i> <span>New Institution</span></a>
+      <a href="/admin/institutionEdit.html" class="btn btn-default"><i class="fa fa-university"></i> <span>New Institution</span></a>
     </div>
   </div>
 
@@ -132,7 +131,7 @@ class OwnerCell extends \Tk\Table\Cell\Text
     {
         //$val =  parent::getPropertyValue($obj, $property);
         $val =  '';
-        $owner = $obj->getOwner();
+        $owner = $obj->getOwnerUser();
         if ($owner) {
             $val = $owner->name;
         }

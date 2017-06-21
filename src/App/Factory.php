@@ -12,7 +12,7 @@ use Tk\Db\Pdo;
  */
 class Factory
 {
-    static $LTI_DB_PREFIX = '';
+    //static $LTI_DB_PREFIX = '';
 
     /**
      * @var \Tk\Config
@@ -31,7 +31,11 @@ class Factory
     {
         if (!self::$config) {
             self::$config = \Tk\Config::getInstance($sitePath, $siteUrl);
+<<<<<<< HEAD
             include(self::$config->getSrcPath() . '/config/config.php');
+=======
+            include(self::$config->getSrcPath() . '/config/application.php');
+>>>>>>> 6cec457e3c085ca548bc707e5f30cf8d90c7899a
         }
         return self::$config;
     }
@@ -136,12 +140,12 @@ class Factory
      * @param string $name
      * @return mixed|Pdo
      */
-    public static function getDb($name = 'default')
+    public static function getDb($name = 'db')
     {
         $config = self::getConfig();
-        if (!$config->getDb() && $config->has('db.type')) {
+        if (!$config->getDb() && $config->has($name.'.type')) {
             try {
-                $pdo = Pdo::getInstance($name, $config->getGroup('db'));
+                $pdo = Pdo::getInstance($name, $config->getGroup($name, true));
 //                $logger = $config->getLog();
 //                if ($config->getLog() && $config->isDebug()) {
 //                    $pdo->setOnLogListener(function ($entry) use ($config->getLog()) {
@@ -150,7 +154,7 @@ class Factory
 //                }
                 $config->setDb($pdo);
             } catch (\Exception $e) {
-                error_log('<p>' . $e->getMessage() . '</p>');
+                error_log('<p>\App\Factory::getDb(): ' . $e->getMessage() . '</p>');
                 exit;
             }
             self::getConfig()->setDb($pdo);
@@ -170,8 +174,11 @@ class Factory
             $config = self::getConfig();
             $dm->add(new \Dom\Modifier\Filter\UrlPath($config->getSiteUrl()));
             $dm->add(new \Dom\Modifier\Filter\JsLast());
-            $dm->add(new \Dom\Modifier\Filter\Less($config->getSitePath(), $config->getSiteUrl(), $config->getCachePath(),
+
+            $less = $dm->add(new \Dom\Modifier\Filter\Less($config->getSitePath(), $config->getSiteUrl(), $config->getCachePath(),
                 array('siteUrl' => $config->getSiteUrl(), 'dataUrl' => $config->getDataUrl(), 'templateUrl' => $config->getTemplateUrl())));
+            $less->setCompress(!$config->isDebug());
+
             if (self::getConfig()->isDebug()) {
                 $dm->add(self::getDomFilterPageBytes());
             }
@@ -228,12 +235,12 @@ class Factory
     /**
      * getEventDispatcher
      *
-     * @return \Tk\EventDispatcher\EventDispatcher
+     * @return \Tk\Event\Dispatcher
      */
     public static function getEventDispatcher()
     {
         if (!self::getConfig()->getEventDispatcher()) {
-            $obj = new \Tk\EventDispatcher\EventDispatcher(self::getConfig()->getLog());
+            $obj = new \Tk\Event\Dispatcher(self::getConfig()->getLog());
             self::getConfig()->setEventDispatcher($obj);
         }
         return self::getConfig()->getEventDispatcher();
@@ -252,6 +259,17 @@ class Factory
         }
         return self::getConfig()->getControllerResolver();
     }
+
+    /**
+     * @return PluginApi
+     */
+    public static function getPluginApi()
+    {
+        if (!self::getConfig()->getPluginApi()) {
+            self::getConfig()->setPluginApi(new PluginApi());
+        }
+        return self::getConfig()->getPluginApi();
+    }
     
     
     /**
@@ -267,6 +285,33 @@ class Factory
         }
         return self::getConfig()->getAuth();
     }
+
+    /**
+     * A helper method to create an instance of an Auth adapter
+     *
+     * @param array $submittedData
+     * @return \Tk\Auth\Adapter\Iface
+     * @throws \Tk\Auth\Exception
+     */
+    public static function getAuthDbTableAdapter($submittedData = array())
+    {
+        $config = self::getConfig();
+        $adapter = new \App\Auth\Adapter\DbTable(
+            $config->getDb(),
+            \Tk\Db\Map\Mapper::$DB_PREFIX . str_replace(\Tk\Db\Map\Mapper::$DB_PREFIX, '', $config['system.auth.dbtable.tableName']),
+            $config['system.auth.dbtable.usernameColumn'],
+            $config['system.auth.dbtable.passwordColumn'],
+            $config['system.auth.dbtable.activeColumn']);
+        if (isset($submittedData['instHash'])) {
+            $institution = \App\Db\InstitutionMap::create()->findByHash($submittedData['instHash']);
+            $adapter->setInstitution($institution);
+        }
+        $adapter->setHashCallback(array(__CLASS__, 'hashPassword'));
+
+        $adapter->replace($submittedData);
+        return $adapter;
+
+    }
     
     /**
      * A helper method to create an instance of an Auth adapter
@@ -276,38 +321,39 @@ class Factory
      * @return \Tk\Auth\Adapter\Iface
      * @throws \Tk\Auth\Exception
      */
-    static function getAuthAdapter($class, $submittedData = array())
-    {
-        $config = self::getConfig();
-        
-        /** @var \Tk\Auth\Adapter\Iface $adapter */
-        $adapter = null;
-        switch ($class) {
-            case '\App\Auth\Adapter\UnimelbLdap':
-                if (!isset($submittedData['instHash'])) return null;
-                $institution = \App\Db\InstitutionMap::create()->findByHash($submittedData['instHash']);
-                if (!$institution || !$institution->getData()->get(\App\Db\InstitutionData::LDAP_ENABLE)) return null;
-                $adapter = new \App\Auth\Adapter\UnimelbLdap($institution);
-                break;
-            case '\App\Auth\Adapter\DbTable':
-                $adapter = new \App\Auth\Adapter\DbTable(
-                    $config->getDb(),
-                    \Tk\Db\Map\Mapper::$DB_PREFIX . str_replace(\Tk\Db\Map\Mapper::$DB_PREFIX, '', $config['system.auth.dbtable.tableName']),
-                    $config['system.auth.dbtable.usernameColumn'],
-                    $config['system.auth.dbtable.passwordColumn'],
-                    $config['system.auth.dbtable.activeColumn']);
-                $adapter->setHashCallback(array(__CLASS__, 'hashPassword'));
-                break;
-            default:
-                if (class_exists($class))
-                    $adapter = new $class();
-        }
-        if (!$adapter) {
-            throw new \Tk\Auth\Exception('Cannot locate adapter class: ' . $class);
-        }
-        $adapter->replace($submittedData);
-        return $adapter;
-    }
+//    public static function getAuthAdapter($class, $submittedData = array())
+//    {
+//        $config = self::getConfig();
+//
+//        /** @var \Tk\Auth\Adapter\Iface $adapter */
+//        $adapter = null;
+//        switch ($class) {
+////            case '\App\Auth\Adapter\UnimelbLdap':
+////                if (!isset($submittedData['instHash'])) return null;
+////                $institution = \App\Db\InstitutionMap::create()->findByHash($submittedData['instHash']);
+////                if (!$institution || !$institution->getData()->get(\App\Db\InstitutionData::LDAP_ENABLE)) return null;
+////                $adapter = new \App\Auth\Adapter\UnimelbLdap($institution);
+////                break;
+//            case '\App\Auth\Adapter\DbTable':
+//                $adapter = new \App\Auth\Adapter\DbTable(
+//                    $config->getDb(),
+//                    \Tk\Db\Map\Mapper::$DB_PREFIX . str_replace(\Tk\Db\Map\Mapper::$DB_PREFIX, '', $config['system.auth.dbtable.tableName']),
+//                    $config['system.auth.dbtable.usernameColumn'],
+//                    $config['system.auth.dbtable.passwordColumn'],
+//                    $config['system.auth.dbtable.activeColumn']);
+//                $adapter->setHashCallback(array(__CLASS__, 'hashPassword'));
+//                break;
+//            default:
+//                if (class_exists($class))
+//                    $adapter = new $class();
+//        }
+//        if (!$adapter) {
+//            throw new \Tk\Auth\Exception('Cannot locate adapter class: ' . $class);
+//        }
+//        $adapter->replace($submittedData);
+//        return $adapter;
+//    }
+
 
     /**
      * hashPassword
@@ -316,31 +362,82 @@ class Factory
      * @param \App\Db\User $user (optional)
      * @return string
      */
-    static public function hashPassword($pwd, $user = null)
+    public static function hashPassword($pwd, $user = null)
     {
+        $salt = '';
         if ($user) {    // Use salted password
             if (method_exists($user, 'getHash'))
-                $pwd = $pwd . $user->getHash();
+                $salt = $user->getHash();
             else if ($user->hash)
-                $pwd = $pwd . $user->hash;
+                $salt = $user->hash;
         }
-        $h = self::hash($pwd);
-        return $h;
+        return self::hash($pwd, $salt);
     }
 
     /**
      * Hash a string using the system config set algorithm
      *
      * @link http://php.net/manual/en/function.hash.php
-     * @param string $pwd
-     * @param \App\Db\User $user (optional)
+     * @param string $str
+     * @param string $salt (optional)
+     * @param string $algo Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..)
+     *
      * @return string
      */
-    static public function hash($pwd, $user = null)
+    public static function hash($str, $salt = '', $algo = 'md5')
     {
+        if ($salt) $str .= $salt;
         if (self::getConfig()->get('hash.function'))
-            return hash(self::getConfig()->get('hash.function'), $pwd);
-        return hash('md5', $pwd);
+            $algo = self::getConfig()->get('hash.function');
+        return hash($algo, $str);
+    }
+
+    /**
+     * @param string $formId
+     * @param string $method
+     * @param string|null $action
+     * @return \Tk\Form
+     */
+    public static function createForm($formId, $method = \Tk\Form::METHOD_POST, $action = null)
+    {
+        $form = \Tk\Form::create($formId, $method, $action);
+        $form->addCss('form-horizontal');
+        return $form;
+    }
+
+    /**
+     * @param $form
+     * @return \Tk\Form\Renderer\Dom
+     */
+    public static function createFormRenderer($form)
+    {
+        $obj = new \Tk\Form\Renderer\Dom($form);
+        $obj->setFieldGroupClass(\App\Form\Renderer\HorizontalFieldGroup::class);
+        return $obj;
+    }
+
+    /**
+     *
+     * @param string $id
+     * @param array $params
+     * @param null|\Tk\Request $request
+     * @param null|\Tk\Session $session
+     * @return \Tk\Table
+     */
+    public static function createTable($id, $params = array(), $request = null, $session = null)
+    {
+        $form = \Tk\Table::create($id, $params, $request, $session);
+        return $form;
+    }
+
+    /**
+     * @param \Tk\Table $table
+     * @return \Tk\Table\Renderer\Dom\Table
+     */
+    public static function createTableRenderer($table)
+    {
+        $obj = \Tk\Table\Renderer\Dom\Table::create($table);
+        return $obj;
     }
     
     /**
@@ -355,9 +452,8 @@ class Factory
      * @param string $uid
      * @param bool $active
      * @return Db\User
-     * @todo Save any extra required data, IE: `auedupersonid` (Student/Staff Number)
      */
-    static function createNewUser($institutionId, $username, $email, $role, $password, $name = '', $uid = '', $active = true)
+    public static function createNewUser($institutionId, $username, $email, $role, $password = '', $name = '', $uid = '', $active = true)
     {
         $user = new \App\Db\User();
         $user->institutionId = $institutionId;
@@ -366,7 +462,8 @@ class Factory
         $user->name = $name;
         $user->email = $email;
         $user->role = $role;
-        $user->setPassword($password);
+        if ($password)
+            $user->setNewPassword($password);
         $user->active = $active;
         $user->save();
 
@@ -384,7 +481,7 @@ class Factory
      * @return string
      * @todo: Probably not the best place for this..... Dependant on the App
      */
-    static function createMailTemplate($body, $showFooter = true)
+    public static function createMailTemplate($body, $showFooter = true)
     {
         $request = self::getRequest();
 

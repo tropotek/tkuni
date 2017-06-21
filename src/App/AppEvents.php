@@ -22,20 +22,30 @@ class AppEvents
      *     if ($event->get('controller') instanceof \App\Controller\Index) { ... }
      * </code>
      *
-     * @event \Tk\EventDispatcher\Event
-     * @var string
+     * @event \Tk\Event\Event
      */
-    const CONTROLLER_POST_RENDER = 'controller.render.post';
+    const SHOW = 'controller.show';
 
     /**
-     * Called at the end the Page/Iface::pageInit() method
-     * Use this modify the main page template
+     * Called at the end the Page/Iface::doPageInit() method
+     * Use this modify the main page template before the controller is rendered to it
      *
-     * @event \Tk\EventDispatcher\Event
-     * @var string
+     * @event \Tk\Event\Event
      */
-    const PAGE_POST_RENDER = 'page.render.post';
+    const PAGE_INIT = 'page.init';
 
+
+    /**
+     * This event is called when a user is migrated from one course to another.
+     * In this event all student course data from the source course should be moved
+     * to the destination course.
+     *
+     * Event Data:
+     *  'courseFromId', 'courseToId', 'userId
+     *
+     * @event \Tk\Event\Event
+     */
+    const COURSE_MIGRATE_USER = 'course.migrate.user';
 
 
 

@@ -2,7 +2,7 @@
 namespace App\Ui\Menu;
 
 
-use Dom\Template;
+
 
 /**
  * Class AdminMenu
