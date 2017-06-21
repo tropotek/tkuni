@@ -113,9 +113,6 @@ class ActionsCell extends \Tk\Table\Cell\Text
         parent::__construct('actions');
         $this->setOrderProperty('');
         $this->course = $course;
-        
-        //$list = \Tk\Form\Field\Option\ArrayObjectIterator::create(\App\Db\CourseMap::create()->findActive($this->course->institutionId));
-        // TODO: remove this class from the list
         $this->findCourseDialog = new \App\Ui\Dialog\AjaxSelect('Migrate Student', array($this, 'onSelect'), \Tk\Uri::create('/ajax/course/findFiltered.html'));
         $this->findCourseDialog->setAjaxParams(array('ignoreUser' => '1', 'courseId' => $this->course->getId()));
         $this->findCourseDialog->setNotes('Select the course to migrate the student to...');
@@ -199,7 +196,7 @@ class ActionsCell extends \Tk\Table\Cell\Text
     public function __makeTemplate()
     {
         $html = <<<HTML
-<div class="text-right">
+<div class="">
   <a href="#" class="btn btn-default btn-xs migrateUser" title="Migrate user to another course " var="migrate" choice="migrate"><i class="fa fa-exchange"></i></a>
 </div>
 HTML;

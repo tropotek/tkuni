@@ -77,11 +77,6 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface
      * @var Data
      */
     private $data = null;
-
-    /**
-     * @var \IMSGlobal\LTI\ToolProvider\ToolConsumer
-     */
-    private $ltiConsumer = null;
     
     
 
@@ -101,54 +96,8 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     {
         $this->getHash();
 
-        // TODO LTI Consumer ??????????
-        // Maybe we need a dispatcher hook here for extendability
-        // Think this out but the LTI should be plugable.
-
-        // unimelb_00002
-        // 1f72a0bac401a3e375e737185817463c
-        $consumer = $this->getLtiConsumer();
-        if ($this->getData()->get(InstitutionData::LTI_ENABLE)) {
-            if (!$consumer) {
-                $consumer = new \IMSGlobal\LTI\ToolProvider\ToolConsumer(null, \App\Factory::getLtiDataConnector());
-            }
-            $consumer->setKey($this->getData()->get(InstitutionData::LTI_KEY));
-            $consumer->secret = $this->getData()->get(InstitutionData::LTI_SECRET);
-            $consumer->enabled = true;
-            $consumer->name = $this->name;
-            $consumer->save();
-
-            $this->getData()->set(InstitutionData::LTI_CURRENT_KEY, $consumer->getKey());
-            $this->getData()->set(InstitutionData::LTI_CURRENT_ID, $consumer->getRecordId());
-            $this->getData()->set(InstitutionData::LTI_SECRET, $consumer->secret);
-            $url = \Tk\Uri::create('/lti/'.$this->getHash().'/launch.html')->toString();
-            if ($this->domain)
-                $url = \Tk\Uri::create('http://'.$this->domain.'/lti/launch.html')->toString();
-            $this->getData()->set(self::LTI_URL, $url);
-
-        } else {
-            if ($consumer) {
-                $consumer->enabled = false;
-                $consumer->save();
-            }
-        }
-
         $this->getData()->save();
         parent::save();
-    }
-
-    /**
-     *
-     * @return \IMSGlobal\LTI\ToolProvider\ToolConsumer
-     */
-    public function getLtiConsumer()
-    {
-        $key = $this->getData()->get(InstitutionData::LTI_CURRENT_KEY);
-        if ($key === '') $key = null;
-        if (!$this->ltiConsumer && $key) {
-            $this->ltiConsumer = new \IMSGlobal\LTI\ToolProvider\ToolConsumer($key, \App\Factory::getLtiDataConnector());
-        }
-        return $this->ltiConsumer;
     }
 
     /**

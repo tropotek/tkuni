@@ -35,8 +35,8 @@ $params = array('role' => \App\Db\User::ROLE_ADMIN);
 $routes->add('admin-home', new \Tk\Routing\Route('/admin/index.html', 'App\Controller\Admin\Dashboard::doDefault', $params));
 $routes->add('admin-home-base', new \Tk\Routing\Route('/admin/', 'App\Controller\Admin\Dashboard::doDefault', $params));
 
-$routes->add('admin-institution-manager', new \Tk\Routing\Route('/admin/institutionManager.html', 'App\Controller\Admin\Institution\Manager::doDefault', $params));
-$routes->add('admin-institution-edit', new \Tk\Routing\Route('/admin/institutionEdit.html', 'App\Controller\Admin\Institution\Edit::doDefault', $params));
+$routes->add('admin-institution-manager', new \Tk\Routing\Route('/admin/institutionManager.html', 'App\Controller\Institution\Manager::doDefault', $params));
+$routes->add('admin-institution-edit', new \Tk\Routing\Route('/admin/institutionEdit.html', 'App\Controller\Institution\Edit::doDefault', $params));
 $routes->add('admin-institution-plugin-manager', new \Tk\Routing\Route('/admin/{zoneName}/{zoneId}/plugins.html', 'App\Controller\PluginZoneManager::doDefault',
     array('role' => \App\Db\User::ROLE_ADMIN, 'zoneName' => 'institution', 'zoneId' => '0') ));
 
