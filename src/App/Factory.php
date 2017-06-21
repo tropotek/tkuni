@@ -31,11 +31,7 @@ class Factory
     {
         if (!self::$config) {
             self::$config = \Tk\Config::getInstance($sitePath, $siteUrl);
-<<<<<<< HEAD
-            include(self::$config->getSrcPath() . '/config/config.php');
-=======
             include(self::$config->getSrcPath() . '/config/application.php');
->>>>>>> 6cec457e3c085ca548bc707e5f30cf8d90c7899a
         }
         return self::$config;
     }
