@@ -96,6 +96,15 @@ class Factory
     }
 
     /**
+     * @return \App\Db\User
+     */
+    public static function getUser()
+    {
+        return self::getConfig()->getUser();
+    }
+    
+    
+    /**
      * getPluginFactory
      *
      * @return \Tk\Plugin\Factory

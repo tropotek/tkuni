@@ -38,6 +38,11 @@ class User extends \Dom\Renderer\Renderer
      */
     protected $editUrl = null;
 
+    /**
+     * @var \Tk\Table\Cell\Actions
+     */
+    protected $actionsCell = null;
+
 
     /**
      * CourseTable constructor.
@@ -66,6 +71,17 @@ class User extends \Dom\Renderer\Renderer
         $this->table = new \Tk\Table('StaffList');
         $this->table->setParam('renderer', \Tk\Table\Renderer\Dom\Table::create($this->table));
 
+
+        $this->actionsCell = new \Tk\Table\Cell\Actions();
+        $this->actionsCell->addButton(\Tk\Table\Cell\ActionButton::create('Masquerade', \Tk\Uri::create(), 'fa  fa-user-secret', 'tk-masquerade'))
+            ->setOnShow(function ($obj, $button, $cell) {
+                /* @var $obj \App\Db\User */
+                /* @var $button \Tk\Table\Cell\ActionButton */
+                if (\App\Listener\MasqueradeHandler::canMasqueradeAs(\App\Factory::getUser(), $obj)) {
+                    $button->setUrl(\App\Uri::create()->set(\App\Listener\MasqueradeHandler::MSQ, $obj->getId()));
+                }
+            });
+        $this->table->addCell($this->actionsCell);
         $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCss('key')->setUrl($this->editUrl);
 
         if ($this->institutionId)

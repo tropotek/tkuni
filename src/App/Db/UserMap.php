@@ -35,7 +35,7 @@ class UserMap extends Mapper
             $this->dbMap->addPropertyMap(new Db\Text('email'));
             $this->dbMap->addPropertyMap(new Db\Date('lastLogin', 'last_login'));
             $this->dbMap->addPropertyMap(new Db\Text('notes'));
-            //$this->dbMap->addPropertyMap(new Db\Text('sessionId', 'session_id'));
+            $this->dbMap->addPropertyMap(new Db\Text('sessionId', 'session_id'));
             $this->dbMap->addPropertyMap(new Db\Boolean('active'));
             $this->dbMap->addPropertyMap(new Db\Text('hash'));
             $this->dbMap->addPropertyMap(new Db\Date('modified'));
