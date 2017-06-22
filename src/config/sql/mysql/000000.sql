@@ -21,12 +21,12 @@ CREATE TABLE IF NOT EXISTS `user` (
   `email` VARCHAR(168) NOT NULL DEFAULT '',
   `notes` TEXT,
   `session_id` VARCHAR(70) NOT NULL DEFAULT '',
-  `last_login` TIMESTAMP,
+  `last_login` DATETIME,
   `active` TINYINT(1) NOT NULL DEFAULT 1,
   `hash` VARCHAR(128) NOT NULL DEFAULT '',
   `del` TINYINT(1) NOT NULL DEFAULT 0,
-  `modified` TIMESTAMP NOT NULL,
-  `created` TIMESTAMP NOT NULL,
+  `modified` DATETIME NOT NULL,
+  `created` DATETIME NOT NULL,
   UNIQUE KEY `user_username` (`institution_id`, `username`),
   UNIQUE KEY `user_email` (`institution_id`, `email`),
   UNIQUE KEY `user_hash` (`institution_id`, `hash`)
@@ -46,8 +46,8 @@ CREATE TABLE IF NOT EXISTS `institution` (
   `active` TINYINT(1) NOT NULL DEFAULT 1,
   `hash` VARCHAR(128) NOT NULL DEFAULT '',
   `del` TINYINT(1) NOT NULL DEFAULT 0,
-  `modified` TIMESTAMP NOT NULL,
-  `created` TIMESTAMP NOT NULL,
+  `modified` DATETIME NOT NULL,
+  `created` DATETIME NOT NULL,
 --  UNIQUE KEY `inst_domain` (`domain`),
   UNIQUE KEY `inst_hash` (`hash`)
 ) ENGINE=InnoDB;
@@ -62,11 +62,11 @@ CREATE TABLE IF NOT EXISTS `course` (
   `code` VARCHAR(64) NOT NULL DEFAULT '',
   `email` VARCHAR(255) NOT NULL DEFAULT '',
   `description` TEXT,
-  `date_start` TIMESTAMP NOT NULL,
-  `date_end` TIMESTAMP NOT NULL,
+  `date_start` DATETIME NOT NULL,
+  `date_end` DATETIME NOT NULL,
   `del` TINYINT(1) NOT NULL DEFAULT 0,
-  `modified` TIMESTAMP NOT NULL,
-  `created` TIMESTAMP NOT NULL,
+  `modified` DATETIME NOT NULL,
+  `created` DATETIME NOT NULL,
   UNIQUE KEY `course_code_institution` (`code`, `institution_id`)
 ) ENGINE=InnoDB;
 
@@ -112,7 +112,7 @@ INSERT INTO `institution` (`owner_id`, `name`, `email`, `description`, `logo`, `
 ;
 
 INSERT INTO `course` (`institution_id`, `name`, `code`, `email`, `description`, `date_start`, `date_end`, `modified`, `created`)
-    VALUES (1, 'Poultry Industry Field Work', 'VETS50001_2014_SM1', 'course@unimelb.edu.au', '',  NOW(), DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 190 DAY), NOW() , NOW() )
+    VALUES (1, 'Poultry Industry Field Work', 'VETS50001_2014_SM1', 'course@unimelb.edu.au', '',  NOW(), DATE_ADD(CURRENT_DATETIME, INTERVAL 190 DAY), NOW() , NOW() )
 ;
 
 INSERT INTO `course_has_user` (`user_id`, `course_id`)
