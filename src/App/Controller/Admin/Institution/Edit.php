@@ -230,7 +230,7 @@ class Edit extends Iface
       </div>
       <div class="panel-body ">
         <div class="row">
-          <div class="col-lg-12">
+          <div class="col-md-12">
             <div var="form"></div>
           </div>
         </div>
@@ -238,7 +238,7 @@ class Edit extends Iface
     </div>
   </div>
   
-  <div class="col-lg-7" choice="showInfo">
+  <div class="col-md-7" choice="showInfo">
     <div class="panel panel-default">
       <div class="panel-heading">
         <i class="fa fa-university fa-fw"></i> Institution
