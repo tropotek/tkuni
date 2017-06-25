@@ -4,6 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
+    "hash": "1b7140205f6a787e8ff281fa55189b27",
     "content-hash": "bfcdbc7b730b431a93a3a898ec24faea",
     "packages": [
         {
@@ -44,7 +45,7 @@
             "keywords": [
                 "LTI"
             ],
-            "time": "2016-09-18T04:22:22+00:00"
+            "time": "2016-09-18 04:22:22"
         },
         {
             "name": "monolog/monolog",
@@ -257,7 +258,7 @@
                 }
             ],
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
-            "time": "2017-03-15T19:32:56+00:00"
+            "time": "2017-03-15 19:32:56"
         },
         {
             "name": "psr/cache",
@@ -408,12 +409,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tropotek/ems-ldap.git",
-                "reference": "f9edca37534bac7cb0e1a99b5b70792fd093d5ac"
+                "reference": "448ccee92645affee633852cc8404b715796aecd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tropotek/ems-ldap/zipball/f9edca37534bac7cb0e1a99b5b70792fd093d5ac",
-                "reference": "f9edca37534bac7cb0e1a99b5b70792fd093d5ac",
+                "url": "https://api.github.com/repos/tropotek/ems-ldap/zipball/448ccee92645affee633852cc8404b715796aecd",
+                "reference": "448ccee92645affee633852cc8404b715796aecd",
                 "shasum": ""
             },
             "require": {
@@ -448,7 +449,7 @@
                 "plugin",
                 "tropotek"
             ],
-            "time": "2017-06-19 21:39:09"
+            "time": "2017-06-21 00:02:33"
         },
         {
             "name": "ttek-plg/ems-lti",
@@ -456,12 +457,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tropotek/ems-lti.git",
-                "reference": "998e1e1e00fa3a2df28670bc2451ebd6ef1c1499"
+                "reference": "5ff882e0c76cdd08ea771d96ff2235741fae7a8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tropotek/ems-lti/zipball/998e1e1e00fa3a2df28670bc2451ebd6ef1c1499",
-                "reference": "998e1e1e00fa3a2df28670bc2451ebd6ef1c1499",
+                "url": "https://api.github.com/repos/tropotek/ems-lti/zipball/5ff882e0c76cdd08ea771d96ff2235741fae7a8e",
+                "reference": "5ff882e0c76cdd08ea771d96ff2235741fae7a8e",
                 "shasum": ""
             },
             "require": {
@@ -497,7 +498,7 @@
                 "plugin",
                 "tropotek"
             ],
-            "time": "2017-06-19 21:39:15"
+            "time": "2017-06-21 02:03:46"
         },
         {
             "name": "ttek/tk-auth",
@@ -552,12 +553,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tropotek/tk-database.git",
-                "reference": "e03450f24ad56be5295b69dfa267a21281ea0f6c"
+                "reference": "160f2e793c2bafd443ab6e70882b1170fef8bc5e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tropotek/tk-database/zipball/e03450f24ad56be5295b69dfa267a21281ea0f6c",
-                "reference": "e03450f24ad56be5295b69dfa267a21281ea0f6c",
+                "url": "https://api.github.com/repos/tropotek/tk-database/zipball/160f2e793c2bafd443ab6e70882b1170fef8bc5e",
+                "reference": "160f2e793c2bafd443ab6e70882b1170fef8bc5e",
                 "shasum": ""
             },
             "require": {
@@ -592,7 +593,7 @@
                 "database",
                 "tropotek"
             ],
-            "time": "2017-06-15 02:01:13"
+            "time": "2017-06-21 19:57:28"
         },
         {
             "name": "ttek/tk-domtemplate",
@@ -750,12 +751,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tropotek/tk-http.git",
-                "reference": "f3b122d70139d588184d74395245a31ceacaa26c"
+                "reference": "c0d647d588766f1082fadc9b5efc1bdfc5bb8dc2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tropotek/tk-http/zipball/f3b122d70139d588184d74395245a31ceacaa26c",
-                "reference": "f3b122d70139d588184d74395245a31ceacaa26c",
+                "url": "https://api.github.com/repos/tropotek/tk-http/zipball/c0d647d588766f1082fadc9b5efc1bdfc5bb8dc2",
+                "reference": "c0d647d588766f1082fadc9b5efc1bdfc5bb8dc2",
                 "shasum": ""
             },
             "require": {
@@ -792,7 +793,7 @@
                 "http",
                 "tropotek"
             ],
-            "time": "2017-06-19 01:05:38"
+            "time": "2017-06-20 03:54:33"
         },
         {
             "name": "ttek/tk-installers",

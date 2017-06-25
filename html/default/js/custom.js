@@ -6,7 +6,6 @@ $(document).ready(function() {
 
   // Standard file input
   if ($.fn.tkFileInput !== undefined) {
-
     $('.tk-imageinput').tkImageInput({
       dataUrl: config.dataUrl
     });
@@ -17,19 +16,14 @@ $(document).ready(function() {
 
     $('.tk-fileinput:not(.tk-imageinput)').tkFileInput({});
   }
-
-
-
+  
   $('a[role=tab]').click(function() { $(this).blur(); });
-
-
+  
   $('select.tk-dualSelect').DualListBox();
-
-
+  
   // setup tab pain input checkbox trigger
   $('.tk-form input.tk-input-toggle').tkTabCheckboxToggle();
-
-
+  
 
   $('input.date').datepicker({
     dateFormat: 'dd/mm/yy'
@@ -52,9 +46,19 @@ $(document).ready(function() {
     // $('.input-daterange input').each(function() {
     //   //$(this).datepicker('clearDates');
     // });
-
   }
-
+  
+  // Live events, work even when content replaced
+  $('body')
+    .on('click', 'a[role=tab]', function() { $(this).blur(); })   // Blur tabs after click
+    .on('click', '.tk-masquerade', function () {
+      return confirm('You are about to masquerade as the selected user?');
+    })
+    .on('click', '.tk-remove', function () {
+      return confirm('Are you sure you want to remove this item?');
+    });
+  
+  
 });
 
 
@@ -88,7 +92,6 @@ $(document).ready(function() {
         toggle.apply(checkbox);
       });
       toggle.apply(checkbox);
-
     };  // END init()
 
     // private methods

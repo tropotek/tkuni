@@ -12,8 +12,6 @@ use Tk\Db\Pdo;
  */
 class Factory
 {
-    //static $LTI_DB_PREFIX = '';
-
     /**
      * @var \Tk\Config
      */
@@ -96,6 +94,15 @@ class Factory
     }
 
     /**
+     * @return \App\Db\User
+     */
+    public static function getUser()
+    {
+        return self::getConfig()->getUser();
+    }
+    
+    
+    /**
      * getPluginFactory
      *
      * @return \Tk\Plugin\Factory
@@ -142,12 +149,6 @@ class Factory
         if (!$config->getDb() && $config->has($name.'.type')) {
             try {
                 $pdo = Pdo::getInstance($name, $config->getGroup($name, true));
-//                $logger = $config->getLog();
-//                if ($config->getLog() && $config->isDebug()) {
-//                    $pdo->setOnLogListener(function ($entry) use ($config->getLog()) {
-//                        $logger->debug('[' . round($entry['time'], 4) . 'sec] ' . $entry['query']);
-//                    });
-//                }
                 $config->setDb($pdo);
             } catch (\Exception $e) {
                 error_log('<p>\App\Factory::getDb(): ' . $e->getMessage() . '</p>');
@@ -308,48 +309,6 @@ class Factory
         return $adapter;
 
     }
-    
-    /**
-     * A helper method to create an instance of an Auth adapter
-     *
-     * @param string $class
-     * @param array $submittedData
-     * @return \Tk\Auth\Adapter\Iface
-     * @throws \Tk\Auth\Exception
-     */
-//    public static function getAuthAdapter($class, $submittedData = array())
-//    {
-//        $config = self::getConfig();
-//
-//        /** @var \Tk\Auth\Adapter\Iface $adapter */
-//        $adapter = null;
-//        switch ($class) {
-////            case '\App\Auth\Adapter\UnimelbLdap':
-////                if (!isset($submittedData['instHash'])) return null;
-////                $institution = \App\Db\InstitutionMap::create()->findByHash($submittedData['instHash']);
-////                if (!$institution || !$institution->getData()->get(\App\Db\InstitutionData::LDAP_ENABLE)) return null;
-////                $adapter = new \App\Auth\Adapter\UnimelbLdap($institution);
-////                break;
-//            case '\App\Auth\Adapter\DbTable':
-//                $adapter = new \App\Auth\Adapter\DbTable(
-//                    $config->getDb(),
-//                    \Tk\Db\Map\Mapper::$DB_PREFIX . str_replace(\Tk\Db\Map\Mapper::$DB_PREFIX, '', $config['system.auth.dbtable.tableName']),
-//                    $config['system.auth.dbtable.usernameColumn'],
-//                    $config['system.auth.dbtable.passwordColumn'],
-//                    $config['system.auth.dbtable.activeColumn']);
-//                $adapter->setHashCallback(array(__CLASS__, 'hashPassword'));
-//                break;
-//            default:
-//                if (class_exists($class))
-//                    $adapter = new $class();
-//        }
-//        if (!$adapter) {
-//            throw new \Tk\Auth\Exception('Cannot locate adapter class: ' . $class);
-//        }
-//        $adapter->replace($submittedData);
-//        return $adapter;
-//    }
-
 
     /**
      * hashPassword

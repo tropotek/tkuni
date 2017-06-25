@@ -1,5 +1,5 @@
 <?php
-namespace App\Controller\Admin\Institution;
+namespace App\Controller\Institution;
 
 use Dom\Template;
 use Tk\Form;

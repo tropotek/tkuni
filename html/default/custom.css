@@ -86,6 +86,10 @@ body.public {
 .tk-table .tk-actions {
   margin: 5px 0px;
 }
+.tk-table .mActions {
+  text-align: left;
+}
+
 .tk-table .btn {
   margin-right: 5px;
 }

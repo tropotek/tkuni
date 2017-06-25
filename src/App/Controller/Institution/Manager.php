@@ -1,5 +1,5 @@
 <?php
-namespace App\Controller\Admin\Institution;
+namespace App\Controller\Institution;
 
 use Dom\Template;
 use Tk\Form\Field;
@@ -37,8 +37,6 @@ class Manager extends Iface
      */
     public function doDefault(Request $request)
     {
-        //$this->getBreadcrumbs()->reset()->init();
-
         $this->table = \App\Factory::createTable('InstitutionList');
         $this->table->setParam('renderer', \App\Factory::createTableRenderer($this->table));
 
@@ -54,7 +52,6 @@ class Manager extends Iface
         $this->table->addFilter(new Field\Input('keywords'))->setLabel('')->setAttr('placeholder', 'Keywords');
 
         // Actions
-        //$this->table->addAction(\Tk\Table\Action\Button::getInstance('New Institution', 'fa fa-plus', \Tk\Uri::create('admin/institutionEdit.html')));
         $this->table->addAction(\Tk\Table\Action\Delete::create());
         $this->table->addAction(\Tk\Table\Action\Csv::create());
 
