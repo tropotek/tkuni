@@ -174,7 +174,8 @@ class Factory
 
             $less = $dm->add(new \Dom\Modifier\Filter\Less($config->getSitePath(), $config->getSiteUrl(), $config->getCachePath(),
                 array('siteUrl' => $config->getSiteUrl(), 'dataUrl' => $config->getDataUrl(), 'templateUrl' => $config->getTemplateUrl())));
-            $less->setCompress(!$config->isDebug());
+            $less->setCompress(true);
+            //$less->setCompress(!$config->isDebug());
             
             if (self::getConfig()->isDebug()) {
                 $dm->add(self::getDomFilterPageBytes());
