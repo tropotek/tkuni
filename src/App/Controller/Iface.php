@@ -40,18 +40,6 @@ abstract class Iface extends \Tk\Controller\Iface
         }
         return $this->page;
     }
-
-    /**
-     * @param $title
-     * @return $this
-     */
-    public function setPageTitle($title)
-    {
-        if ($this->getPage()) {
-            $this->getPage()->setTitle($title);
-        }
-        return $this;
-    }
     
     /**
      * Get the currently logged in user
