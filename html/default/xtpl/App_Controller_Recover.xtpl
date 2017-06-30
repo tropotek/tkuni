@@ -1,0 +1,42 @@
+<div>
+
+  <div class="section">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-5">
+
+          <p>Enter your username to receive an email to recover your account password.</p>
+
+          <div class="basic-login clearfix">
+            <div class="alert alert-danger" role="alert" choice="error"><strong>Error!</strong> <span var="errMsg">Invalid login credentials</span></div>
+            <form role="form" id="loginForm" method="post">
+              <input type="hidden" name="act" value="recover" />
+
+              <div class="form-group" var="username-group">
+                <label for="login-username"><i class="icon-user"></i> <b>Username or Email</b></label>
+                <input class="form-control" name="account" id="login-username" type="text" placeholder="" />
+              </div>
+              <div class="form-group">
+                <button type="submit" name="recover" class="btn pull-right">Recover</button>
+              </div>
+            </form>
+          </div>
+
+        </div>
+        <div class="col-sm-7 social-login text-center clearfix well">
+          <!--
+          <p>Or login with your Facebook or Twitter</p>
+          <div class="social-login-buttons">
+            <a href="#" class="btn-facebook-login">Login with Facebook</a>
+            <a href="#" class="btn-twitter-login">Login with Twitter</a>
+          </div>
+          -->
+          <div class="not-member" choice="register">
+            <p>Not a member? <a href="/register.html">Register here</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

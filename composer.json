@@ -51,6 +51,7 @@
         "ttek/tk-form": "~2.0",
         "ttek/tk-table": "~2.0",
         "ttek/tk-plugin": "~2.0",
+        "ttek/tk-ui": "~2.0",
         "ttek-plg/ems-lti": "~1.0",
         "ttek-plg/ems-ldap": "~1.0",
         "monolog/monolog": "^1.13@dev",

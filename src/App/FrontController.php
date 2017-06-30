@@ -31,7 +31,18 @@ class FrontController extends \Tk\Kernel\HttpKernel
     public function __construct(Dispatcher $dispatcher, Resolver $resolver, $config)
     {
         parent::__construct($dispatcher, $resolver);
-        $this->config = $config;
+
+        // initialise Dom Loader
+        \App\Factory::getDomLoader();
+
+        // Init the plugins
+        \App\Factory::getPluginFactory();
+
+        // Initiate the email gateway
+        \App\Factory::getEmailGateway();
+
+        // Initiate the plugin API object
+        \App\Factory::getPluginApi();
         
         $this->init();
     }
@@ -44,31 +55,31 @@ class FrontController extends \Tk\Kernel\HttpKernel
     {
         $logger = $this->config->getLog();
 
-        // (kernel.init)
-        $this->dispatcher->addSubscriber(new \Tk\Listener\StartupHandler($logger, $this->config->getRequest(), $this->config->getSession()));
-
-        // (kernel.request)
+        // Tk Listeners
+        $this->getDispatcher()->addSubscriber(new \Tk\Listener\StartupHandler($logger, $this->getConfig()->getRequest(), $this->getConfig()->getSession()));
         $matcher = new \Tk\Routing\UrlMatcher($this->config['site.routes']);
-        $this->dispatcher->addSubscriber(new \Tk\Listener\RouteListener($matcher));
-        $this->dispatcher->addSubscriber(new \App\Listener\AuthHandler());
-        $this->dispatcher->addSubscriber(new \App\Listener\MasqueradeHandler());
+        $this->getDispatcher()->addSubscriber(new \Tk\Listener\RouteListener($matcher));
+        $this->getDispatcher()->addSubscriber(new \Tk\Listener\PageHandler($this->getDispatcher()));
+        $this->getDispatcher()->addSubscriber(new \Tk\Listener\ResponseHandler(Factory::getDomModifier()));
+        $this->getDispatcher()->addSubscriber(new \Tk\Listener\ExceptionListener($logger));
+        $this->getDispatcher()->addSubscriber(new \Tk\Listener\ExceptionEmailListener(\App\Factory::getEmailGateway(), $logger,
+            $this->getConfig()->get('site.email'), $this->getConfig()->get('site.title')));
+        $sh = new \Tk\Listener\ShutdownHandler($logger, $this->getConfig()->getScriptTime());
+        $sh->setPageBytes(\App\Factory::getDomFilterPageBytes());
+        $this->getDispatcher()->addSubscriber($sh);
+        
+        // App Listeners
+        $this->getDispatcher()->addSubscriber(new \App\Listener\AuthHandler());
+        $this->getDispatcher()->addSubscriber(new \App\Listener\MasqueradeHandler());
         $this->getDispatcher()->addSubscriber(new \App\Listener\InstitutionHandler());
 
-        // (kernel.response)
-        $this->dispatcher->addSubscriber(new \Tk\Listener\ResponseHandler(Factory::getDomModifier()));
-
-        // (kernel.exception)
-        $this->dispatcher->addSubscriber(new \Tk\Listener\ExceptionListener($logger));
-        $this->dispatcher->addSubscriber(new \Tk\Listener\ExceptionEmailListener(\App\Factory::getEmailGateway(), $logger,
-            $this->config->get('site.email'), $this->config->get('site.title')));
-
-        // (kernel.terminate)
-        $sh = new \Tk\Listener\ShutdownHandler($logger, $this->config->getScriptTime());
-        $sh->setPageBytes(\App\Factory::getDomFilterPageBytes());
-        $this->dispatcher->addSubscriber($sh);
-
     }
-    
-    
-    
+
+    /**
+     * @return \Tk\Config
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
 }

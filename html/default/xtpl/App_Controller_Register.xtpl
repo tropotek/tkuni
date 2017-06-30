@@ -4,8 +4,8 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-5">
-          
-          
+
+
           <div class="basic-login clearfix">
             <div choice="success">
               <h2>Success</h2>
@@ -20,15 +20,15 @@
 
             <div var="registerForm" choice="form"></div>
           </div>
-          
-          
+
+
         </div>
         <div class="col-sm-7 social-login text-center clearfix well">
           <div class="not-member">
             <p>Forgot your password? <a href="/recover.html">Recover It Here</a></p>
           </div>
         </div>
-      </div>  
+      </div>
     </div>
   </div>
 
