@@ -39,17 +39,18 @@ class Edit extends Iface
      */
     public function __construct()
     {
-        parent::__construct('Course Edit');
+        parent::__construct();
     }
 
     /**
      *
      * @param Request $request
-     * @return \App\Page\Iface|Template|string
      * @throws \Tk\Exception
      */
     public function doDefault(Request $request)
     {
+        $this->setPageTitle('Course Edit');
+        
         $this->institution = $this->getUser()->getInstitution();
 
         $this->course = new \App\Db\Course();
@@ -80,7 +81,6 @@ class Edit extends Iface
         $this->form->load(\App\Db\CourseMap::create()->unmapForm($this->course));
         $this->form->execute();
 
-        return $this->show();
     }
 
     /**
@@ -114,11 +114,11 @@ class Edit extends Iface
     }
 
     /**
-     * @return \App\Page\Iface
+     * @return \Dom\Template
      */
     public function show()
     {
-        $template = $this->getTemplate();
+        $template = parent::show();
 
         // Render the form
         $template->insertTemplate('form', $this->form->getParam('renderer')->show()->getTemplate());
@@ -128,7 +128,7 @@ class Edit extends Iface
             $template->setAttr('enroll', 'href', \App\Uri::createHomeUrl('/courseEnrollment.html')->set('courseId', $this->course->id));
         }
 
-        return $this->getPage()->setPageContent($template);
+        return $template;
     }
 
     /**

@@ -4,33 +4,43 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-5">
+          <div choice="inst" class="institution row " style="margin-bottom: 10px;">
+            <img src="#" choice="instLogo" var="instLogo" class="col-sm-2" />
+            <h3 var="instName" class="col-sm-10"></h3>
+          </div>
 
-          <p>Enter your username to receive an email to recover your account password.</p>
 
-          <div class="basic-login clearfix">
+          <div class="basic-login" var="loginForm">
+
             <div class="alert alert-danger" role="alert" choice="error"><strong>Error!</strong> <span var="errMsg">Invalid login credentials</span></div>
+
             <form role="form" id="loginForm" method="post">
-              <input type="hidden" name="act" value="recover" />
+              <input type="hidden" name="act" value="login" />
 
               <div class="form-group" var="username-group">
                 <label for="login-username"><i class="icon-user"></i> <b>Username or Email</b></label>
-                <input class="form-control" name="account" id="login-username" type="text" placeholder="" />
+                <input class="form-control" name="username" id="login-username" type="text" placeholder="" />
+              </div>
+              <div class="form-group" var="password-group">
+                <label for="login-password"><i class="icon-lock"></i> <b>Password</b></label>
+                <input class="form-control" name="password" id="login-password" type="password" placeholder="" />
               </div>
               <div class="form-group">
-                <button type="submit" name="recover" class="btn pull-right">Recover</button>
+                <!-- label class="checkbox" for="login-remember">
+                  <input type="checkbox" name="remember" value="remember" id="login-remember" /> Remember me
+                </label -->
+                <a href="#" class="forgot-password">Forgot password?</a>
+                <button type="submit" name="login" class="btn pull-right">Login</button>
+                <div class="clearfix"></div>
               </div>
             </form>
           </div>
 
+
+
         </div>
-        <div class="col-sm-7 social-login text-center clearfix well">
-          <!--
-          <p>Or login with your Facebook or Twitter</p>
-          <div class="social-login-buttons">
-            <a href="#" class="btn-facebook-login">Login with Facebook</a>
-            <a href="#" class="btn-twitter-login">Login with Twitter</a>
-          </div>
-          -->
+        <div class="col-sm-7 social-login2 text-center well">
+
           <div class="not-member" choice="register">
             <p>Not a member? <a href="/register.html">Register here</a></p>
           </div>

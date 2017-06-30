@@ -27,18 +27,10 @@ class Manager extends Iface
     protected $course = null;
     
 
-    /**
-     *
-     */
-    public function __construct()
-    {
-        parent::__construct('User Manager');
-    }
 
     /**
      *
      * @param Request $request
-     * @return \App\Page\Iface|Template|string
      */
     public function doDefault(Request $request)
     {
@@ -85,7 +77,7 @@ class Manager extends Iface
         $users = \App\Db\UserMap::create()->findFiltered($filter, $this->table->makeDbTool('a.name'));
         $this->table->setList($users);
 
-        return $this->show();
+        
     }
 
     /**
@@ -105,18 +97,18 @@ class Manager extends Iface
     }
 
     /**
-     * @return \App\Page\Iface
+     * @return \Dom\Template
      */
     public function show()
     {
-        $template = $this->getTemplate();
+        $template = parent::show();
 
         $template->replaceTemplate('table', $this->table->getParam('renderer')->show());
 
         $template->setAttr('new', 'href', \App\Uri::createHomeUrl('/userEdit.html'));
         $template->setChoice($this->getUser()->role);
 
-        return $this->getPage()->setPageContent($template);
+        return $template;
     }
 
     /**

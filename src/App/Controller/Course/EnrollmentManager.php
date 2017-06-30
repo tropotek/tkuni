@@ -44,7 +44,6 @@ class EnrollmentManager extends Iface
     /**
      *
      * @param Request $request
-     * @return \App\Page\Iface|Template|string
      * @throws \Tk\Exception
      */
     public function doDefault(Request $request)
@@ -81,16 +80,15 @@ class EnrollmentManager extends Iface
         });
         $this->userDialog->execute($request);
 
-        return $this->show();
     }
 
 
     /**
-     * @return \App\Page\Iface
+     * @return \Dom\Template
      */
     public function show()
     {
-        $template = $this->getTemplate();
+        $template = parent::show();
         
         // Enrolment Dialog
         $template->appendTemplate('enrollment', $this->userDialog->show());
@@ -129,7 +127,7 @@ JS;
 CSS;
         $template->appendCss($css);
 
-        return $this->getPage()->setPageContent($template);
+        return $template;
     }
 
     /**

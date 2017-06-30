@@ -33,15 +33,7 @@ class Edit extends Iface
      */
     private $institution = null;
 
-
-    /**
-     *
-     */
-    public function __construct()
-    {
-        parent::__construct('User Edit');
-    }
-
+    
 
     public function setPageHeading()
     {
@@ -61,7 +53,6 @@ class Edit extends Iface
     /**
      *
      * @param Request $request
-     * @return \App\Page\Iface|Template|string
      * @throws \Tk\Exception
      */
     public function doDefault(Request $request)
@@ -128,7 +119,6 @@ class Edit extends Iface
         
         $this->form->execute();
         
-        return $this->show();
     }
 
     /**
@@ -194,11 +184,11 @@ class Edit extends Iface
     }
 
     /**
-     * @return \App\Page\Iface
+     * @return \Dom\Template
      */
     public function show()
     {
-        $template = $this->getTemplate();
+        $template = parent::show();
         
         if ($this->user->id) {
             $template->insertText('username', $this->user->name . ' - [UID ' . $this->user->id . ']');
@@ -217,7 +207,7 @@ class Edit extends Iface
             $template->setChoice('msq');
         }
 
-        return $this->getPage()->setPageContent($this->getTemplate());
+        return $template;
     }
 
 

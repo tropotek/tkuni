@@ -22,24 +22,16 @@ class Contact extends Iface
     protected $form = null;
 
     
-    /**
-     *
-     */
-    public function __construct()
-    {
-        parent::__construct('Contact Us');
-    }
 
     /**
      * doDefault
      *
      * @param Request $request
-     * @return \App\Page\PublicPage
      */
     public function doDefault(Request $request)
     {
-        $this->config = \Tk\Config::getInstance();
-
+        $this->setPageTitle('Contact');
+        
         $this->form = new Form('contactForm');
         
         $this->form->addField(new Field\Input('name'));
@@ -48,7 +40,7 @@ class Contact extends Iface
         $opts = new Field\Option\ArrayIterator(array('General', 'Services', 'Orders'));
         $this->form->addField(new Field\Select('type[]', $opts));
         
-        $this->form->addField(new Field\File('attach[]', $request));
+        $this->form->addField(new Field\File('attach[]'));
         $this->form->addField(new Field\Textarea('message'));
         
         $this->form->addField(new Event\Button('send', array($this, 'doSubmit')));
@@ -56,7 +48,6 @@ class Contact extends Iface
         // Find and Fire submit event
         $this->form->execute();
 
-        return $this->show();
     }
 
     /**
@@ -66,13 +57,13 @@ class Contact extends Iface
      */
     public function show()
     {
-        $template = $this->getTemplate();
-
+        $template = parent::show();
+        
         // Render the form
         $ren = new \Tk\Form\Renderer\DomStatic($this->form, $template);
         $ren->show();
 
-        return $this->getPage()->setPageContent($template);
+        return $template;
     }
 
     /**
@@ -163,14 +154,4 @@ MSG;
         return true;
     }
 
-
-    /**
-     * DomTemplate magic method
-     *
-     * @return \Dom\Template
-     */
-    public function __makeTemplate()
-    {
-        return \Dom\Loader::loadFile($this->getPage()->getTemplatePath().'/xtpl/public/contact.xtpl');
-    }
 }

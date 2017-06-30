@@ -26,12 +26,9 @@ $config['google.recaptcha.privateKey'] = '6Ldg2wsUAAAAANCLllmQfCg5jSWUbJD6rSjEmt
 /*
  * Template folders for pages
  */
-$config['system.template.path'] = '/html';
-$config['template.xtpl.path'] = $config['system.template.path'] . '/xtpl';
-
-
-//$config['template.admin.path'] = '/html/default';
-//$config['template.public.path'] = '/html/default';
+$config['template.xtpl.path'] = $config['system.template.path'] . '/default/xtpl';
+$config['template.admin.path'] = $config['system.template.path'] . '/default';
+$config['template.public.path'] = $config['system.template.path'] . '/default';
 
 /*
  * Change the system timezone

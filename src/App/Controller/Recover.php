@@ -9,8 +9,6 @@ use Tk\Auth\AuthEvents;
 
 
 /**
- * Class Index
- *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
@@ -22,7 +20,7 @@ class Recover extends Iface
 {
 
     /**
-     * @var Form
+     * @var \Tk\Form
      */
     protected $form = null;
 
@@ -31,21 +29,13 @@ class Recover extends Iface
      */
     private $dispatcher = null;
 
-    /**
-     *
-     */
-    public function __construct()
-    {
-        parent::__construct('Recover Password');
-        $this->dispatcher = $this->getConfig()->getEventDispatcher();
-    }
 
     /**
      * @param Request $request
-     * @return \App\Page\Iface
      */
     public function doDefault(Request $request)
     {
+        $this->setPageTitle('Recover Password');
 
         $this->form = new Form('loginForm', $request);
 
@@ -55,9 +45,11 @@ class Recover extends Iface
         // Find and Fire submit event
         $this->form->execute();
 
-        return $this->show();
     }
 
+    /**
+     * @param Form $form
+     */
     public function doRecover($form)
     {
         
@@ -99,7 +91,7 @@ class Recover extends Iface
         $event->set('password', $newPass);
         $event->set('templatePath', $this->getPage()->getTemplatePath());
         
-        $this->dispatcher->dispatch(AuthEvents::RECOVER, $event);
+        \App\Factory::getEventDispatcher()->dispatch(AuthEvents::RECOVER, $event);
         
         \Tk\Alert::addSuccess('You new access details have been sent to your email address.');
         \Tk\Uri::create()->redirect();
@@ -109,23 +101,11 @@ class Recover extends Iface
 
     public function show()
     {
-        $template = $this->getTemplate();
+        $template = parent::show();
         if ($this->getConfig()->get('site.client.registration')) {
             $template->setChoice('register');
         }
-        return $this->getPage()->setPageContent($template);
-    }
-
-
-    /**
-     * DomTemplate magic method
-     *
-     * @return \Dom\Template
-     */
-    public function __makeTemplate()
-    {
-        $tplFile = $this->getPage()->getTemplatePath().'/xtpl/public/recover.xtpl';
-        return \Dom\Loader::loadFile($tplFile);
+        return $template;
     }
 
 }

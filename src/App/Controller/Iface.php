@@ -2,33 +2,19 @@
 namespace App\Controller;
 
 
-abstract class Iface extends \Dom\Renderer\Renderer
+abstract class Iface extends \Tk\Controller\Iface
 {
 
-    /**
-     * @var string
-     */
-    protected $pageTitle = '';
     
     /**
-     * @var \App\Page\Iface
+     * Iface constructor.
      */
-    protected $page = null;
-
-
-    /**
-     * @param string $pageTitle
-     */
-    public function __construct($pageTitle = '')
-    {
-        $this->setPageTitle($pageTitle);
-        $this->getPage();
-    }
+    public function __construct() { }
 
     /**
      * Get a new instance of the page to display the content in.
      *
-     * @return \App\Page\Iface
+     * @return \Dom\Template
      */
     public function getPage()
     {
@@ -56,42 +42,15 @@ abstract class Iface extends \Dom\Renderer\Renderer
     }
 
     /**
-     *
-     * @return string
-     */
-    public function getTemplatePath()
-    {
-        return $this->getPage()->getTemplatePath();
-    }
-
-    /**
-     *
-     * @return string
-     */
-    public function getPageTitle()
-    {
-        return $this->pageTitle;
-    }
-
-    /**
-     *
-     * @param string $pageTitle
+     * @param $title
      * @return $this
      */
-    public function setPageTitle($pageTitle)
+    public function setPageTitle($title)
     {
-        $this->pageTitle = $pageTitle;
+        if ($this->getPage()) {
+            $this->getPage()->setTitle($title);
+        }
         return $this;
-    }
-
-    /**
-     * Get the global config object.
-     *
-     * @return \Tk\Config
-     */
-    public function getConfig()
-    {
-        return \Tk\Config::getInstance();
     }
     
     /**
@@ -102,6 +61,22 @@ abstract class Iface extends \Dom\Renderer\Renderer
     public function getUser()
     {
         return $this->getConfig()->getUser();
+    }
+
+
+    /**
+     * DomTemplate magic method example
+     *
+     * @return \Dom\Template
+     */
+    public function __makeTemplate()
+    {
+        $html = <<<HTML
+<div></div>
+HTML;
+        return \Dom\Loader::load($html);
+        // OR FOR A FILE
+        //return \Dom\Loader::loadFile($this->getTemplatePath().'/public.xtpl');
     }
 
 }

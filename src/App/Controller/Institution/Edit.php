@@ -39,21 +39,14 @@ class Edit extends Iface
     protected $table = null;
 
 
-    /**
-     *
-     */
-    public function __construct()
-    {
-        parent::__construct('Institution Edit');
-    }
 
     /**
-     *
      * @param Request $request
-     * @return \App\Page\Iface|Template|string
      */
     public function doDefault(Request $request)
     {
+        $this->setPageTitle('Institution Edit');
+        
         $this->institution = new \App\Db\Institution();
         $this->owner = new \App\Db\User();
 
@@ -97,7 +90,6 @@ class Edit extends Iface
 
         $this->form->execute();
 
-        return $this->show();
     }
 
     /**
@@ -160,11 +152,11 @@ class Edit extends Iface
     }
 
     /**
-     * @return \App\Page\Iface
+     * @return \Dom\Template
      */
     public function show()
     {
-        $template = $this->getTemplate();
+        $template = parent::show();
 
         // Render the form
         $template->insertTemplate('form', $this->form->getParam('renderer')->show()->getTemplate());
@@ -193,7 +185,7 @@ class Edit extends Iface
 
 
 
-        return $this->getPage()->setPageContent($template);
+        return $template;
     }
 
     /**

@@ -30,19 +30,9 @@ class PluginZoneManager extends Iface
     protected $zoneId = 0;
 
     
-
-    /**
-     *
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     /**
      *
      * @param Request $request
-     * @return \App\Page\Iface
      * @throws \Tk\Exception
      */
     public function doDefault(Request $request, $zoneName, $zoneId)
@@ -68,7 +58,6 @@ class PluginZoneManager extends Iface
         
         $this->table->setList($this->getPluginList());
 
-        return $this->show();
     }
 
     /**
@@ -89,18 +78,18 @@ class PluginZoneManager extends Iface
     }
 
     /**
-     * @return \App\Page\Iface
+     * @return \Dom\Template
      */
     public function show()
     {
-        $template = $this->getTemplate();
+        $template = parent::show();
 
         // render Table
         $template->replaceTemplate('PluginList', $this->table->getParam('renderer')->show());
 
         $template->insertText('zone', $this->makeTitleFromZone($this->zoneName));
 
-        return $this->getPage()->setPageContent($template);
+        return $template;
     }
 
     /**

@@ -9,14 +9,9 @@ use Tk\Auth\AuthEvents;
 
 
 /**
- * Class Index
- *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
- * TODO: Only set this up to register institutional clients.
- *  Then they can purchase a service and manage their account.
- *
  */
 class Register extends Iface
 {
@@ -42,21 +37,13 @@ class Register extends Iface
     
 
     /**
-     *
-     */
-    public function __construct()
-    {
-        parent::__construct('Create New Account');
-        $this->dispatcher = $this->getConfig()->getEventDispatcher();
-    }
-
-    /**
      * @param Request $request
-     * @return \App\Page\Iface
      * @throws \Tk\Exception
      */
     public function doDefault(Request $request)
     {
+        $this->setPageTitle('Register New Account');
+        
         if (!$this->getConfig()->get('site.client.registration')) {
             throw new \Tk\Exception('User registration disabled.');
         }
@@ -64,7 +51,6 @@ class Register extends Iface
             $this->doConfirmation($request);
         }
         if ($this->getUser()) {
-            // Todo: Redirect to the users homepage
             \Tk\Uri::create($this->getUser()->getHomeUrl())->redirect();
         }
 
@@ -87,7 +73,6 @@ class Register extends Iface
         // Find and Fire submit event
         $this->form->execute();
 
-        return $this->show();
     }
 
 
@@ -147,8 +132,7 @@ class Register extends Iface
         $event->set('user', $this->user);
         $event->set('pass', $this->form->getFieldValue('password'));
         $event->set('institution', $this->institution);
-        $event->set('templatePath', $this->getPage()->getTemplatePath());
-        $this->dispatcher->dispatch(AuthEvents::REGISTER, $event);
+        \App\Factory::getEventDispatcher()->dispatch(AuthEvents::REGISTER, $event);
 
         // Redirect with message to check their email
         \Tk\Alert::addSuccess('Your New Account Has Been Created.');
@@ -192,8 +176,7 @@ class Register extends Iface
         $event->set('request', $request);
         $event->set('user', $user);
         $event->set('institution', $institution);
-        $event->set('templatePath', $this->getTemplatePath());
-        $this->dispatcher->dispatch(AuthEvents::REGISTER_CONFIRM, $event);
+        \App\Factory::getEventDispatcher()->dispatch(AuthEvents::REGISTER_CONFIRM, $event);
         
         \Tk\Alert::addSuccess('Account Activation Successful.');
         \Tk\Uri::create('/login.html')->redirect();
@@ -202,7 +185,7 @@ class Register extends Iface
 
     public function show()
     {
-        $template = $this->getTemplate();
+        $template = parent::show();
 
         if ($this->getConfig()->getSession()->getOnce('h')) {
             $template->setChoice('success');
@@ -211,27 +194,11 @@ class Register extends Iface
             $template->setChoice('form');
 
             // Render the form
-//            $ren = new \Tk\Form\Renderer\DomStatic($this->form, $template);
-//            $ren->show();
-
-            // Render the form
             $fren = new \Tk\Form\Renderer\Dom($this->form);
             $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());
         }
         
-        return $this->getPage()->setPageContent($template);
-    }
-
-
-    /**
-     * DomTemplate magic method
-     *
-     * @return \Dom\Template
-     */
-    public function __makeTemplate()
-    {
-        $tplFile = $this->getPage()->getTemplatePath().'/xtpl/public/register.xtpl';
-        return \Dom\Loader::loadFile($tplFile);
+        return $template;
     }
 
 }

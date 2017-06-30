@@ -32,16 +32,16 @@ class Manager extends Iface
      */
     public function __construct()
     {
-        parent::__construct('Course Manager');
+        parent::__construct();
     }
 
     /**
      *
      * @param Request $request
-     * @return \App\Page\Iface|Template|string
      */
     public function doDefault(Request $request)
     {
+        $this->setPageTitle('Course Manager');
         $this->institution = $this->getUser()->getInstitution();
         if (!$this->institution)
             throw new \Tk\Exception('Institution Not Found.');
@@ -74,26 +74,23 @@ class Manager extends Iface
         if (!empty($filter['userId'])) {
             $filter['userId'] = $this->getUser()->id;
         }
-
-
-
+        
         $users = \App\Db\CourseMap::create()->findFiltered($filter, $this->table->makeDbTool('a.id'));
         $this->table->setList($users);
 
-        return $this->show();
     }
 
     /**
-     * @return \App\Page\Iface
+     * @return \Dom\Template
      */
     public function show()
     {
-        $template = $this->getTemplate();
+        $template = parent::show();
 
         $template->setAttr('new', 'href', \App\Uri::createHomeUrl('/courseEdit.html'));
 
         $template->replaceTemplate('table', $this->table->getParam('renderer')->show());
-        return $this->getPage()->setPageContent($template);
+        return $template;
     }
 
 
