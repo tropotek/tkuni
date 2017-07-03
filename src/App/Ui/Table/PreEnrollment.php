@@ -46,7 +46,7 @@ class PreEnrollment extends \Dom\Renderer\Renderer
 
     /**
      *
-     * @return \App\Page\Iface|Template|string
+     * @return \Dom\Template|Template|string
      */
     public function doDefault()
     {

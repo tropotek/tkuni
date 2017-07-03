@@ -26,8 +26,9 @@ $config['google.recaptcha.privateKey'] = '6Ldg2wsUAAAAANCLllmQfCg5jSWUbJD6rSjEmt
 /*
  * Template folders for pages
  */
-$config['template.admin.path'] = '/html/default';
-$config['template.public.path'] = '/html/default';
+$config['template.admin.path'] = $config['system.template.path'] . '/default';
+$config['template.public.path'] = $config['system.template.path'] . '/default';
+$config['template.xtpl.path'] = $config['template.admin.path'] . '/xtpl';
 
 /*
  * Change the system timezone

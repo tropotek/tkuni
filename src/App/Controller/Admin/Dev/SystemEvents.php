@@ -26,16 +26,16 @@ class SystemEvents extends Iface
      */
     public function __construct()
     {
-        parent::__construct('Available Events');
+        parent::__construct();
     }
     
     /**
      *
      * @param Request $request
-     * @return \App\Page\Iface|Template|string
      */
     public function doDefault(Request $request)
     {
+        $this->setPageTitle('Available Events');
 
         $this->table = \App\Factory::createTable(\Tk\Object::basename($this).'PluEventList');
         $this->table->setParam('renderer', \App\Factory::createTableRenderer($this->table));
@@ -49,9 +49,7 @@ class SystemEvents extends Iface
 
         $list = $this->convertEventData(\App\Factory::getEventDispatcher()->getAvailableEvents(\App\Factory::getConfig()->getSitePath()));
         $this->table->setList($list);
-
-
-        return $this->show();
+        
     }
 
     /**
@@ -77,15 +75,15 @@ class SystemEvents extends Iface
     }
 
     /**
-     * @return \App\Page\Iface
+     * @return \Dom\Template
      */
     public function show()
     {
-        $template = $this->getTemplate();
+        $template = parent::show();
 
         $template->replaceTemplate('table', $this->table->getParam('renderer')->show());
 
-        return $this->getPage()->setPageContent($template);
+        return $template;
     }
 
 

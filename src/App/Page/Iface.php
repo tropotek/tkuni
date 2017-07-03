@@ -2,25 +2,12 @@
 namespace App\Page;
 
 /**
- *
- *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterface
+abstract class Iface extends \Tk\Controller\Page
 {
-
-    /**
-     * @var \App\Controller\Iface
-     */
-    protected $controller = null;
-
-    /**
-     * @var string
-     */
-    protected $templatePath = '';
-    
     
     /**
      * Iface constructor.
@@ -29,150 +16,33 @@ abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
      */
     public function __construct(\App\Controller\Iface $controller)
     {
-        $this->controller = $controller;
-        if (!$this->templatePath)
-            $this->templatePath = $this->getConfig()->getSitePath() . $this->getConfig()->get('template.public.path');
+        parent::__construct($controller);
+//        if (!$this->templatePath)
+//            $this->templatePath = $this->getConfig()->getSitePath() . $this->getConfig()->get('template.public.path');
 
-        $this->show();
     }
 
-    /**
-     *
-     * @return string
-     */
-    public function getTemplatePath()
-    {
-        return $this->templatePath;
-    }
 
     /**
      * Set the page heading, should be set from main controller
      *
-     * @return $this
+     * @return \Dom\Template
      * @throws \Dom\Exception
      */
-    protected function initPage()
+    public function show()
     {
-        /** @var \Dom\Template $template */
-        $template = $this->getTemplate();
+        $template = parent::show();
 
-        if ($this->getConfig()->get('site.meta.keywords')) {
-            $template->appendMetaTag('keywords', $this->getConfig()->get('site.meta.keywords'));
-        }
-        if ($this->getConfig()->get('site.meta.description')) {
-            $template->appendMetaTag('description', $this->getConfig()->get('site.meta.description'));
-        }
-
-        $template->appendMetaTag('tk-author', 'http://www.tropotek.com/, http://www.phpdomtemplate.com/', $template->getTitleElement());
-        $template->appendMetaTag('tk-project', 'tk2uni', $template->getTitleElement());
-        $template->appendMetaTag('tk-version', '1.0', $template->getTitleElement());
-        
-        if ($this->getConfig()->get('site.title')) {
-            $template->setAttr('siteName', 'title', $this->getConfig()->get('site.title'));
-            $template->setTitleText(trim($template->getTitleText() . ' - ' . $this->getConfig()->get('site.title'), '- '));
-        }
-
-        if ($this->controller->getUser()) {
+        if ($this->getUser()) {
+            $template->insertText('username', $this->getUser()->getDisplayName());
+            $template->setAttr('dashUrl', 'href', \App\Uri::createHomeUrl('/index.html'));
+            
             $template->setChoice('logout');
         } else {
             $template->setChoice('login');
         }
 
-        if (\Tk\AlertCollection::hasMessages()) {
-            $noticeTpl = \Tk\AlertCollection::getInstance()->show()->getTemplate();
-            $template->replaceTemplate('alerts', $noticeTpl)->setChoice('alerts');
-            $template->setChoice('alerts');
-        }
-
-        $siteUrl = $this->getConfig()->getSiteUrl();
-        $dataUrl = $this->getConfig()->getDataUrl();
-        $themeUrl = $this->getTemplatePath();
-
-        $js = <<<JS
-var config = {
-  siteUrl : '$siteUrl',
-  dataUrl : '$dataUrl',
-  themeUrl: '$themeUrl'
-};
-JS;
-        $template->appendJs($js, array('data-jsl-priority' => -1000));
-
-        if ($this->getConfig()->get('site.global.js')) {
-            $template->appendJs($this->getConfig()->get('site.global.js'));
-        }
-        if ($this->getConfig()->get('site.global.css')) {
-            $template->appendCss($this->getConfig()->get('site.global.css'));
-        }
-
-        $event = new \Tk\Event\Event();
-        $event->set('template', $template);
-        $event->set('page', $this);
-        $event->set('controller', $this->getController());
-        \App\Factory::getEventDispatcher()->dispatch(\App\AppEvents::PAGE_INIT, $event);
-
-        return $this;
-    }
-
-    /**
-     *
-     */
-    protected function renderPageTitle()
-    {
-        $template = $this->getTemplate();
-        if ($this->getController()->getPageTitle()) {
-            $template->setTitleText(trim($this->getController()->getPageTitle() . ' - ' . $template->getTitleText(), '- '));
-            $template->insertText('pageHeading', $this->getController()->getPageTitle());
-            $template->setChoice('pageHeading');
-        }
-        if ($this->getConfig()->isDebug()) {
-            $template->setTitleText(trim('DEBUG: ' . $template->getTitleText(), '- '));
-        }
-    }
-
-    /**
-     * Set the page Content
-     *
-     * @param string|\Dom\Template|\Dom\Renderer\Iface|\DOMDocument $content
-     * @return Iface
-     */
-    public function setPageContent($content)
-    {
-        // Allow people to hook into the controller result.
-        $event = new \Tk\Event\Event();
-        $event->set('controllerContent', $content);
-        $event->set('controller', $this->getController());
-        \App\Factory::getEventDispatcher()->dispatch(\App\AppEvents::SHOW, $event);
-
-        $this->renderPageTitle();
-        if (!$content) return $this;
-        if ($content instanceof \Dom\Template) {
-            $this->getTemplate()->appendTemplate('content', $content);
-        } else if ($content instanceof \Dom\Renderer\RendererInterface) {
-            $this->getTemplate()->appendTemplate('content', $content->getTemplate());
-        } else if ($content instanceof \DOMDocument) {
-            $this->getTemplate()->insertDoc('content', $content);
-        } else if (is_string($content)) {
-            $this->template->insertHtml('content', $content);
-        }
-        return $this;
-    }
-
-    /**
-     * @return \App\Controller\Iface
-     */
-    public function getController()
-    {
-        return $this->controller;
-    }
-
-    /**
-     * Get the global config object.
-     *
-     * @return \Tk\Config
-     */
-    public function getConfig()
-    {
-        return \Tk\Config::getInstance();
+        return $template;
     }
 
     /**

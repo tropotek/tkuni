@@ -29,25 +29,16 @@ class Profile extends Iface
     private $user = null;
 
 
-    /**
-     *
-     */
-    public function __construct()
-    {
-        $title = 'My Profile';
-        parent::__construct($title);
-    }
 
     /**
      *
      * @param Request $request
-     * @return \App\Page\Iface|Template|string
      */
     public function doDefault(Request $request)
     {
+        $this->setPageTitle('My Profile');
+        
         $this->user = $this->getUser();
-
-
 
         $this->form = \App\Factory::createForm('userEdit');
         $this->form->setParam('renderer', \App\Factory::createFormRenderer($this->form));
@@ -69,7 +60,6 @@ class Profile extends Iface
         $this->form->load(\App\Db\UserMap::create()->unmapForm($this->user));
         $this->form->execute();
 
-        return $this->show();
     }
 
     /**
@@ -112,18 +102,18 @@ class Profile extends Iface
     }
 
     /**
-     * @return \App\Page\Iface
+     * @return \Dom\Template
      */
     public function show()
     {
-        $template = $this->getTemplate();
+        $template = parent::show();
 
         $template->insertText('username', $this->user->name . ' - [UID ' . $this->user->id . ']');
 
         // Render the form
         $template->insertTemplate('form', $this->form->getParam('renderer')->show()->getTemplate());
 
-        return $this->getPage()->setPageContent($this->getTemplate());
+        return $template;
     }
 
 

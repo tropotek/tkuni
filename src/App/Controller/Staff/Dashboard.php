@@ -17,36 +17,14 @@ class Dashboard extends Iface
     
     /**
      *
-     */
-    public function __construct()
-    {
-        parent::__construct('Dashboard');
-    }
-    
-    /**
-     *
      * @param Request $request
-     * @return \App\Page\Iface|Template|string
      */
     public function doDefault(Request $request)
     {
+        $this->setPageTitle('Dashboard');
         
-        //throw new \Exception('This is a test');
         
-        
-        return $this->show();
     }
-
-    /**
-     * @return \App\Page\Iface
-     */
-    public function show()
-    {
-        $template = $this->getTemplate();
-        
-        return $this->getPage()->setPageContent($template);
-    }
-
 
     /**
      * DomTemplate magic method

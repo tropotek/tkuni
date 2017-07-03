@@ -111,24 +111,9 @@ class Bootstrap
         // * Session    
         Factory::getSession();
 
-
         // Initiate the default database connection
         \App\Factory::getDb();
-        // Import config settings from DB
-        $config->replace(\Tk\Db\Data::create()->toArray());
-
-        // initialise Dom Loader
-        \App\Factory::getDomLoader();
-
-        // Init the plugins
-        \App\Factory::getPluginFactory();
-
-        // Initiate the email gateway
-        \App\Factory::getEmailGateway();
-
-        // Initiate the plugin API object
-        \App\Factory::getPluginApi();
-
+        $config->replace(\Tk\Db\Data::create()->all());
 
         return $config;
     }

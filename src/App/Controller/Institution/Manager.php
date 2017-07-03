@@ -24,19 +24,12 @@ class Manager extends Iface
 
     /**
      *
-     */
-    public function __construct()
-    {
-        parent::__construct('Institution Manager');
-    }
-
-    /**
-     *
      * @param Request $request
-     * @return \App\Page\Iface|Template|string
      */
     public function doDefault(Request $request)
     {
+        $this->setPageTitle('Institution Manager');
+            
         $this->table = \App\Factory::createTable('InstitutionList');
         $this->table->setParam('renderer', \App\Factory::createTableRenderer($this->table));
 
@@ -58,17 +51,16 @@ class Manager extends Iface
         $users = \App\Db\InstitutionMap::create()->findFiltered($this->table->getFilterValues(), $this->table->makeDbTool('a.id'));
         $this->table->setList($users);
 
-        return $this->show();
     }
 
     /**
-     * @return \App\Page\Iface
+     * @return \Dom\Template
      */
     public function show()
     {
-        $template = $this->getTemplate();
+        $template = parent::show();
         $template->replaceTemplate('table', $this->table->getParam('renderer')->show());
-        return $this->getPage()->setPageContent($template);
+        return $template;
     }
 
     /**

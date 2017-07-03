@@ -40,7 +40,6 @@ class PluginManager extends Iface
     /**
      *
      * @param Request $request
-     * @return \App\Page\Iface
      */
     public function doDefault(Request $request)
     {
@@ -67,8 +66,7 @@ class PluginManager extends Iface
         $this->table->addCell(new \Tk\Table\Cell\Date('time'))->setFormat(\Tk\Date::FORMAT_MED_DATE)->setLabel('Created')->setOrderProperty('');
 
         $this->table->setList($this->getPluginList());
-
-        return $this->show();
+        
     }
 
     /**
@@ -131,11 +129,11 @@ class PluginManager extends Iface
     }
 
     /**
-     * @return \App\Page\Iface
+     * @return \Dom\Template
      */
     public function show()
     {
-        $template = $this->getTemplate();
+        $template = parent::show();
 
         // Render the form
         $template->insertTemplate('form', $this->form->getParam('renderer')->show()->getTemplate());
@@ -143,7 +141,7 @@ class PluginManager extends Iface
         // render Table
         $template->replaceTemplate('PluginList', $this->table->getParam('renderer')->show());
 
-        return $this->getPage()->setPageContent($template);
+        return $template;
     }
 
     /**
