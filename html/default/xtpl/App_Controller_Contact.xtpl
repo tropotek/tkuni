@@ -3,14 +3,17 @@
   <div class="section">
     <div class="container">
       <div class="row">
-
-
-        <div class="col-sm-4">
+        <div class="col-sm-7">
+          <!-- Map -->
+          <div id="contact-us-map">
+            <iframe width="100%" height="100%" frameborder="0" style="border:0"
+                    src="https://www.google.com/maps/embed/v1/search?q=Melbourne&amp;key=AIzaSyD4rtK06ifc7l3b5bThBYJKOycy1_XqhmI" allowfullscreen="allowfullscreen" var="googleMap"></iframe>
+          </div>
+          <!-- End Map -->
           <!-- Contact Info -->
           <p class="contact-us-details">
             <b>Address:</b>
-            123 Fake Street, LN1 2ST, <br/>
-            London, United Kingdom
+            123 Fake Street, LN1 2ST, London, United Kingdom
             <br/>
             <b>Phone:</b>
             +44 123 654321
@@ -23,9 +26,10 @@
           </p>
           <!-- End Contact Info -->
         </div>
-
-        <div class="col-sm-8">
+        <div class="col-sm-5">
           <!-- Contact Form -->
+          <h3>Send Us a Message</h3>
+
           <div class="alert alert-success" role="alert" choice="sent">
             <strong>Success!</strong> Your form has been successfully sent.
           </div>
@@ -51,7 +55,7 @@
                 </div>
               </div>
 
-              <div class="form-group form" var="group-type">
+              <div class="form-group" var="group-type">
                 <label for="prependedInput" class="col-sm-3 control-label">
                   <b>Topic</b>
                 </label>
@@ -70,7 +74,7 @@
                   <b>Attach</b>
                 </label>
                 <div class="col-sm-9">
-                  <input type="file" name="attach" id="attach" multiple="true"/>
+                  <input type="file" name="attach" id="attach" multiple="true" />
                 </div>
               </div>
 
@@ -93,7 +97,6 @@
           </div>
           <!-- End Contact Info -->
         </div>
-
       </div>
     </div>
   </div>
