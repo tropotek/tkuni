@@ -31,14 +31,6 @@ class PluginManager extends Iface
 
     /**
      *
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
-     *
      * @param Request $request
      */
     public function doDefault(Request $request)

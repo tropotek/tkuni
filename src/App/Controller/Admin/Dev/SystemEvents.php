@@ -20,15 +20,7 @@ class SystemEvents extends Iface
      */
     protected $table = null;
 
-    
-    /**
-     *
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-    
+
     /**
      *
      * @param Request $request

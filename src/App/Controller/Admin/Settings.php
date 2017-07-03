@@ -27,14 +27,6 @@ class Settings extends Iface
      */
     protected $data = null;
 
-    
-    /**
-     *
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
 
     /**
      * doDefault
