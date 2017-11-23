@@ -17,9 +17,6 @@ abstract class Iface extends \Tk\Controller\Page
     public function __construct(\App\Controller\Iface $controller)
     {
         parent::__construct($controller);
-//        if (!$this->templatePath)
-//            $this->templatePath = $this->getConfig()->getSitePath() . $this->getConfig()->get('template.public.path');
-
     }
 
 
@@ -40,6 +37,11 @@ abstract class Iface extends \Tk\Controller\Page
             $template->setChoice('logout');
         } else {
             $template->setChoice('login');
+        }
+
+        if (\Tk\AlertCollection::hasMessages()) {
+            $template->insertTemplate('alerts', \Tk\AlertCollection::getInstance()->show());
+            $template->setChoice('alerts');
         }
 
         return $template;

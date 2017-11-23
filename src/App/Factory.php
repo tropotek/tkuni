@@ -207,7 +207,7 @@ class Factory
         if (!self::getConfig()->getDomLoader()) {
             $dl = \Dom\Loader::getInstance()->setParams(self::getConfig()->all());
             $dl->addAdapter(new \Dom\Loader\Adapter\DefaultLoader());
-            if (self::getConfig()->getTemplatePath()) {
+            if (self::getConfig()->getTemplateXtplPath()) {
                 $dl->addAdapter(new \Dom\Loader\Adapter\ClassPath(self::getConfig()->getSitePath() . self::getConfig()->getTemplateXtplPath(), 'xtpl'));
             }
             self::getConfig()->setDomLoader($dl);

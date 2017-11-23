@@ -21,6 +21,7 @@ $config['db.pass'] = 'password';
 \Tk\Util\SqlMigrate::$DB_TABLE = '_migration';
 \Tk\Session\Adapter\Database::$DB_TABLE = '_session';
 
+
 // Debug settings
 $config['debug'] = false;
 //$config['system.log.path'] = '/home/user/log/error.log';

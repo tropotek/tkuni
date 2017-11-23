@@ -5,11 +5,6 @@ namespace App\Controller;
 abstract class Iface extends \Tk\Controller\Iface
 {
 
-    
-    /**
-     * Iface constructor.
-     */
-    public function __construct() { }
 
     /**
      * Get a new instance of the page to display the content in.

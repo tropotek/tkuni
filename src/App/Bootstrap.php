@@ -94,14 +94,12 @@ class Bootstrap
 
         // Include all URL routes
         include($config->getSrcPath() . '/config/routes.php');
-        
+
+        ini_set('display_errors', 'Off');       // Only log errors?????
         if ($config->isDebug()) {
             error_reporting(-1);
-            //error_reporting(E_ALL | E_STRICT);
-            ini_set('display_errors', 'Off');       // Only log errors?????
         } else {
             error_reporting(0);
-            ini_set('display_errors', 'Off');
         }
         
         // * Request
