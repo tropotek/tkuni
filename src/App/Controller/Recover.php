@@ -40,7 +40,7 @@ class Recover extends Iface
         $this->form = new Form('loginForm', $request);
 
         $this->form->addField(new Field\Input('account'));
-        $this->form->addField(new Event\Button('recover', array($this, 'doRecover')));
+        $this->form->addField(new Event\Submit('recover', array($this, 'doRecover')));
 
         // Find and Fire submit event
         $this->form->execute();

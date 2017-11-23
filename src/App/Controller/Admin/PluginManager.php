@@ -41,14 +41,14 @@ class PluginManager extends Iface
 
         // Upload plugin
         $this->form = \App\Factory::createForm('pluginEdit');
-        $this->form->setParam('renderer', \App\Factory::createFormRenderer($this->form));
+        $this->form->setRenderer(\App\Factory::createFormRenderer($this->form));
         $this->form->addField(new Field\File('package', '', $this->getConfig()->getPluginPath()))->addCss('tk-fileinput');
-        $this->form->addField(new Event\Button('upload', array($this, 'doUpload')))->addCss('btn-primary');
+        $this->form->addField(new Event\Submit('upload', array($this, 'doUpload')))->addCss('btn-primary');
         $this->form->execute();
 
         // Plugin manager table
         $this->table = \App\Factory::createTable('PluginList');
-        $this->table->setParam('renderer', \App\Factory::createTableRenderer($this->table));
+        $this->table->setRenderer(\App\Factory::createTableRenderer($this->table));
 
         $this->table->addCell(new IconCell('icon'))->setLabel('');
         $this->table->addCell(new ActionsCell('actions'));
@@ -128,10 +128,10 @@ class PluginManager extends Iface
         $template = parent::show();
 
         // Render the form
-        $template->insertTemplate('form', $this->form->getParam('renderer')->show()->getTemplate());
+        $template->insertTemplate('form', $this->form->getRenderer()->show());
 
         // render Table
-        $template->replaceTemplate('PluginList', $this->table->getParam('renderer')->show());
+        $template->replaceTemplate('PluginList', $this->table->getRenderer()->show());
 
         return $template;
     }

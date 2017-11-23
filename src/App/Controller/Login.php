@@ -42,7 +42,7 @@ class Login extends Iface
         $this->form->addField(new Field\Input('username'));
         $this->form->addField(new Field\Password('password'));
 
-        $this->form->addField(new Event\Button('login', array($this, 'doLogin')));
+        $this->form->addField(new Event\Submit('login', array($this, 'doLogin')));
         
         
     }
@@ -150,7 +150,7 @@ class Login extends Iface
 
         // Render the form
         $fren = new \Tk\Form\Renderer\Dom($this->form);
-        $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());
+        $template->insertTemplate($this->form->getId(), $fren->show());
 
         if ($this->institution) {
             if ($this->institution->getLogoUrl()) {

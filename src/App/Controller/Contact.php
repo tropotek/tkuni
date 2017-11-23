@@ -40,7 +40,7 @@ class Contact extends Iface
         $this->form->addField(new Field\File('attach[]'));
         $this->form->addField(new Field\Textarea('message'));
         
-        $this->form->addField(new Event\Button('send', array($this, 'doSubmit')));
+        $this->form->addField(new Event\Submit('send', array($this, 'doSubmit')));
         
         // Find and Fire submit event
         $this->form->execute();

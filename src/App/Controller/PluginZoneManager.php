@@ -48,7 +48,7 @@ class PluginZoneManager extends Iface
         $this->pluginFactory = \App\Factory::getPluginFactory();
         // Plugin manager table
         $this->table = \App\Factory::createTable('PluginList');
-        $this->table->setParam('renderer', \App\Factory::createTableRenderer($this->table));
+        $this->table->setRenderer(\App\Factory::createTableRenderer($this->table));
 
         $this->table->addCell(new IconCell('icon'))->setLabel('');
         $this->table->addCell(new ActionsCell($this->zoneName, $this->zoneId));
@@ -85,7 +85,7 @@ class PluginZoneManager extends Iface
         $template = parent::show();
 
         // render Table
-        $template->replaceTemplate('PluginList', $this->table->getParam('renderer')->show());
+        $template->replaceTemplate('PluginList', $this->table->getRenderer()->show());
 
         $template->insertText('zone', $this->makeTitleFromZone($this->zoneName));
 

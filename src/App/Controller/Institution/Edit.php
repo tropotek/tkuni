@@ -56,7 +56,7 @@ class Edit extends Iface
         }
 
         $this->form = \App\Factory::createForm('institutionEdit');
-        $this->form->setParam('renderer', \App\Factory::createFormRenderer($this->form));
+        $this->form->setRenderer(\App\Factory::createFormRenderer($this->form));
 
         $this->form->addField(new Field\Input('name'))->setRequired(true)->setTabGroup('Details');
         $this->form->addField(new Field\Input('username'))->setRequired(true)->setTabGroup('Details');
@@ -80,8 +80,8 @@ class Edit extends Iface
         if (!$this->owner->getId())
             $f->setRequired(true);
 
-        $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
-        $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
+        $this->form->addField(new Event\Submit('update', array($this, 'doSubmit')));
+        $this->form->addField(new Event\Submit('save', array($this, 'doSubmit')));
         $this->form->addField(new Event\Link('cancel', \Tk\Uri::create('/admin/institutionManager.html')));
 
         $this->form->load(\App\Db\InstitutionMap::create()->unmapForm($this->institution));
@@ -159,7 +159,7 @@ class Edit extends Iface
         $template = parent::show();
 
         // Render the form
-        $template->insertTemplate('form', $this->form->getParam('renderer')->show()->getTemplate());
+        $template->insertTemplate('form', $this->form->getRenderer()->show());
 
         if ($this->institution->id) {
             $courseTable = new \App\Ui\Table\Course($this->institution->id);

@@ -57,7 +57,7 @@ class PreEnrollment extends \Dom\Renderer\Renderer
 
 
         $this->table = \App\Factory::createTable('pendingUsers');
-        $this->table->setParam('renderer', \App\Factory::createTableRenderer($this->table));
+        $this->table->setRenderer(\App\Factory::createTableRenderer($this->table));
         $this->table->addCss('tk-pending-users');
 
         $this->table->addCell(new \Tk\Table\Cell\Checkbox('email'));

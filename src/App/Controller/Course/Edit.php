@@ -61,7 +61,7 @@ class Edit extends Iface
         }
 
         $this->form = \App\Factory::createForm('courseEdit');
-        $this->form->setParam('renderer', \App\Factory::createFormRenderer($this->form));
+        $this->form->setRenderer(\App\Factory::createFormRenderer($this->form));
 
         $this->form->addField(new Field\Input('name'))->setRequired(true);
         $this->form->addField(new Field\Input('code'))->setRequired(true);
@@ -71,8 +71,8 @@ class Edit extends Iface
 //        $this->form->addField(new Field\Input('dateEnd'))->addCss('date')->setRequired(true);
         $this->form->addField(new Field\Textarea('description'));
 
-        $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
-        $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
+        $this->form->addField(new Event\Submit('update', array($this, 'doSubmit')));
+        $this->form->addField(new Event\Submit('save', array($this, 'doSubmit')));
         $url = \App\Uri::createHomeUrl('/courseManager.html');
         $this->form->addField(new Event\Link('cancel', $url));
 
@@ -119,7 +119,7 @@ class Edit extends Iface
         $template = parent::show();
 
         // Render the form
-        $template->insertTemplate('form', $this->form->getParam('renderer')->show()->getTemplate());
+        $template->insertTemplate('form', $this->form->getRenderer()->show());
 
         if ($this->course->id) {
             $template->setChoice('update');

@@ -39,15 +39,15 @@ class Settings extends Iface
         $this->data = \Tk\Db\Data::create();
         
         $this->form = \App\Factory::createForm('settingsEdit');
-        $this->form->setParam('renderer', \App\Factory::createFormRenderer($this->form));
+        $this->form->setRenderer(\App\Factory::createFormRenderer($this->form));
 
         $this->form->addField(new Field\Input('site.title'))->setLabel('Site Title')->setRequired(true);
         $this->form->addField(new Field\Input('site.email'))->setLabel('Site Email')->setRequired(true);
         $this->form->addField(new Field\Checkbox('site.client.registration'))->setLabel('Client Registration')->setNotes('Allow users to create new accounts');
         $this->form->addField(new Field\Checkbox('site.client.activation'))->setLabel('Client Activation')->setNotes('Allow users to activate their own accounts');
 
-        $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
-        $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
+        $this->form->addField(new Event\Submit('update', array($this, 'doSubmit')));
+        $this->form->addField(new Event\Submit('save', array($this, 'doSubmit')));
         $this->form->addField(new Event\LinkButton('cancel', \Tk\Uri::create('/admin/index.html')));
 
         $this->form->load($this->data->toArray());
@@ -95,7 +95,7 @@ class Settings extends Iface
         $template = parent::show();
 
         // Render the form
-        $template->insertTemplate('form', $this->form->getParam('renderer')->show()->getTemplate());
+        $template->insertTemplate('form', $this->form->getRenderer()->show());
 
         return $template;
     }

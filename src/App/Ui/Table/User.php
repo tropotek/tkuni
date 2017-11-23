@@ -69,7 +69,7 @@ class User extends \Dom\Renderer\Renderer
     {
 
         $this->table = new \Tk\Table('StaffList');
-        $this->table->setParam('renderer', \Tk\Table\Renderer\Dom\Table::create($this->table));
+        $this->table->setRenderer(\Tk\Table\Renderer\Dom\Table::create($this->table));
 
 
         $this->actionsCell = new \Tk\Table\Cell\Actions();
@@ -117,9 +117,9 @@ class User extends \Dom\Renderer\Renderer
      */
     public function show()
     {
-        $this->table->getParam('renderer')->show();
-        $this->setTemplate($this->table->getParam('renderer')->getTemplate());
-        return $this->table->getParam('renderer')->getTemplate();
+        $this->table->getRenderer()->show();
+        $this->setTemplate($this->table->getRenderer()->getTemplate());
+        return $this->table->getRenderer()->getTemplate();
     }
 
 }

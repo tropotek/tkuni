@@ -9,7 +9,7 @@ abstract class Iface extends \Tk\Controller\Iface
     /**
      * Get a new instance of the page to display the content in.
      *
-     * @return \Dom\Template
+     * @return \Tk\Controller\Page
      */
     public function getPage()
     {
@@ -20,18 +20,19 @@ abstract class Iface extends \Tk\Controller\Iface
             switch($role) {
                 case \App\Db\User::ROLE_ADMIN:
                 case 'client':
-                    $this->page = new \App\Page\AdminPage($this);
+                    $this->page = new \App\Page\AdminPage();
                     break;
                 case \App\Db\User::ROLE_STAFF:
-                    $this->page = new \App\Page\StaffPage($this);
+                    $this->page = new \App\Page\StaffPage();
                     break;
                 case \App\Db\User::ROLE_STUDENT:
-                    $this->page = new \App\Page\StudentPage($this);
+                    $this->page = new \App\Page\StudentPage();
                     break;
                 default:
-                    $this->page = new \App\Page\PublicPage($this);
+                    $this->page = new \App\Page\PublicPage();
                     break;
             }
+            $this->page->setController($this);
         }
         return $this->page;
     }

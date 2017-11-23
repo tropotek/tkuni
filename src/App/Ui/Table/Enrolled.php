@@ -49,7 +49,7 @@ class Enrolled extends \Dom\Renderer\Renderer
     public function doDefault()
     {
         $this->table = \App\Factory::createTable('enrolledUsers');
-        $this->table->setParam('renderer', \App\Factory::createTableRenderer($this->table));
+        $this->table->setRenderer(\App\Factory::createTableRenderer($this->table));
         $this->table->addCss('tk-enrolled-users');
 
         $this->table->addCell(new \Tk\Table\Cell\Checkbox('id'));
@@ -80,7 +80,7 @@ class Enrolled extends \Dom\Renderer\Renderer
      */
     public function show()
     {
-        $ren = $this->table->getParam('renderer');
+        $ren = $this->table->getRenderer();
         $ren->show();
         
         /** @var \Dom\Template $template */
@@ -122,7 +122,7 @@ class ActionsCell extends \Tk\Table\Cell\Text
     public function setTable($table)
     {
 
-        $ren = $table->getParam('renderer');
+        $ren = $table->getRenderer();
         if ($ren) {
             /** @var \Dom\Template $tableTemplate */
             $tableTemplate = $ren->getTemplate();

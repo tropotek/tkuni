@@ -35,6 +35,21 @@ class Factory
     }
 
     /**
+     * Get the Institution object for the logged in user
+     *
+     * @return \App\Db\Institution
+     * @throws \Tk\Exception
+     */
+    public static function getInstitution()
+    {
+        if (!self::getConfig()->getInsitution() && self::getConfig()->getUser()) {
+            $obj = self::getConfig()->getUser()->getInstitution();
+            self::getConfig()->setInsitution($obj);
+        }
+        return self::getConfig()->getInsitution();
+    }
+
+    /**
      * getRequest
      *
      * @return \IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector_pdo

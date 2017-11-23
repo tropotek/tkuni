@@ -29,11 +29,32 @@ class AuthHandler implements Subscriber
         // Only the identity details should be in the auth session not the full user object, to save space and be secure.
         $config = \App\Factory::getConfig();
         $auth = \App\Factory::getAuth();
+        /** @var \App\Db\User $user */
+        $user = null;                       // public user
         if ($auth->getIdentity()) {
             $ident = $auth->getIdentity();
             $user = \App\Db\UserMap::create()->find($ident);
             if ($user)
                 $config->setUser($user);
+        }
+
+        // Get page access permission from route params (see config/routes.php)
+        $role = $event->getRequest()->getAttribute('role');
+
+        // no role means page is publicly accessible
+        if (!$role || empty($role)) return;
+        if ($user) {
+            if (!$user->hasRole($role)) {
+                // Could redirect to a authentication error page.
+                \Tk\Alert::addWarning('You do not have access to the requested page.');
+                $user->getHomeUrl()->redirect();
+            }
+            if ($user->sessionId != \App\Factory::getSession()->getId()) {
+                $user->sessionId = \App\Factory::getSession()->getId();
+                $user->save();
+            }
+        } else {
+            \Tk\Uri::create('/login.html')->redirect();
         }
     }
 
@@ -45,28 +66,28 @@ class AuthHandler implements Subscriber
      */
     public function onControllerAccess(ControllerEvent $event)
     {
-        /** @var \App\Controller\Iface $controller */
-        $controller = $event->getController();
-        /** @var \App\Db\User $user */
-        $user = \App\Factory::getConfig()->getUser();
-        $role = $event->getRequest()->getAttribute('role');
-        if (!$role || empty($role)) return;
-        if (!$user) {
-            if ($controller instanceof \App\Controller\Iface) {
-                \Tk\Uri::create('/login.html')->redirect();
-            } else {
-                throw new \Tk\Auth\Exception('Invalid access permissions');
-            }
-        } else {
-            if ($user->sessionId != \App\Factory::getSession()->getId()) {
-                $user->sessionId = \App\Factory::getSession()->getId();
-                $user->save();
-            }
-            if (!$user->hasRole($role) && $user->active) {
-                \Tk\Alert::addWarning('You do not have access to the requested page.');
-                $user->getHomeUrl()->redirect();
-            }
-        }
+//        /** @var \App\Controller\Iface $controller */
+//        $controller = $event->getController();
+//        /** @var \App\Db\User $user */
+//        $user = \App\Factory::getConfig()->getUser();
+//        $role = $event->getRequest()->getAttribute('role');
+//        if (!$role || empty($role)) return;
+//        if (!$user) {
+//            if ($controller instanceof \App\Controller\Iface) {
+//                \Tk\Uri::create('/login.html')->redirect();
+//            } else {
+//                throw new \Tk\Auth\Exception('Invalid access permissions');
+//            }
+//        } else {
+//            if ($user->sessionId != \App\Factory::getSession()->getId()) {
+//                $user->sessionId = \App\Factory::getSession()->getId();
+//                $user->save();
+//            }
+//            if (!$user->hasRole($role) && $user->active) {
+//                \Tk\Alert::addWarning('You do not have access to the requested page.');
+//                $user->getHomeUrl()->redirect();
+//            }
+//        }
     }
 
     /**

@@ -41,7 +41,7 @@ class Profile extends Iface
         $this->user = $this->getUser();
 
         $this->form = \App\Factory::createForm('userEdit');
-        $this->form->setParam('renderer', \App\Factory::createFormRenderer($this->form));
+        $this->form->setRenderer(\App\Factory::createFormRenderer($this->form));
         $this->form->setAttr('autocomplete', 'off');
 
         $this->form->addField(new Field\Input('username'))->setRequired(true)->setTabGroup('Details');
@@ -52,8 +52,8 @@ class Profile extends Iface
         $this->form->addField(new Field\Password('newPassword'))->setAttr('placeholder', 'Click to edit')->setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setTabGroup('Password');
         $this->form->addField(new Field\Password('confPassword'))->setAttr('placeholder', 'Click to edit')->setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setNotes('Change this users password.')->setTabGroup('Password');
 
-        $this->form->addField(new Event\Button('update', array($this, 'doSubmit')));
-        $this->form->addField(new Event\Button('save', array($this, 'doSubmit')));
+        $this->form->addField(new Event\Submit('update', array($this, 'doSubmit')));
+        $this->form->addField(new Event\Submit('save', array($this, 'doSubmit')));
         $url = \Tk\Uri::create($this->getUser()->getHomeUrl());
         $this->form->addField(new Event\Link('cancel', $url));
 
@@ -111,7 +111,7 @@ class Profile extends Iface
         $template->insertText('username', $this->user->name . ' - [UID ' . $this->user->id . ']');
 
         // Render the form
-        $template->insertTemplate('form', $this->form->getParam('renderer')->show()->getTemplate());
+        $template->insertTemplate('form', $this->form->getRenderer()->show());
 
         return $template;
     }

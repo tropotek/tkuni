@@ -30,7 +30,7 @@ class SystemEvents extends Iface
         $this->setPageTitle('Available Events');
 
         $this->table = \App\Factory::createTable(\Tk\Object::basename($this).'PluEventList');
-        $this->table->setParam('renderer', \App\Factory::createTableRenderer($this->table));
+        $this->table->setRenderer(\App\Factory::createTableRenderer($this->table));
 
         $this->table->addCell(new \Tk\Table\Cell\Text('name'));
         $this->table->addCell(new \Tk\Table\Cell\Text('value'));
@@ -73,7 +73,7 @@ class SystemEvents extends Iface
     {
         $template = parent::show();
 
-        $template->replaceTemplate('table', $this->table->getParam('renderer')->show());
+        $template->replaceTemplate('table', $this->table->getRenderer()->show());
 
         return $template;
     }

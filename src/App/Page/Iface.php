@@ -8,16 +8,7 @@ namespace App\Page;
  */
 abstract class Iface extends \Tk\Controller\Page
 {
-    
-    /**
-     * Iface constructor.
-     *
-     * @param \App\Controller\Iface $controller
-     */
-    public function __construct(\App\Controller\Iface $controller)
-    {
-        parent::__construct($controller);
-    }
+
 
 
     /**

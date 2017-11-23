@@ -14,6 +14,7 @@ $config['db.user'] = 'username';
 $config['db.pass'] = 'password';
 
 
+
 /*
  * Set the default table names in the DB
  */
@@ -24,7 +25,7 @@ $config['db.pass'] = 'password';
 
 // Debug settings
 $config['debug'] = false;
-//$config['system.log.path'] = '/home/user/log/error.log';
-//$config['system.log.level'] = \Psr\Log\LogLevel::DEBUG;
+//$config['log.path'] = '/home/user/log/error.log';
+//$config['log.level'] = \Psr\Log\LogLevel::DEBUG;
 //$config['system.debug.email'] = 'root@localhost';
 

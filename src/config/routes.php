@@ -12,12 +12,12 @@
  * );
  */
 $config = \Tk\Config::getInstance();
-$params = array();
 $routes = new \Tk\Routing\RouteCollection();
 $config['site.routes'] = $routes;
 
 
 // Default Home catchall
+$params = array();
 $routes->add('home', new \Tk\Routing\Route('/index.html', 'App\Controller\Index::doDefault', $params));
 $routes->add('home-base', new \Tk\Routing\Route('/', 'App\Controller\Index::doDefault', $params));
 $routes->add('contact', new \Tk\Routing\Route('/contact.html', 'App\Controller\Contact::doDefault', $params));

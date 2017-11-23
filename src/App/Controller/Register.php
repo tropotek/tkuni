@@ -66,7 +66,7 @@ class Register extends Iface
         $this->form->addField(new Field\Input('username'));
         $this->form->addField(new Field\Password('password'));
         $this->form->addField(new Field\Password('passwordConf'));
-        $this->form->addField(new Event\Button('register', array($this, 'doRegister')));
+        $this->form->addField(new Event\Submit('register', array($this, 'doRegister')));
 
         $this->form->load(\App\Db\UserMap::create()->unmapForm($this->user));
         

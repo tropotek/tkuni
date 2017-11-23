@@ -47,7 +47,7 @@ class Manager extends Iface
             throw new \Tk\Exception('Institution Not Found.');
 
         $this->table = \App\Factory::createTable('CourseList');
-        $this->table->setParam('renderer', \App\Factory::createTableRenderer($this->table));
+        $this->table->setRenderer(\App\Factory::createTableRenderer($this->table));
 
         $this->table->addCell(new \Tk\Table\Cell\Checkbox('id'));
         $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCss('key')->setUrl(\App\Uri::createHomeUrl('/courseEdit.html'));
@@ -89,7 +89,7 @@ class Manager extends Iface
 
         $template->setAttr('new', 'href', \App\Uri::createHomeUrl('/courseEdit.html'));
 
-        $template->replaceTemplate('table', $this->table->getParam('renderer')->show());
+        $template->replaceTemplate('table', $this->table->getRenderer()->show());
         return $template;
     }
 
