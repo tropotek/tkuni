@@ -21,7 +21,7 @@ $config['session.encryption'] = false;
  * A value of 0 will keep the session active until the browser is closed (with a limit of 24h).
  * gc_maxlifetime
  */
-$config['session.expiration'] = 86400;
+$config['session.expiration'] = 60 * 60 * 24 * 1;
 
 /*
  * Number of page loads before the session id is regenerated.
