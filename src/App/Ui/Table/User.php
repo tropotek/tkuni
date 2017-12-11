@@ -74,7 +74,7 @@ class User extends \Dom\Renderer\Renderer
 
         $this->actionsCell = new \Tk\Table\Cell\Actions();
         $this->actionsCell->addButton(\Tk\Table\Cell\ActionButton::create('Masquerade', \Tk\Uri::create(), 'fa  fa-user-secret', 'tk-masquerade'))
-            ->setOnShow(function ($obj, $button, $cell) {
+            ->setOnShow(function ($cell, $obj, $button) {
                 /* @var $obj \App\Db\User */
                 /* @var $button \Tk\Table\Cell\ActionButton */
                 if (\App\Listener\MasqueradeHandler::canMasqueradeAs(\App\Factory::getUser(), $obj)) {

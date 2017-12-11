@@ -39,9 +39,9 @@ class Edit extends Iface
     protected $table = null;
 
 
-
     /**
      * @param Request $request
+     * @throws \Tk\Exception
      */
     public function doDefault(Request $request)
     {
@@ -94,6 +94,8 @@ class Edit extends Iface
 
     /**
      * @param \Tk\Form $form
+     * @throws \Tk\Exception
+     * @throws Form\Exception
      */
     public function doSubmit($form)
     {

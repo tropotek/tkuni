@@ -32,9 +32,9 @@ class DateRange extends \Tk\Form\Field\Iface
     /**
      * Get the element HTML
      *
-     * @return string|\Dom\Template
+     * @return \Dom\Template
      */
-    public function getHtml()
+    public function show()
     {
         $t = $this->getTemplate();
 
@@ -79,7 +79,5 @@ class DateRange extends \Tk\Form\Field\Iface
 HTML;
         return \Dom\Loader::load($xhtml);
     }
-    
-    
-    
+
 }

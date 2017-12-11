@@ -37,7 +37,7 @@ class Edit extends Iface
      */
     public function __construct()
     {
-        parent::__construct();
+
     }
 
     /**

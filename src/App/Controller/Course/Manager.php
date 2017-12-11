@@ -32,12 +32,13 @@ class Manager extends Iface
      */
     public function __construct()
     {
-        parent::__construct();
+
     }
 
     /**
      *
      * @param Request $request
+     * @throws \Tk\Exception
      */
     public function doDefault(Request $request)
     {
