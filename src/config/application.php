@@ -26,8 +26,13 @@ $config['google.recaptcha.privateKey'] = '6Ldg2wsUAAAAANCLllmQfCg5jSWUbJD6rSjEmt
 /*
  * Template folders for pages
  */
-$config['template.admin.path'] = $config['system.template.path'] . '/default';
-$config['template.public.path'] = $config['system.template.path'] . '/default';
+$config['system.template.path'] = '/html';
+$config['template.admin'] = $config['system.template.path'].'/default/admin.xtpl';
+$config['template.staff'] = $config['system.template.path'].'/default/staff.xtpl';
+$config['template.student'] = $config['system.template.path'].'/default/student.xtpl';
+$config['template.public'] = $config['system.template.path'].'/default/public.xtpl';
+
+// Path for renderer custom templates
 $config['template.xtpl.path'] = $config['template.admin.path'] . '/xtpl';
 
 /*

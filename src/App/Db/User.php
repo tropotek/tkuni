@@ -14,6 +14,7 @@ use Tk\Db\Data;
  */
 class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
 {
+    const ROLE_PUBLIC = 'public';
     const ROLE_ADMIN = 'admin';
     const ROLE_CLIENT= 'client';
     const ROLE_STAFF = 'staff';

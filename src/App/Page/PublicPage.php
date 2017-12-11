@@ -16,7 +16,7 @@ class PublicPage extends Iface
      */
     public function __makeTemplate()
     {
-        return \Dom\Loader::loadFile($this->getConfig()->getSitePath() . $this->getConfig()->get('template.public.path') . '/public.xtpl');
+        return \Dom\Loader::loadFile($this->getConfig()->getSitePath() . $this->getConfig()->get('template.public'));
     }
 
 }
