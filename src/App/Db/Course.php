@@ -53,11 +53,6 @@ class Course extends \Tk\Db\Map\Model
     public $dateEnd = null;
 
     /**
-     * @var boolean
-     */
-    public $active = true;
-
-    /**
      * @var \DateTime
      */
     public $modified = null;
@@ -120,25 +115,25 @@ class Course extends \Tk\Db\Map\Model
     }
 
     /**
-     * 
+     *
      * @param $user
      * @return mixed
      */
     public function isUserEnrolled($user)
     {
-        return self::getMapper()->inCourse($this->id, $user->id);
+        return CourseMap::create()->hasUser($this->id, $user->id);
     }
 
     /**
      * Enroll a user in this course
-     * 
+     *
      * @param $user
      * @return $this
      */
     public function enrollUser($user)
     {
         if (!$this->isUserEnrolled($user)) {
-            self::getMapper()->addUserCourse($this->id, $user->id);
+            CourseMap::create()->addUser($this->id, $user->id);
         }
         return $this;
     }

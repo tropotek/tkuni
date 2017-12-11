@@ -184,41 +184,43 @@ class CourseMap extends Mapper
      */
     public function hasUser($courseId, $userId)
     {
-        $sql = sprintf('SELECT * FROM course_has_user WHERE course_id = %d AND user_id = %d', (int)$courseId, (int)$userId);
-        return ($this->getDb()->query($sql)->rowCount() > 0);
+        $stm = $this->getDb()->prepare('SELECT * FROM course_has_user WHERE course_id = ? AND user_id = ?');
+        $stm->execute(array($courseId, $userId));
+        return ($stm->rowCount() > 0);
     }
 
     /**
      * @param int $courseId
      * @param int $userId
-     * @return \Tk\Db\PDOStatement
-     */
-    public function removeUser($courseId, $userId)
-    {
-        $query = sprintf('DELETE FROM course_has_user WHERE user_id = %d AND course_id = %d', (int)$userId, (int)$courseId);
-        return $this->getDb()->exec($query);
-    }
-
-    /**
-     * @param int $courseId
-     * @param int $userId
-     * @return \Tk\Db\PDOStatement
      */
     public function addUser($courseId, $userId)
     {
         if ($this->hasUser($courseId, $userId)) return;
-        $query = sprintf('INSERT INTO course_has_user (user_id, course_id)  VALUES (%d, %d) ', (int)$userId, (int)$courseId);
-        return $this->getDb()->exec($query);
+        $stm = $this->getDb()->prepare('INSERT INTO course_has_user (user_id, course_id)  VALUES (?, ?)');
+        $stm->execute(array($courseId, $userId));
     }
 
     /**
+     * depending on the combination of parameters:
+     *  o remove a user from a course
+     *  o remove all users from a course
+     *  o remove all courses from a user
+     *
      * @param int $courseId
-     * @return \Tk\Db\PDOStatement
+     * @param int $userId
      */
-    public function removeAllUsers($courseId)
+    public function removeUser($courseId = null, $userId = null)
     {
-        $query = sprintf('DELETE FROM course_has_user WHERE course_id = %d ', (int)$courseId);
-        return $this->getDb()->exec($query);
+        if ($courseId && $userId) {
+            $stm = $this->getDb()->prepare('DELETE FROM course_has_user WHERE user_id = ? AND course_id = ?');
+            $stm->execute(array($courseId, $userId));
+        } else if(!$courseId && $userId) {
+            $stm = $this->getDb()->prepare('DELETE FROM course_has_user WHERE user_id = ?');
+            $stm->execute(array($userId));
+        } else if ($courseId && !$userId) {
+            $stm = $this->getDb()->prepare('DELETE FROM course_has_user WHERE course_id = ?');
+            $stm->execute(array($courseId));
+        }
     }
 
 
@@ -255,24 +257,42 @@ class CourseMap extends Mapper
      */
     public function findPreEnrollments($courseId, $tool = null)
     {
-        $sql = sprintf('SELECT a.course_id, a.email, a.uid, b.id as \'user_id\', IF(c.course_id IS NULL, 0, 1) as enrolled
-FROM  %s a 
-  LEFT JOIN  %s b ON (b.email = a.email)  
-  LEFT JOIN %s c ON (b.id = c.user_id AND c.course_id = %d)
-WHERE a.course_id = %d',
-            $this->quoteTable('course_pre_enrollment'), $this->quoteTable('user'), $this->quoteTable('course_has_user'),
-            (int)$courseId, (int)$courseId);
-
         $toolStr = '';
         if ($tool) {
             $tool->setLimit(0);
             $toolStr = ' '.$tool->toSql('', $this->getDb());
         }
-        $sql .= $toolStr;
 
-        $res = $this->getDb()->query($sql);
-        $arr = $res->fetchAll();
+        $stm = $this->getDb()->prepare('SELECT a.course_id, a.email, a.uid, b.id as \'user_id\', IF(c.course_id IS NULL, 0, 1) as enrolled
+FROM  course_pre_enrollment a 
+  LEFT JOIN  user b ON (b.email = a.email)  
+  LEFT JOIN course_has_user c ON (b.id = c.user_id AND c.course_id = ?)
+WHERE a.course_id = ? ' . $toolStr);
+        $stm->execute(array($courseId, $courseId));
+
+        $arr = $stm->fetchAll();
         return $arr;
+
+
+
+//        $sql = sprintf('SELECT a.course_id, a.email, a.uid, b.id as \'user_id\', IF(c.course_id IS NULL, 0, 1) as enrolled
+//FROM  %s a
+//  LEFT JOIN  %s b ON (b.email = a.email)
+//  LEFT JOIN %s c ON (b.id = c.user_id AND c.course_id = %d)
+//WHERE a.course_id = %d',
+//            $this->quoteTable('course_pre_enrollment'), $this->quoteTable('user'), $this->quoteTable('course_has_user'),
+//            (int)$courseId, (int)$courseId);
+//
+//        $toolStr = '';
+//        if ($tool) {
+//            $tool->setLimit(0);
+//            $toolStr = ' '.$tool->toSql('', $this->getDb());
+//        }
+//        $sql .= $toolStr;
+//
+//        $res = $this->getDb()->query($sql);
+//        $arr = $res->fetchAll();
+//        return $arr;
     }
 
     /**
@@ -284,11 +304,15 @@ WHERE a.course_id = %d',
      */
     public function findAllPreEnrollments($courseId)
     {
-        $sql = sprintf('SELECT * FROM %s a LEFT JOIN %s b ON (a.email = b.email) WHERE b.course_id = %d',
-            $this->quoteTable('user'), $this->quoteTable('course_pre_enrollment'), (int)$courseId);
-        $res = $this->getDb()->query($sql);
-        $arr = $res->fetchAll();
-        return $arr;
+        $stm = $this->getDb()->prepare('SELECT * FROM user a LEFT JOIN course_pre_enrollment b ON (a.email = b.email) WHERE b.course_id = ?');
+        $stm->execute(array($courseId));
+        return $stm->fetchAll();
+
+//        $sql = sprintf('SELECT * FROM %s a LEFT JOIN %s b ON (a.email = b.email) WHERE b.course_id = %d',
+//            $this->quoteTable('user'), $this->quoteTable('course_pre_enrollment'), (int)$courseId);
+//        $res = $this->getDb()->query($sql);
+//        $arr = $res->fetchAll();
+//        return $arr;
     }
 
     /**
@@ -298,9 +322,13 @@ WHERE a.course_id = %d',
      */
     public function hasPreEnrollment($courseId, $email)
     {
-        $sql = sprintf('SELECT * FROM %s WHERE course_id = %d AND email = %s',
-            $this->quoteTable('course_pre_enrollment'), (int)$courseId, $this->quote($email));
-        return ($this->getDb()->query($sql)->rowCount() > 0);
+        $stm = $this->getDb()->prepare('SELECT * FROM course_pre_enrollment WHERE course_id = ? AND email = ?');
+        $stm->execute(array($courseId, $email));
+        return ($stm->rowCount() > 0);
+
+//        $sql = sprintf('SELECT * FROM %s WHERE course_id = %d AND email = %s',
+//            $this->quoteTable('course_pre_enrollment'), (int)$courseId, $this->quote($email));
+//        return ($this->getDb()->query($sql)->rowCount() > 0);
     }
 
     /**
@@ -311,9 +339,12 @@ WHERE a.course_id = %d',
     public function addPreEnrollment($courseId, $email, $uid = '')
     {
         if (!$this->hasPreEnrollment($courseId, $email)) {
-            $query = sprintf('INSERT INTO %s (course_id, email, uid)  VALUES (%d, %s, %s) ',
-                $this->quoteTable('course_pre_enrollment'), (int)$courseId, $this->quote($email), $this->quote($uid));
-            $this->getDb()->exec($query);
+            $stm = $this->getDb()->prepare('INSERT INTO course_pre_enrollment (course_id, email, uid)  VALUES (?, ?, ?)');
+            $stm->execute(array($courseId, $email, $uid));
+
+//            $query = sprintf('INSERT INTO %s (course_id, email, uid)  VALUES (%d, %s, %s) ',
+//                $this->quoteTable('course_pre_enrollment'), (int)$courseId, $this->quote($email), $this->quote($uid));
+//            $this->getDb()->exec($query);
         }
         // Do not add the user to the course_has_user table as this will be added automatically the next time the user logs in
         // This part should be implemented in a auth.onLogin listener
@@ -326,9 +357,12 @@ WHERE a.course_id = %d',
     public function removePreEnrollment($courseId, $email)
     {
         if ($this->hasPreEnrollment($courseId, $email)) {
-            $query = sprintf('DELETE FROM %s WHERE course_id = %d AND email = %s',
-                $this->quoteTable('course_pre_enrollment'), (int)$courseId, $this->quote($email));
-            $this->getDb()->exec($query);
+            $stm = $this->getDb()->prepare('DELETE FROM course_pre_enrollment WHERE course_id = ? AND email = ?');
+            $stm->execute(array($courseId, $email));
+
+//            $query = sprintf('DELETE FROM %s WHERE course_id = %d AND email = %s',
+//                $this->quoteTable('course_pre_enrollment'), (int)$courseId, $this->quote($email));
+//            $this->getDb()->exec($query);
         }
     }
 

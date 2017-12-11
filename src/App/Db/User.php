@@ -2,7 +2,6 @@
 namespace App\Db;
 
 use Tk\Auth\Exception;
-use App\Auth\Acl;
 use Tk\Db\Data;
 
 
