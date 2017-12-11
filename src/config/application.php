@@ -27,13 +27,14 @@ $config['google.recaptcha.privateKey'] = '6Ldg2wsUAAAAANCLllmQfCg5jSWUbJD6rSjEmt
  * Template folders for pages
  */
 $config['system.template.path'] = '/html';
+
 $config['template.admin'] = $config['system.template.path'].'/default/admin.xtpl';
 $config['template.staff'] = $config['system.template.path'].'/default/staff.xtpl';
 $config['template.student'] = $config['system.template.path'].'/default/student.xtpl';
 $config['template.public'] = $config['system.template.path'].'/default/public.xtpl';
 
 // Path for renderer custom templates
-$config['template.xtpl.path'] = $config['template.admin.path'] . '/xtpl';
+$config['template.xtpl.path'] = $config['system.template.path'] . '/default/xtpl';
 
 /*
  * Change the system timezone
