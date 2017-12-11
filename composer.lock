@@ -396,12 +396,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tropotek/ems-ldap.git",
-                "reference": "102e575ad10d528790375d773d0fd5c526a52392"
+                "reference": "40ac6b1f55328fb6e137133ffa1e4d116f3ac54d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tropotek/ems-ldap/zipball/102e575ad10d528790375d773d0fd5c526a52392",
-                "reference": "102e575ad10d528790375d773d0fd5c526a52392",
+                "url": "https://api.github.com/repos/tropotek/ems-ldap/zipball/40ac6b1f55328fb6e137133ffa1e4d116f3ac54d",
+                "reference": "40ac6b1f55328fb6e137133ffa1e4d116f3ac54d",
                 "shasum": ""
             },
             "require": {
@@ -436,7 +436,7 @@
                 "plugin",
                 "tropotek"
             ],
-            "time": "2017-11-22T23:07:48+00:00"
+            "time": "2017-11-23T03:17:18+00:00"
         },
         {
             "name": "ttek-plg/ems-lti",
@@ -444,12 +444,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tropotek/ems-lti.git",
-                "reference": "1ef0376c8c316c1dfd38fd19a3b045d5a3b7eb27"
+                "reference": "36c042bee6cfc84ff6bb6756fcc2b91504d14a69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tropotek/ems-lti/zipball/1ef0376c8c316c1dfd38fd19a3b045d5a3b7eb27",
-                "reference": "1ef0376c8c316c1dfd38fd19a3b045d5a3b7eb27",
+                "url": "https://api.github.com/repos/tropotek/ems-lti/zipball/36c042bee6cfc84ff6bb6756fcc2b91504d14a69",
+                "reference": "36c042bee6cfc84ff6bb6756fcc2b91504d14a69",
                 "shasum": ""
             },
             "require": {
@@ -485,7 +485,7 @@
                 "plugin",
                 "tropotek"
             ],
-            "time": "2017-11-22T23:07:42+00:00"
+            "time": "2017-11-23T03:17:11+00:00"
         },
         {
             "name": "ttek/tk-auth",
