@@ -307,12 +307,6 @@ WHERE a.course_id = ? ' . $toolStr);
         $stm = $this->getDb()->prepare('SELECT * FROM user a LEFT JOIN course_pre_enrollment b ON (a.email = b.email) WHERE b.course_id = ?');
         $stm->execute(array($courseId));
         return $stm->fetchAll();
-
-//        $sql = sprintf('SELECT * FROM %s a LEFT JOIN %s b ON (a.email = b.email) WHERE b.course_id = %d',
-//            $this->quoteTable('user'), $this->quoteTable('course_pre_enrollment'), (int)$courseId);
-//        $res = $this->getDb()->query($sql);
-//        $arr = $res->fetchAll();
-//        return $arr;
     }
 
     /**
@@ -325,10 +319,6 @@ WHERE a.course_id = ? ' . $toolStr);
         $stm = $this->getDb()->prepare('SELECT * FROM course_pre_enrollment WHERE course_id = ? AND email = ?');
         $stm->execute(array($courseId, $email));
         return ($stm->rowCount() > 0);
-
-//        $sql = sprintf('SELECT * FROM %s WHERE course_id = %d AND email = %s',
-//            $this->quoteTable('course_pre_enrollment'), (int)$courseId, $this->quote($email));
-//        return ($this->getDb()->query($sql)->rowCount() > 0);
     }
 
     /**
@@ -341,10 +331,6 @@ WHERE a.course_id = ? ' . $toolStr);
         if (!$this->hasPreEnrollment($courseId, $email)) {
             $stm = $this->getDb()->prepare('INSERT INTO course_pre_enrollment (course_id, email, uid)  VALUES (?, ?, ?)');
             $stm->execute(array($courseId, $email, $uid));
-
-//            $query = sprintf('INSERT INTO %s (course_id, email, uid)  VALUES (%d, %s, %s) ',
-//                $this->quoteTable('course_pre_enrollment'), (int)$courseId, $this->quote($email), $this->quote($uid));
-//            $this->getDb()->exec($query);
         }
         // Do not add the user to the course_has_user table as this will be added automatically the next time the user logs in
         // This part should be implemented in a auth.onLogin listener
@@ -359,10 +345,6 @@ WHERE a.course_id = ? ' . $toolStr);
         if ($this->hasPreEnrollment($courseId, $email)) {
             $stm = $this->getDb()->prepare('DELETE FROM course_pre_enrollment WHERE course_id = ? AND email = ?');
             $stm->execute(array($courseId, $email));
-
-//            $query = sprintf('DELETE FROM %s WHERE course_id = %d AND email = %s',
-//                $this->quoteTable('course_pre_enrollment'), (int)$courseId, $this->quote($email));
-//            $this->getDb()->exec($query);
         }
     }
 

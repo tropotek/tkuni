@@ -89,11 +89,18 @@ class PluginApi
                 $course = new \App\Db\Course();
                 \App\Db\CourseMap::create()->mapForm($params, $course);
                 $course->save();
-                /** @var \App\Db\User $user */
-                $user = $params['user'];
-                \App\Db\CourseMap::create()->addUser($course->id, $user->id);
+                $this->addUserToCourse($course, $params['user']);
         }
         return $course;
+    }
+
+    /**
+     * @param \App\Db\Course $course
+     * @param \app\Db\User $user
+     */
+    public function addUserToCourse($course, $user)
+    {
+        \App\Db\CourseMap::create()->addUser($course->getId(), $user->getId());
     }
 
     /**
@@ -118,6 +125,7 @@ class PluginApi
      * @param \App\Db\User $user
      * @param \App\Db\Course $course
      * @return \Tk\Uri
+     * @throws \Exception
      */
     public function getLtiHome($user, $course)
     {
