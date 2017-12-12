@@ -189,8 +189,8 @@ class Edit extends \App\Controller\AdminIface
             }
             $this->getActionPanel()->addButton(\Tk\Ui\Button::create('Plugins',
                 \App\Uri::createHomeUrl('/institution/'.$this->institution->getId().'/plugins.html'), 'fa fa-plug'));
-            $this->getActionPanel()->addButton(\Tk\Ui\Button::create('Skills Setup',
-                \App\Uri::createHomeUrl('/skillSetup.html')->set('institutionId', $this->institution->id), 'fa fa-medkit'));
+
+            
 
         } else {
             $template->addCss('editPanel', 'col-md-12');
