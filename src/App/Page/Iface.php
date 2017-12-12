@@ -10,12 +10,10 @@ abstract class Iface extends \Tk\Controller\Page
 {
 
 
-
     /**
      * Set the page heading, should be set from main controller
      *
      * @return \Dom\Template
-     * @throws \Dom\Exception
      */
     public function show()
     {
@@ -24,7 +22,7 @@ abstract class Iface extends \Tk\Controller\Page
         if ($this->getUser()) {
             $template->insertText('username', $this->getUser()->getDisplayName());
             $template->setAttr('dashUrl', 'href', \App\Uri::createHomeUrl('/index.html'));
-            
+
             $template->setChoice('logout');
         } else {
             $template->setChoice('login');
@@ -34,6 +32,7 @@ abstract class Iface extends \Tk\Controller\Page
             $template->insertTemplate('alerts', \Tk\AlertCollection::getInstance()->show());
             $template->setChoice('alerts');
         }
+
 
         return $template;
     }

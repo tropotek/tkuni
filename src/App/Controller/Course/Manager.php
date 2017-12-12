@@ -4,7 +4,7 @@ namespace App\Controller\Course;
 use Dom\Template;
 use Tk\Form\Field;
 use Tk\Request;
-use App\Controller\Iface;
+
 
 /**
  *
@@ -13,7 +13,7 @@ use App\Controller\Iface;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Manager extends Iface
+class Manager extends \App\Controller\AdminIface
 {
 
     /**
@@ -32,13 +32,12 @@ class Manager extends Iface
      */
     public function __construct()
     {
-
+        parent::__construct();
     }
 
     /**
      *
      * @param Request $request
-     * @throws \Tk\Exception
      */
     public function doDefault(Request $request)
     {
@@ -88,9 +87,10 @@ class Manager extends Iface
     {
         $template = parent::show();
 
-        $template->setAttr('new', 'href', \App\Uri::createHomeUrl('/courseEdit.html'));
-
         $template->replaceTemplate('table', $this->table->getRenderer()->show());
+
+        $this->getActionPanel()->addButton(\Tk\Ui\Button::create('New Course', \App\Uri::createHomeUrl('/courseEdit.html'), 'fa fa-graduation-cap'));
+
         return $template;
     }
 
@@ -106,20 +106,7 @@ class Manager extends Iface
 <div class="">
 
   <div class="panel panel-default">
-    <div class="panel-heading">
-      <i class="fa fa-cogs fa-fw"></i> Actions
-    </div>
-    <div class="panel-body">
-      <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i>
-        <span>Back</span></a>
-      <a href="/client/courseEdit.html" class="btn btn-default" var="new"><i class="fa fa-graduation-cap"></i> <span>New Course</span></a>
-    </div>
-  </div>
-
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <i class="fa fa-graduation-cap fa-fw"></i> Course
-    </div>
+    <div class="panel-heading"><i class="fa fa-graduation-cap fa-fw"></i> Course</div>
     <div class="panel-body">
       <div var="table"></div>
     </div>

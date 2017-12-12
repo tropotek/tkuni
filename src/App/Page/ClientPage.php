@@ -15,9 +15,7 @@ class ClientPage extends Iface
     public function show()
     {
         $template = parent::show();
-
         $template->replaceTemplate('nav', \App\Ui\Menu\ClientMenu::create()->show());
-
         return $template;
     }
     

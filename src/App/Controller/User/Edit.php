@@ -6,16 +6,13 @@ use Dom\Template;
 use Tk\Form;
 use Tk\Form\Field;
 use Tk\Form\Event;
-use App\Controller\Iface;
 
 /**
- *
- *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Edit extends Iface
+class Edit extends \App\Controller\AdminIface
 {
 
     /**
@@ -33,8 +30,20 @@ class Edit extends Iface
      */
     private $institution = null;
 
-    
+    /**
+     * @var null|\Tk\Uri
+     */
+    protected $url = null;
 
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * setPageHeading
+     */
     public function setPageHeading()
     {
         switch($this->getUser()->role) {
@@ -62,7 +71,7 @@ class Edit extends Iface
 
         $this->user = new \App\Db\User();
         $this->user->role = $this->getUser()->role;
-        if ($this->user->hasRole(\App\Db\User::ROLE_CLIENT)) {
+        if ($this->user->isClient()) {
             $this->user->role = \App\Db\User::ROLE_STAFF;
         }
 
@@ -76,32 +85,52 @@ class Edit extends Iface
             }
         }
 
+        if (!$this->url)
+            $this->url = \App\Uri::createHomeUrl('/userManager.html');
+
         $this->form = \App\Factory::createForm('userEdit');
         $this->form->setRenderer(\App\Factory::createFormRenderer($this->form));
 
-        $this->form->addField(new Field\Input('name'))->setRequired(true)->setTabGroup('Details');
-        $this->form->addField(new Field\Input('username'))->setRequired(true)->setTabGroup('Details');
-        $this->form->addField(new Field\Input('email'))->setRequired(true)->setTabGroup('Details');
+        if (!$this->getuser()->isStudent()) {
+            $this->form->addField(new Field\Input('name'))->setTabGroup('Details')->setRequired(true);
+        } else {
+            $this->form->addField(new Field\Html('name'))->setTabGroup('Details')->setRequired(true);
+        }
+        $this->form->addField(new Field\Input('displayName'))->setTabGroup('Details')->setRequired(true);
+        if ($this->getUser()->isAdmin() || $this->getUser()->isClient()) {
+            $this->form->addField(new Field\Input('username'))->setTabGroup('Details')->setRequired(true);
+            $this->form->addField(new Field\Input('email'))->setTabGroup('Details')->setRequired(true);
+        } else {
+            $this->form->addField(new Field\Html('username'))->setTabGroup('Details');
+            $this->form->addField(new Field\Html('email'))->setTabGroup('Details');
+        }
         if ($this->user->hasRole(array(\App\Db\User::ROLE_STAFF, \App\Db\User::ROLE_STUDENT))) {
             $this->form->addField(new Field\Input('uid'))->setLabel('UID')->setTabGroup('Details')->setNotes('The student or staff number assigned by the institution.');
         }
-        if ($this->getUser()->hasRole(array(\App\Db\User::ROLE_STAFF, \App\Db\User::ROLE_CLIENT))) {
-            $list = array('-- Select --' => '', 'Staff' => \App\Db\User::ROLE_STAFF, 'Student' => \App\Db\User::ROLE_STUDENT);
-            $this->form->addField(new Field\Select('role', $list))->setNotes('Select the access level for this user')->setTabGroup('Details')->setRequired(true);
+        if ($this->getUser()->isAdmin()) {
+            if ($this->getUser()->hasRole(array(\App\Db\User::ROLE_STAFF, \App\Db\User::ROLE_CLIENT))) {
+                $list = array('-- Select --' => '', 'Staff' => \App\Db\User::ROLE_STAFF, 'Student' => \App\Db\User::ROLE_STUDENT);
+                $this->form->addField(new Field\Select('role', $list))->setNotes('Select the access level for this user')->setRequired(true)->setTabGroup('Details');
+            }
         }
-        $this->form->addField(new Field\Checkbox('active'))->setTabGroup('Details');
+        if (!$this->getuser()->isStudent()) {
+            $this->form->addField(new Field\Checkbox('active'))->setTabGroup('Details');
+        }
 
-        $this->form->setAttr('autocomplete', 'off');
-        $f = $this->form->addField(new Field\Password('newPassword'))->setAttr('placeholder', 'Click to edit')->
+        if ($this->getUser()->isAdmin()) {
+            $this->form->setAttr('autocomplete', 'off');
+            $f = $this->form->addField(new Field\Password('newPassword'))->setAttr('placeholder', 'Click to edit')->
             setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setTabGroup('Password');
-        if (!$this->user->getId())
-            $f->setRequired(true);
-        $f = $this->form->addField(new Field\Password('confPassword'))->setAttr('placeholder', 'Click to edit')->
+            if (!$this->user->getId())
+                $f->setRequired(true);
+            $f = $this->form->addField(new Field\Password('confPassword'))->setAttr('placeholder', 'Click to edit')->
             setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setNotes('Change this users password.')->setTabGroup('Password');
-        if (!$this->user->getId())
-            $f->setRequired(true);
+            if (!$this->user->getId())
+                $f->setRequired(true);
+        }
 
-        if ($this->user->id && ($this->getUser()->hasRole(\App\Db\User::ROLE_STAFF) || $this->getUser()->hasRole(\App\Db\User::ROLE_CLIENT)) ) {
+        //if ($this->user->id && $this->getUser()->isClient() ) {
+        if ($this->user->id && ($this->getUser()->isStaff() || $this->getUser()->isClient()) ) {
             $list = \Tk\Form\Field\Option\ArrayObjectIterator::create(\App\Db\CourseMap::create()->findActive($this->institution->id));
             $this->form->addField(new Field\Select('selCourse[]', $list))->setLabel('Course Selection')->setNotes('This list only shows active and enrolled courses. Use the enrollment form in the edit course page if your course is not visible.')->
                 setTabGroup('Courses')->addCss('tk-dualSelect')->setAttr('data-title', 'Courses');
@@ -112,8 +141,7 @@ class Edit extends Iface
         $this->form->addField(new Event\Submit('update', array($this, 'doSubmit')));
         $this->form->addField(new Event\Submit('save', array($this, 'doSubmit')));
 
-        $url = \App\Uri::createHomeUrl('/userManager.html');
-        $this->form->addField(new Event\Link('cancel', $url));
+        $this->form->addField(new Event\Link('cancel', $this->url));
         
         $this->form->load(\App\Db\UserMap::create()->unmapForm($this->user));
         
@@ -147,7 +175,6 @@ class Edit extends Iface
 
         $form->addFieldErrors($this->user->validate());
 
-
         if ($form->hasErrors()) {
             return;
         }
@@ -161,9 +188,9 @@ class Edit extends Iface
             $this->user->institutionId = $this->institution->id;
 
             // TODO: Add the ability to assign a staff member to courses.
-            if ($this->user->id) {
+            $selected = $form->getFieldValue('selCourse');
+            if ($this->user->id && is_array($selected)) {
                 $list = \App\Db\CourseMap::create()->findActive($this->institution->id);
-                $selected = $form->getFieldValue('selCourse');
                 /** @var \App\Db\Course $course */
                 foreach ($list as $course) {
                     if (in_array($course->id, $selected)) {
@@ -178,7 +205,7 @@ class Edit extends Iface
 
         \Tk\Alert::addSuccess('User record saved!');
         if ($form->getTriggeredEvent()->getName() == 'update') {
-            \App\Uri::createHomeUrl('/userManager.html')->redirect();
+            $this->url->redirect();
         }
         \Tk\Uri::create()->set('userId', $this->user->id)->redirect();
     }
@@ -189,6 +216,9 @@ class Edit extends Iface
     public function show()
     {
         $template = parent::show();
+
+        // Render the form
+        $template->insertTemplate('form', $this->form->getRenderer()->show());
         
         if ($this->user->id) {
             $template->insertText('username', $this->user->name . ' - [UID ' . $this->user->id . ']');
@@ -198,15 +228,10 @@ class Edit extends Iface
             $template->setChoice('new');
         }
 
-        // Render the form
-        $template->insertTemplate('form', $this->form->getRenderer()->show());
-
-        //if ($this->user->id && $this->user->id != $this->getUser()->id) {
-        if ($this->user->id) {
-            $template->setAttr('msq', 'href', \App\Uri::create()->reset()->set(\App\Listener\MasqueradeHandler::MSQ, $this->user->hash));
-            $template->setChoice('msq');
+        if (\App\Listener\MasqueradeHandler::canMasqueradeAs($this->getUser(), $this->user)) {
+            $this->getActionPanel()->addButton(\Tk\Ui\Button::create('Masquerade',
+                \App\Uri::create()->reset()->set(\App\Listener\MasqueradeHandler::MSQ, $this->user->hash), 'fa fa-user-secret'))->addCss('tk-masquerade');
         }
-
         return $template;
     }
 
@@ -223,20 +248,7 @@ class Edit extends Iface
 <div class="">
 
   <div class="panel panel-default">
-    <div class="panel-heading">
-      <i class="fa fa-cogs fa-fw"></i> Actions
-    </div>
-    <div class="panel-body">
-      <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i>
-        <span>Back</span></a>
-      <a href="javascript:;" class="btn btn-default" choice="msq" var="msq"><i class="fa fa-user-secret"></i> <span>Masquerade</span></a>
-    </div>
-  </div>
-
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <i class="fa fa-user fa-fw"></i> <span var="username"></span>
-    </div>
+    <div class="panel-heading"><i class="fa fa-user fa-fw"></i> <span var="username"></span></div>
     <div class="panel-body">
       <div var="form"></div>
     </div>

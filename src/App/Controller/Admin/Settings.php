@@ -5,16 +5,13 @@ use Tk\Request;
 use Tk\Form;
 use Tk\Form\Event;
 use Tk\Form\Field;
-use App\Controller\Iface;
 
 /**
- * Class Contact
- *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Settings extends Iface
+class Settings extends \App\Controller\AdminIface
 {
 
     /**
@@ -32,6 +29,7 @@ class Settings extends Iface
      * doDefault
      *
      * @param Request $request
+     * @throws \Tk\Exception
      */
     public function doDefault(Request $request)
     {
@@ -97,6 +95,8 @@ class Settings extends Iface
         // Render the form
         $template->insertTemplate('form', $this->form->getRenderer()->show());
 
+        $this->getActionPanel()->addButton(\Tk\Ui\Button::create('Site Plugins', \App\Uri::createHomeUrl('/plugins.html'), 'fa fa-plug'));
+
         return $template;
     }
 
@@ -109,18 +109,6 @@ class Settings extends Iface
     {
         $xhtml = <<<HTML
 <div>
-
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <i class="fa fa-cogs fa-fw"></i> Actions
-    </div>
-    <div class="panel-body">
-      <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i>
-        <span>Back</span></a>
-      <a href="/admin/plugins.html" class="btn btn-default"><i class="fa fa-plug"></i> <span>Plugins</span></a>
-      <a href="/admin/userManager.html" class="btn btn-default"><i class="fa fa-users"></i> <span>Users</span></a>
-    </div>
-  </div>
 
   <div class="panel panel-default">
     <div class="panel-heading">

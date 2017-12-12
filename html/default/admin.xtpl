@@ -81,6 +81,7 @@
     <div class="row" choice="pageHeading">
       <div class="col-lg-12">
         <h1 class="page-header" var="pageHeading">Dashboard</h1>
+        <ol class="breadcrumb" var="breadcrumb" choice="breadcrumb"></ol>
       </div>
     </div>
 

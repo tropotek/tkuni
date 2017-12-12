@@ -4,8 +4,6 @@ namespace App;
 use Tk\Db\Pdo;
 
 /**
- * Class Factory
- *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
@@ -17,6 +15,48 @@ class Factory
      */
     static $config = null;
 
+
+    /**
+     * getFrontController
+     *
+     * @return \App\FrontController
+     */
+    public static function getFrontController()
+    {
+        if (!self::getConfig()->getFrontController()) {
+            $obj = new \App\FrontController(self::getEventDispatcher(), self::getControllerResolver(), self::getConfig());
+            self::getConfig()->setFrontController($obj);
+        }
+        return self::getConfig()->getFrontController();
+    }
+
+    /**
+     * getControllerResolver
+     *
+     * @return \Tk\Controller\Resolver
+     */
+    public static function getControllerResolver()
+    {
+        if (!self::getConfig()->getControllerResolver()) {
+            $obj = new \Tk\Controller\PageResolver(self::getConfig()->getLog());
+            self::getConfig()->setControllerResolver($obj);
+        }
+        return self::getConfig()->getControllerResolver();
+    }
+
+    /**
+     * getEventDispatcher
+     *
+     * @return \Tk\Event\Dispatcher
+     */
+    public static function getEventDispatcher()
+    {
+        if (!self::getConfig()->getEventDispatcher()) {
+            $obj = new \Tk\Event\Dispatcher(self::getConfig()->getLog());
+            self::getConfig()->setEventDispatcher($obj);
+        }
+        return self::getConfig()->getEventDispatcher();
+    }
 
     /**
      * getConfig
@@ -32,21 +72,6 @@ class Factory
             include(self::$config->getSrcPath() . '/config/application.php');
         }
         return self::$config;
-    }
-
-    /**
-     * Get the Institution object for the logged in user
-     *
-     * @return \App\Db\Institution
-     * @throws \Tk\Exception
-     */
-    public static function getInstitution()
-    {
-        if (!self::getConfig()->getInsitution() && self::getConfig()->getUser()) {
-            $obj = self::getConfig()->getUser()->getInstitution();
-            self::getConfig()->setInsitution($obj);
-        }
-        return self::getConfig()->getInsitution();
     }
 
     /**
@@ -109,15 +134,6 @@ class Factory
     }
 
     /**
-     * @return \App\Db\User
-     */
-    public static function getUser()
-    {
-        return self::getConfig()->getUser();
-    }
-    
-    
-    /**
      * getPluginFactory
      *
      * @return \Tk\Plugin\Factory
@@ -131,27 +147,12 @@ class Factory
     }
 
     /**
-     * getEmailGateway
-     *
-     * @return \Tk\Mail\Gateway
-     */
-    public static function getEmailGateway()
-    {
-        if (!self::getConfig()->getEmailGateway()) {
-            $gateway = new \Tk\Mail\Gateway(self::getConfig());
-            $gateway->setDispatcher(self::getEventDispatcher());
-            self::getConfig()->setEmailGateway($gateway);
-        }
-        return self::getConfig()->getEmailGateway();
-    }
-    
-    /**
      * getDb
      * Ways to get the db after calling this method
      *
-     *  - \App\Factory::getDb()                 // Application level call
-     *  - \Tk\Config::getInstance()->getDb()    //
-     *  - \Tk\Db\Pdo::getInstance()             //
+     *  - \App\Factory::getDb()                    // Application level call
+     *  - \Tk\Config::getInstance()->getDb()       //
+     *  - \Tk\Db\Pdo::getInstance()                //
      *
      * Note: If you are creating a base lib then the DB really should be sent in via a param or method.
      *
@@ -173,10 +174,10 @@ class Factory
         }
         return self::getConfig()->getDb();
     }
-    
+
     /**
      * get a dom Modifier object
-     * 
+     *
      * @return \Dom\Modifier\Modifier
      */
     public static function getDomModifier()
@@ -191,7 +192,7 @@ class Factory
                 array('siteUrl' => $config->getSiteUrl(), 'dataUrl' => $config->getDataUrl(), 'templateUrl' => $config->getTemplateUrl())));
             $less->setCompress(true);
             //$less->setCompress(!$config->isDebug());
-            
+
             if (self::getConfig()->isDebug()) {
                 $dm->add(self::getDomFilterPageBytes());
             }
@@ -214,11 +215,11 @@ class Factory
 
     /**
      * getDomLoader
-     * 
+     *
      * @return \Dom\Loader
      */
     public static function getDomLoader()
-    {   
+    {
         if (!self::getConfig()->getDomLoader()) {
             $dl = \Dom\Loader::getInstance()->setParams(self::getConfig()->all());
             $dl->addAdapter(new \Dom\Loader\Adapter\DefaultLoader());
@@ -231,49 +232,6 @@ class Factory
     }
 
     /**
-     * getFrontController
-     *
-     * @return \App\FrontController
-     */
-    public static function getFrontController()
-    {
-        if (!self::getConfig()->getFrontController()) {
-            $obj = new \App\FrontController(self::getEventDispatcher(), self::getControllerResolver(), self::getConfig());
-            self::getConfig()->setFrontController($obj);
-        }
-        return self::getConfig()->getFrontController();
-    }
-
-
-    /**
-     * getEventDispatcher
-     *
-     * @return \Tk\Event\Dispatcher
-     */
-    public static function getEventDispatcher()
-    {
-        if (!self::getConfig()->getEventDispatcher()) {
-            $obj = new \Tk\Event\Dispatcher(self::getConfig()->getLog());
-            self::getConfig()->setEventDispatcher($obj);
-        }
-        return self::getConfig()->getEventDispatcher();
-    }
-
-    /**
-     * getControllerResolver
-     *
-     * @return \Tk\Controller\Resolver
-     */
-    public static function getControllerResolver()
-    {
-        if (!self::getConfig()->getControllerResolver()) {
-            $obj = new \Tk\Controller\Resolver(self::getConfig()->getLog());
-            self::getConfig()->setControllerResolver($obj);
-        }
-        return self::getConfig()->getControllerResolver();
-    }
-
-    /**
      * @return PluginApi
      */
     public static function getPluginApi()
@@ -283,8 +241,7 @@ class Factory
         }
         return self::getConfig()->getPluginApi();
     }
-    
-    
+
     /**
      * getAuth
      *
@@ -364,6 +321,29 @@ class Factory
     }
 
     /**
+     * @return \App\Db\User
+     */
+    public static function getUser()
+    {
+        return self::getConfig()->getUser();
+    }
+
+    /**
+     * Get the Institution object for the logged in user
+     *
+     * @return \App\Db\Institution
+     * @throws \Tk\Exception
+     */
+    public static function getInstitution()
+    {
+        if (!self::getConfig()->getInsitution() && self::getConfig()->getUser()) {
+            $obj = self::getConfig()->getUser()->getInstitution();
+            self::getConfig()->setInsitution($obj);
+        }
+        return self::getConfig()->getInsitution();
+    }
+
+    /**
      * @param string $formId
      * @param string $method
      * @param string|null $action
@@ -410,7 +390,84 @@ class Factory
         $obj = \Tk\Table\Renderer\Dom\Table::create($table);
         return $obj;
     }
-    
+
+    /**
+     * @param string $title
+     * @param string $icon
+     * @param bool $withBack
+     * @return \Tk\Ui\Admin\ActionPanel
+     */
+    public static function createActionPanel($title = 'Actions', $icon = 'fa fa-cogs', $withBack = true)
+    {
+        $ap = \Tk\Ui\Admin\ActionPanel::create($title, $icon);
+        if ($withBack) {
+            $ap->addButton(\Tk\Ui\Button::create('Back', 'javascript: window.history.back();', 'fa fa-arrow-left'))
+                ->addCss('btn-default btn-once back');
+        }
+        return $ap;
+    }
+
+    /**
+     * getCrumbs
+     *
+     * @return \App\Ui\Crumbs|null
+     */
+    public static function getCrumbs()
+    {
+        if (!self::getConfig()->getCrumbs()) {
+            $user = self::getUser();
+            if (!$user) return null;
+            $session = self::getSession();
+            $sid = 'crumbs.'.$user->getId();
+
+            $crumbs = \App\Ui\Crumbs::create();
+            if ($session->has($sid)) {
+                $crumbs = \App\Ui\Crumbs::createFromArray($session->get($sid));
+            }
+            if (!count($crumbs->getList())) {
+                $crumbs->addCrumb('Dashboard', $user->getHomeUrl());
+            }
+            self::getConfig()->setCrumbs($crumbs);
+        }
+        return self::getConfig()->getCrumbs();
+    }
+
+    public static function resetCrumbs()
+    {
+        if (self::getCrumbs()) {
+            $user = self::getUser();
+            $session = self::getSession();
+            $sid = 'crumbs.'.$user->getId();
+            $session->remove($sid);
+            self::getCrumbs()->setList(array('Dashboard' => $user->getHomeUrl()));
+        }
+    }
+
+    public static function saveCrumbs()
+    {
+        if (self::getCrumbs()) {
+            $user = self::getUser();
+            $session = self::getSession();
+            $sid = 'crumbs.'.$user->getId();
+            $session->set($sid, self::getCrumbs()->getList());
+        }
+    }
+
+    /**
+     * getEmailGateway
+     *
+     * @return \Tk\Mail\Gateway
+     */
+    public static function getEmailGateway()
+    {
+        if (!self::getConfig()->getEmailGateway()) {
+            $gateway = new \Tk\Mail\Gateway(self::getConfig());
+            $gateway->setDispatcher(self::getEventDispatcher());
+            self::getConfig()->setEmailGateway($gateway);
+        }
+        return self::getConfig()->getEmailGateway();
+    }
+
     /**
      * Create a new user
      *

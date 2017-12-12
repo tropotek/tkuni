@@ -13,13 +13,37 @@ use App\Controller\Iface;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Manager extends Iface
+class Manager extends \App\Controller\AdminIface
 {
 
     /**
      * @var \Tk\Table
      */
     protected $table = null;
+
+    /**
+     * @var \Tk\Table\Cell\Actions
+     */
+    protected $actionsCell = null;
+
+    /**
+     * Manager constructor.
+     * @throws \Exception
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->actionsCell = new \Tk\Table\Cell\Actions();
+        \App\Factory::resetCrumbs();
+    }
+
+    /**
+     * @return \Tk\Table\Cell\Actions
+     */
+    public function getActionsCell()
+    {
+        return $this->actionsCell;
+    }
 
 
     /**
@@ -34,6 +58,7 @@ class Manager extends Iface
         $this->table->setRenderer(\App\Factory::createTableRenderer($this->table));
 
         $this->table->addCell(new \Tk\Table\Cell\Checkbox('id'));
+        $this->table->addCell($this->actionsCell);
         $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCss('key')->setUrl(\Tk\Uri::create('admin/institutionEdit.html'));
         $this->table->addCell(new OwnerCell('owner'));
         $this->table->addCell(new \Tk\Table\Cell\Text('email'));
@@ -60,6 +85,9 @@ class Manager extends Iface
     {
         $template = parent::show();
         $template->replaceTemplate('table', $this->table->getRenderer()->show());
+
+        $this->getActionPanel()->addButton(\Tk\Ui\Button::create('New Institution', \App\Uri::createHomeUrl('/institutionEdit.html'), 'fa fa-university'));
+
         return $template;
     }
 
@@ -72,16 +100,6 @@ class Manager extends Iface
     {
         $xhtml = <<<HTML
 <div class="">
-
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <i class="fa fa-cogs fa-fw"></i> Actions
-    </div>
-    <div class="panel-body">
-      <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
-      <a href="/admin/institutionEdit.html" class="btn btn-default"><i class="fa fa-university"></i> <span>New Institution</span></a>
-    </div>
-  </div>
 
   <div class="panel panel-default">
     <div class="panel-heading">

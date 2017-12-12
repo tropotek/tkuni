@@ -11,7 +11,6 @@ class StaffPage extends Iface
 
     /**
      * @return \Dom\Template
-     * @throws \Dom\Exception
      */
     public function show()
     {
@@ -29,7 +28,7 @@ class StaffPage extends Iface
      */
     public function __makeTemplate()
     {
-        return \Dom\Loader::loadFile($this->getConfig()->getSitePath() . $this->getConfig()->get('template.admin'));
+        return \Dom\Loader::loadFile($this->getConfig()->getSitePath() . $this->getConfig()->get('template.staff'));
     }
 
 }

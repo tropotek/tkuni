@@ -15,7 +15,7 @@ use App\Controller\Iface;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class PluginManager extends Iface
+class PluginManager extends \App\Controller\AdminIface
 {
 
     /**
@@ -146,14 +146,6 @@ class PluginManager extends Iface
         $xhtml = <<<HTML
 <div>
 
-  <div class="panel panel-default panel-shortcut">
-    <div class="panel-heading">
-      <h4 class="panel-title"><i class="fa fa-cogs"></i> Actions</h4>
-    </div>
-    <div class="panel-body">
-      <a href="javascript: window.history.back();" class="btn btn-default back" var="back"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
-    </div>
-  </div>
 
   <div class="row">
     <div class="col-md-8 col-sm-12">

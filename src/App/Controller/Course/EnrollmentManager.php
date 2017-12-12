@@ -3,16 +3,13 @@ namespace App\Controller\Course;
 
 use Tk\Request;
 use Dom\Template;
-use App\Controller\Iface;
 
 /**
- *
- *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class EnrollmentManager extends Iface
+class EnrollmentManager extends \App\Controller\AdminIface
 {
 
     /**
@@ -53,9 +50,9 @@ class EnrollmentManager extends Iface
             throw new \Tk\Exception('Invalid course details');
         
         $this->setPageTitle("`" . $this->course->name . '` Enrolments');
-        
-        $this->pendingTable = new \App\Ui\Table\PreEnrollment($this->course);
+
         $this->enrolledTable = new \App\Ui\Table\Enrolled($this->course);
+        $this->pendingTable = new \App\Ui\Table\PreEnrollment($this->course);
 
 
         $filter = array();
@@ -89,17 +86,23 @@ class EnrollmentManager extends Iface
     public function show()
     {
         $template = parent::show();
-        
+
         // Enrolment Dialog
         $template->appendTemplate('enrollment', $this->userDialog->show());
-        $template->setAttr('addUser', 'data-target', '#'.$this->userDialog->getId());
+        //$template->setAttr('addUser', 'data-target', '#'.$this->userDialog->getId());
+        $this->getActionPanel()->addButton(\Tk\Ui\Button::create('Enroll Student','#', 'fa fa-user-plus'))
+            ->setAttr('data-toggle', 'modal')->setAttr('data-target', '#'.$this->userDialog->getId())
+            ->setAttr('title', 'Add an existing student to this course');
 
         // Enrolled Table
         $template->replaceTemplate('enrolledTable', $this->enrolledTable->show());
         
         // Pending Table
         $template->replaceTemplate('pendingTable', $this->pendingTable->show());
-        $template->setAttr('modelBtn', 'data-target', '#'.$this->pendingTable->getDialog()->getId());
+        //$template->setAttr('modelBtn', 'data-target', '#'.$this->pendingTable->getDialog()->getId());
+        $this->getActionPanel()->addButton(\Tk\Ui\Button::create('Pre-Enroll Student','#', 'fa fa-user-plus'))
+            ->setAttr('data-toggle', 'modal')->setAttr('data-target', '#'.$this->pendingTable->getDialog()->getId())
+            ->setAttr('title', 'Pre-Enroll a non-existing student, they will automatically be enrolled on login');
         
         $js = <<<JS
 jQuery(function($) {
@@ -127,6 +130,10 @@ JS;
 CSS;
         $template->appendCss($css);
 
+
+
+
+
         return $template;
     }
 
@@ -140,25 +147,11 @@ CSS;
         $xhtml = <<<HTML
 <div var="enrollment">
 
-  <div class="panel panel-default panel-shortcut">
-    <div class="panel-heading">
-      <h4 class="panel-title"><i class="fa fa-cogs"></i> Actions</h4>
-    </div>
-    <div class="panel-body">
-      <a href="javascript: window.history.back();" class="btn btn-default btn-once back" var="back"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
-      <a href="javascript:;" class="btn btn-default" title="Add an existing student to this course" data-toggle="modal" var="addUser"><i class="fa fa-user-plus"></i> <span>Enroll Student</span></a>      
-      <a href="javascript:;" class="btn btn-default" title="Pre-Enroll a non-existing student, they will automatically be enrolled on login" data-toggle="modal" data-target="#" var="modelBtn"><i class="fa fa-user-plus"></i> <span>Pre-Enroll Student</span></a>
-      <!--<a href="javascript:;" class="btn btn-default ui-popover" data-placement="top" data-trigger="hover" data-content="Pre-Enroll a non-existing user, they will automatically be enrolled on login" data-toggle="modal" data-target="#" var="modelBtn"><i class="fa fa-user-plus"></i> <span>Pre-Enroll User</span></a>-->
-    </div>
-  </div>
-
   <div class="row">
     <div class="col-md-8">
 
       <div class="panel panel-default">
-        <div class="panel-heading">
-          <i class="fa fa-users"></i> <span var="">Enrolled</span>
-        </div>
+        <div class="panel-heading"><i class="fa fa-users"></i> <span var="">Enrolled</span></div>
         <div class="panel-body">
           <div var="enrolledTable"></div>
         </div>
@@ -168,9 +161,7 @@ CSS;
     <div class="col-md-4">
 
       <div class="panel panel-default">
-        <div class="panel-heading">
-          <i class="fa fa-users"></i> <span>Pending</span>
-        </div>
+        <div class="panel-heading"><i class="fa fa-users"></i> <span>Pending</span></div>
         <div class="panel-body">
           <div var="pendingTable"></div>
           <div class="small">

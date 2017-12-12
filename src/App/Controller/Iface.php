@@ -5,11 +5,26 @@ namespace App\Controller;
 abstract class Iface extends \Tk\Controller\Iface
 {
 
+    /**
+     * @return string
+     */
+    public function getDefaultTitle()
+    {
+        $replace = array('admin-', 'client-', 'staff-', 'student-', '-base');
+        /** @var \Tk\Request $request */
+        $request = $this->getConfig()->getRequest();
+        if ($request) {
+            $routeName = $request->getAttribute('_route');
+            $routeName = str_replace($replace, '', $routeName);
+            return ucwords(trim(str_replace('-', ' ', $routeName)));
+        }
+        return '';
+    }
 
     /**
      * Get a new instance of the page to display the content in.
      *
-     * @return \Tk\Controller\Page
+     * @return \App\Page\Iface
      */
     public function getPage()
     {
@@ -19,8 +34,10 @@ abstract class Iface extends \Tk\Controller\Iface
         if (!$this->page) {
             switch($role) {
                 case \App\Db\User::ROLE_ADMIN:
-                case 'client':
                     $this->page = new \App\Page\AdminPage();
+                    break;
+                case \App\Db\User::ROLE_CLIENT:
+                    $this->page = new \App\Page\ClientPage();
                     break;
                 case \App\Db\User::ROLE_STAFF:
                     $this->page = new \App\Page\StaffPage();
@@ -36,7 +53,7 @@ abstract class Iface extends \Tk\Controller\Iface
         }
         return $this->page;
     }
-    
+
     /**
      * Get the currently logged in user
      *
@@ -46,7 +63,6 @@ abstract class Iface extends \Tk\Controller\Iface
     {
         return $this->getConfig()->getUser();
     }
-
 
     /**
      * DomTemplate magic method example

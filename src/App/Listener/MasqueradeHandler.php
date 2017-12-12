@@ -42,23 +42,24 @@ class MasqueradeHandler implements Subscriber
      * Add any headers to the final response.
      *
      * @param GetResponseEvent $event
-     * @throws \Tk\Exception
      */
     public function onMasquerade(GetResponseEvent $event)
     {
         $request = $event->getRequest();
         if (!$request->has(self::MSQ)) return;
-
         try {
             /** @var User $user */
             $user = \App\Factory::getConfig()->getUser();
             if (!$user) throw new \Tk\Exception('Unknown User');
             /** @var User $msqUser */
-            $msqUser = \App\Db\UserMap::create()->find($request->get(self::MSQ));
+            $msqUser = \App\Db\UserMap::create()->findByhash($request->get(self::MSQ));
+            vd($request->get(self::MSQ), $msqUser);
+            //if (!$msqUser || $msqUser->isClient()) throw new \Tk\Exception('Invalid User');
             if (!$msqUser) throw new \Tk\Exception('Invalid User');
             self::masqueradeLogin($user, $msqUser);
         } catch (\Exception $e) {
             \Tk\Alert::addWarning($e->getMessage());
+            \Tk\Uri::create()->remove(self::MSQ)->redirect();
         }
     }
 
@@ -137,7 +138,6 @@ class MasqueradeHandler implements Subscriber
      * @param User $user
      * @param User $msqUser
      * @return bool|void
-     * @throws \Tk\Exception
      */
     public static function masqueradeLogin($user, $msqUser)
     {
@@ -169,6 +169,7 @@ class MasqueradeHandler implements Subscriber
     /**
      * masqueradeLogout
      *
+     * @throws \Tk\Exception
      */
     public static function masqueradeLogout()
     {
@@ -180,6 +181,7 @@ class MasqueradeHandler implements Subscriber
         $userData = array_pop($msqArr);
         if (empty($userData['userId']) || empty($userData['url']))
             throw new \Tk\Exception('Session data corrupt. Clear session data and try again.');
+        
         $userId = (int)$userData['userId'];
         $url = \Tk\Uri::create($userData['url']);
 

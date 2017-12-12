@@ -19,8 +19,8 @@ include_once(__DIR__ . '/session.php');
 $config['site.title'] = 'New UNI Site';
 $config['site.email'] = 'fvas-elearning@unimelb.edu.au';
 
-$config['google.map.apikey'] = 'AIzaSyCSGICa1zdV6i2LV5GKLymRwjix03qYIeM';
-$config['google.recaptcha.publicKey'] = '6Ldg2wsUAAAAALpMHPiHEtZJ_SGycdDa11Kt_IOh';
+$config['google.map.apikey']           = 'AIzaSyCSGICa1zdV6i2LV5GKLymRwjix03qYIeM';
+$config['google.recaptcha.publicKey']  = '6Ldg2wsUAAAAALpMHPiHEtZJ_SGycdDa11Kt_IOh';
 $config['google.recaptcha.privateKey'] = '6Ldg2wsUAAAAANCLllmQfCg5jSWUbJD6rSjEmtSL';
 
 /*
@@ -28,10 +28,11 @@ $config['google.recaptcha.privateKey'] = '6Ldg2wsUAAAAANCLllmQfCg5jSWUbJD6rSjEmt
  */
 $config['system.template.path'] = '/html';
 
-$config['template.admin'] = $config['system.template.path'].'/default/admin.xtpl';
-$config['template.staff'] = $config['system.template.path'].'/default/staff.xtpl';
-$config['template.student'] = $config['system.template.path'].'/default/student.xtpl';
-$config['template.public'] = $config['system.template.path'].'/default/public.xtpl';
+$config['template.admin']     = $config['system.template.path'] . '/default/admin.xtpl';
+$config['template.client']    = $config['system.template.path'] . '/default/admin.xtpl';
+$config['template.staff']     = $config['system.template.path'] . '/default/staff.xtpl';
+$config['template.student']   = $config['system.template.path'] . '/default/student.xtpl';
+$config['template.public']    = $config['system.template.path'] . '/default/public.xtpl';
 
 // Path for renderer custom templates
 $config['template.xtpl.path'] = $config['system.template.path'] . '/default/xtpl';
@@ -61,11 +62,11 @@ $config['date.timezone'] = 'Australia/Victoria';
 /*
  * Config for the \Tk\Auth\Adapter\DbTable
  */
-$config['system.auth.dbtable.tableName'] = 'user';
+$config['system.auth.dbtable.tableName']      = 'user';
 $config['system.auth.dbtable.usernameColumn'] = 'username';
 $config['system.auth.dbtable.passwordColumn'] = 'password';
-$config['system.auth.dbtable.saltColumn'] = 'hash';
-$config['system.auth.dbtable.activeColumn'] = 'active';
+$config['system.auth.dbtable.saltColumn']     = 'hash';
+$config['system.auth.dbtable.activeColumn']   = 'active';
 
 /*
  * Auth adapters to use in logging into the site

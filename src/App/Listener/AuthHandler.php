@@ -9,8 +9,6 @@ use Tk\Event\AuthEvent;
 use Tk\Auth\AuthEvents;
 
 /**
- * Class StartupHandler
- *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
@@ -29,32 +27,11 @@ class AuthHandler implements Subscriber
         // Only the identity details should be in the auth session not the full user object, to save space and be secure.
         $config = \App\Factory::getConfig();
         $auth = \App\Factory::getAuth();
-        /** @var \App\Db\User $user */
-        $user = null;                       // public user
         if ($auth->getIdentity()) {
             $ident = $auth->getIdentity();
             $user = \App\Db\UserMap::create()->find($ident);
             if ($user)
                 $config->setUser($user);
-        }
-
-        // Get page access permission from route params (see config/routes.php)
-        $role = $event->getRequest()->getAttribute('role');
-
-        // no role means page is publicly accessible
-        if (!$role || empty($role)) return;
-        if ($user) {
-            if (!$user->hasRole($role)) {
-                // Could redirect to a authentication error page.
-                \Tk\Alert::addWarning('You do not have access to the requested page.');
-                $user->getHomeUrl()->redirect();
-            }
-            if ($user->sessionId != \App\Factory::getSession()->getId()) {
-                $user->sessionId = \App\Factory::getSession()->getId();
-                $user->save();
-            }
-        } else {
-            \Tk\Uri::create('/login.html')->redirect();
         }
     }
 
@@ -63,31 +40,32 @@ class AuthHandler implements Subscriber
      *
      * @param ControllerEvent $event
      * @throws \Tk\Auth\Exception
+     * @throws \Exception
      */
     public function onControllerAccess(ControllerEvent $event)
     {
-//        /** @var \App\Controller\Iface $controller */
-//        $controller = $event->getController();
-//        /** @var \App\Db\User $user */
-//        $user = \App\Factory::getConfig()->getUser();
-//        $role = $event->getRequest()->getAttribute('role');
-//        if (!$role || empty($role)) return;
-//        if (!$user) {
-//            if ($controller instanceof \App\Controller\Iface) {
-//                \Tk\Uri::create('/login.html')->redirect();
-//            } else {
-//                throw new \Tk\Auth\Exception('Invalid access permissions');
-//            }
-//        } else {
-//            if ($user->sessionId != \App\Factory::getSession()->getId()) {
-//                $user->sessionId = \App\Factory::getSession()->getId();
-//                $user->save();
-//            }
-//            if (!$user->hasRole($role) && $user->active) {
-//                \Tk\Alert::addWarning('You do not have access to the requested page.');
-//                $user->getHomeUrl()->redirect();
-//            }
-//        }
+        /** @var \App\Controller\Iface $controller */
+        $controller = $event->getController();
+        /** @var \App\Db\User $user */
+        $user = \App\Factory::getConfig()->getUser();
+        $role = $event->getRequest()->getAttribute('role');
+        if (!$role || empty($role)) return;
+        if (!$user) {
+            if ($controller instanceof \App\Controller\Iface) {
+                \Tk\Uri::create('/login.html')->redirect();
+            } else {
+                throw new \Tk\Auth\Exception('Invalid access permissions');
+            }
+        } else {
+            if ($user->sessionId != \App\Factory::getSession()->getId()) {
+                $user->sessionId = \App\Factory::getSession()->getId();
+                $user->save();
+            }
+            if (!$user->hasRole($role) && $user->active) {
+                \Tk\Alert::addWarning('You do not have access to the requested page.');
+                $user->getHomeUrl()->redirect();
+            }
+        }
     }
 
     /**
@@ -127,6 +105,7 @@ class AuthHandler implements Subscriber
             throw new \Tk\Auth\Exception('Inactive account, please contact your administrator.');
         }
 
+        //vd($user, $event->getRedirect());
         if($user && $event->getRedirect() == null) {
             $event->setRedirect($user->getHomeUrl());
         }
@@ -163,6 +142,12 @@ class AuthHandler implements Subscriber
 
     }
 
+    /**
+     * @param \Tk\Event\Event $event
+     * @throws \Dom\Exception
+     * @throws \Tk\Exception
+     * @throws \Tk\Mail\Exception
+     */
     public function onRegister(\Tk\Event\Event $event)
     {
         /** @var \App\Db\User $user */
@@ -178,10 +163,14 @@ class AuthHandler implements Subscriber
 
         $message = new \Tk\Mail\Message($body->toString(), $subject, $user->email, \App\Factory::getConfig()->get('site.email'));
         \App\Factory::getEmailGateway()->send($message);
-
-
     }
 
+    /**
+     * @param \Tk\Event\Event $event
+     * @throws \Dom\Exception
+     * @throws \Tk\Exception
+     * @throws \Tk\Mail\Exception
+     */
     public function onRegisterConfirm(\Tk\Event\Event $event)
     {
         /** @var \App\Db\User $user */
@@ -197,9 +186,14 @@ class AuthHandler implements Subscriber
 
         $message = new \Tk\Mail\Message($body->toString(), $subject, $user->email, \App\Factory::getConfig()->get('site.email'));
         \App\Factory::getEmailGateway()->send($message);
-
     }
 
+    /**
+     * @param \Tk\Event\Event $event
+     * @throws \Dom\Exception
+     * @throws \Tk\Exception
+     * @throws \Tk\Mail\Exception
+     */
     public function onRecover(\Tk\Event\Event $event)
     {
         /** @var \App\Db\User $user */
@@ -217,7 +211,6 @@ class AuthHandler implements Subscriber
 
         $message = new \Tk\Mail\Message($body->toString(), $subject, $user->email, \App\Factory::getConfig()->get('site.email'));
         \App\Factory::getEmailGateway()->send($message);
-
     }
 
 
@@ -254,6 +247,5 @@ class AuthHandler implements Subscriber
             AuthEvents::RECOVER => 'onRecover'
         );
     }
-    
-    
+
 }

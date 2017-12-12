@@ -34,6 +34,7 @@ $routes->add('register', new \Tk\Routing\Route('/register.html', 'App\Controller
 $params = array('role' => \App\Db\User::ROLE_ADMIN);
 $routes->add('admin-home', new \Tk\Routing\Route('/admin/index.html', 'App\Controller\Admin\Dashboard::doDefault', $params));
 $routes->add('admin-home-base', new \Tk\Routing\Route('/admin/', 'App\Controller\Admin\Dashboard::doDefault', $params));
+$routes->add('dev-events', new \Tk\Routing\Route('/admin/dev/events.html', 'App\Controller\Admin\Dev\SystemEvents::doDefault', $params));
 
 $routes->add('admin-institution-manager', new \Tk\Routing\Route('/admin/institutionManager.html', 'App\Controller\Institution\Manager::doDefault', $params));
 $routes->add('admin-institution-edit', new \Tk\Routing\Route('/admin/institutionEdit.html', 'App\Controller\Institution\Edit::doDefault', $params));
@@ -48,8 +49,22 @@ $routes->add('admin-settings', new \Tk\Routing\Route('/admin/settings.html', 'Ap
 $routes->add('admin-plugin-manager', new \Tk\Routing\Route('/admin/plugins.html', 'App\Controller\Admin\PluginManager::doDefault', $params));
 
 
-// Dev pages
-$routes->add('dev-events', new \Tk\Routing\Route('/admin/dev/events.html', 'App\Controller\Admin\Dev\SystemEvents::doDefault', $params));
+// Client Pages
+$params = array('role' => \App\Db\User::ROLE_CLIENT);
+$routes->add('client-home', new \Tk\Routing\Route('/client/index.html', 'App\Controller\Client\Dashboard::doDefault', $params));
+$routes->add('client-home-base', new \Tk\Routing\Route('/client/', 'App\Controller\Client\Dashboard::doDefault', $params));
+$routes->add('client-user-profile', new \Tk\Routing\Route('/client/profile.html', 'App\Controller\User\Profile::doDefault', $params));
+$routes->add('client-staff-manager', new \Tk\Routing\Route('/client/staffManager.html', 'App\Controller\User\StaffManager::doDefault', $params));
+$routes->add('client-staff-edit', new \Tk\Routing\Route('/client/staffEdit.html', 'App\Controller\User\StaffEdit::doDefault', $params));
+
+$routes->add('client-institution-edit', new \Tk\Routing\Route('/client/institutionEdit.html', 'App\Controller\Institution\Edit::doDefault', $params));
+$routes->add('client-institution-plugin-manager', new \Tk\Routing\Route('/client/{zoneName}/{zoneId}/plugins.html', 'App\Controller\PluginZoneManager::doDefault',
+    array('role' => \App\Db\User::ROLE_CLIENT, 'zoneName' => 'institution', 'zoneId' => '0') ));
+
+$routes->add('client-course-manager', new \Tk\Routing\Route('/client/courseManager.html', 'App\Controller\Course\Manager::doDefault', $params));
+$routes->add('client-course-edit', new \Tk\Routing\Route('/client/courseEdit.html', 'App\Controller\Course\Edit::doDefault', $params));
+$routes->add('client-course-enrollment', new \Tk\Routing\Route('/client/courseEnrollment.html', 'App\Controller\Course\EnrollmentManager::doDefault', $params));
+
 
 
 // Staff Pages

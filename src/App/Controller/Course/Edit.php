@@ -6,14 +6,13 @@ use Tk\Form;
 use Tk\Form\Event;
 use Tk\Form\Field;
 use Tk\Request;
-use App\Controller\Iface;
 
 /**
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Edit extends Iface
+class Edit extends \App\Controller\AdminIface
 {
 
     /**
@@ -37,7 +36,7 @@ class Edit extends Iface
      */
     public function __construct()
     {
-
+        parent::__construct();
     }
 
     /**
@@ -48,7 +47,7 @@ class Edit extends Iface
     public function doDefault(Request $request)
     {
         $this->setPageTitle('Course Edit');
-        
+
         $this->institution = $this->getUser()->getInstitution();
 
         $this->course = new \App\Db\Course();
@@ -122,8 +121,10 @@ class Edit extends Iface
         $template->insertTemplate('form', $this->form->getRenderer()->show());
 
         if ($this->course->id) {
+            $this->getActionPanel()->addButton(\Tk\Ui\Button::create('Enrollment List',
+                \App\Uri::createHomeUrl('/courseEnrollment.html')->set('courseId', $this->course->id), 'fa fa-list'));
+
             $template->setChoice('update');
-            $template->setAttr('enroll', 'href', \App\Uri::createHomeUrl('/courseEnrollment.html')->set('courseId', $this->course->id));
         }
 
         return $template;
@@ -140,19 +141,7 @@ class Edit extends Iface
 <div class="">
 
   <div class="panel panel-default">
-    <div class="panel-heading">
-      <i class="fa fa-cogs"></i> Actions
-    </div>
-    <div class="panel-body">
-      <a href="javascript: window.history.back();" class="btn btn-default"><i class="fa fa-arrow-left"></i> <span>Back</span></a>
-      <a href="javascript:;" class="btn btn-default" var="enroll" choice="update"><i class="fa fa-list"></i> <span>Enrollment List</span></a>
-    </div>
-  </div>
-
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <i class="fa fa-graduation-cap"></i> Course Edit
-    </div>
+    <div class="panel-heading"><i class="fa fa-graduation-cap"></i> Course Edit</div>
     <div class="panel-body">
       <div var="form"></div>
     </div>
