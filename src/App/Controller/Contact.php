@@ -57,8 +57,7 @@ class Contact extends Iface
         $template = parent::show();
         
         // Render the form
-        $ren = new \Tk\Form\Renderer\DomStatic($this->form, $template);
-        $ren->show();
+        \Tk\Form\Renderer\DomStatic::create($this->form, $template)->show();
 
         return $template;
     }
@@ -67,6 +66,7 @@ class Contact extends Iface
      * doSubmit()
      *
      * @param Form $form
+     * @throws \Tk\Mail\Exception
      */
     public function doSubmit($form)
     {
@@ -108,6 +108,7 @@ class Contact extends Iface
      *
      * @param Form $form
      * @return bool
+     * @throws \Tk\Mail\Exception
      */
     private function sendEmail($form)
     {
@@ -151,4 +152,17 @@ MSG;
         return true;
     }
 
+
+//    /**
+//     * @return \Dom\Template
+//     */
+//    public function __makeTemplate()
+//    {
+//        $html = <<<HTML
+//<div></div>
+//HTML;
+//        return \Dom\Loader::load($html);
+//        // OR FOR A FILE
+//        //return \Dom\Loader::loadFile($this->getTemplatePath().'/public.xtpl');
+//    }
 }

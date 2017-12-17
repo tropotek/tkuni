@@ -28,7 +28,7 @@ class FrontController extends \Tk\Kernel\HttpKernel
         parent::__construct($dispatcher, $resolver);
 
         // initialise Dom Loader
-        \App\Factory::getDomLoader();
+        //\App\Factory::getDomLoader();
 
         // Init the plugins
         \App\Factory::getPluginFactory();
@@ -83,7 +83,7 @@ class FrontController extends \Tk\Kernel\HttpKernel
         $this->getDispatcher()->addSubscriber(new \App\Listener\MasqueradeHandler());
         $this->getDispatcher()->addSubscriber(new \App\Listener\InstitutionHandler());
         $this->getDispatcher()->addSubscriber(new \App\Listener\ActionPanelHandler());
-
+        $this->getDispatcher()->addSubscriber(new \App\Listener\PageTemplateHandler());
 
     }
 

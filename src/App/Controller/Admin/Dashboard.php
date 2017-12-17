@@ -14,12 +14,13 @@ use App\Controller\Iface;
  */
 class Dashboard extends Iface
 {
-    
-    
+
+
     /**
      *
      * @param Request $request
      * @return \Dom\Template|Template|string
+     * @throws \Exception
      */
     public function doDefault(Request $request)
     {

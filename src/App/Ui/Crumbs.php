@@ -26,14 +26,11 @@ class Crumbs extends \Dom\Renderer\Renderer
     protected $list = array();
 
 
+
     /**
      * Crumbs constructor.
-     *
      */
-    private function __construct()
-    {
-
-    }
+    private function __construct() { }
 
     /**
      *
@@ -81,7 +78,6 @@ class Crumbs extends \Dom\Renderer\Renderer
     }
 
     /**
-     *
      * @return \Tk\Uri
      */
     public function getBackUrl()
@@ -97,7 +93,6 @@ class Crumbs extends \Dom\Renderer\Renderer
     }
 
     /**
-     *
      * @param string $title
      * @param \Tk\Uri|string $url
      * @return $this
@@ -110,7 +105,6 @@ class Crumbs extends \Dom\Renderer\Renderer
     }
 
     /**
-     *
      * @param string $title
      * @param \Tk\Uri|string $url
      * @return $this
@@ -121,7 +115,6 @@ class Crumbs extends \Dom\Renderer\Renderer
     }
 
     /**
-     *
      * @param $title
      * @return array
      */
@@ -136,7 +129,6 @@ class Crumbs extends \Dom\Renderer\Renderer
     }
 
     /**
-     *
      * @param $url
      * @param bool $ignoreQuery
      * @return array

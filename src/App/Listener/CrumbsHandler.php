@@ -14,7 +14,6 @@ class CrumbsHandler implements Subscriber
 
     /**
      * @param \Tk\Event\ControllerEvent $event
-     * @throws \Exception
      */
     public function onController(\Tk\Event\ControllerEvent $event)
     {
@@ -39,7 +38,6 @@ class CrumbsHandler implements Subscriber
 
     /**
      * @param \Tk\Event\Event $event
-     * @throws \Exception
      */
     public function onShow(\Tk\Event\Event $event)
     {
@@ -74,7 +72,6 @@ JS;
 
     /**
      * @param \Tk\Event\RequestEvent $event
-     * @throws \Exception
      */
     public function onFinishRequest(\Tk\Event\RequestEvent $event)
     {

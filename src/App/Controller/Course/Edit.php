@@ -123,6 +123,8 @@ class Edit extends \App\Controller\AdminIface
         if ($this->course->id) {
             $this->getActionPanel()->addButton(\Tk\Ui\Button::create('Enrollment List',
                 \App\Uri::createHomeUrl('/courseEnrollment.html')->set('courseId', $this->course->id), 'fa fa-list'));
+            $this->getActionPanel()->addButton(\Tk\Ui\Button::create('Students',
+                \App\Uri::createHomeUrl('/studentManager.html')->set('courseId', $this->course->id), 'fa fa-group'));
 
             $template->setChoice('update');
         }

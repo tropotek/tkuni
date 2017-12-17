@@ -71,7 +71,7 @@ class UserMap extends Mapper
      * @param $hash
      * @param int $institutionId
      * @param string|array $role
-     * @return Institution|null
+     * @return Institution|null|Model
      */
     public function findByhash($hash, $institutionId = 0, $role = null)
     {
@@ -90,7 +90,9 @@ class UserMap extends Mapper
             if ($w)
                 $where .= ' AND (' . rtrim($w, ' OR ') . ')';
         }
-        return $this->select($where)->current();
+
+        $res = $this->select($where);
+        return $res->current();
     }
 
     /**

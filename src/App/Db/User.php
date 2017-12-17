@@ -1,13 +1,10 @@
 <?php
 namespace App\Db;
 
-use Tk\Auth\Exception;
 use Tk\Db\Data;
 
 
 /**
- * Class User
- *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
@@ -122,7 +119,8 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     }
 
     /**
-     * 
+     *
+     * @throws \Tk\Exception
      */
     public function save()
     {
@@ -130,6 +128,7 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
             $this->displayName = $this->name;
         }
         $this->getHash();
+        vd();
         $this->getData()->save();
         parent::save();
     }
@@ -145,7 +144,6 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
             $this->data = \Tk\Db\Data::create($this->id, get_class($this));
         return $this->data;
     }
-
 
     /**
      * Create a random password
@@ -169,6 +167,7 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
      * Get the user hash or generate one if needed
      *
      * @return string
+     * @throws \Tk\Exception
      */
     public function getHash()
     {
@@ -196,7 +195,6 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
      * Set the password from a plain string
      *
      * @param string $pwd
-     * @throws Exception
      */
     public function setNewPassword($pwd = '')
     {
@@ -237,7 +235,6 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
      * @note \App\Uri::createHomeUrl() uses this method to get the home path
      *
      * @return \Tk\Uri
-     * @throws \Exception
      */
     public function getHomeUrl()
     {

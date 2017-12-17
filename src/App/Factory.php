@@ -179,6 +179,7 @@ class Factory
      * get a dom Modifier object
      *
      * @return \Dom\Modifier\Modifier
+     * @throws \Tk\Exception
      */
     public static function getDomModifier()
     {
@@ -223,8 +224,11 @@ class Factory
         if (!self::getConfig()->getDomLoader()) {
             $dl = \Dom\Loader::getInstance()->setParams(self::getConfig()->all());
             $dl->addAdapter(new \Dom\Loader\Adapter\DefaultLoader());
-            if (self::getConfig()->getTemplateXtplPath()) {
-                $dl->addAdapter(new \Dom\Loader\Adapter\ClassPath(self::getConfig()->getSitePath() . self::getConfig()->getTemplateXtplPath(), 'xtpl'));
+            /** @var \App\Controller\Iface $controller */
+            $controller = self::getRequest()->getAttribute('controller.object');
+            if ($controller->getPage()) {
+                $config = self::getConfig();
+                $dl->addAdapter(new \Dom\Loader\Adapter\ClassPath(dirname($controller->getPage()->getTemplatePath()).$config['template.xtpl.path'], $config['template.xtpl.ext']));
             }
             self::getConfig()->setDomLoader($dl);
         }
@@ -261,7 +265,6 @@ class Factory
      *
      * @param array $submittedData
      * @return \Tk\Auth\Adapter\Iface
-     * @throws \Tk\Auth\Exception
      */
     public static function getAuthDbTableAdapter($submittedData = array())
     {
@@ -289,6 +292,7 @@ class Factory
      * @param $pwd
      * @param \App\Db\User $user (optional)
      * @return string
+     * @throws \Tk\Exception
      */
     public static function hashPassword($pwd, $user = null)
     {
@@ -332,7 +336,6 @@ class Factory
      * Get the Institution object for the logged in user
      *
      * @return \App\Db\Institution
-     * @throws \Tk\Exception
      */
     public static function getInstitution()
     {
@@ -341,6 +344,18 @@ class Factory
             self::getConfig()->setInsitution($obj);
         }
         return self::getConfig()->getInsitution();
+    }
+
+    /**
+     * @return int|mixed
+     */
+    public static function getInstitutionId()
+    {
+        $institutionId = 0;
+        if (self::getInstitution()) {
+            $institutionId = self::getInstitution()->getId();
+        }
+        return $institutionId;
     }
 
     /**
@@ -432,6 +447,9 @@ class Factory
         return self::getConfig()->getCrumbs();
     }
 
+    /**
+     *
+     */
     public static function resetCrumbs()
     {
         if (self::getCrumbs()) {
@@ -443,6 +461,9 @@ class Factory
         }
     }
 
+    /**
+     *
+     */
     public static function saveCrumbs()
     {
         if (self::getCrumbs()) {
@@ -480,6 +501,7 @@ class Factory
      * @param string $uid
      * @param bool $active
      * @return Db\User
+     * @throws \Tk\Exception
      */
     public static function createNewUser($institutionId, $username, $email, $role, $password = '', $name = '', $uid = '', $active = true)
     {

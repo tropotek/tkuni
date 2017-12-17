@@ -96,7 +96,7 @@ class StaffMenu extends \Dom\Renderer\Renderer
         <ul class="nav" id="side-menu">
           <li><a href="/staff/index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
           <li><a href="/staff/courseManager.html"><i class="fa fa-graduation-cap fa-fw"></i> Courses</a></li>
-          <li><a href="/staff/userManager.html"><i class="fa fa-users fa-fw"></i> Users</a></li>
+          <!--<li><a href="/staff/staffManager.html"><i class="fa fa-users fa-fw"></i> Staff</a></li>-->
         </ul>
       </div>
     </div>

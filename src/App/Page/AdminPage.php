@@ -29,9 +29,9 @@ class AdminPage extends Iface
      *
      * @return \Dom\Template
      */
-    public function __makeTemplate()
-    {
-        return \Dom\Loader::loadFile($this->getConfig()->getSitePath() . $this->getConfig()->get('template.admin'));
-    }
+//    public function __makeTemplate()
+//    {
+//        return \Dom\Loader::loadFile($this->getConfig()->getSitePath() . $this->getConfig()->get('template.admin'));
+//    }
 
 }

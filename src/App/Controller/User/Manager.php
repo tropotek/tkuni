@@ -48,6 +48,14 @@ class Manager extends \App\Controller\AdminIface
     }
 
     /**
+     * @return \Tk\Table\Cell\Actions
+     */
+    public function getActionsCell()
+    {
+        return $this->actionsCell;
+    }
+
+    /**
      *
      * @param Request $request
      */
@@ -71,16 +79,6 @@ class Manager extends \App\Controller\AdminIface
                     $button->setAttr('disabled', 'disabled')->addCss('disabled');
                 }
             });
-
-        if ($this->getUser()->isStaff()) {
-            $this->actionsCell->addButton(\Tk\Table\Cell\ActionButton::create('Entries',
-                \App\Uri::createHomeUrl('/entryManager.html'), 'fa  fa-list-alt', 'tk-entries'))
-                ->setOnShow(function($cell, $obj, $button) {
-                    /* @var $obj \App\Db\User */
-                    /* @var $button \Tk\Table\Cell\ActionButton */
-                    $button->setUrl($button->getUrl()->set('userId', $obj->getId()));
-                });
-        }
 
         $this->table = \App\Factory::createTable('UserList');
         $this->table->setRenderer(\App\Factory::createTableRenderer($this->table));

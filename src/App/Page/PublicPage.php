@@ -14,9 +14,9 @@ class PublicPage extends Iface
      *
      * @return \Dom\Template
      */
-    public function __makeTemplate()
-    {
-        return \Dom\Loader::loadFile($this->getConfig()->getSitePath() . $this->getConfig()->get('template.public'));
-    }
+//    public function __makeTemplate()
+//    {
+//        return \Dom\Loader::loadFile($this->getConfig()->getSitePath() . $this->getConfig()->get('template.public'));
+//    }
 
 }

@@ -53,6 +53,16 @@ class Manager extends \App\Controller\AdminIface
     public function doDefault(Request $request)
     {
         $this->setPageTitle('Institution Manager');
+
+
+        $this->actionsCell->addButton(\Tk\Table\Cell\ActionButton::create('Masquerade', \Tk\Uri::create(), 'fa  fa-user-secret', 'tk-masquerade'))
+            ->setOnShow(function ($cell, $obj, $button) {
+                /* @var $obj \App\Db\Institution */
+                /* @var $button \Tk\Table\Cell\ActionButton */
+                if (\App\Listener\MasqueradeHandler::canMasqueradeAs(\App\Factory::getUser(), $obj->getOwnerUser())) {
+                    $button->setUrl(\App\Uri::create()->set(\App\Listener\MasqueradeHandler::MSQ, $obj->getOwnerUser()->getHash()));
+                }
+            });
             
         $this->table = \App\Factory::createTable('InstitutionList');
         $this->table->setRenderer(\App\Factory::createTableRenderer($this->table));
