@@ -27,19 +27,20 @@ $config['google.recaptcha.privateKey'] = '6Ldg2wsUAAAAANCLllmQfCg5jSWUbJD6rSjEmt
  * Template folders for pages
  */
 $config['system.template.path'] = '/html';
-
 $config['template.admin']     = $config['system.template.path'] . '/sbadmin2/admin.xtpl';
 $config['template.client']    = $config['system.template.path'] . '/sbadmin2/admin.xtpl';
 $config['template.staff']     = $config['system.template.path'] . '/sbadmin2/admin.xtpl';
 $config['template.student']   = $config['system.template.path'] . '/sbadmin2/admin.xtpl';
 $config['template.public']    = $config['system.template.path'] . '/sbadmin2/public.xtpl';
 
-
-// This path is where designers can place templates that override the system default renderer templates.
-// relative Path for renderer custom templates, this will reside in the above user template folders EG: $path = dirname($config['template.admin']) . $config['template.xtpl.path'];
-//$config['template.xtpl.path'] = $config['system.template.path'] . '/sbadmin2/xtpl';
+/*
+ * This path is where designers can place templates that override the system default templates.
+ * Relative Path for renderer custom templates, this will reside in the above user template folders
+ * EG: $path = dirname($config['template.admin']) . $config['template.xtpl.path'];
+ */
 $config['template.xtpl.path'] = '/xtpl';
 $config['template.xtpl.ext'] = '.xtpl';
+
 
 /*
  * Change the system timezone
