@@ -228,7 +228,10 @@ class Factory
             $controller = self::getRequest()->getAttribute('controller.object');
             if ($controller->getPage()) {
                 $config = self::getConfig();
-                $dl->addAdapter(new \Dom\Loader\Adapter\ClassPath(dirname($controller->getPage()->getTemplatePath()).$config['template.xtpl.path'], $config['template.xtpl.ext']));
+                $templatePath = dirname($controller->getPage()->getTemplatePath());
+                $xtplPath = str_replace('{templatePath}', $templatePath, $config['template.xtpl.path']);
+                vd($xtplPath);
+                $dl->addAdapter(new \Dom\Loader\Adapter\ClassPath($xtplPath, $config['template.xtpl.ext']));
             }
             self::getConfig()->setDomLoader($dl);
         }
