@@ -18,20 +18,17 @@ class PageTemplateHandler implements Subscriber
     {
         /** @var \App\Controller\Iface $controller */
         $controller = $event->get('controller');
-        $user = $controller->getUser();
         $config = \App\Factory::getConfig();
 
         $role = 'public';
-        if ($user) $role = $user->role;
-
-        $templatePath = $config['template.'.$role];
+        if ($config->getRequest()->getAttribute('role'))
+            $role = $config->getRequest()->getAttribute('role');
+        $templatePath = $config['template.' . $role];
 
         // Setup the template loader
         $controller->getPage()->setTemplatePath($config->getSitePath() . $templatePath);
         \App\Factory::getDomLoader();
     }
-
-
 
     /**
      * Returns an array of event names this subscriber wants to listen to.

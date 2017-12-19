@@ -230,7 +230,6 @@ class Factory
                 $config = self::getConfig();
                 $templatePath = dirname($controller->getPage()->getTemplatePath());
                 $xtplPath = str_replace('{templatePath}', $templatePath, $config['template.xtpl.path']);
-                vd($xtplPath);
                 $dl->addAdapter(new \Dom\Loader\Adapter\ClassPath($xtplPath, $config['template.xtpl.ext']));
             }
             self::getConfig()->setDomLoader($dl);

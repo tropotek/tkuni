@@ -11,7 +11,6 @@ $config = \Tk\Config::getInstance();
 
 include_once(__DIR__ . '/session.php');
 
-
 /**************************************
  * Default app config values
  **************************************/
@@ -27,11 +26,11 @@ $config['google.recaptcha.privateKey'] = '6Ldg2wsUAAAAANCLllmQfCg5jSWUbJD6rSjEmt
  * Template folders for pages
  */
 $config['system.template.path'] = '/html';
-$config['template.admin']     = $config['system.template.path'] . '/sbadmin2/admin.xtpl';
-$config['template.client']    = $config['system.template.path'] . '/sbadmin2/admin.xtpl';
-$config['template.staff']     = $config['system.template.path'] . '/sbadmin2/admin.xtpl';
-$config['template.student']   = $config['system.template.path'] . '/sbadmin2/admin.xtpl';
-$config['template.public']    = $config['system.template.path'] . '/sbadmin2/public.xtpl';
+$config['template.admin']     = $config['system.template.path'] . '/sbadmin2/admin.html';
+$config['template.client']    = $config['system.template.path'] . '/sbadmin2/admin.html';
+$config['template.staff']     = $config['system.template.path'] . '/sbadmin2/admin.html';
+$config['template.student']   = $config['system.template.path'] . '/sbadmin2/admin.html';
+$config['template.public']    = $config['system.template.path'] . '/sbadmin2/public.html';
 
 /*
  * This path is where designers can place templates that override the system default templates.
@@ -41,6 +40,7 @@ $config['template.public']    = $config['system.template.path'] . '/sbadmin2/pub
  */
 $config['template.xtpl.path'] = '{templatePath}/xtpl';
 $config['template.xtpl.ext'] = '.xtpl';
+
 
 
 /*
@@ -82,13 +82,10 @@ $config['system.auth.dbtable.activeColumn']   = 'active';
 //);
 
 
-
 /*
  * Set this to true to allow extended email addresses in the format of "User Name <username@domain.com>"
  */
 // \Tk\Mail\Message::$ENABLE_EXTENDED_ADDRESS = false;
-
-
 
 
 // ------------------------------------------------------------
