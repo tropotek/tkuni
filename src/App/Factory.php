@@ -452,14 +452,30 @@ class Factory
     /**
      *
      */
-    public static function resetCrumbs()
+//    public static function resetCrumbs()
+//    {
+//        if (self::getCrumbs()) {
+//            $user = self::getUser();
+//            $session = self::getSession();
+//            $sid = 'crumbs.'.$user->getId();
+//            $session->remove($sid);
+//            self::getCrumbs()->setList(array('Dashboard' => $user->getHomeUrl()));
+//        }
+//    }
+
+    public static function resetCrumbs($course = null)
     {
-        if (self::getCrumbs()) {
+        $crumbs = self::getCrumbs();
+        if ($crumbs && !\App\Factory::getRequest()->has(\App\Ui\Crumbs::CRUMB_IGNORE)) {
             $user = self::getUser();
             $session = self::getSession();
             $sid = 'crumbs.'.$user->getId();
             $session->remove($sid);
-            self::getCrumbs()->setList(array('Dashboard' => $user->getHomeUrl()));
+            $crumbs->setList();
+            $crumbs->addCrumb('Dashboard', $user->getHomeUrl());
+            if ($course) {
+                $crumbs->addCrumb('Course Dashboard', \App\Uri::createCourseUrl('/index.html', $course));
+            }
         }
     }
 

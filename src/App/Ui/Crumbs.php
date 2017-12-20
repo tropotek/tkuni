@@ -72,7 +72,7 @@ class Crumbs extends \Dom\Renderer\Renderer
     /**
      * @param $list
      */
-    public function setList($list)
+    public function setList($list = array())
     {
         $this->list = $list;
     }

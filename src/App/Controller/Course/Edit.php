@@ -120,7 +120,7 @@ class Edit extends \App\Controller\AdminIface
         // Render the form
         $template->insertTemplate('form', $this->form->getRenderer()->show());
 
-        if ($this->course->id) {
+        if ($this->course->id && $this->getUser()->isStaff()) {
             $this->getActionPanel()->addButton(\Tk\Ui\Button::create('Enrollment List',
                 \App\Uri::createHomeUrl('/courseEnrollment.html')->set('courseId', $this->course->id), 'fa fa-list'));
             $this->getActionPanel()->addButton(\Tk\Ui\Button::create('Students',
