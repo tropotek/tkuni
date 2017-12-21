@@ -26,7 +26,7 @@ class Uri extends \Tk\Uri
             return clone $spec;
 
         $home = '';
-        $user = \App\Factory::getConfig()->getUser();
+        $user = \App\Config::getInstance()->getUser();
         if ($user instanceof \App\Db\User) {
             $home = $user->getHomeUrl();
             if($home instanceof \Tk\Uri) {
@@ -50,7 +50,7 @@ class Uri extends \Tk\Uri
             return clone $spec;
 
         if ($course === null)
-            $course = \App\Factory::getCourse();
+            $course = \App\Config::getInstance()->getCourse();
         $courseCode = '';
         if ($course) {
             $courseCode = $course->code . '/';
@@ -70,7 +70,7 @@ class Uri extends \Tk\Uri
         if ($spec instanceof \Tk\Uri)
             return clone $spec;
         if ($institution === null)
-            $institution = \App\Factory::getInstitution();
+            $institution = \App\Config::getInstance()->getInstitution();
         return self::create('/inst/'.$institution->hash . '/' . trim($spec,'/'));
     }
 
@@ -98,7 +98,7 @@ class Uri extends \Tk\Uri
      */
     public function noLog($b = true)
     {
-        if (!\App\Factory::getConfig()->isDebug()) return $this;
+        if (!\App\Config::getInstance()->isDebug()) return $this;
 
         if ($b)
             $this->set('nolog');

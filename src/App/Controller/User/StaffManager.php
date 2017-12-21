@@ -19,7 +19,7 @@ class StaffManager extends Manager
     {
         parent::__construct();
         $this->setPageTitle('Staff Manager');
-        $this->editUrl = \App\Uri::createHomeUrl('/staffEdit.html');
+        $this->editUrl = \Uni\Uri::createHomeUrl('/staffEdit.html');
     }
 
     /**

@@ -6,7 +6,7 @@
  * Time: 7:07 AM
  */
 
-$config = \Tk\Config::getInstance();
+$config = \App\Config::getInstance();
 $data = \Tk\Db\Data::create();
 $data->set('site.title', 'tk2uni');
 $data->set('site.email', 'fvas-elearning@unimelb.edu.au');

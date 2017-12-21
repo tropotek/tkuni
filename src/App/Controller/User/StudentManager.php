@@ -19,7 +19,7 @@ class StudentManager extends Manager
     {
         parent::__construct();
         $this->setPageTitle('Student Manager');
-        $this->editUrl = \App\Uri::createHomeUrl('/studentEdit.html');
+        $this->editUrl = \Uni\Uri::createHomeUrl('/studentEdit.html');
     }
 
     /**

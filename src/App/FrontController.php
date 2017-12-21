@@ -28,13 +28,13 @@ class FrontController extends \Tk\Kernel\HttpKernel
         parent::__construct($dispatcher, $resolver);
 
         // Init the plugins
-        \App\Factory::getPluginFactory();
+        $this->getConfig()->getPluginFactory();
 
         // Initiate the email gateway
-        \App\Factory::getEmailGateway();
+        $this->getConfig()->getEmailGateway();
 
         // Initiate the plugin API object
-        \App\Factory::getPluginApi();
+        $this->getConfig()->getPluginApi();
         
         $this->init();
     }
@@ -55,7 +55,7 @@ class FrontController extends \Tk\Kernel\HttpKernel
         $matcher = new \Tk\Routing\UrlMatcher($this->getConfig()->get('site.routes'));
         $this->getDispatcher()->addSubscriber(new \Tk\Listener\RouteListener($matcher));
         $this->getDispatcher()->addSubscriber(new \Tk\Listener\PageHandler($this->getDispatcher()));
-        $this->getDispatcher()->addSubscriber(new \Tk\Listener\ResponseHandler(Factory::getDomModifier()));
+        $this->getDispatcher()->addSubscriber(new \Tk\Listener\ResponseHandler($this->getConfig()->getDomModifier()));
 
         // Exception Handling
         $this->getDispatcher()->addSubscriber(new \Tk\Listener\LogExceptionListener($logger));
@@ -65,30 +65,31 @@ class FrontController extends \Tk\Kernel\HttpKernel
             $this->getDispatcher()->addSubscriber(new \Tk\Listener\ExceptionListener($this->getConfig()->isDebug()));
         }
         if (!$this->getConfig()->isDebug()) {
-            $this->getDispatcher()->addSubscriber(new \Tk\Listener\ExceptionEmailListener(\App\Factory::getEmailGateway(), $logger,
+            $this->getDispatcher()->addSubscriber(new \Tk\Listener\ExceptionEmailListener($this->getConfig()->getEmailGateway(), $logger,
                 $this->getConfig()->get('site.email'), $this->getConfig()->get('site.title')));
         }
 
 
         $sh = new \Tk\Listener\ShutdownHandler($logger, $this->getConfig()->getScriptTime());
-        $sh->setPageBytes(\App\Factory::getDomFilterPageBytes());
+        $sh->setPageBytes($this->getConfig()->getDomFilterPageBytes());
         $this->getDispatcher()->addSubscriber($sh);
 
         // App Listeners
         $this->getDispatcher()->addSubscriber(new \App\Listener\AuthHandler());
-        $this->getDispatcher()->addSubscriber(new \App\Listener\CrumbsHandler());
+        $this->getDispatcher()->addSubscriber(new \Uni\Listener\CrumbsHandler());
+        $this->getDispatcher()->addSubscriber(new \App\Listener\NavRendererHandler());
         $this->getDispatcher()->addSubscriber(new \App\Listener\MasqueradeHandler());
         $this->getDispatcher()->addSubscriber(new \App\Listener\InstitutionHandler());
-        $this->getDispatcher()->addSubscriber(new \App\Listener\ActionPanelHandler());
+        $this->getDispatcher()->addSubscriber(new \Uni\Listener\ActionPanelHandler());
         $this->getDispatcher()->addSubscriber(new \App\Listener\PageTemplateHandler());
 
     }
 
     /**
-     * @return \Tk\Config
+     * @return \App\Config
      */
     public function getConfig()
     {
-        return \App\Factory::getConfig();
+        return \App\Config::getInstance();
     }
 }

@@ -90,7 +90,6 @@ class UserMap extends Mapper
             if ($w)
                 $where .= ' AND (' . rtrim($w, ' OR ') . ')';
         }
-
         $res = $this->select($where);
         return $res->current();
     }

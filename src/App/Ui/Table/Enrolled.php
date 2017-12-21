@@ -48,8 +48,8 @@ class Enrolled extends \Dom\Renderer\Renderer
      */
     public function doDefault()
     {
-        $this->table = \App\Factory::createTable('enrolledUsers');
-        $this->table->setRenderer(\App\Factory::createTableRenderer($this->table));
+        $this->table = \App\Config::getInstance()->createTable('enrolledUsers');
+        $this->table->setRenderer(\App\Config::getInstance()->createTableRenderer($this->table));
         $this->table->addCss('tk-enrolled-users');
 
         $this->table->addCell(new \Tk\Table\Cell\Checkbox('id'));
@@ -116,7 +116,7 @@ class ActionsCell extends \Tk\Table\Cell\Text
         $this->findCourseDialog = new \App\Ui\Dialog\AjaxSelect('Migrate Student', array($this, 'onSelect'), \Tk\Uri::create('/ajax/course/findFiltered.html'));
         $this->findCourseDialog->setAjaxParams(array('ignoreUser' => '1', 'courseId' => $this->course->getId()));
         $this->findCourseDialog->setNotes('Select the course to migrate the student to...');
-        $this->findCourseDialog->execute(\App\Factory::getRequest());
+        $this->findCourseDialog->execute(\App\Config::getInstance()->getRequest());
     }
     
     public function setTable($table)
@@ -133,7 +133,7 @@ class ActionsCell extends \Tk\Table\Cell\Text
 
     public function onSelect($data)
     {
-        $dispatcher = \App\Factory::getEventDispatcher();
+        $dispatcher = \App\Config::getInstance()->getEventDispatcher();
         // Migrate the user to the new course
         $event = new \Tk\Event\Event();
         $event->set('courseFromId', $this->course->getId());

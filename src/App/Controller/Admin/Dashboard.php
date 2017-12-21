@@ -3,7 +3,7 @@ namespace App\Controller\Admin;
 
 use Tk\Request;
 use Dom\Template;
-use App\Controller\Iface;
+use Uni\Controller\Iface;
 
 /**
  *

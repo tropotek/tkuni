@@ -6,7 +6,7 @@ use Dom\Template;
 use Tk\Form;
 use Tk\Form\Field;
 use Tk\Form\Event;
-use App\Controller\Iface;
+use Uni\Controller\Iface;
 
 /**
  *
@@ -40,8 +40,8 @@ class Profile extends Iface
         
         $this->user = $this->getUser();
 
-        $this->form = \App\Factory::createForm('userEdit');
-        $this->form->setRenderer(\App\Factory::createFormRenderer($this->form));
+        $this->form = \App\Config::getInstance()->createForm('userEdit');
+        $this->form->setRenderer(\App\Config::getInstance()->createFormRenderer($this->form));
         $this->form->setAttr('autocomplete', 'off');
 
         $this->form->addField(new Field\Input('displayName'))->setTabGroup('Details');
@@ -77,7 +77,7 @@ class Profile extends Iface
 
         \Tk\Alert::addSuccess('User record saved!');
         if ($form->getTriggeredEvent()->getName() == 'update') {
-            \App\Uri::createHomeUrl('/index.html')->redirect();
+            \Uni\Uri::createHomeUrl('/index.html')->redirect();
         }
         \Tk\Uri::create()->redirect();
     }

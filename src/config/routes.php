@@ -11,7 +11,7 @@
  *     array('GET', 'POST', 'HEAD')     // methods
  * );
  */
-$config = \Tk\Config::getInstance();
+$config = \App\Config::getInstance();
 $routes = new \Tk\Routing\RouteCollection();
 $config['site.routes'] = $routes;
 

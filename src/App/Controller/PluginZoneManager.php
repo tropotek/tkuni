@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use Tk\Request;
 use Dom\Template;
+use Uni\Controller\Iface;
 
 /**
  *
@@ -45,10 +46,10 @@ class PluginZoneManager extends Iface
             throw new \Tk\Exception('Invalid zone plugin information?');
         }
 
-        $this->pluginFactory = \App\Factory::getPluginFactory();
+        $this->pluginFactory = \App\Config::getInstance()->getPluginFactory();
         // Plugin manager table
-        $this->table = \App\Factory::createTable('PluginList');
-        $this->table->setRenderer(\App\Factory::createTableRenderer($this->table));
+        $this->table = \App\Config::getInstance()->createTable('PluginList');
+        $this->table->setRenderer(\App\Config::getInstance()->createTableRenderer($this->table));
 
         $this->table->addCell(new IconCell('icon'))->setLabel('');
         $this->table->addCell(new ActionsCell($this->zoneName, $this->zoneId));
@@ -65,7 +66,7 @@ class PluginZoneManager extends Iface
      */
     private function getPluginList()
     {
-        $pluginFactory = \App\Factory::getPluginFactory();
+        $pluginFactory = \App\Config::getInstance()->getPluginFactory();
         $plugins = $pluginFactory->getZonePluginList($this->zoneName);
         $list = array();
         /** @var \Tk\Plugin\Iface $plugin */
@@ -167,9 +168,9 @@ class IconCell extends \Tk\Table\Cell\Text
     {
         $template = $this->__makeTemplate();
 
-        $pluginName = \App\Factory::getPluginFactory()->cleanPluginName($info->name);
-        if (is_file(\Tk\Config::getInstance()->getPluginPath() . '/' . $pluginName . '/icon.png')) {
-            $template->setAttr('icon', 'src', \Tk\Config::getInstance()->getPluginUrl() . '/' . $pluginName . '/icon.png');
+        $pluginName = \App\Config::getInstance()->getPluginFactory()->cleanPluginName($info->name);
+        if (is_file(\App\Config::getInstance()->getPluginPath() . '/' . $pluginName . '/icon.png')) {
+            $template->setAttr('icon', 'src', \App\Config::getInstance()->getPluginUrl() . '/' . $pluginName . '/icon.png');
             $template->setChoice('icon');
         }
 
@@ -224,7 +225,7 @@ class ActionsCell extends \Tk\Table\Cell\Text
      */
     public function execute() {
         /** @var \Tk\Request $request */
-        $request = \Tk\Config::getInstance()->getRequest();
+        $request = \App\Config::getInstance()->getRequest();
 
         if ($request->has('enable')) {
             $this->doEnablePlugin($request);
@@ -242,7 +243,7 @@ class ActionsCell extends \Tk\Table\Cell\Text
     public function getCellHtml($info, $rowIdx = null)
     {
         $template = $this->__makeTemplate();
-        $pluginFactory = \App\Factory::getPluginFactory();
+        $pluginFactory = \App\Config::getInstance()->getPluginFactory();
         $pluginName = $pluginFactory->cleanPluginName($info->name);
         /** @var \Tk\Plugin\Iface $plugin */
         $plugin = $pluginFactory->getPlugin($pluginName);
@@ -310,7 +311,7 @@ HTML;
             return;
         }
         try {
-            \App\Factory::getPluginFactory()->enableZonePlugin($pluginName, $this->zoneName, $this->zoneId);
+            \App\Config::getInstance()->getPluginFactory()->enableZonePlugin($pluginName, $this->zoneName, $this->zoneId);
             \Tk\Alert::addSuccess('Plugin `' . $pluginName . '` enabled.');
         }catch (\Exception $e) {
             \Tk\Alert::addError('Plugin `' . $pluginName . '` cannot be enabled.');
@@ -325,7 +326,7 @@ HTML;
             \Tk\Alert::addWarning('Cannot locate Plugin: ' . $pluginName);
             return;
         }
-        \App\Factory::getPluginFactory()->disableZonePlugin($pluginName, $this->zoneName, $this->zoneId);
+        \App\Config::getInstance()->getPluginFactory()->disableZonePlugin($pluginName, $this->zoneName, $this->zoneId);
         \Tk\Alert::addSuccess('Plugin `' . $pluginName . '` disabled');
         \Tk\Uri::create()->remove('disable')->redirect();
     }

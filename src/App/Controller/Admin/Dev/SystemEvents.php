@@ -8,7 +8,7 @@ use Tk\Request;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class SystemEvents extends \App\Controller\AdminIface
+class SystemEvents extends \Uni\Controller\AdminIface
 {
 
     /**
@@ -26,8 +26,8 @@ class SystemEvents extends \App\Controller\AdminIface
     {
         $this->setPageTitle('Available Events');
 
-        $this->table = \App\Factory::createTable(\Tk\Object::basename($this).'PluEventList');
-        $this->table->setRenderer(\App\Factory::createTableRenderer($this->table));
+        $this->table = \App\Config::getInstance()->createTable(\Tk\Object::basename($this).'PluEventList');
+        $this->table->setRenderer(\App\Config::getInstance()->createTableRenderer($this->table));
 
         $this->table->addCell(new \Tk\Table\Cell\Text('name'));
         $this->table->addCell(new \Tk\Table\Cell\Text('value'));
@@ -36,7 +36,7 @@ class SystemEvents extends \App\Controller\AdminIface
 
         $this->table->addAction(\Tk\Table\Action\Csv::create());
 
-        $list = $this->convertEventData(\App\Factory::getEventDispatcher()->getAvailableEvents(\App\Factory::getConfig()->getSitePath()));
+        $list = $this->convertEventData(\App\Config::getInstance()->getEventDispatcher()->getAvailableEvents(\App\Config::getInstance()->getSitePath()));
         $this->table->setList($list);
         
     }

@@ -5,6 +5,7 @@ use Tk\Request;
 use Tk\Form;
 use Tk\Form\Event;
 use Tk\Form\Field;
+use Uni\Controller\Iface;
 
 /**
  * @author Michael Mifsud <info@tropotek.com>
@@ -142,12 +143,12 @@ $attachCount
 MSG;
         
 
-        $message = new \Tk\Mail\Message(\App\Factory::createMailTemplate($body), $this->getConfig()->get('site.name') . ':'. $name .' Contact Form Submission', $this->getConfig()->get('site.email'), $email);
+        $message = new \Tk\Mail\Message(\App\Config::getInstance()->createMailTemplate($body), $this->getConfig()->get('site.name') . ':'. $name .' Contact Form Submission', $this->getConfig()->get('site.email'), $email);
 
         if ($field->hasFile()) {
             $message->addAttachment($field->getUploadedFile()->getFile(), $field->getUploadedFile()->getFilename());
         }
-        \App\Factory::getEmailGateway()->send($message);
+        \App\Config::getInstance()->getEmailGateway()->send($message);
 
         return true;
     }

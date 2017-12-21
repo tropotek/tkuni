@@ -12,22 +12,27 @@ class PageTemplateHandler implements Subscriber
 {
 
     /**
+     * This listener decides what template a page should have.
+     * This would be the main outer HTML page template
+     *
      * @param \Tk\Event\Event $event
      */
     public function onPageInit(\Tk\Event\Event $event)
     {
-        /** @var \App\Controller\Iface $controller */
+        /** @var \Uni\Controller\Iface $controller */
         $controller = $event->get('controller');
-        $config = \App\Factory::getConfig();
+        $config = \App\Config::getInstance();
 
         $role = 'public';
-        if ($config->getRequest()->getAttribute('role'))
+        if ($config->getRequest()->getAttribute('role')) {
             $role = $config->getRequest()->getAttribute('role');
+            if (is_array($role)) $role = current($role);
+        }
         $templatePath = $config['template.' . $role];
 
         // Setup the template loader
         $controller->getPage()->setTemplatePath($config->getSitePath() . $templatePath);
-        \App\Factory::getDomLoader();
+        \App\Config::getInstance()->getDomLoader();
     }
 
     /**
@@ -53,7 +58,7 @@ class PageTemplateHandler implements Subscriber
     public static function getSubscribedEvents()
     {
         return array(
-            \Tk\PageEvents::PAGE_INIT => 'onPageInit'
+            \Tk\PageEvents::PAGE_INIT => array('onPageInit', 100)
         );
     }
 

@@ -152,7 +152,7 @@ class AjaxSelect extends Iface
         }
         
         $ajaxUrl = $this->ajaxUrl->toString();
-        $actionUrl = \App\Uri::create()->set($this->getSelectButtonId())->toString();
+        $actionUrl = \Uni\Uri::create()->set($this->getSelectButtonId())->toString();
         $jsonAjaxParams = json_encode($this->ajaxParams,\JSON_FORCE_OBJECT);
         $dialogId = $this->getId();
         

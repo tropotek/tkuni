@@ -9,7 +9,7 @@ use Dom\Template;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class CourseDashboard extends \App\Controller\Iface
+class CourseDashboard extends \Uni\Controller\Iface
 {
 
     /**
@@ -19,7 +19,7 @@ class CourseDashboard extends \App\Controller\Iface
     {
         $this->setPageTitle('Course Dashboard');
         if ($this->getUser()->isStaff()) {
-            \App\Factory::resetCrumbs($this->getCourse());
+            \Uni\Ui\Crumbs::resetCourse($this->getCourse());
         }
     }
 

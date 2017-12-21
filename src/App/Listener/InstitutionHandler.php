@@ -25,13 +25,13 @@ class InstitutionHandler implements Subscriber
     public function onRequest(GetResponseEvent $event)
     {
         /** @var \App\Db\User $user */
-        $user = \Tk\Config::getInstance()->getUser();
+        $user = \App\Config::getInstance()->getUser();
         if ($user && $user->getInstitution()) {
-            \Tk\Config::getInstance()->setInstitution($user->getInstitution());
+            \App\Config::getInstance()->setInstitution($user->getInstitution());
         }
         if ($event->getRequest()->getAttribute('instHash')) {
             $institution = \App\Db\InstitutionMap::create()->findByHash($event->getRequest()->getAttribute('instHash'));
-            \Tk\Config::getInstance()->setInstitution($institution);
+            \App\Config::getInstance()->setInstitution($institution);
         }
     }
 

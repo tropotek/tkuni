@@ -2,49 +2,17 @@
 namespace App\Ui\Menu;
 
 
-
-
 /**
  * Class ClientMenu
+ *
+ * @author Michael Mifsud <info@tropotek.com>
+ * @link http://www.tropotek.com/
+ * @license Copyright 2016 Michael Mifsud
  */
-class ClientMenu extends \Dom\Renderer\Renderer
+class ClientMenu extends Iface
 {
 
-
     /**
-     * ClientMenu constructor.
-     */
-    public function __construct()
-    {
-
-    }
-
-    /**
-     * @return ClientMenu
-     */
-    static function create()
-    {
-        return new static();
-    }
-
-    /**
-     * @return \Tk\Config
-     */
-    public function getConfig()
-    {
-        return \App\Factory::getConfig();
-    }
-
-    /**
-     * @return \App\Db\User
-     */
-    public function getUser()
-    {
-        return $this->getConfig()->getUser();
-    }
-
-    /**
-     *
      * @return \Dom\Template
      */
     public function show()
@@ -55,7 +23,6 @@ class ClientMenu extends \Dom\Renderer\Renderer
 
         return $template;
     }
-
 
     /**
      * DomTemplate magic method

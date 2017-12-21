@@ -49,10 +49,14 @@ class MasqueradeHandler implements Subscriber
         if (!$request->has(self::MSQ)) return;
         try {
             /** @var User $user */
-            $user = \App\Factory::getConfig()->getUser();
+            $user = \App\Config::getInstance()->getUser();
             if (!$user) throw new \Tk\Exception('Unknown User');
+            $iid = \App\Config::getInstance()->getInstitutionId();
+            if (!$iid)
+                $iid = (int)$request->get('institutionId');
+
             /** @var User $msqUser */
-            $msqUser = \App\Db\UserMap::create()->findByhash($request->get(self::MSQ), \App\Factory::getInstitutionId());
+            $msqUser = \App\Db\UserMap::create()->findByhash($request->get(self::MSQ), $iid);
             //if (!$msqUser || $msqUser->isClient()) throw new \Tk\Exception('Invalid User');
             if (!$msqUser) throw new \Tk\Exception('Invalid User');
             self::masqueradeLogin($user, $msqUser);
@@ -69,8 +73,8 @@ class MasqueradeHandler implements Subscriber
     /**
      * Check if this user can masquerade as the supplied msqUser
      *
-     * @param User $user
-     * @param User $msqUser
+     * @param User|\Uni\Db\UserIface $user
+     * @param User|\Uni\Db\UserIface $msqUser
      * @return bool
      */
     public static function canMasqueradeAs($user, $msqUser)
@@ -78,7 +82,7 @@ class MasqueradeHandler implements Subscriber
         if (!$msqUser || !$user) return false;
         if ($user->id == $msqUser->id) return false;
 
-        $msqArr = \App\Factory::getSession()->get(self::SID);
+        $msqArr = \App\Config::getInstance()->getSession()->get(self::SID);
         if (is_array($msqArr)) {    // Check if we are allready masquerading as this user in the queue
             foreach ($msqArr as $data) {
                 if ($data['userId'] == $msqUser->id) return false;
@@ -111,8 +115,8 @@ class MasqueradeHandler implements Subscriber
      */
     public static function isMasquerading()
     {
-        if (!\App\Factory::getSession()->has(self::SID)) return 0;
-        $msqArr = \App\Factory::getSession()->get(self::SID);
+        if (!\App\Config::getInstance()->getSession()->has(self::SID)) return 0;
+        $msqArr = \App\Config::getInstance()->getSession()->get(self::SID);
         return count($msqArr);
     }
 
@@ -124,8 +128,8 @@ class MasqueradeHandler implements Subscriber
     public static function getMasqueradingUser()
     {
         $user = null;
-        if (\App\Factory::getSession()->has(self::SID)) {
-            $msqArr = current(\App\Factory::getSession()->get(self::SID));
+        if (\App\Config::getInstance()->getSession()->has(self::SID)) {
+            $msqArr = current(\App\Config::getInstance()->getSession()->get(self::SID));
             /** @var \App\Db\User $user */
             $user = \App\Db\UserMap::create()->find($msqArr['userId']);
         }
@@ -144,7 +148,7 @@ class MasqueradeHandler implements Subscriber
         if ($user->id == $msqUser->id) return;
 
         // Get the masquerade queue from the session
-        $msqArr = \App\Factory::getSession()->get(self::SID);
+        $msqArr = \App\Config::getInstance()->getSession()->get(self::SID);
         if (!is_array($msqArr)) $msqArr = array();
 
         if (!self::canMasqueradeAs($user, $msqUser)) {
@@ -158,10 +162,10 @@ class MasqueradeHandler implements Subscriber
         );
         array_push($msqArr, $userData);
         // Save the updated masquerade queue
-        \App\Factory::getSession()->set(self::SID, $msqArr);
+        \App\Config::getInstance()->getSession()->set(self::SID, $msqArr);
 
         // Login as the selected user
-        \App\Factory::getAuth()->getStorage()->write($msqUser->id);
+        \App\Config::getInstance()->getAuth()->getStorage()->write($msqUser->id);
         \Tk\Uri::create($msqUser->getHomeUrl())->redirect();
     }
 
@@ -173,8 +177,8 @@ class MasqueradeHandler implements Subscriber
     public static function masqueradeLogout()
     {
         if (!self::isMasquerading()) return;
-        if (!\App\Factory::getAuth()->hasIdentity()) return;
-        $msqArr = \App\Factory::getSession()->get(self::SID);
+        if (!\App\Config::getInstance()->getAuth()->hasIdentity()) return;
+        $msqArr = \App\Config::getInstance()->getSession()->get(self::SID);
         if (!is_array($msqArr) || !count($msqArr)) return;
 
         $userData = array_pop($msqArr);
@@ -185,9 +189,9 @@ class MasqueradeHandler implements Subscriber
         $url = \Tk\Uri::create($userData['url']);
 
         // Save the updated masquerade queue
-        \App\Factory::getSession()->set(self::SID, $msqArr);
+        \App\Config::getInstance()->getSession()->set(self::SID, $msqArr);
 
-        \App\Factory::getAuth()->getStorage()->write($userId);
+        \App\Config::getInstance()->getAuth()->getStorage()->write($userId);
         $url->redirect();
     }
 
@@ -197,7 +201,7 @@ class MasqueradeHandler implements Subscriber
      */
     public static function masqueradeClear()
     {
-        \App\Factory::getSession()->remove(self::SID);
+        \App\Config::getInstance()->getSession()->remove(self::SID);
     }
 
     /**

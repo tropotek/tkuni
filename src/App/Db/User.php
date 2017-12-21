@@ -9,14 +9,8 @@ use Tk\Db\Data;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
+class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\Db\UserIface
 {
-    const ROLE_PUBLIC = 'public';
-    const ROLE_ADMIN = 'admin';
-    const ROLE_CLIENT= 'client';
-    const ROLE_STAFF = 'staff';
-    const ROLE_STUDENT = 'student';
-
 
     /**
      * @var int
@@ -188,20 +182,21 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
         if (!$this->username || !$this->role || !$this->email) {
             throw new \Tk\Exception('The username, role and email must be set before generating a valid hash');
         }
-        return \App\Factory::hash(sprintf('%s%s%s%s', $this->getVolatileId(), $this->institutionId, $this->username, $this->email));
+        return \App\Config::getInstance()->hash(sprintf('%s%s%s%s', $this->getVolatileId(), $this->institutionId, $this->username, $this->email));
     }
 
     /**
      * Set the password from a plain string
      *
      * @param string $pwd
+     * @throws \Tk\Exception
      */
     public function setNewPassword($pwd = '')
     {
         if (!$pwd) {
             $pwd = self::createPassword(10);
         }
-        $this->password = \App\Factory::hashPassword($pwd, $this);
+        $this->password = \App\Config::getInstance()->hashPassword($pwd, $this);
     }
 
     /**
@@ -232,7 +227,7 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     /**
      * Return the users home|dashboard relative url
      *
-     * @note \App\Uri::createHomeUrl() uses this method to get the home path
+     * @note \Uni\Uri::createHomeUrl() uses this method to get the home path
      *
      * @return \Tk\Uri
      */

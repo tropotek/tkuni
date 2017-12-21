@@ -8,6 +8,7 @@ use Tk\Form\Event;
 use Tk\Auth;
 use Tk\Auth\AuthEvents;
 use Tk\Event\AuthEvent;
+use Uni\Controller\Iface;
 
 
 /**
@@ -97,7 +98,7 @@ class Login extends Iface
     public function doLogin($form)
     {
         /** @var Auth $auth */
-        $auth = \App\Factory::getAuth();
+        $auth = \App\Config::getInstance()->getAuth();
 
         if (!$form->getFieldValue('username')) {
             $form->addFieldError('username', 'Please enter a valid username');

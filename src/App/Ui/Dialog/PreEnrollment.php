@@ -63,7 +63,7 @@ class PreEnrollment extends Iface
         if (!$request->has('enroll')) {
             return;
         }
-        //$this->course = \App\Factory::getCourse();
+        //$this->course = \App\Config::getInstance()->getCourse();
         $this->course = \App\Db\CourseMap::create()->find($request->get('courseId'));
         if (!$this->course)
             throw new \Tk\Exception('Invalid course details');
@@ -186,7 +186,7 @@ JS;
      */
     public function makeBodyHtml()
     {
-        $url = \App\Factory::getRequest()->getUri()->toString();
+        $url = \App\Config::getInstance()->getRequest()->getUri()->toString();
         $xhtml = <<<HTML
 <form id="addEnrollmentForm" method="POST" action="$url" enctype="multipart/form-data">
 

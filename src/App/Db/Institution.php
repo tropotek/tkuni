@@ -2,6 +2,7 @@
 namespace App\Db;
 
 use Tk\Db\Data;
+use Uni\Db\CourseIface;
 
 /**
  *
@@ -9,7 +10,7 @@ use Tk\Db\Data;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface
+class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\Db\InstitutionIface
 {
 
     /**
@@ -95,7 +96,6 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     public function save()
     {
         $this->getHash();
-
         $this->getData()->save();
         parent::save();
     }
@@ -117,7 +117,6 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface
      * Helper method to generate user hash
      *
      * @return string
-     * @throws \Tk\Exception
      */
     public function generateHash()
     {
@@ -154,7 +153,7 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     public function getLogoUrl()
     {
         if ($this->logo)
-            return \Tk\Uri::create(\App\Factory::getConfig()->getDataUrl().$this->logo);
+            return \Tk\Uri::create(\App\Config::getInstance()->getDataUrl().$this->logo);
     }
 
     /**
@@ -162,11 +161,43 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface
      *
      * @return User
      */
-    public function getOwnerUser()
+    public function getOwner()
     {
         if (!$this->owner)
             $this->owner = \App\Db\UserMap::create()->find($this->ownerId);
         return $this->owner;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOwnerId()
+    {
+        return $this->ownerId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDomain()
+    {
+        return $this->domain;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isActive()
+    {
+        return $this->active;
     }
 
 
@@ -201,4 +232,21 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface
         return $error;
     }
 
+    /**
+     * @param string $courseCode
+     * @return CourseIface
+     */
+    public function findCourseByCode($courseCode)
+    {
+        return \App\Db\CourseMap::create()->findByCode($courseCode, $this->getId());
+    }
+
+    /**
+     * @param int $courseId
+     * @return CourseIface
+     */
+    public function findCourse($courseId)
+    {
+        return \App\Db\CourseMap::create()->find($courseId);
+    }
 }

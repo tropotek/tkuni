@@ -2,46 +2,16 @@
 namespace App\Ui\Menu;
 
 
-
-
 /**
  * Class StaffMenu
+ *
+ * @author Michael Mifsud <info@tropotek.com>
+ * @link http://www.tropotek.com/
+ * @license Copyright 2016 Michael Mifsud
  */
-class StaffMenu extends \Dom\Renderer\Renderer
+class StaffMenu extends Iface
 {
 
-
-    /**
-     * StaffMenu constructor.
-     */
-    public function __construct()
-    {
-
-    }
-
-    /**
-     * @return StaffMenu
-     */
-    static function create()
-    {
-        return new static();
-    }
-
-    /**
-     * @return \Tk\Config
-     */
-    public function getConfig()
-    {
-        return \App\Factory::getConfig();
-    }
-
-    /**
-     * @return \App\Db\User
-     */
-    public function getUser()
-    {
-        return $this->getConfig()->getUser();
-    }
 
     /**
      *

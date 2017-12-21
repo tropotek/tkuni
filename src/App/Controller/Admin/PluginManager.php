@@ -6,7 +6,7 @@ use Dom\Template;
 use Tk\Form;
 use Tk\Form\Field;
 use Tk\Form\Event;
-use App\Controller\Iface;
+use Uni\Controller\Iface;
 
 /**
  *
@@ -15,7 +15,7 @@ use App\Controller\Iface;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class PluginManager extends \App\Controller\AdminIface
+class PluginManager extends \Uni\Controller\AdminIface
 {
 
     /**
@@ -37,18 +37,18 @@ class PluginManager extends \App\Controller\AdminIface
     {
         $this->setPageTitle('Plugin Manager');
 
-        $this->pluginFactory = \App\Factory::getPluginFactory();
+        $this->pluginFactory = \App\Config::getInstance()->getPluginFactory();
 
         // Upload plugin
-        $this->form = \App\Factory::createForm('pluginEdit');
-        $this->form->setRenderer(\App\Factory::createFormRenderer($this->form));
+        $this->form = \App\Config::getInstance()->createForm('pluginEdit');
+        $this->form->setRenderer(\App\Config::getInstance()->createFormRenderer($this->form));
         $this->form->addField(new Field\File('package', '', $this->getConfig()->getPluginPath()))->addCss('tk-fileinput');
         $this->form->addField(new Event\Submit('upload', array($this, 'doUpload')))->addCss('btn-primary');
         $this->form->execute();
 
         // Plugin manager table
-        $this->table = \App\Factory::createTable('PluginList');
-        $this->table->setRenderer(\App\Factory::createTableRenderer($this->table));
+        $this->table = \App\Config::getInstance()->createTable('PluginList');
+        $this->table->setRenderer(\App\Config::getInstance()->createTableRenderer($this->table));
 
         $this->table->addCell(new IconCell('icon'))->setLabel('');
         $this->table->addCell(new ActionsCell('actions'));
@@ -66,7 +66,7 @@ class PluginManager extends \App\Controller\AdminIface
      */
     private function getPluginList()
     {
-        $pluginFactory = \App\Factory::getPluginFactory();
+        $pluginFactory = \App\Config::getInstance()->getPluginFactory();
         $list = array();
         $names = $pluginFactory->getAvailablePlugins();
         foreach ($names as $pluginName) {
@@ -204,10 +204,10 @@ class IconCell extends \Tk\Table\Cell\Text
     {
         $template = $this->__makeTemplate();
 
-        $pluginName = \App\Factory::getPluginFactory()->cleanPluginName($info->name);
+        $pluginName = \App\Config::getInstance()->getPluginFactory()->cleanPluginName($info->name);
 
-        if (is_file(\Tk\Config::getInstance()->getPluginPath().'/'.$pluginName.'/icon.png')) {
-            $template->setAttr('icon', 'src', \Tk\Config::getInstance()->getPluginUrl() . '/' . $pluginName . '/icon.png');
+        if (is_file(\App\Config::getInstance()->getPluginPath().'/'.$pluginName.'/icon.png')) {
+            $template->setAttr('icon', 'src', \App\Config::getInstance()->getPluginUrl() . '/' . $pluginName . '/icon.png');
             $template->setChoice('icon');
         }
 
@@ -253,7 +253,7 @@ class ActionsCell extends \Tk\Table\Cell\Text
      */
     public function execute() {
         /** @var \Tk\Request $request */
-        $request = \Tk\Config::getInstance()->getRequest();
+        $request = \App\Config::getInstance()->getRequest();
 
         if ($request->has('act')) {
             $this->doActivatePlugin($request);
@@ -273,7 +273,7 @@ class ActionsCell extends \Tk\Table\Cell\Text
     public function getCellHtml($info, $rowIdx = null)
     {
         $template = $this->__makeTemplate();
-        $pluginFactory = \App\Factory::getPluginFactory();
+        $pluginFactory = \App\Config::getInstance()->getPluginFactory();
         $pluginName = $pluginFactory->cleanPluginName($info->name);
 
         if ($pluginFactory->isActive($pluginName)) {
@@ -292,7 +292,7 @@ class ActionsCell extends \Tk\Table\Cell\Text
             $template->setAttr('act', 'href', \Tk\Uri::create()->reset()->set('act', $pluginName));
             $this->getRow()->addCss('plugin-inactive');
 
-            if (!\Tk\Plugin\Factory::isComposer($pluginName, \Tk\Config::getInstance()->getComposer())) {
+            if (!\Tk\Plugin\Factory::isComposer($pluginName, \App\Config::getInstance()->getComposer())) {
                 $template->setAttr('del', 'href', \Tk\Uri::create()->reset()->set('del', $pluginName));
             } else {
                 $template->addCss('del', 'disabled');
@@ -351,7 +351,7 @@ HTML;
 
     protected function doActivatePlugin(Request $request)
     {
-        $pluginFactory = \App\Factory::getPluginFactory();
+        $pluginFactory = \App\Config::getInstance()->getPluginFactory();
         $pluginName = strip_tags(trim($request->get('act')));
         if (!$pluginName) {
             \Tk\Alert::addWarning('Cannot locate Plugin: ' . $pluginName);
@@ -374,7 +374,7 @@ HTML;
             return;
         }
         try {
-            \App\Factory::getPluginFactory()->deactivatePlugin($pluginName);
+            \App\Config::getInstance()->getPluginFactory()->deactivatePlugin($pluginName);
             \Tk\Alert::addSuccess('Plugin `' . $pluginName . '` deactivated successfully');
         }catch (\Exception $e) {
             \Tk\Alert::addError('Deactivate Failed: ' . $e->getMessage());
@@ -389,7 +389,7 @@ HTML;
             \Tk\Alert::addWarning('Cannot locate Plugin: ' . $pluginName);
             return;
         }
-        $pluginPath = \App\Factory::getPluginFactory()->getPluginPath($pluginName);
+        $pluginPath = \App\Config::getInstance()->getPluginFactory()->getPluginPath($pluginName);
 
         if (!is_dir($pluginPath)) {
             \Tk\Alert::addWarning('Plugin `' . $pluginName . '` path not found');

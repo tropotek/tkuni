@@ -4,7 +4,7 @@ namespace App\Controller\Institution;
 use Dom\Template;
 use Tk\Form\Field;
 use Tk\Request;
-use App\Controller\Iface;
+use Uni\Controller\Iface;
 
 /**
  *
@@ -13,7 +13,7 @@ use App\Controller\Iface;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Manager extends \App\Controller\AdminIface
+class Manager extends \Uni\Controller\AdminIface
 {
 
     /**
@@ -34,7 +34,8 @@ class Manager extends \App\Controller\AdminIface
     {
         parent::__construct();
         $this->actionsCell = new \Tk\Table\Cell\Actions();
-        \App\Factory::resetCrumbs();
+        \Uni\Ui\Crumbs::reset();
+        //\App\Config::getInstance()->resetCrumbs();
     }
 
     /**
@@ -59,13 +60,13 @@ class Manager extends \App\Controller\AdminIface
             ->setOnShow(function ($cell, $obj, $button) {
                 /* @var $obj \App\Db\Institution */
                 /* @var $button \Tk\Table\Cell\ActionButton */
-                if (\App\Listener\MasqueradeHandler::canMasqueradeAs(\App\Factory::getUser(), $obj->getOwnerUser())) {
-                    $button->setUrl(\App\Uri::create()->set(\App\Listener\MasqueradeHandler::MSQ, $obj->getOwnerUser()->getHash()));
+                if (\App\Listener\MasqueradeHandler::canMasqueradeAs(\App\Config::getInstance()->getUser(), $obj->getOwner())) {
+                    $button->setUrl(\Uni\Uri::create()->set(\App\Listener\MasqueradeHandler::MSQ, $obj->getOwner()->getHash()));
                 }
             });
             
-        $this->table = \App\Factory::createTable('InstitutionList');
-        $this->table->setRenderer(\App\Factory::createTableRenderer($this->table));
+        $this->table = \App\Config::getInstance()->createTable('InstitutionList');
+        $this->table->setRenderer(\App\Config::getInstance()->createTableRenderer($this->table));
 
         $this->table->addCell(new \Tk\Table\Cell\Checkbox('id'));
         $this->table->addCell($this->actionsCell);
@@ -96,7 +97,7 @@ class Manager extends \App\Controller\AdminIface
         $template = parent::show();
         $template->replaceTemplate('table', $this->table->getRenderer()->show());
 
-        $this->getActionPanel()->addButton(\Tk\Ui\Button::create('New Institution', \App\Uri::createHomeUrl('/institutionEdit.html'), 'fa fa-university'));
+        $this->getActionPanel()->addButton(\Tk\Ui\Button::create('New Institution', \Uni\Uri::createHomeUrl('/institutionEdit.html'), 'fa fa-university'));
 
         return $template;
     }
@@ -148,7 +149,7 @@ class OwnerCell extends \Tk\Table\Cell\Text
     {
         //$val =  parent::getPropertyValue($obj, $property);
         $val =  '';
-        $owner = $obj->getOwnerUser();
+        $owner = $obj->getOwner();
         if ($owner) {
             $val = $owner->name;
         }

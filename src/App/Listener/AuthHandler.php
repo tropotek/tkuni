@@ -25,10 +25,11 @@ class AuthHandler implements Subscriber
     {
         // if a user is in the session add them to the global config
         // Only the identity details should be in the auth session not the full user object, to save space and be secure.
-        $config = \App\Factory::getConfig();
-        $auth = \App\Factory::getAuth();
+        $config = \App\Config::getInstance();
+        $auth = \App\Config::getInstance()->getAuth();
         if ($auth->getIdentity()) {
             $ident = $auth->getIdentity();
+            /** @var \App\Db\User $user */
             $user = \App\Db\UserMap::create()->find($ident);
             if ($user)
                 $config->setUser($user);
@@ -44,21 +45,21 @@ class AuthHandler implements Subscriber
      */
     public function onControllerAccess(ControllerEvent $event)
     {
-        /** @var \App\Controller\Iface $controller */
+        /** @var \Uni\Controller\Iface $controller */
         $controller = $event->getController();
         /** @var \App\Db\User $user */
-        $user = \App\Factory::getConfig()->getUser();
+        $user = \App\Config::getInstance()->getUser();
         $role = $event->getRequest()->getAttribute('role');
         if (!$role || empty($role)) return;
         if (!$user) {
-            if ($controller instanceof \App\Controller\Iface) {
+            if ($controller instanceof \Uni\Controller\Iface) {
                 \Tk\Uri::create('/login.html')->redirect();
             } else {
                 throw new \Tk\Auth\Exception('Invalid access permissions');
             }
         } else {
-            if ($user->sessionId != \App\Factory::getSession()->getId()) {
-                $user->sessionId = \App\Factory::getSession()->getId();
+            if ($user->sessionId != \App\Config::getInstance()->getSession()->getId()) {
+                $user->sessionId = \App\Config::getInstance()->getSession()->getId();
                 $user->save();
             }
             if (!$user->hasRole($role) && $user->active) {
@@ -74,7 +75,7 @@ class AuthHandler implements Subscriber
      */
     public function onLogin(AuthEvent $event)
     {
-        $adapter = \App\Factory::getAuthDbTableAdapter($event->all());
+        $adapter = \App\Config::getInstance()->getAuthDbTableAdapter($event->all());
         $result = $event->getAuth()->authenticate($adapter);
 
         $event->setResult($result);
@@ -111,7 +112,7 @@ class AuthHandler implements Subscriber
         }
 
         //store the type of adapter for allowing the staff student to modify their password
-        \App\Factory::getSession()->set('auth.password.access', ($event->get('auth.password.access') === true) );
+        \App\Config::getInstance()->getSession()->set('auth.password.access', ($event->get('auth.password.access') === true) );
 
         // Update the user record.
         $user->lastLogin = \Tk\Date::create();
@@ -125,7 +126,7 @@ class AuthHandler implements Subscriber
     public function onLogout(AuthEvent $event)
     {
         /** @var \App\Db\User $user */
-        $user = \Tk\Config::getInstance()->getUser();
+        $user = \App\Config::getInstance()->getUser();
         if ($user) {
             if (!$event->getRedirect()) {
                 $event->setRedirect(\Tk\Uri::create('/index.html'));
@@ -137,21 +138,20 @@ class AuthHandler implements Subscriber
             $user->save();
             $auth = $event->getAuth();
             $auth->clearIdentity();
-            \App\Factory::getSession()->destroy();
+            \App\Config::getInstance()->getSession()->destroy();
         }
 
     }
 
     /**
      * @param \Tk\Event\Event $event
-     * @throws \Dom\Exception
      * @throws \Tk\Exception
      * @throws \Tk\Mail\Exception
      */
     public function onRegister(\Tk\Event\Event $event)
     {
         /** @var \App\Db\User $user */
-        $user = $event->get('user');
+        $user = $event->get('UserIface');
 
         // on success email user confirmation
         $body = \Dom\Loader::loadFile($event->get('templatePath').'/xtpl/mail/account.registration.xtpl');
@@ -161,20 +161,19 @@ class AuthHandler implements Subscriber
         $body->setAttr('url', 'href', $url->toString());
         $subject = 'Account Registration Request.';
 
-        $message = new \Tk\Mail\Message($body->toString(), $subject, $user->email, \App\Factory::getConfig()->get('site.email'));
-        \App\Factory::getEmailGateway()->send($message);
+        $message = new \Tk\Mail\Message($body->toString(), $subject, $user->email, \App\Config::getInstance()->get('site.email'));
+        \App\Config::getInstance()->getEmailGateway()->send($message);
     }
 
     /**
      * @param \Tk\Event\Event $event
-     * @throws \Dom\Exception
      * @throws \Tk\Exception
      * @throws \Tk\Mail\Exception
      */
     public function onRegisterConfirm(\Tk\Event\Event $event)
     {
         /** @var \App\Db\User $user */
-        $user = $event->get('user');
+        $user = $event->get('UserIface');
 
         // Send an email to confirm account active
         $body = \Dom\Loader::loadFile($event->get('templatePath').'/xtpl/mail/account.activated.xtpl');
@@ -184,20 +183,19 @@ class AuthHandler implements Subscriber
         $body->setAttr('url', 'href', $url->toString());
         $subject = 'Account Registration Activation.';
 
-        $message = new \Tk\Mail\Message($body->toString(), $subject, $user->email, \App\Factory::getConfig()->get('site.email'));
-        \App\Factory::getEmailGateway()->send($message);
+        $message = new \Tk\Mail\Message($body->toString(), $subject, $user->email, \App\Config::getInstance()->get('site.email'));
+        \App\Config::getInstance()->getEmailGateway()->send($message);
     }
 
     /**
      * @param \Tk\Event\Event $event
-     * @throws \Dom\Exception
      * @throws \Tk\Exception
      * @throws \Tk\Mail\Exception
      */
     public function onRecover(\Tk\Event\Event $event)
     {
         /** @var \App\Db\User $user */
-        $user = $event->get('user');
+        $user = $event->get('UserIface');
         $pass = $event->get('password');
 
         // Send an email to confirm account active
@@ -209,8 +207,8 @@ class AuthHandler implements Subscriber
         $body->setAttr('url', 'href', $url->toString());
         $subject = 'Account Password Recovery.';
 
-        $message = new \Tk\Mail\Message($body->toString(), $subject, $user->email, \App\Factory::getConfig()->get('site.email'));
-        \App\Factory::getEmailGateway()->send($message);
+        $message = new \Tk\Mail\Message($body->toString(), $subject, $user->email, \App\Config::getInstance()->get('site.email'));
+        \App\Config::getInstance()->getEmailGateway()->send($message);
     }
 
 

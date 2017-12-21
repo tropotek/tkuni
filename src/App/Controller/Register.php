@@ -6,6 +6,7 @@ use Tk\Form\Field;
 use Tk\Form\Event;
 use Tk\Request;
 use Tk\Auth\AuthEvents;
+use Uni\Controller\Iface;
 
 
 /**
@@ -129,10 +130,10 @@ class Register extends Iface
         // Fire the login event to allow developing of misc auth plugins
         $event = new \Tk\Event\Event();
         $event->set('form', $form);
-        $event->set('user', $this->user);
+        $event->set('UserIface', $this->user);
         $event->set('pass', $this->form->getFieldValue('password'));
         $event->set('institution', $this->institution);
-        \App\Factory::getEventDispatcher()->dispatch(AuthEvents::REGISTER, $event);
+        \App\Config::getInstance()->getEventDispatcher()->dispatch(AuthEvents::REGISTER, $event);
 
         // Redirect with message to check their email
         \Tk\Alert::addSuccess('Your New Account Has Been Created.');
@@ -174,9 +175,9 @@ class Register extends Iface
         
         $event = new \Tk\Event\Event();
         $event->set('request', $request);
-        $event->set('user', $user);
+        $event->set('UserIface', $user);
         $event->set('institution', $institution);
-        \App\Factory::getEventDispatcher()->dispatch(AuthEvents::REGISTER_CONFIRM, $event);
+        \App\Config::getInstance()->getEventDispatcher()->dispatch(AuthEvents::REGISTER_CONFIRM, $event);
         
         \Tk\Alert::addSuccess('Account Activation Successful.');
         \Tk\Uri::create('/login.html')->redirect();
