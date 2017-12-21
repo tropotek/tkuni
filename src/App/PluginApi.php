@@ -12,17 +12,9 @@ namespace App;
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  */
-class PluginApi
+class PluginApi implements \Uni\PluginApi
 {
 
-
-    /**
-     * PluginApi constructor.
-     */
-    public function __construct()
-    {
-
-    }
 
     /**
      * @param $username
@@ -43,6 +35,7 @@ class PluginApi
     /**
      * @param array $params
      * @return null|Db\User
+     * @throws \Tk\Exception
      */
     public function createUser($params = array())
     {
@@ -50,7 +43,7 @@ class PluginApi
         switch($params['type']) {
             case 'ldap':
             case 'lti':
-                $user = \App\Factory::createNewUser($params['institutionId'],
+                $user = \App\Config::createNewUser($params['institutionId'],
                     $params['username'], $params['email'], $params['role'], $params['password'], $params['name'], $params['uid'], $params['active']);
         }
 
@@ -89,7 +82,7 @@ class PluginApi
                 $course = new \App\Db\Course();
                 \App\Db\CourseMap::create()->mapForm($params, $course);
                 $course->save();
-                $this->addUserToCourse($course, $params['user']);
+                $this->addUserToCourse($course, $params['UserIface']);
         }
         return $course;
     }
@@ -111,11 +104,11 @@ class PluginApi
      */
     public function autoAuthenticate($user)
     {
-        $auth = \App\Factory::getAuth();
+        $auth = \App\Config::getInstance()->getAuth();
         \App\Listener\MasqueradeHandler::masqueradeClear();
         $authResult = new \Tk\Auth\Result(\Tk\Auth\Result::SUCCESS, $user->id);
         $auth->clearIdentity()->getStorage()->write($user->id);
-        \Tk\Config::getInstance()->setUser($user);
+        \App\Config::getInstance()->setUser($user);
         return $authResult;
     }
 

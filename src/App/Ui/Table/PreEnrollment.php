@@ -50,14 +50,14 @@ class PreEnrollment extends \Dom\Renderer\Renderer
      */
     public function doDefault()
     {
-        $request = \App\Factory::getRequest();
+        $request = \App\Config::getInstance()->getRequest();
 
         $this->dialog = new \App\Ui\Dialog\PreEnrollment('Pre-Enroll User');
         $this->dialog->execute($request);
 
 
-        $this->table = \App\Factory::createTable('pendingUsers');
-        $this->table->setRenderer(\App\Factory::createTableRenderer($this->table));
+        $this->table = \App\Config::getInstance()->createTable('pendingUsers');
+        $this->table->setRenderer(\App\Config::getInstance()->createTableRenderer($this->table));
         $this->table->addCss('tk-pending-users');
 
         $this->table->addCell(new \Tk\Table\Cell\Checkbox('email'));
@@ -111,7 +111,7 @@ CSS;
      */
     public function getUser()
     {
-        return \App\Factory::getConfig()->getUser();
+        return \App\Config::getInstance()->getUser();
     }
 
     /**

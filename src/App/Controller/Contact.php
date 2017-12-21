@@ -5,6 +5,7 @@ use Tk\Request;
 use Tk\Form;
 use Tk\Form\Event;
 use Tk\Form\Field;
+use Uni\Controller\Iface;
 
 /**
  * @author Michael Mifsud <info@tropotek.com>
@@ -57,8 +58,7 @@ class Contact extends Iface
         $template = parent::show();
         
         // Render the form
-        $ren = new \Tk\Form\Renderer\DomStatic($this->form, $template);
-        $ren->show();
+        \Tk\Form\Renderer\DomStatic::create($this->form, $template)->show();
 
         return $template;
     }
@@ -67,6 +67,7 @@ class Contact extends Iface
      * doSubmit()
      *
      * @param Form $form
+     * @throws \Tk\Mail\Exception
      */
     public function doSubmit($form)
     {
@@ -108,6 +109,7 @@ class Contact extends Iface
      *
      * @param Form $form
      * @return bool
+     * @throws \Tk\Mail\Exception
      */
     private function sendEmail($form)
     {
@@ -141,14 +143,27 @@ $attachCount
 MSG;
         
 
-        $message = new \Tk\Mail\Message(\App\Factory::createMailTemplate($body), $this->getConfig()->get('site.name') . ':'. $name .' Contact Form Submission', $this->getConfig()->get('site.email'), $email);
+        $message = new \Tk\Mail\Message(\App\Config::getInstance()->createMailTemplate($body), $this->getConfig()->get('site.name') . ':'. $name .' Contact Form Submission', $this->getConfig()->get('site.email'), $email);
 
         if ($field->hasFile()) {
             $message->addAttachment($field->getUploadedFile()->getFile(), $field->getUploadedFile()->getFilename());
         }
-        \App\Factory::getEmailGateway()->send($message);
+        \App\Config::getInstance()->getEmailGateway()->send($message);
 
         return true;
     }
 
+
+//    /**
+//     * @return \Dom\Template
+//     */
+//    public function __makeTemplate()
+//    {
+//        $html = <<<HTML
+//<div></div>
+//HTML;
+//        return \Dom\Loader::load($html);
+//        // OR FOR A FILE
+//        //return \Dom\Loader::loadFile($this->getTemplatePath().'/public.xtpl');
+//    }
 }

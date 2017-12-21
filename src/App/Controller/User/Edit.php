@@ -12,7 +12,7 @@ use Tk\Form\Event;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Edit extends \App\Controller\AdminIface
+class Edit extends \Uni\Controller\AdminIface
 {
 
     /**
@@ -86,10 +86,10 @@ class Edit extends \App\Controller\AdminIface
         }
 
         if (!$this->url)
-            $this->url = \App\Uri::createHomeUrl('/userManager.html');
+            $this->url = \Uni\Uri::createHomeUrl('/userManager.html');
 
-        $this->form = \App\Factory::createForm('userEdit');
-        $this->form->setRenderer(\App\Factory::createFormRenderer($this->form));
+        $this->form = \App\Config::getInstance()->createForm('userEdit');
+        $this->form->setRenderer(\App\Config::getInstance()->createFormRenderer($this->form));
 
         if (!$this->getuser()->isStudent()) {
             $this->form->addField(new Field\Input('name'))->setTabGroup('Details')->setRequired(true);
@@ -180,7 +180,7 @@ class Edit extends \App\Controller\AdminIface
         }
         // Hash the password correctly
         if ($this->form->getFieldValue('newPassword')) {
-            $this->user->password = \App\Factory::hashPassword($this->form->getFieldValue('newPassword'), $this->user);
+            $this->user->password = \App\Config::getInstance()->hashPassword($this->form->getFieldValue('newPassword'), $this->user);
         }
 
         // Add user to institution
@@ -230,7 +230,7 @@ class Edit extends \App\Controller\AdminIface
 
         if (\App\Listener\MasqueradeHandler::canMasqueradeAs($this->getUser(), $this->user)) {
             $this->getActionPanel()->addButton(\Tk\Ui\Button::create('Masquerade',
-                \App\Uri::create()->reset()->set(\App\Listener\MasqueradeHandler::MSQ, $this->user->hash), 'fa fa-user-secret'))->addCss('tk-masquerade');
+                \Uni\Uri::create()->reset()->set(\App\Listener\MasqueradeHandler::MSQ, $this->user->hash), 'fa fa-user-secret'))->addCss('tk-masquerade');
         }
         return $template;
     }

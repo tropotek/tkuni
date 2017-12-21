@@ -3,7 +3,7 @@ namespace App\Controller\Admin;
 
 use Tk\Request;
 use Dom\Template;
-use App\Controller\Iface;
+use Uni\Controller\Iface;
 
 /**
  *
@@ -14,12 +14,13 @@ use App\Controller\Iface;
  */
 class Dashboard extends Iface
 {
-    
-    
+
+
     /**
      *
      * @param Request $request
      * @return \Dom\Template|Template|string
+     * @throws \Exception
      */
     public function doDefault(Request $request)
     {

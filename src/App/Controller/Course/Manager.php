@@ -13,7 +13,7 @@ use Tk\Request;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Manager extends \App\Controller\AdminIface
+class Manager extends \Uni\Controller\AdminIface
 {
 
     /**
@@ -46,11 +46,11 @@ class Manager extends \App\Controller\AdminIface
         if (!$this->institution)
             throw new \Tk\Exception('Institution Not Found.');
 
-        $this->table = \App\Factory::createTable('CourseList');
-        $this->table->setRenderer(\App\Factory::createTableRenderer($this->table));
+        $this->table = \App\Config::getInstance()->createTable('CourseList');
+        $this->table->setRenderer(\App\Config::getInstance()->createTableRenderer($this->table));
 
         $this->table->addCell(new \Tk\Table\Cell\Checkbox('id'));
-        $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCss('key')->setUrl(\App\Uri::createHomeUrl('/courseEdit.html'));
+        $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCss('key')->setUrl(\Uni\Uri::createHomeUrl('/courseEdit.html'));
         $this->table->addCell(new \Tk\Table\Cell\Text('code'));
         $this->table->addCell(new \Tk\Table\Cell\Text('email'));
         $this->table->addCell(new \Tk\Table\Cell\Date('dateStart'));
@@ -89,7 +89,7 @@ class Manager extends \App\Controller\AdminIface
 
         $template->replaceTemplate('table', $this->table->getRenderer()->show());
 
-        $this->getActionPanel()->addButton(\Tk\Ui\Button::create('New Course', \App\Uri::createHomeUrl('/courseEdit.html'), 'fa fa-graduation-cap'));
+        $this->getActionPanel()->addButton(\Tk\Ui\Button::create('New Course', \Uni\Uri::createHomeUrl('/courseEdit.html'), 'fa fa-graduation-cap'));
 
         return $template;
     }

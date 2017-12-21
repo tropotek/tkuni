@@ -42,6 +42,7 @@ class Bootstrap
     /**
      * This will also load dependant objects into the config, so this is the DI object for now.
      *
+     * @throws \Exception
      */
     static function execute()
     {
@@ -49,13 +50,13 @@ class Bootstrap
             // php version must be high enough to support traits
             throw new \Exception('Your PHP5 version must be greater than 5.4.0 [Curr Ver: '.phpversion().']');
         }
-        
-        // Do not call \Tk\Config::getInstance() before this point
-        $config = Factory::getConfig();
+
+        $config = \App\Config::getInstance();
+        include($config->getSrcPath() . '/config/application.php');
 
         // This maybe should be created in a Factory or DI Container....
         if (is_readable($config->getLogPath())) {
-            if (!\App\Factory::getRequest()->has('nolog')) {
+            if (!$config->getRequest()->has('nolog')) {
                 $logger = new Logger('system');
                 $handler = new StreamHandler($config->getLogPath(), $config->getLogLevel());
                 $formatter = new \Tk\Log\MonologLineFormatter();
@@ -80,7 +81,7 @@ class Bootstrap
         \Tk\ErrorHandler::getInstance($config->getLog());
 
         // Initiate the default database connection
-        \App\Factory::getDb();
+        $config->getDb();
         $config->replace(\Tk\Db\Data::create()->all());
 
 
@@ -91,13 +92,9 @@ class Bootstrap
 
         // Include all URL routes
         include($config->getSrcPath() . '/config/routes.php');
-        
-        // * Request
-        Factory::getRequest();
-        // * Cookie
-        Factory::getCookie();
-        // * Session    
-        Factory::getSession();
+
+        // * Session
+        $config->getSession();
 
         return $config;
     }

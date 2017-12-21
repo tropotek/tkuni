@@ -7,10 +7,9 @@
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-$config = \Tk\Config::getInstance();
+$config = \App\Config::getInstance();
 
 include_once(__DIR__ . '/session.php');
-
 
 /**************************************
  * Default app config values
@@ -27,15 +26,22 @@ $config['google.recaptcha.privateKey'] = '6Ldg2wsUAAAAANCLllmQfCg5jSWUbJD6rSjEmt
  * Template folders for pages
  */
 $config['system.template.path'] = '/html';
+$config['template.admin']     = $config['system.template.path'] . '/sbadmin2/admin.html';
+$config['template.client']    = $config['system.template.path'] . '/sbadmin2/admin.html';
+$config['template.staff']     = $config['system.template.path'] . '/sbadmin2/admin.html';
+$config['template.student']   = $config['system.template.path'] . '/sbadmin2/admin.html';
+$config['template.public']    = $config['system.template.path'] . '/sbadmin2/public.html';
 
-$config['template.admin']     = $config['system.template.path'] . '/default/admin.xtpl';
-$config['template.client']    = $config['system.template.path'] . '/default/admin.xtpl';
-$config['template.staff']     = $config['system.template.path'] . '/default/staff.xtpl';
-$config['template.student']   = $config['system.template.path'] . '/default/student.xtpl';
-$config['template.public']    = $config['system.template.path'] . '/default/public.xtpl';
+/*
+ * This path is where designers can place templates that override the system default templates.
+ * Relative Path for renderer custom templates, this will reside in the above user template folders
+ * EG: $path = dirname($config['template.admin']) . $config['template.xtpl.path'];
+ * @var {templatePath} will be replaced by the path of the current user page template
+ */
+$config['template.xtpl.path'] = '{templatePath}/xtpl';
+$config['template.xtpl.ext'] = '.xtpl';
 
-// Path for renderer custom templates
-$config['template.xtpl.path'] = $config['system.template.path'] . '/default/xtpl';
+
 
 /*
  * Change the system timezone
@@ -62,7 +68,7 @@ $config['date.timezone'] = 'Australia/Victoria';
 /*
  * Config for the \Tk\Auth\Adapter\DbTable
  */
-$config['system.auth.dbtable.tableName']      = 'user';
+$config['system.auth.dbtable.tableName']      = 'UserIface';
 $config['system.auth.dbtable.usernameColumn'] = 'username';
 $config['system.auth.dbtable.passwordColumn'] = 'password';
 $config['system.auth.dbtable.saltColumn']     = 'hash';
@@ -76,13 +82,10 @@ $config['system.auth.dbtable.activeColumn']   = 'active';
 //);
 
 
-
 /*
  * Set this to true to allow extended email addresses in the format of "User Name <username@domain.com>"
  */
 // \Tk\Mail\Message::$ENABLE_EXTENDED_ADDRESS = false;
-
-
 
 
 // ------------------------------------------------------------

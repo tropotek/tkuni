@@ -4,14 +4,13 @@
  * @link http://www.tropotek.com/
  * @license Copyright 2007 Michael Mifsud
  */
-include(dirname(__FILE__) . '/_prepend.php');
-
 try {
-    $request = \App\Factory::getRequest();
-    $kernel = \App\Factory::getFrontController();
-    \Tk\Config::getInstance()->setComposer($composer);
-    $response = $kernel->handle($request)->send();
-    $kernel->terminate($request, $response);
+    include(dirname(__FILE__) . '/_prepend.php');
+    $config = \App\Config::getInstance();
+    $request = $config->getRequest();
+    $fc = $config->getFrontController();
+    $response = $fc->handle($request)->send();
+    $fc->terminate($request, $response);
 } catch (Exception $e) {
     // TODO:
     \Tk\Log::error($e->__toString());

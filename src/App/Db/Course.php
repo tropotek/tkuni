@@ -9,7 +9,7 @@ use Tk\Db\Data;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Course extends \Tk\Db\Map\Model
+class Course extends \Tk\Db\Map\Model implements \Uni\Db\CourseIface
 {
     
     /**
@@ -136,6 +136,54 @@ class Course extends \Tk\Db\Map\Model
             CourseMap::create()->addUser($this->id, $user->id);
         }
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getInstitutionId()
+    {
+        return $this->institutionId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateStart()
+    {
+        return $this->dateStart;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateEnd()
+    {
+        return $this->dateEnd;
     }
 
     /**

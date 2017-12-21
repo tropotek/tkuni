@@ -12,7 +12,7 @@ use Tk\Form\Field;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Manager extends \App\Controller\AdminIface
+class Manager extends \Uni\Controller\AdminIface
 {
 
     /**
@@ -48,6 +48,14 @@ class Manager extends \App\Controller\AdminIface
     }
 
     /**
+     * @return \Tk\Table\Cell\Actions
+     */
+    public function getActionsCell()
+    {
+        return $this->actionsCell;
+    }
+
+    /**
      *
      * @param Request $request
      */
@@ -55,7 +63,7 @@ class Manager extends \App\Controller\AdminIface
     {
 
         if (!$this->editUrl)
-            $this->editUrl = \App\Uri::createHomeUrl('/userEdit.html');
+            $this->editUrl = \Uni\Uri::createHomeUrl('/userEdit.html');
 
         if ($request->has('courseId'))
             $this->course = \App\Db\CourseMap::create()->find($request->get('courseId'));
@@ -65,25 +73,15 @@ class Manager extends \App\Controller\AdminIface
             ->setOnShow(function($cell, $obj, $button) {
                 /* @var $obj \App\Db\User */
                 /* @var $button \Tk\Table\Cell\ActionButton */
-                if (\App\Listener\MasqueradeHandler::canMasqueradeAs(\App\Factory::getUser(), $obj)) {
-                    $button->setUrl(\App\Uri::create()->set(\App\Listener\MasqueradeHandler::MSQ, $obj->getHash()));
+                if (\App\Listener\MasqueradeHandler::canMasqueradeAs(\App\Config::getInstance()->getUser(), $obj)) {
+                    $button->setUrl(\Uni\Uri::create()->set(\App\Listener\MasqueradeHandler::MSQ, $obj->getHash()));
                 } else {
                     $button->setAttr('disabled', 'disabled')->addCss('disabled');
                 }
             });
 
-        if ($this->getUser()->isStaff()) {
-            $this->actionsCell->addButton(\Tk\Table\Cell\ActionButton::create('Entries',
-                \App\Uri::createHomeUrl('/entryManager.html'), 'fa  fa-list-alt', 'tk-entries'))
-                ->setOnShow(function($cell, $obj, $button) {
-                    /* @var $obj \App\Db\User */
-                    /* @var $button \Tk\Table\Cell\ActionButton */
-                    $button->setUrl($button->getUrl()->set('userId', $obj->getId()));
-                });
-        }
-
-        $this->table = \App\Factory::createTable('UserList');
-        $this->table->setRenderer(\App\Factory::createTableRenderer($this->table));
+        $this->table = \App\Config::getInstance()->createTable('UserList');
+        $this->table->setRenderer(\App\Config::getInstance()->createTableRenderer($this->table));
 
         $this->table->addCell(new \Tk\Table\Cell\Checkbox('id'));
         $this->table->addCell($this->actionsCell);
@@ -100,7 +98,7 @@ class Manager extends \App\Controller\AdminIface
         $this->table->addFilter(new Field\Input('keywords'))->setLabel('')->setAttr('placeholder', 'Keywords');
 
         // Actions
-        //$this->table->addAction(\Tk\Table\Action\Button::getInstance('New User', 'fa fa-plus', \App\Uri::createHomeUrl('/userEdit.html'));
+        //$this->table->addAction(\Tk\Table\Action\Button::getInstance('New User', 'fa fa-plus', \Uni\Uri::createHomeUrl('/userEdit.html'));
         //$this->table->addAction(\Tk\Table\Action\Delete::create());
         $this->table->addAction(\Tk\Table\Action\Csv::create());
 

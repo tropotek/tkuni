@@ -77,8 +77,8 @@ class User extends \Dom\Renderer\Renderer
             ->setOnShow(function ($cell, $obj, $button) {
                 /* @var $obj \App\Db\User */
                 /* @var $button \Tk\Table\Cell\ActionButton */
-                if (\App\Listener\MasqueradeHandler::canMasqueradeAs(\App\Factory::getUser(), $obj)) {
-                    $button->setUrl(\App\Uri::create()->set(\App\Listener\MasqueradeHandler::MSQ, $obj->getId()));
+                if (\App\Listener\MasqueradeHandler::canMasqueradeAs(\App\Config::getInstance()->getUser(), $obj)) {
+                    $button->setUrl(\Uni\Uri::create()->set(\App\Listener\MasqueradeHandler::MSQ, $obj->getHash()));
                 }
             });
         $this->table->addCell($this->actionsCell);
@@ -99,7 +99,7 @@ class User extends \Dom\Renderer\Renderer
         //$this->table->addFilter(new Field\Input('keywords'))->setLabel('')->setAttr('placeholder', 'Keywords');
 
         // Actions
-        //$this->table->addAction(\Tk\Table\Action\Csv::getInstance(\App\Factory::getConfig()->getDb()));
+        //$this->table->addAction(\Tk\Table\Action\Csv::getInstance(\App\Config::getInstance()->getDb()));
 
         // Set list
         $filter = $this->table->getFilterValues();

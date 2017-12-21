@@ -12,7 +12,7 @@ use Tk\Request;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Edit extends \App\Controller\AdminIface
+class Edit extends \Uni\Controller\AdminIface
 {
 
     /**
@@ -59,8 +59,8 @@ class Edit extends \App\Controller\AdminIface
             }
         }
 
-        $this->form = \App\Factory::createForm('courseEdit');
-        $this->form->setRenderer(\App\Factory::createFormRenderer($this->form));
+        $this->form = \App\Config::getInstance()->createForm('courseEdit');
+        $this->form->setRenderer(\App\Config::getInstance()->createFormRenderer($this->form));
 
         $this->form->addField(new Field\Input('name'))->setRequired(true);
         $this->form->addField(new Field\Input('code'))->setRequired(true);
@@ -72,7 +72,7 @@ class Edit extends \App\Controller\AdminIface
 
         $this->form->addField(new Event\Submit('update', array($this, 'doSubmit')));
         $this->form->addField(new Event\Submit('save', array($this, 'doSubmit')));
-        $url = \App\Uri::createHomeUrl('/courseManager.html');
+        $url = \Uni\Uri::createHomeUrl('/courseManager.html');
         $this->form->addField(new Event\Link('cancel', $url));
 
         $this->form->load(\App\Db\CourseMap::create()->unmapForm($this->course));
@@ -104,7 +104,7 @@ class Edit extends \App\Controller\AdminIface
         \Tk\Alert::addSuccess('Record saved!');
 
         if ($form->getTriggeredEvent()->getName() == 'update') {
-            \App\Uri::createHomeUrl('/courseManager.html')->redirect();
+            \Uni\Uri::createHomeUrl('/courseManager.html')->redirect();
         }
 
         \Tk\Uri::create()->set('courseId', $this->course->id)->redirect();
@@ -120,9 +120,11 @@ class Edit extends \App\Controller\AdminIface
         // Render the form
         $template->insertTemplate('form', $this->form->getRenderer()->show());
 
-        if ($this->course->id) {
+        if ($this->course->id && $this->getUser()->isStaff()) {
             $this->getActionPanel()->addButton(\Tk\Ui\Button::create('Enrollment List',
-                \App\Uri::createHomeUrl('/courseEnrollment.html')->set('courseId', $this->course->id), 'fa fa-list'));
+                \Uni\Uri::createHomeUrl('/courseEnrollment.html')->set('courseId', $this->course->id), 'fa fa-list'));
+            $this->getActionPanel()->addButton(\Tk\Ui\Button::create('Students',
+                \Uni\Uri::createHomeUrl('/studentManager.html')->set('courseId', $this->course->id), 'fa fa-group'));
 
             $template->setChoice('update');
         }

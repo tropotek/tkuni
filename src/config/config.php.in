@@ -4,7 +4,7 @@
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-$config = \Tk\Config::getInstance();
+$config = \App\Config::getInstance();
 
 // Database access
 $config['db.type'] = 'mysql';

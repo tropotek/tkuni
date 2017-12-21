@@ -20,7 +20,7 @@ class StaffEdit extends Edit
     public function __construct()
     {
         parent::__construct();
-        $this->url = \App\Uri::createHomeUrl('/staffManager.html');
+        $this->url = \Uni\Uri::createHomeUrl('/staffManager.html');
     }
 
     public function setPageHeading()

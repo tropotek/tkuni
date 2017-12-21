@@ -2,46 +2,16 @@
 namespace App\Ui\Menu;
 
 
-
-
 /**
  * Class StudentMenu
+ *
+ * @author Michael Mifsud <info@tropotek.com>
+ * @link http://www.tropotek.com/
+ * @license Copyright 2016 Michael Mifsud
  */
-class StudentMenu extends \Dom\Renderer\Renderer
+class StudentMenu extends Iface
 {
 
-
-    /**
-     * StudentMenu constructor.
-     */
-    public function __construct()
-    {
-
-    }
-
-    /**
-     * @return StudentMenu
-     */
-    static function create()
-    {
-        return new static();
-    }
-
-    /**
-     * @return \Tk\Config
-     */
-    public function getConfig()
-    {
-        return \App\Factory::getConfig();
-    }
-
-    /**
-     * @return \App\Db\User
-     */
-    public function getUser()
-    {
-        return $this->getConfig()->getUser();
-    }
 
     /**
      *

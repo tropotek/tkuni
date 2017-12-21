@@ -7,41 +7,9 @@ namespace App\Ui\Menu;
 /**
  * Class AdminMenu
  */
-class AdminMenu extends \Dom\Renderer\Renderer
+class AdminMenu extends Iface
 {
 
-
-    /**
-     * AdminMenu constructor.
-     */
-    public function __construct()
-    {
-
-    }
-
-    /**
-     * @return AdminMenu
-     */
-    static function create()
-    {
-        return new static();
-    }
-
-    /**
-     * @return \Tk\Config
-     */
-    public function getConfig()
-    {
-        return \App\Factory::getConfig();
-    }
-
-    /**
-     * @return \App\Db\User
-     */
-    public function getUser()
-    {
-        return $this->getConfig()->getUser();
-    }
 
     /**
      *

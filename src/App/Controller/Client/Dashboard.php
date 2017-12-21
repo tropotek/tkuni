@@ -3,11 +3,9 @@ namespace App\Controller\Client;
 
 use Tk\Request;
 use Dom\Template;
-use App\Controller\Iface;
+use Uni\Controller\Iface;
 
 /**
- *
- *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
@@ -16,12 +14,12 @@ class Dashboard extends Iface
 {
     
     /**
-     *
      * @param Request $request
      */
     public function doDefault(Request $request)
     {
         $this->setPageTitle('Dashboard');
+
         /** @var \Lti\Provider $provider */
         //$provider = $this->getConfig()->get('lti.provider');
         

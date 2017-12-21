@@ -241,7 +241,7 @@ class CourseMap extends Mapper
         $from = sprintf('%s a, %s b, %s c LEFT JOIN %s d ON (c.id = d.user_id) ',
             $this->quoteTable($this->getTable()),
             $this->quoteTable('course_pre_enrollment'),
-            $this->quoteTable('user'),
+            $this->quoteTable('UserIface'),
             $this->quoteTable('course_has_user'));
         $where = sprintf('a.id = b.course_id AND b.email = c.email AND a.institution_id = %d AND b.email = %s AND d.user_id IS NULL',
             (int)$institutionId, $this->quote($email));

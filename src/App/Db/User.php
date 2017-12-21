@@ -1,25 +1,16 @@
 <?php
 namespace App\Db;
 
-use Tk\Auth\Exception;
 use Tk\Db\Data;
 
 
 /**
- * Class User
- *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
+class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\Db\UserIface
 {
-    const ROLE_PUBLIC = 'public';
-    const ROLE_ADMIN = 'admin';
-    const ROLE_CLIENT= 'client';
-    const ROLE_STAFF = 'staff';
-    const ROLE_STUDENT = 'student';
-
 
     /**
      * @var int
@@ -122,7 +113,8 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     }
 
     /**
-     * 
+     *
+     * @throws \Tk\Exception
      */
     public function save()
     {
@@ -130,6 +122,7 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
             $this->displayName = $this->name;
         }
         $this->getHash();
+        vd();
         $this->getData()->save();
         parent::save();
     }
@@ -145,7 +138,6 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
             $this->data = \Tk\Db\Data::create($this->id, get_class($this));
         return $this->data;
     }
-
 
     /**
      * Create a random password
@@ -169,6 +161,7 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
      * Get the user hash or generate one if needed
      *
      * @return string
+     * @throws \Tk\Exception
      */
     public function getHash()
     {
@@ -189,21 +182,21 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
         if (!$this->username || !$this->role || !$this->email) {
             throw new \Tk\Exception('The username, role and email must be set before generating a valid hash');
         }
-        return \App\Factory::hash(sprintf('%s%s%s%s', $this->getVolatileId(), $this->institutionId, $this->username, $this->email));
+        return \App\Config::getInstance()->hash(sprintf('%s%s%s%s', $this->getVolatileId(), $this->institutionId, $this->username, $this->email));
     }
 
     /**
      * Set the password from a plain string
      *
      * @param string $pwd
-     * @throws Exception
+     * @throws \Tk\Exception
      */
     public function setNewPassword($pwd = '')
     {
         if (!$pwd) {
             $pwd = self::createPassword(10);
         }
-        $this->password = \App\Factory::hashPassword($pwd, $this);
+        $this->password = \App\Config::getInstance()->hashPassword($pwd, $this);
     }
 
     /**
@@ -234,10 +227,9 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     /**
      * Return the users home|dashboard relative url
      *
-     * @note \App\Uri::createHomeUrl() uses this method to get the home path
+     * @note \Uni\Uri::createHomeUrl() uses this method to get the home path
      *
      * @return \Tk\Uri
-     * @throws \Exception
      */
     public function getHomeUrl()
     {

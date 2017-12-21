@@ -11,7 +11,7 @@ use Tk\Form\Field;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Settings extends \App\Controller\AdminIface
+class Settings extends \Uni\Controller\AdminIface
 {
 
     /**
@@ -36,8 +36,8 @@ class Settings extends \App\Controller\AdminIface
         $this->setPageTitle('Site Settings');
         $this->data = \Tk\Db\Data::create();
         
-        $this->form = \App\Factory::createForm('settingsEdit');
-        $this->form->setRenderer(\App\Factory::createFormRenderer($this->form));
+        $this->form = \App\Config::getInstance()->createForm('settingsEdit');
+        $this->form->setRenderer(\App\Config::getInstance()->createFormRenderer($this->form));
 
         $this->form->addField(new Field\Input('site.title'))->setLabel('Site Title')->setRequired(true);
         $this->form->addField(new Field\Input('site.email'))->setLabel('Site Email')->setRequired(true);
@@ -95,7 +95,7 @@ class Settings extends \App\Controller\AdminIface
         // Render the form
         $template->insertTemplate('form', $this->form->getRenderer()->show());
 
-        $this->getActionPanel()->addButton(\Tk\Ui\Button::create('Site Plugins', \App\Uri::createHomeUrl('/plugins.html'), 'fa fa-plug'));
+        $this->getActionPanel()->addButton(\Tk\Ui\Button::create('Site Plugins', \Uni\Uri::createHomeUrl('/plugins.html'), 'fa fa-plug'));
 
         return $template;
     }

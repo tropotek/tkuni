@@ -67,7 +67,7 @@ class Course extends \Dom\Renderer\Renderer
         //$this->table->addFilter(new Field\Input('keywords'))->setLabel('')->setAttr('placeholder', 'Keywords');
 
         // Actions
-        //$this->table->addAction(\Tk\Table\Action\Csv::getInstance(\App\Factory::getConfig()->getDb()));
+        //$this->table->addAction(\Tk\Table\Action\Csv::getInstance(\App\Config::getInstance()->getDb()));
 
         // Set list
         $filter = $this->table->getFilterValues();

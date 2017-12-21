@@ -106,8 +106,8 @@ class FindUser extends Iface
     public function show()
     {
         $template = $this->makeBodyTemplate();
-        $ajaxUrl = \App\Uri::create('/ajax/user/findFiltered.html')->toString();
-        $actionUrl = \App\Uri::create()->set($this->getSelectButtonId())->toString();
+        $ajaxUrl = \Uni\Uri::create('/ajax/user/findFiltered.html')->toString();
+        $actionUrl = \Uni\Uri::create()->set($this->getSelectButtonId())->toString();
 
         
         $json = json_encode($this->filter);
