@@ -53,7 +53,7 @@ class Config extends \Uni\Config
             $institution = \App\Db\InstitutionMap::create()->findByHash($submittedData['instHash']);
             $adapter->setInstitution($institution);
         }
-        $adapter->setHashCallback(array(__CLASS__, 'hashPassword'));
+        $adapter->setHashCallback(array(\Tk\Config::getInstance(), 'hashPassword'));
         $adapter->replace($submittedData);
         return $adapter;
     }
@@ -75,7 +75,7 @@ class Config extends \Uni\Config
             else if ($user->hash)
                 $salt = $user->hash;
         }
-        return self::hash($pwd, $salt);
+        return $this->hash($pwd, $salt);
     }
 
     /**
