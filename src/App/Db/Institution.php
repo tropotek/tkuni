@@ -243,7 +243,7 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\D
 
     /**
      * @param int $courseId
-     * @return CourseIface
+     * @return \Tk\Db\Map\Model|\Tk\Db\ModelInterface|CourseIface
      */
     public function findCourse($courseId)
     {

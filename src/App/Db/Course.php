@@ -115,6 +115,16 @@ class Course extends \Tk\Db\Map\Model implements \Uni\Db\CourseIface
     }
 
     /**
+     * Get the path for all file associated to this object
+     *
+     * @return string
+     */
+    public function getDataPath()
+    {
+        return sprintf('%s/course/%s', $this->getInstitution()->getDataPath(), $this->getVolatileId());
+    }
+
+    /**
      *
      * @param $user
      * @return mixed
