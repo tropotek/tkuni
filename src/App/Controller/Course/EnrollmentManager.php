@@ -69,9 +69,9 @@ class EnrollmentManager extends \Uni\Controller\AdminIface
                 if (!$user->isEnrolled($this->course->getId())) {
                     // TODO: test for any preconditions, maybe fire an enrollment event?
                     \App\Db\CourseMap::create()->addUser($this->course->getId(), $user->getId());
-                    \Tk\Alert::addSuccess($user->getDisplayName() . ' added to the course ' . $this->course->name);
+                    \Tk\Alert::addSuccess($user->getName() . ' added to the course ' . $this->course->name);
                 } else {
-                    \Tk\Alert::addWarning($user->getDisplayName() . ' already enrolled in the course ' . $this->course->name);
+                    \Tk\Alert::addWarning($user->getName() . ' already enrolled in the course ' . $this->course->name);
                 }
             }
         });

@@ -21,7 +21,7 @@ class StaffMenu extends Iface
     {
         $template = $this->getTemplate();
 
-        $template->insertText('username', $this->getUser()->getDisplayName());
+        $template->insertText('username', $this->getUser()->getName());
 
         return $template;
     }

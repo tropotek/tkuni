@@ -216,12 +216,20 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\Db\UserI
     /**
      * Get a valid display name
      */
-    public function getDisplayName()
+    public function getName()
     {
         if (!$this->displayName) {
             return $this->name;
         }
         return $this->displayName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
     }
 
     /**
