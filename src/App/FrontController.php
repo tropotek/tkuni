@@ -16,8 +16,6 @@ class FrontController extends \Tk\Kernel\HttpKernel
 {
 
     /**
-     * Constructor.
-     *
      * @param Dispatcher $dispatcher
      * @param Resolver $resolver
      * @param $config
