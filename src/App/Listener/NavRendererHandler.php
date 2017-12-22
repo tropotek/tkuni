@@ -64,7 +64,7 @@ class NavRendererHandler implements Subscriber
     public static function getSubscribedEvents()
     {
         return array(
-            \Tk\PageEvents::CONTROLLER_SHOW =>  array('onShow', 0)
+            \Tk\PageEvents::PAGE_SHOW =>  array('onShow', 0)
         );
     }
 
