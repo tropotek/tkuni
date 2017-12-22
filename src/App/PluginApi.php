@@ -104,11 +104,11 @@ class PluginApi implements \Uni\PluginApi
      */
     public function autoAuthenticate($user)
     {
-        $auth = \App\Config::getInstance()->getAuth();
+        $auth = $this->getConfig()->getAuth();
         \App\Listener\MasqueradeHandler::masqueradeClear();
-        $authResult = new \Tk\Auth\Result(\Tk\Auth\Result::SUCCESS, $user->id);
-        $auth->clearIdentity()->getStorage()->write($user->id);
-        \App\Config::getInstance()->setUser($user);
+        $authResult = new \Tk\Auth\Result(\Tk\Auth\Result::SUCCESS, $user->getId());
+        $auth->clearIdentity()->getStorage()->write($user->getId());
+        $this->getConfig()->setUser($user);
         return $authResult;
     }
 
@@ -125,5 +125,13 @@ class PluginApi implements \Uni\PluginApi
         return $user->getHomeUrl();
     }
 
+
+    /**
+     * @return \App\Config
+     */
+    public function getConfig()
+    {
+        return \App\Config::getInstance();
+    }
 
 }
