@@ -1,10 +1,8 @@
 <?php
 namespace App;
 
-
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use Psr\Log\NullLogger;
 
 
 /**
@@ -51,7 +49,8 @@ class Bootstrap
             throw new \Exception('Your PHP5 version must be greater than 5.4.0 [Curr Ver: '.phpversion().']');
         }
 
-        $config = \App\Config::getInstance();
+        $config = \App\Config::create();
+        //include($config->getSrcPath() . '/config/application.php');
 
         // This maybe should be created in a Factory or DI Container....
         if (is_readable($config->getLogPath())) {

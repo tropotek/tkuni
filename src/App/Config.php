@@ -25,7 +25,7 @@ class Config extends \Uni\Config
     }
 
     /**
-     * @return \Uni\PluginApi
+     * @return \App\PluginApi
      */
     public function getPluginApi()
     {
