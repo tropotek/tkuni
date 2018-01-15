@@ -39,6 +39,7 @@ class FrontController extends \Tk\Kernel\HttpKernel
 
     /**
      * init Application front controller
+     *
      * @throws \Tk\Exception
      */
     public function init()
