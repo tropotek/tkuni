@@ -50,7 +50,7 @@ class Bootstrap
         }
 
         $config = \App\Config::create();
-        //include($config->getSrcPath() . '/config/application.php');
+        include($config->getSrcPath() . '/config/application.php');
 
         // This maybe should be created in a Factory or DI Container....
         if (is_readable($config->getLogPath())) {
