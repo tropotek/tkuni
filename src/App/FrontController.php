@@ -26,13 +26,13 @@ class FrontController extends \Tk\Kernel\HttpKernel
         parent::__construct($dispatcher, $resolver);
 
         // Init the plugins
-        $this->getConfig()->getPluginFactory();
+        $config->getPluginFactory();
 
         // Initiate the email gateway
-        $this->getConfig()->getEmailGateway();
+        $config->getEmailGateway();
 
         // Initiate the plugin API object
-        $this->getConfig()->getPluginApi();
+        $config->getPluginApi();
         
         $this->init();
     }
@@ -44,51 +44,47 @@ class FrontController extends \Tk\Kernel\HttpKernel
      */
     public function init()
     {
-        $logger = $this->getConfig()->getLog();
-        /** @var \Tk\Request $request */
-        $request = $this->getConfig()->getRequest();
+        $config = \App\Config::getInstance();
+        $logger = $config->getLog();
+        $request = $config->getRequest();
+        $dispatcher = $this->getDispatcher();
 
+        if (!$config->isCli()) {
+            $matcher = new \Tk\Routing\UrlMatcher($config->get('site.routes'));
+            $dispatcher->addSubscriber(new \Tk\Listener\RouteListener($matcher));
+            $dispatcher->addSubscriber(new \Tk\Listener\PageHandler($dispatcher));
+            $dispatcher->addSubscriber(new \Tk\Listener\ResponseHandler($config->getDomModifier()));
+        }
 
         // Tk Listeners
-        $this->getDispatcher()->addSubscriber(new \Tk\Listener\StartupHandler($logger, $request, $this->getConfig()->getSession()));
-        $matcher = new \Tk\Routing\UrlMatcher($this->getConfig()->get('site.routes'));
-        $this->getDispatcher()->addSubscriber(new \Tk\Listener\RouteListener($matcher));
-        $this->getDispatcher()->addSubscriber(new \Tk\Listener\PageHandler($this->getDispatcher()));
-        $this->getDispatcher()->addSubscriber(new \Tk\Listener\ResponseHandler($this->getConfig()->getDomModifier()));
+        $dispatcher->addSubscriber(new \Tk\Listener\StartupHandler($logger, $request, $config->getSession()));
+
 
         // Exception Handling
-        $this->getDispatcher()->addSubscriber(new \Tk\Listener\LogExceptionListener($logger));
+        $dispatcher->addSubscriber(new \Tk\Listener\LogExceptionListener($logger));
         if (preg_match('|^/ajax/.+|', $request->getUri()->getRelativePath())) { // If ajax request
-            $this->getDispatcher()->addSubscriber(new \Tk\Listener\JsonExceptionListener($this->getConfig()->isDebug()));
+            $dispatcher->addSubscriber(new \Tk\Listener\JsonExceptionListener($config->isDebug()));
         } else {
-            $this->getDispatcher()->addSubscriber(new \Tk\Listener\ExceptionListener($this->getConfig()->isDebug()));
+            $dispatcher->addSubscriber(new \Tk\Listener\ExceptionListener($config->isDebug()));
         }
-        if (!$this->getConfig()->isDebug()) {
-            $this->getDispatcher()->addSubscriber(new \Tk\Listener\ExceptionEmailListener($this->getConfig()->getEmailGateway(), $logger,
-                $this->getConfig()->get('site.email'), $this->getConfig()->get('site.title')));
+        if (!$config->isDebug()) {
+            $dispatcher->addSubscriber(new \Tk\Listener\ExceptionEmailListener($config->getEmailGateway(), $logger,
+                $config->get('site.email'), $config->get('site.title')));
         }
 
-
-        $sh = new \Tk\Listener\ShutdownHandler($logger, $this->getConfig()->getScriptTime());
-        $sh->setPageBytes($this->getConfig()->getDomFilterPageBytes());
-        $this->getDispatcher()->addSubscriber($sh);
+        $sh = new \Tk\Listener\ShutdownHandler($logger, $config->getScriptTime());
+        $sh->setPageBytes($config->getDomFilterPageBytes());
+        $dispatcher->addSubscriber($sh);
 
         // App Listeners
-        $this->getDispatcher()->addSubscriber(new \App\Listener\AuthHandler());
-        $this->getDispatcher()->addSubscriber(new \Uni\Listener\CrumbsHandler());
-        $this->getDispatcher()->addSubscriber(new \App\Listener\NavRendererHandler());
-        $this->getDispatcher()->addSubscriber(new \App\Listener\MasqueradeHandler());
-        $this->getDispatcher()->addSubscriber(new \App\Listener\InstitutionHandler());
-        $this->getDispatcher()->addSubscriber(new \Uni\Listener\ActionPanelHandler());
-        $this->getDispatcher()->addSubscriber(new \App\Listener\PageTemplateHandler());
+        $dispatcher->addSubscriber(new \App\Listener\AuthHandler());
+        $dispatcher->addSubscriber(new \Uni\Listener\CrumbsHandler());
+        $dispatcher->addSubscriber(new \App\Listener\NavRendererHandler());
+        $dispatcher->addSubscriber(new \App\Listener\MasqueradeHandler());
+        $dispatcher->addSubscriber(new \App\Listener\InstitutionHandler());
+        $dispatcher->addSubscriber(new \Uni\Listener\ActionPanelHandler());
+        $dispatcher->addSubscriber(new \App\Listener\PageTemplateHandler());
 
     }
 
-    /**
-     * @return \App\Config
-     */
-    public function getConfig()
-    {
-        return \App\Config::getInstance();
-    }
 }

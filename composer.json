@@ -50,8 +50,8 @@
         "ttek/tk-ui": "~2.0",
         "ttek/tk-uni": "~2.0",
         "ttek/tk-plugin": "~2.0",
-        "ttek-plg/ems-lti": "~1.0",
-        "ttek-plg/ems-ldap": "~1.0"
+        "ttek-plg/plg-lti": "~2.0",
+        "ttek-plg/plg-ldap": "~2.0"
     },
     "require-dev":  {
     }

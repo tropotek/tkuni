@@ -14,17 +14,13 @@ $config['db.user'] = 'username';
 $config['db.pass'] = 'password';
 
 
-
-/*
- * Set the default table names in the DB
- */
-\Tk\Plugin\Factory::$DB_TABLE = '_plugin';
-\Tk\Util\SqlMigrate::$DB_TABLE = '_migration';
-\Tk\Session\Adapter\Database::$DB_TABLE = '_session';
+// Required for ./bin scripts to have correctly Formed URLS
+$config['site.host'] = 'example.com.au';
+$config['site.url']  = '';
 
 
 // Debug settings
-$config['debug'] = false;
+//$config['debug'] = true;
 //$config['log.path'] = '/home/user/log/error.log';
 //$config['log.level'] = \Psr\Log\LogLevel::DEBUG;
 //$config['system.debug.email'] = 'root@localhost';

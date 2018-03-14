@@ -37,7 +37,6 @@ class DbEvent extends \Tk\Event\Event
      */
     public function __construct($model, $mapper)
     {
-        parent::__construct();
         $this->model = $model;
         $this->mapper = $mapper;
     }

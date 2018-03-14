@@ -10,6 +10,42 @@ namespace App;
 class Config extends \Uni\Config
 {
 
+    // ----------------------------------------------------
+
+    /**
+     * @param int $id
+     * @return \Uni\Db\InstitutionIface|\Tk\Db\ModelInterface|\App\Db\Institution
+     * @throws \Tk\Db\Exception
+     */
+    public function findInstitution($id)
+    {
+        return \App\Db\InstitutionMap::create()->find($id);
+    }
+
+    /**
+     * @param int $id
+     * @return null|\Tk\Db\Map\Model|\Tk\Db\ModelInterface|\App\Db\Course
+     * @throws \Tk\Db\Exception
+     */
+    public function findCourse($id)
+    {
+        return \App\Db\CourseMap::create()->find($id);
+    }
+
+    /**
+     * @param int $id
+     * @return null|\Tk\Db\Map\Model|\Tk\Db\ModelInterface|\App\Db\User
+     * @throws \Tk\Db\Exception
+     */
+    public function findUser($id)
+    {
+        return \App\Db\UserMap::create()->find($id);
+    }
+
+    // ----------------------------------------------------
+
+
+
     /**
      * getFrontController
      *

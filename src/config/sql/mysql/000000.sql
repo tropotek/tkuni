@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `course` (
   `del` TINYINT(1) NOT NULL DEFAULT 0,
   `modified` DATETIME NOT NULL,
   `created` DATETIME NOT NULL,
-  UNIQUE KEY `course_code_institution` (`code`, `institution_id`)
+  KEY `course_code_institution` (`code`, `institution_id`)
 ) ENGINE=InnoDB;
 
 -- ----------------------------
@@ -128,3 +128,7 @@ VALUES
   (1, 'student@unimelb.edu.au')
 ;
 
+
+-- Use this to upgrade the ems- to plg- naming convention if required
+-- UPDATE _plugin SET `name` = REPLACE(`name`, 'ems-', 'plg-');
+-- UPDATE _plugin_zone SET `plugin_name` = REPLACE(`plugin_name`, 'ems-', 'plg-');
