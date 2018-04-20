@@ -4,8 +4,6 @@ namespace App\Ui\Table;
 use Dom\Template;
 
 /**
- * Class CourseTable
- *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
@@ -19,9 +17,9 @@ class PreEnrollment extends \Dom\Renderer\Renderer
     protected $table = null;
 
     /**
-     * @var \App\Db\Course
+     * @var \App\Db\Subject
      */
-    protected $course = null;
+    protected $subject = null;
 
     /**
      * @var \App\Ui\Dialog\PreEnrollment
@@ -30,16 +28,16 @@ class PreEnrollment extends \Dom\Renderer\Renderer
 
 
     /**
-     * CourseTable constructor.
-     * @param \App\Db\Course $course
+     * constructor.
+     * @param \App\Db\Subject $subject
      * @throws \Tk\Exception
      */
-    public function __construct($course)
+    public function __construct($subject)
     {
-        $this->course = $course;
+        $this->subject = $subject;
 
-        if (!$this->course)
-            throw new \Tk\Exception('Invalid course details');
+        if (!$this->subject)
+            throw new \Tk\Exception('Invalid subject details');
 
         $this->doDefault();
     }
@@ -73,9 +71,9 @@ class PreEnrollment extends \Dom\Renderer\Renderer
         // Set Table List
         $filter = $this->table->getFilterValues();
         $filter['institutionId'] = $this->getUser()->getInstitution()->getId();
-        $filter['courseId'] = $this->course->getId();
+        $filter['subjectId'] = $this->subject->getId();
 
-        $list = \App\Db\CourseMap::create()->findPreEnrollments($this->course->getId(), $this->table->makeDbTool('enrolled'));
+        $list = \App\Db\SubjectMap::create()->findPreEnrollments($this->subject->getId(), $this->table->makeDbTool('enrolled'));
 
         $this->table->setList($list);
 
@@ -163,14 +161,14 @@ class ActionUnEnroll extends \Tk\Table\Action\Delete
         /* @var \stdClass $obj */
         foreach($this->getTable()->getList() as $obj) {
             if (in_array($obj->email, $selected) && !in_array($obj->email, $this->excludeIdList)) {
-                $courseMap = \App\Db\CourseMap::create();
-                $courseMap->removePreEnrollment($obj->course_id, $obj->email);
-                /** @var \App\Db\Course $course */
-                $course = $courseMap->find($obj->course_id);
-                if ($course) {  // Delete user from course enrolment
-                    $user = \App\Db\UserMap::create()->findByEmail($obj->email, $course->institutionId);
+                $subjectMap = \App\Db\SubjectMap::create();
+                $subjectMap->removePreEnrollment($obj->subject_id, $obj->email);
+                /** @var \App\Db\Subject $subject */
+                $subject = $subjectMap->find($obj->subject_id);
+                if ($subject) {  // Delete user from subject enrolment
+                    $user = \App\Db\UserMap::create()->findByEmail($obj->email, $subject->institutionId);
                     if ($user) {
-                        $courseMap->removeUser($course->getId(), $user->getId());
+                        $subjectMap->removeUser($subject->getId(), $user->getId());
                     }
                 }
                 $i++;
@@ -184,7 +182,7 @@ class ActionUnEnroll extends \Tk\Table\Action\Delete
      */
     protected function getConfirmStr()
     {
-        return "'Delete ' + selected.length + ' selected records?\\nNote: Enrolled users will be removed from this course'";
+        return "'Delete ' + selected.length + ' selected records?\\nNote: Enrolled users will be removed from this subject'";
     }
 }
 

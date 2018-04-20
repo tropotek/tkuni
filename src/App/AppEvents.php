@@ -41,11 +41,11 @@ class AppEvents
      * to the destination course.
      *
      * Event Data:
-     *  'courseFromId', 'courseToId', 'userId
+     *  'subjectFromId', 'subjectToId', 'userId
      *
      * @event \Tk\Event\Event
      */
-    const COURSE_MIGRATE_USER = 'course.migrate.user';
+    const SUBJECT_MIGRATE_USER = 'subject.migrate.user';
 
 
 

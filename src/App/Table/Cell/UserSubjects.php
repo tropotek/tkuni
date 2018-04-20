@@ -3,13 +3,11 @@ namespace App\Table\Cell;
 
 
 /**
- * Class UserCourses
- *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2017 Michael Mifsud
  */
-class UserCourses extends \Tk\Table\Cell\Text
+class UserSubjects extends \Tk\Table\Cell\Text
 {
 
     protected $institutionId = 0;
@@ -31,11 +29,11 @@ class UserCourses extends \Tk\Table\Cell\Text
     public function getPropertyValue($obj, $property)
     {
         //$val =  parent::getPropertyValue($obj, $property);
-        $courseList = \App\Db\CourseMap::create()->findByUserId($obj->id, $this->institutionId, \Tk\Db\Tool::create('a.name'));
+        $list = \App\Db\SubjectMap::create()->findByUserId($obj->id, $this->institutionId, \Tk\Db\Tool::create('a.name'));
         $val = '';
-        /** @var \App\Db\Course $course */
-        foreach ($courseList as $course) {
-            $val .= $course->code . ', ';
+        /** @var \App\Db\Subject $subject */
+        foreach ($list as $subject) {
+            $val .= $subject->code . ', ';
         }
         $val = rtrim($val, ', ');
 

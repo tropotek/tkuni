@@ -4,13 +4,11 @@ namespace App\Ui\Table;
 use Dom\Template;
 
 /**
- * Class CourseTable
- *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  */
-class Course extends \Dom\Renderer\Renderer
+class Subject extends \Dom\Renderer\Renderer
 {
 
     /**
@@ -30,7 +28,7 @@ class Course extends \Dom\Renderer\Renderer
 
 
     /**
-     * CourseTable constructor.
+     *  constructor.
      *
      * @param int $institutionId
      * @param \Tk\Uri|null $editUrl
@@ -46,10 +44,11 @@ class Course extends \Dom\Renderer\Renderer
     /**
      *
      * @return \Dom\Template|Template|string
+     * @throws \Exception
      */
     public function doDefault()
     {
-        $this->table = new \Tk\Table('CourseList');
+        $this->table = new \Tk\Table('SubjectList');
         $this->table->setRenderer(\Tk\Table\Renderer\Dom\Table::create($this->table));
 
         //$this->table->addCell(new \Tk\Table\Cell\Checkbox('id'));
@@ -73,7 +72,7 @@ class Course extends \Dom\Renderer\Renderer
         $filter = $this->table->getFilterValues();
         if ($this->institutionId)
             $filter['institutionId'] = $this->institutionId;
-        $users = \App\Db\CourseMap::create()->findFiltered($filter, $this->table->makeDbTool('a.id'));
+        $users = \App\Db\SubjectMap::create()->findFiltered($filter, $this->table->getTool('a.id'));
         $this->table->setList($users);
 
     }

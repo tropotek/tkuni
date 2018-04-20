@@ -24,12 +24,12 @@ class Config extends \Uni\Config
 
     /**
      * @param int $id
-     * @return null|\Tk\Db\Map\Model|\Tk\Db\ModelInterface|\App\Db\Course
+     * @return null|\Tk\Db\Map\Model|\Tk\Db\ModelInterface|\App\Db\Subject
      * @throws \Tk\Db\Exception
      */
-    public function findCourse($id)
+    public function findSubject($id)
     {
-        return \App\Db\CourseMap::create()->find($id);
+        return \App\Db\SubjectMap::create()->find($id);
     }
 
     /**
@@ -45,11 +45,11 @@ class Config extends \Uni\Config
     // ----------------------------------------------------
 
 
-
     /**
      * getFrontController
      *
      * @return \App\FrontController
+     * @throws \Tk\Exception
      */
     public function getFrontController()
     {

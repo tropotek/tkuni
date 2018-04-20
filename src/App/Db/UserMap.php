@@ -185,6 +185,7 @@ class UserMap extends Mapper
      * @param array $filter
      * @param Tool $tool
      * @return ArrayObject
+     * @throws \Tk\Db\Exception
      */
     public function findFiltered($filter = array(), $tool = null)
     {
@@ -215,9 +216,9 @@ class UserMap extends Mapper
             $where .= sprintf('a.institution_id = %d AND ', (int)$filter['institutionId']);
         }
 
-        if (!empty($filter['courseId'])) {
-            $from .= sprintf(', course_has_user c');
-            $where .= sprintf('a.id = c.user_id AND c.course_id = %d AND ', (int)$filter['courseId']);
+        if (!empty($filter['subjectId'])) {
+            $from .= sprintf(', subject_has_user c');
+            $where .= sprintf('a.id = c.user_id AND c.subject_id = %d AND ', (int)$filter['subjectId']);
         }
 
         if (!empty($filter['role'])) {

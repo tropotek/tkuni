@@ -63,7 +63,7 @@ class ClientMenu extends Iface
         <ul class="nav" id="side-menu">
           <li><a href="/client/index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
           <li><a href="/client/institutionEdit.html"><i class="fa fa-university fa-fw"></i> Institution</a></li>
-          <li><a href="/client/courseManager.html"><i class="fa fa-graduation-cap fa-fw"></i> Courses</a></li>
+          <li><a href="/client/subjectManager.html"><i class="fa fa-graduation-cap fa-fw"></i> Subjects</a></li>
           <li><a href="/client/staffManager.html"><i class="fa fa-group fa-fw"></i> Staff</a></li>
         </ul>
       </div>

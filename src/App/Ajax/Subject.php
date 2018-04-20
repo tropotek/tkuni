@@ -10,7 +10,7 @@ use Tk\Request;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Course
+class Subject
 {
 
     /**
@@ -21,9 +21,9 @@ class Course
     {
         $status = 200;  // change this on error
         $filter = $request->all();
-        if (!empty($filter['courseId'])) {
-            $filter['exclude'] = $filter['courseId'];
-            unset($filter['courseId']);
+        if (!empty($filter['subjectId'])) {
+            $filter['exclude'] = $filter['subjectId'];
+            unset($filter['subjectId']);
         }
         if (empty($filter['keywords'])) {
             unset($filter['keywords']);
@@ -32,11 +32,11 @@ class Course
             unset($filter['userId']);
         }
 
-        $list = \App\Db\CourseMap::create()->findFiltered($filter);
+        $list = \App\Db\SubjectMap::create()->findFiltered($filter);
         $data = array();
         
-        foreach ($list as $course) {
-            $data[] = $course;
+        foreach ($list as $subject) {
+            $data[] = $subject;
         }
         return \Tk\ResponseJson::createJson($data, $status);
     }

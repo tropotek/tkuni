@@ -100,7 +100,7 @@
   <div class="jumbotron">
     <h1>Tk2Uni Template!</h1>
     <p class="lead">
-      This template site is setup to manage institutions, courses, staff, students and enrollments. It also has adapters
+      This template site is setup to manage institutions,subjects, staff, students and enrollments. It also has adapters
       to connect to LDAP and LMS systems.
     </p>
     <p>
@@ -113,9 +113,9 @@
       <h2>User Roles</h2>
       <ul>
         <li><b>admin:</b> Site administration. Manage client accounts and site setup/content</li>
-        <li><b>client:</b> Institution user, manage Institution settings and all course information</li>
-        <li><b>staff:</b> Institution coordinator to assigned courses. Manage Courses students and application data.</li>
-        <li><b>student:</b> Institution student assigned to courses. Manage application data for their enrolled courses.</li>
+        <li><b>client:</b> Institution user, manage Institution settings and all subject information</li>
+        <li><b>staff:</b> Institution coordinator to assigned subjects. Manage subjects students and application data.</li>
+        <li><b>student:</b> Institution student assigned to subjects. Manage application data for their enrolled subjects.</li>
       </ul>
       <p>
         <a role="button" href="#" class="btn btn-primary">View details »</a>

@@ -65,7 +65,7 @@ class StaffMenu extends Iface
       <div class="sidebar-nav navbar-collapse">
         <ul class="nav" id="side-menu">
           <li><a href="/staff/index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
-          <li><a href="/staff/courseManager.html"><i class="fa fa-graduation-cap fa-fw"></i> Courses</a></li>
+          <li><a href="/staff/subjectManager.html"><i class="fa fa-graduation-cap fa-fw"></i> Subjects</a></li>
           <!--<li><a href="/staff/staffManager.html"><i class="fa fa-users fa-fw"></i> Staff</a></li>-->
         </ul>
       </div>

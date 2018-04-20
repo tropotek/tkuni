@@ -55,9 +55,9 @@ CREATE TABLE IF NOT EXISTS institution (
 );
 
 -- ----------------------------
---  Course Data Tables
+--  subject Data Tables
 -- ----------------------------
-CREATE TABLE IF NOT EXISTS course (
+CREATE TABLE IF NOT EXISTS subject (
   id SERIAL PRIMARY KEY,
   institution_id INTEGER NOT NULL DEFAULT 0,
   name VARCHAR(255) NOT NULL DEFAULT '',
@@ -69,29 +69,29 @@ CREATE TABLE IF NOT EXISTS course (
   del NUMERIC(1) NOT NULL DEFAULT 0,
   modified TIMESTAMP DEFAULT NOW(),
   created TIMESTAMP DEFAULT NOW(),
-  CONSTRAINT course_code_institution UNIQUE (code, institution_id)
+  CONSTRAINT subject_code_institution UNIQUE (code, institution_id)
 );
 
 -- ----------------------------
--- For now we will assume that one user has one role in a course, ie: coordinator, lecturer, student
--- User is enrolled in course or coordinator of course
+-- For now we will assume that one user has one role in a subject, ie: coordinator, lecturer, student
+-- User is enrolled in subject or coordinator of subject
 -- ----------------------------
-CREATE TABLE IF NOT EXISTS course_has_user (
+CREATE TABLE IF NOT EXISTS subject_has_user (
   user_id INTEGER NOT NULL,
-  course_id INTEGER NOT NULL,
-  CONSTRAINT course_has_user_key UNIQUE (user_id, course_id),
+  subject_id INTEGER NOT NULL,
+  CONSTRAINT subject_has_user_key UNIQUE (user_id, subject_id),
   FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE,
-  FOREIGN KEY (course_id) REFERENCES course(id) ON DELETE CASCADE
+  FOREIGN KEY (subject_id) REFERENCES subject(id) ON DELETE CASCADE
 );
 
 -- --------------------------------------------------------
 --
 -- --------------------------------------------------------
-CREATE TABLE IF NOT EXISTS course_pre_enrollment (
-  course_id INTEGER NOT NULL DEFAULT '0',
+CREATE TABLE IF NOT EXISTS subject_pre_enrollment (
+  subject_id INTEGER NOT NULL DEFAULT '0',
   email VARCHAR(255) NOT NULL DEFAULT '',
   uid VARCHAR(64) NOT NULL DEFAULT '',
-  PRIMARY KEY (course_id, email)
+  PRIMARY KEY (subject_id, email)
 );
 
 
@@ -111,17 +111,17 @@ INSERT INTO institution (owner_id, name, email, description, logo, active, hash,
     (2, 'The University Of Melbourne', 'admin@unimelb.edu.au', 'This is a test institution for this app', '', 1, MD5('1'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW()))
 ;
 
-INSERT INTO course (institution_id, name, code, email, description, start, finish, modified, created)
-    VALUES (1, 'Poultry Industry Field Work', 'VETS50001_2014_SM1', 'course@unimelb.edu.au', '',  date_trunc('seconds', NOW()), date_trunc('seconds', (CURRENT_TIMESTAMP + (190 * interval '1 day')) ), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW()) )
+INSERT INTO subject (institution_id, name, code, email, description, start, finish, modified, created)
+    VALUES (1, 'Poultry Industry Field Work', 'VETS50001_2014_SM1', 'subject@unimelb.edu.au', '',  date_trunc('seconds', NOW()), date_trunc('seconds', (CURRENT_TIMESTAMP + (190 * interval '1 day')) ), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW()) )
 ;
 
-INSERT INTO course_has_user (user_id, course_id)
+INSERT INTO subject_has_user (user_id, subject_id)
 VALUES
   (3, 1),
   (4, 1)
 ;
 
-INSERT INTO course_pre_enrollment (course_id, email)
+INSERT INTO subject_pre_enrollment (subject_id, email)
 VALUES
   (1, 'student@unimelb.edu.au')
 ;

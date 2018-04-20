@@ -53,9 +53,9 @@ CREATE TABLE IF NOT EXISTS `institution` (
 ) ENGINE=InnoDB;
 
 -- ----------------------------
---  Course Data Tables
+--  subject Data Tables
 -- ----------------------------
-CREATE TABLE IF NOT EXISTS `course` (
+CREATE TABLE IF NOT EXISTS `subject` (
   `id` INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   `institution_id` INT(10) UNSIGNED NOT NULL DEFAULT 0,
   `name` VARCHAR(255) NOT NULL DEFAULT '',
@@ -67,17 +67,17 @@ CREATE TABLE IF NOT EXISTS `course` (
   `del` TINYINT(1) NOT NULL DEFAULT 0,
   `modified` DATETIME NOT NULL,
   `created` DATETIME NOT NULL,
-  KEY `course_code_institution` (`code`, `institution_id`)
+  KEY `subject_code_institution` (`code`, `institution_id`)
 ) ENGINE=InnoDB;
 
 -- ----------------------------
--- For now we will assume that one user has one role in a course, ie: coordinator, lecturer, student
--- User is enrolled in course or coordinator of course
+-- For now we will assume that one user has one role in a subject, ie: coordinator, lecturer, student
+-- User is enrolled in subject or coordinator of subject
 -- ----------------------------
-CREATE TABLE IF NOT EXISTS `course_has_user` (
+CREATE TABLE IF NOT EXISTS `subject_has_user` (
   `user_id` INT(10) UNSIGNED NOT NULL DEFAULT 0,
-  `course_id` INT(10) UNSIGNED NOT NULL DEFAULT 0,
-  UNIQUE KEY `course_has_user_key` (`user_id`, `course_id`)
+  `subject_id` INT(10) UNSIGNED NOT NULL DEFAULT 0,
+  UNIQUE KEY `subject_has_user_key` (`user_id`, `subject_id`)
 ) ENGINE=InnoDB;
 
 
@@ -85,11 +85,11 @@ CREATE TABLE IF NOT EXISTS `course_has_user` (
 --
 --
 -- --------------------------------------------------------
-CREATE TABLE IF NOT EXISTS `course_pre_enrollment` (
-  `course_id` int(10) unsigned NOT NULL DEFAULT '0',
+CREATE TABLE IF NOT EXISTS `subject_pre_enrollment` (
+  `subject_id` int(10) unsigned NOT NULL DEFAULT '0',
   `email` VARCHAR(168) NOT NULL DEFAULT '',
   `uid` varchar(64) NOT NULL DEFAULT '',
-  PRIMARY KEY (`course_id`, `email`)
+  PRIMARY KEY (`subject_id`, `email`)
 ) ENGINE=InnoDB;
 
 
@@ -112,18 +112,18 @@ INSERT INTO `institution` (`owner_id`, `name`, `email`, `description`, `logo`, `
     (2, 'The University Of Melbourne', 'admin@unimelb.edu.au', 'This is a test institution for this app', '', 1, MD5('1'), NOW(), NOW())
 ;
 
-INSERT INTO `course` (`institution_id`, `name`, `code`, `email`, `description`, `date_start`, `date_end`, `modified`, `created`)
-  VALUES (1, 'Poultry Industry Field Work', 'VETS50001_2014_SM1', 'course@unimelb.edu.au', '',  NOW(), DATE_ADD(NOW(), INTERVAL 190 DAY), NOW(), NOW() )
---  VALUES (1, 'Poultry Industry Field Work', 'VETS50001_2014_SM1', 'course@unimelb.edu.au', '',  NOW(), DATE_ADD(CURRENT_DATETIME, INTERVAL 190 DAY), NOW(), NOW() )
+INSERT INTO `subject` (`institution_id`, `name`, `code`, `email`, `description`, `date_start`, `date_end`, `modified`, `created`)
+  VALUES (1, 'Poultry Industry Field Work', 'VETS50001_2014_SM1', 'subject@unimelb.edu.au', '',  NOW(), DATE_ADD(NOW(), INTERVAL 190 DAY), NOW(), NOW() )
+--  VALUES (1, 'Poultry Industry Field Work', 'VETS50001_2014_SM1', 'subject@unimelb.edu.au', '',  NOW(), DATE_ADD(CURRENT_DATETIME, INTERVAL 190 DAY), NOW(), NOW() )
 ;
 
-INSERT INTO `course_has_user` (`user_id`, `course_id`)
+INSERT INTO `subject_has_user` (`user_id`, `subject_id`)
 VALUES
   (3, 1),
   (4, 1)
 ;
 
-INSERT INTO `course_pre_enrollment` (`course_id`, `email`)
+INSERT INTO `subject_pre_enrollment` (`subject_id`, `email`)
 VALUES
   (1, 'student@unimelb.edu.au')
 ;

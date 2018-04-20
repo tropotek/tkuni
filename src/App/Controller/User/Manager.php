@@ -21,9 +21,9 @@ class Manager extends \Uni\Controller\AdminIface
     protected $table = null;
 
     /**
-     * @var \App\Db\Course
+     * @var \App\Db\Subject
      */
-    protected $course = null;
+    protected $subject = null;
 
     /**
      * @var null|\Tk\Uri
@@ -56,8 +56,10 @@ class Manager extends \Uni\Controller\AdminIface
     }
 
     /**
-     *
      * @param Request $request
+     * @throws \Tk\Db\Exception
+     * @throws \Tk\Exception
+     * @throws \Tk\Form\Exception
      */
     public function doDefault(Request $request)
     {
@@ -65,8 +67,8 @@ class Manager extends \Uni\Controller\AdminIface
         if (!$this->editUrl)
             $this->editUrl = \Uni\Uri::createHomeUrl('/userEdit.html');
 
-        if ($request->has('courseId'))
-            $this->course = \App\Db\CourseMap::create()->find($request->get('courseId'));
+        if ($request->has('subjectId'))
+            $this->subject = \App\Db\SubjectMap::create()->find($request->get('subjectId'));
 
         $this->actionsCell->addButton(\Tk\Table\Cell\ActionButton::create('Masquerade',
             \Tk\Uri::create(), 'fa  fa-user-secret', 'tk-masquerade'))

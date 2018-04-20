@@ -22,7 +22,7 @@ class User
         
         $users = array();
         $filter = $request->all();
-        unset($filter['courseId']);
+        unset($filter['subjectId']);
         
         if (!empty($filter['keywords'])) {
             if ($filter['keywords'][0] == '*') {    // Keep wildcard char as an undocumented feature for now

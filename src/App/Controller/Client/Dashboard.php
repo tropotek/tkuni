@@ -44,9 +44,9 @@ class Dashboard extends Iface
       Things the institution Client/Institution member should be able to do:
       <ul>
         <li>Edit profile</li>
-        <li>Manage Course setup and data</li>
+        <li>Manage Subject setup and data</li>
         <li>Manage Student accounts</li>
-        <li>Manage student course enrollments</li>
+        <li>Manage student subject enrollments</li>
       </ul>
     </div>
   </div>

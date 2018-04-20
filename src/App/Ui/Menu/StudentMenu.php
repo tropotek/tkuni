@@ -64,7 +64,7 @@ class StudentMenu extends Iface
       <div class="sidebar-nav navbar-collapse">
         <ul class="nav" id="side-menu">
           <li><a href="/student/index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
-          <!-- li><a href="/student/courseManager.html"><i class="fa fa-university fa-fw"></i> Courses</a></li -->
+          <!-- li><a href="/student/subjectManager.html"><i class="fa fa-university fa-fw"></i> Subjects</a></li -->
         </ul>
       </div>
     </div>

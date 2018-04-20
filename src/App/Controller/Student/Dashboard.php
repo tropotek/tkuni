@@ -42,7 +42,7 @@ class Dashboard extends Iface
       Things the institution student member should be able to do:
       <ul>
         <li>Edit profile</li>
-        <li>Manage student course data</li>
+        <li>Manage student subject data</li>
       </ul>
     </div>
   </div>

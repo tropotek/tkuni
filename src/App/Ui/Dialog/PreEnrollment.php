@@ -29,9 +29,9 @@ class PreEnrollment extends Iface
 {
 
     /**
-     * @var \App\Db\Course
+     * @var \App\Db\Subject
      */
-    protected $course = null;
+    protected $subject = null;
 
     /**
      * DialogBox constructor.
@@ -63,10 +63,10 @@ class PreEnrollment extends Iface
         if (!$request->has('enroll')) {
             return;
         }
-        //$this->course = \App\Config::getInstance()->getCourse();
-        $this->course = \App\Db\CourseMap::create()->find($request->get('courseId'));
-        if (!$this->course)
-            throw new \Tk\Exception('Invalid course details');
+        //$this->subject = \App\Config::getInstance()->getSubject();
+        $this->subject = \App\Db\SubjectMap::create()->find($request->get('subjectId'));
+        if (!$this->subject)
+            throw new \Tk\Exception('Invalid subject details');
 
         $list = array();
 
@@ -99,14 +99,14 @@ class PreEnrollment extends Iface
             }
 
             // Add users if found
-            if (!\App\Db\CourseMap::create()->hasPreEnrollment($this->course->getId(), $email)) {
-                \App\Db\CourseMap::create()->addPreEnrollment($this->course->getId(), $email, $uid);
-                $user = \App\Db\UserMap::create()->findByEmail($email, $this->course->institutionId);
+            if (!\App\Db\SubjectMap::create()->hasPreEnrollment($this->subject->getId(), $email)) {
+                \App\Db\SubjectMap::create()->addPreEnrollment($this->subject->getId(), $email, $uid);
+                $user = \App\Db\UserMap::create()->findByEmail($email, $this->subject->institutionId);
                 if ($user) {
-                    \App\Db\CourseMap::create()->addUser($this->course->getId(), $user->getId());
+                    \App\Db\SubjectMap::create()->addUser($this->subject->getId(), $user->getId());
                 }
 
-                $success[] = $i . ' - Added ' . $email . ' to the course enrollment list';
+                $success[] = $i . ' - Added ' . $email . ' to the subject enrollment list';
             } else {
                 $info[] = $i . ' - User ' . $email . ' already enrolled, nothing done.';
             }

@@ -41,21 +41,21 @@ class Uri extends \Tk\Uri
      * Create a course URL in the form of '/ems/staff/VETS50001_2014_SM1/index.html'
      *
      * @param null|string|\Tk\Uri $spec
-     * @param null|\App\Db\Course $course
+     * @param null|\App\Db\Subject $subject
      * @return string|\Tk\Uri|static
      */
-    public static function createCourseUrl($spec = null, $course = null)
+    public static function createSubjectUrl($spec = null, $subject = null)
     {
         if ($spec instanceof \Tk\Uri)
             return clone $spec;
 
-        if ($course === null)
-            $course = \App\Config::getInstance()->getCourse();
-        $courseCode = '';
-        if ($course) {
-            $courseCode = $course->code . '/';
+        if ($subject === null)
+            $subject = \App\Config::getInstance()->getSubject();
+        $subjectCode = '';
+        if ($subject) {
+            $subjectCode = $subject->code . '/';
         }
-        return self::createHomeUrl($courseCode . trim($spec,'/'));
+        return self::createHomeUrl($subjectCode . trim($spec,'/'));
     }
 
     /**

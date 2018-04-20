@@ -1,5 +1,5 @@
 <?php
-namespace App\Controller\Course;
+namespace App\Controller\Subject;
 
 use Tk\Request;
 use Dom\Template;
@@ -18,9 +18,9 @@ class EnrollmentManager extends \Uni\Controller\AdminIface
     protected $table = null;
 
     /**
-     * @var \App\Db\Course
+     * @var \App\Db\Subject
      */
-    protected $course = null;
+    protected $subject = null;
 
     /**
      * @var \App\Ui\Table\PreEnrollment
@@ -45,33 +45,34 @@ class EnrollmentManager extends \Uni\Controller\AdminIface
      */
     public function doDefault(Request $request)
     {
-        $this->course = \App\Db\CourseMap::create()->find($request->get('courseId'));
-        if (!$this->course)
-            throw new \Tk\Exception('Invalid course details');
+        $this->subject = \App\Db\SubjectMap::create()->find($request->get('subjectId'));
+        if (!$this->subject)
+            throw new \Tk\Exception('Invalid subject details');
         
-        $this->setPageTitle("`" . $this->course->name . '` Enrolments');
+        $this->setPageTitle("`" . $this->subject->name . '` Enrolments');
 
-        $this->enrolledTable = new \App\Ui\Table\Enrolled($this->course);
-        $this->pendingTable = new \App\Ui\Table\PreEnrollment($this->course);
+        $this->enrolledTable = new \App\Ui\Table\Enrolled($this->subject);
+        $this->pendingTable = new \App\Ui\Table\PreEnrollment($this->subject);
 
 
         $filter = array();
-        $filter['institutionId'] = $this->course->institutionId;
+        $filter['institutionId'] = $this->subject->institutionId;
         $filter['active'] = '1';
         $filter['role'] = \App\Db\User::ROLE_STUDENT;
         $this->userDialog = new \App\Ui\Dialog\FindUser('Enrol Student', $filter);
-        $this->userDialog->setOnSelect(function ($dialog, $data) {
+        $subject = $this->subject;
+        $this->userDialog->setOnSelect(function ($dialog, $data) use ($subject) {
             /** @var \App\Db\User $user */
-            $user = \App\Db\UserMap::create()->findByHash($data['userHash'], $this->course->institutionId);
+            $user = \App\Db\UserMap::create()->findByHash($data['userHash'], $subject->institutionId);
             if (!$user || !$user->hasRole(array(\App\Db\User::ROLE_STUDENT))) {
                 \Tk\Alert::addWarning('Invalid user.');
             } else {
-                if (!$user->isEnrolled($this->course->getId())) {
+                if (!$user->isEnrolled($subject->getId())) {
                     // TODO: test for any preconditions, maybe fire an enrollment event?
-                    \App\Db\CourseMap::create()->addUser($this->course->getId(), $user->getId());
-                    \Tk\Alert::addSuccess($user->getName() . ' added to the course ' . $this->course->name);
+                    \App\Db\SubjectMap::create()->addUser($subject->getId(), $user->getId());
+                    \Tk\Alert::addSuccess($user->getName() . ' added to the subject ' . $subject->name);
                 } else {
-                    \Tk\Alert::addWarning($user->getName() . ' already enrolled in the course ' . $this->course->name);
+                    \Tk\Alert::addWarning($user->getName() . ' already enrolled in the subject ' . $subject->name);
                 }
             }
         });
@@ -90,9 +91,9 @@ class EnrollmentManager extends \Uni\Controller\AdminIface
         // Enrolment Dialog
         $template->appendTemplate('enrollment', $this->userDialog->show());
         //$template->setAttr('addUser', 'data-target', '#'.$this->userDialog->getId());
-        $this->getActionPanel()->addButton(\Tk\Ui\Button::create('Enroll Student','#', 'fa fa-user-plus'))
+        $this->getActionPanel()->add(\Tk\Ui\Button::create('Enroll Student','#', 'fa fa-user-plus'))
             ->setAttr('data-toggle', 'modal')->setAttr('data-target', '#'.$this->userDialog->getId())
-            ->setAttr('title', 'Add an existing student to this course');
+            ->setAttr('title', 'Add an existing student to this subject');
 
         // Enrolled Table
         $template->replaceTemplate('enrolledTable', $this->enrolledTable->show());
@@ -100,7 +101,7 @@ class EnrollmentManager extends \Uni\Controller\AdminIface
         // Pending Table
         $template->replaceTemplate('pendingTable', $this->pendingTable->show());
         //$template->setAttr('modelBtn', 'data-target', '#'.$this->pendingTable->getDialog()->getId());
-        $this->getActionPanel()->addButton(\Tk\Ui\Button::create('Pre-Enroll Student','#', 'fa fa-user-plus'))
+        $this->getActionPanel()->add(\Tk\Ui\Button::create('Pre-Enroll Student','#', 'fa fa-user-plus'))
             ->setAttr('data-toggle', 'modal')->setAttr('data-target', '#'.$this->pendingTable->getDialog()->getId())
             ->setAttr('title', 'Pre-Enroll a non-existing student, they will automatically be enrolled on login');
         
@@ -166,7 +167,7 @@ CSS;
           <div var="pendingTable"></div>
           <div class="small">
             <p>
-              - Pre-enrolled users will automatically be enrolled into this course on their next login.<br/>
+              - Pre-enrolled users will automatically be enrolled into this subject on their next login.<br/>
               - Deleting an enrolled user from this list will also delete them from the pre-enrollment list.
             </p>
           </div>

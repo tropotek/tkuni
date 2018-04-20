@@ -4,8 +4,6 @@ namespace App\Ui\Table;
 use Dom\Template;
 
 /**
- * Class CourseTable
- *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
@@ -26,7 +24,7 @@ class User extends \Dom\Renderer\Renderer
     /**
      * @var int
      */
-    protected $courseId = 0;
+    protected $subjectId = 0;
 
     /**
      * @var null|array|string
@@ -45,17 +43,18 @@ class User extends \Dom\Renderer\Renderer
 
 
     /**
-     * CourseTable constructor.
+     *  constructor.
+     *
      * @param int $institutionId
      * @param null|array|string $role
-     * @param int $courseId
+     * @param int $subjectId
      * @param null|\Tk\Uri $editUrl
      */
-    public function __construct($institutionId = 0, $role = null, $courseId = 0, $editUrl = null)
+    public function __construct($institutionId = 0, $role = null, $subjectId = 0, $editUrl = null)
     {
         $this->institutionId = $institutionId;
         $this->role = $role;
-        $this->courseId = $courseId;
+        $this->subjectId = $subjectId;
         $this->editUrl = $editUrl;
         $this->doDefault();
     }
@@ -85,7 +84,7 @@ class User extends \Dom\Renderer\Renderer
         $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCss('key')->setUrl($this->editUrl);
 
         if ($this->institutionId)
-            $this->table->addCell(new \App\Table\Cell\UserCourses('course', $this->institutionId));
+            $this->table->addCell(new \App\Table\Cell\UserSubjects('subject', $this->institutionId));
 
         $this->table->addCell(new \Tk\Table\Cell\Text('email'));
 
@@ -104,7 +103,7 @@ class User extends \Dom\Renderer\Renderer
         // Set list
         $filter = $this->table->getFilterValues();
         $filter['institutionId'] = $this->institutionId;
-        $filter['courseId'] = $this->courseId;
+        $filter['subjectId'] = $this->subjectId;
         $filter['role'] = $this->role;
 
         $users = \App\Db\UserMap::create()->findFiltered($filter, $this->table->makeDbTool('a.name'));

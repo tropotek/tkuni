@@ -1,5 +1,5 @@
 <?php
-namespace App\Controller\Course;
+namespace App\Controller\Subject;
 
 use Dom\Template;
 use Tk\Form;
@@ -21,9 +21,9 @@ class Edit extends \Uni\Controller\AdminIface
     protected $form = null;
 
     /**
-     * @var \App\Db\Course
+     * @var \App\Db\Subject
      */
-    private $course = null;
+    private $subject = null;
 
     /**
      * @var \App\Db\Institution
@@ -46,36 +46,36 @@ class Edit extends \Uni\Controller\AdminIface
      */
     public function doDefault(Request $request)
     {
-        $this->setPageTitle('Course Edit');
+        $this->setPageTitle('Subject Edit');
 
         $this->institution = $this->getUser()->getInstitution();
 
-        $this->course = new \App\Db\Course();
-        $this->course->institutionId = $this->institution->id;
-        if ($request->get('courseId')) {
-            $this->course = \App\Db\CourseMap::create()->find($request->get('courseId'));
-            if ($this->institution->id != $this->course->institutionId) {
-                throw new \Tk\Exception('You do not have permission to edit this course.');
+        $this->subject = new \App\Db\Subject();
+        $this->subject->institutionId = $this->institution->id;
+        if ($request->get('subjectId')) {
+            $this->subject = \App\Db\SubjectMap::create()->find($request->get('subjectId'));
+            if ($this->institution->id != $this->subject->institutionId) {
+                throw new \Tk\Exception('You do not have permission to edit this subject.');
             }
         }
 
-        $this->form = \App\Config::getInstance()->createForm('courseEdit');
+        $this->form = \App\Config::getInstance()->createForm('subjectEdit');
         $this->form->setRenderer(\App\Config::getInstance()->createFormRenderer($this->form));
 
         $this->form->addField(new Field\Input('name'))->setRequired(true);
         $this->form->addField(new Field\Input('code'))->setRequired(true);
         $this->form->addField(new Field\Input('email'))->setRequired(true);
-        $this->form->addField(new \App\Form\Field\DateRange('date'))->setRequired(true)->setLabel('Dates')->setNotes('The start and end dates of the course. Placements cannot be created outside these dates.');
+        $this->form->addField(new \App\Form\Field\DateRange('date'))->setRequired(true)->setLabel('Dates')->setNotes('The start and end dates of the subject. Placements cannot be created outside these dates.');
 //        $this->form->addField(new Field\Input('dateStart'))->addCss('date')->setRequired(true);
 //        $this->form->addField(new Field\Input('dateEnd'))->addCss('date')->setRequired(true);
         $this->form->addField(new Field\Textarea('description'));
 
         $this->form->addField(new Event\Submit('update', array($this, 'doSubmit')));
         $this->form->addField(new Event\Submit('save', array($this, 'doSubmit')));
-        $url = \Uni\Uri::createHomeUrl('/courseManager.html');
+        $url = \Uni\Uri::createHomeUrl('/subjectManager.html');
         $this->form->addField(new Event\Link('cancel', $url));
 
-        $this->form->load(\App\Db\CourseMap::create()->unmapForm($this->course));
+        $this->form->load(\App\Db\SubjectMap::create()->unmapForm($this->subject));
         $this->form->execute();
 
     }
@@ -86,28 +86,28 @@ class Edit extends \Uni\Controller\AdminIface
     public function doSubmit($form)
     {
         // Load the object with data from the form using a helper object
-        \App\Db\CourseMap::create()->mapForm($form->getValues(), $this->course);
+        \App\Db\SubjectMap::create()->mapForm($form->getValues(), $this->subject);
 
-        $form->addFieldErrors($this->course->validate());
+        $form->addFieldErrors($this->subject->validate());
 
         if ($form->hasErrors()) {
             return;
         }
 
-        $this->course->save();
+        $this->subject->save();
 
-        // If this is a staff member add them to the course
+        // If this is a staff member add them to the subject
         if ($this->getUser()->hasRole(\App\Db\User::ROLE_STAFF)) {
-            \App\Db\CourseMap::create()->addUser($this->course->id, $this->getUser()->id);
+            \App\Db\SubjectMap::create()->addUser($this->subject->id, $this->getUser()->id);
         }
 
         \Tk\Alert::addSuccess('Record saved!');
 
         if ($form->getTriggeredEvent()->getName() == 'update') {
-            \Uni\Uri::createHomeUrl('/courseManager.html')->redirect();
+            \Uni\Uri::createHomeUrl('/subjectManager.html')->redirect();
         }
 
-        \Tk\Uri::create()->set('courseId', $this->course->id)->redirect();
+        \Tk\Uri::create()->set('subjectId', $this->subject->id)->redirect();
     }
 
     /**
@@ -120,11 +120,11 @@ class Edit extends \Uni\Controller\AdminIface
         // Render the form
         $template->insertTemplate('form', $this->form->getRenderer()->show());
 
-        if ($this->course->id && $this->getUser()->isStaff()) {
-            $this->getActionPanel()->addButton(\Tk\Ui\Button::create('Enrollment List',
-                \Uni\Uri::createHomeUrl('/courseEnrollment.html')->set('courseId', $this->course->id), 'fa fa-list'));
-            $this->getActionPanel()->addButton(\Tk\Ui\Button::create('Students',
-                \Uni\Uri::createHomeUrl('/studentManager.html')->set('courseId', $this->course->id), 'fa fa-group'));
+        if ($this->subject->id && $this->getUser()->isStaff()) {
+            $this->getActionPanel()->add(\Tk\Ui\Button::create('Enrollment List',
+                \Uni\Uri::createHomeUrl('/subjectEnrollment.html')->set('subjectId', $this->subject->id), 'fa fa-list'));
+            $this->getActionPanel()->add(\Tk\Ui\Button::create('Students',
+                \Uni\Uri::createHomeUrl('/studentManager.html')->set('subjectId', $this->subject->id), 'fa fa-group'));
 
             $template->setChoice('update');
         }
@@ -143,7 +143,7 @@ class Edit extends \Uni\Controller\AdminIface
 <div class="">
 
   <div class="panel panel-default">
-    <div class="panel-heading"><i class="fa fa-graduation-cap"></i> Course Edit</div>
+    <div class="panel-heading"><i class="fa fa-graduation-cap"></i> Subject Edit</div>
     <div class="panel-body">
       <div var="form"></div>
     </div>

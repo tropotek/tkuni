@@ -8,14 +8,11 @@ use Tk\DataMap\Db;
 use Tk\DataMap\Form;
 
 /**
- * Class CourseMap
- *
- *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class CourseMap extends Mapper
+class SubjectMap extends Mapper
 {
 
     /**
@@ -65,7 +62,7 @@ class CourseMap extends Mapper
      *
      * @param string $code
      * @param int $institutionId
-     * @return Course|\Tk\Db\ModelInterface
+     * @return Subject|\Tk\Db\ModelInterface
      */
     public function findByCode($code, $institutionId)
     {
@@ -81,8 +78,8 @@ class CourseMap extends Mapper
      */
     public function findByUserId($userId, $institutionId = 0, $tool = null)
     {
-        $from = sprintf('%s a, course_has_user b', $this->getDb()->quoteParameter($this->getTable()));
-        $where = sprintf('a.id = b.course_id AND b.user_id = %d', (int)$userId);
+        $from = sprintf('%s a, subject_has_user b', $this->getDb()->quoteParameter($this->getTable()));
+        $where = sprintf('a.id = b.subject_id AND b.user_id = %d', (int)$userId);
         if ($institutionId) {
             $where .= sprintf(' AND a.institution_id = %d', (int)$institutionId);
         }
@@ -94,7 +91,7 @@ class CourseMap extends Mapper
      *
      * @param int $institutionId
      * @param Tool $tool
-     * @return ArrayObject|Course[]
+     * @return ArrayObject|Subject[]
      */
     public function findActive($institutionId = 0, $tool = null)
     {
@@ -149,8 +146,8 @@ class CourseMap extends Mapper
         }
 
         if (!empty($filter['userId'])) {
-            $from .= sprintf(', course_has_user b');
-            $where .= sprintf('a.id = b.course_id AND b.user_id = %s AND ', (int)$filter['userId']);
+            $from .= sprintf(', subject_has_user b');
+            $where .= sprintf('a.id = b.subject_id AND b.user_id = %s AND ', (int)$filter['userId']);
         }
 
         if (!empty($filter['exclude'])) {
@@ -175,51 +172,51 @@ class CourseMap extends Mapper
 
 
 
-    // Enrolment direct queries - course_has_user holds the currently enrolld users
+    // Enrolment direct queries - subject_has_user holds the currently enrolld users
 
     /**
-     * @param int $courseId
+     * @param int $subjectId
      * @param int $userId
      * @return boolean
      */
-    public function hasUser($courseId, $userId)
+    public function hasUser($subjectId, $userId)
     {
-        $stm = $this->getDb()->prepare('SELECT * FROM course_has_user WHERE course_id = ? AND user_id = ?');
-        $stm->execute(array($courseId, $userId));
+        $stm = $this->getDb()->prepare('SELECT * FROM subject_has_user WHERE subject_id = ? AND user_id = ?');
+        $stm->execute(array($subjectId, $userId));
         return ($stm->rowCount() > 0);
     }
 
     /**
-     * @param int $courseId
+     * @param int $subjectId
      * @param int $userId
      */
-    public function addUser($courseId, $userId)
+    public function addUser($subjectId, $userId)
     {
-        if ($this->hasUser($courseId, $userId)) return;
-        $stm = $this->getDb()->prepare('INSERT INTO course_has_user (user_id, course_id)  VALUES (?, ?)');
-        $stm->execute(array($courseId, $userId));
+        if ($this->hasUser($subjectId, $userId)) return;
+        $stm = $this->getDb()->prepare('INSERT INTO subject_has_user (user_id, subject_id)  VALUES (?, ?)');
+        $stm->execute(array($subjectId, $userId));
     }
 
     /**
      * depending on the combination of parameters:
-     *  o remove a user from a course
-     *  o remove all users from a course
-     *  o remove all courses from a user
+     *  o remove a user from a subject
+     *  o remove all users from a subject
+     *  o remove all subjects from a user
      *
-     * @param int $courseId
+     * @param int $subjectId
      * @param int $userId
      */
-    public function removeUser($courseId = null, $userId = null)
+    public function removeUser($subjectId = null, $userId = null)
     {
-        if ($courseId && $userId) {
-            $stm = $this->getDb()->prepare('DELETE FROM course_has_user WHERE user_id = ? AND course_id = ?');
-            $stm->execute(array($courseId, $userId));
-        } else if(!$courseId && $userId) {
-            $stm = $this->getDb()->prepare('DELETE FROM course_has_user WHERE user_id = ?');
+        if ($subjectId && $userId) {
+            $stm = $this->getDb()->prepare('DELETE FROM subject_has_user WHERE user_id = ? AND subject_id = ?');
+            $stm->execute(array($subjectId, $userId));
+        } else if(!$subjectId && $userId) {
+            $stm = $this->getDb()->prepare('DELETE FROM subject_has_user WHERE user_id = ?');
             $stm->execute(array($userId));
-        } else if ($courseId && !$userId) {
-            $stm = $this->getDb()->prepare('DELETE FROM course_has_user WHERE course_id = ?');
-            $stm->execute(array($courseId));
+        } else if ($subjectId && !$userId) {
+            $stm = $this->getDb()->prepare('DELETE FROM subject_has_user WHERE subject_id = ?');
+            $stm->execute(array($subjectId));
         }
     }
 
@@ -229,33 +226,33 @@ class CourseMap extends Mapper
     //  Enrolment Pending List Queries - The enrollment table holds emails of users that are to be enrolled on their next login.
 
     /**
-     * find all courses that the user is pending enrolment
+     * find all subjects that the user is pending enrolment
      *
      * @param $institutionId
      * @param $email
      * @param null $tool
-     * @return ArrayObject|Course[]
+     * @return ArrayObject|Subject[]
      */
     public function findPendingPreEnrollments($institutionId, $email, $tool = null)
     {
         $from = sprintf('%s a, %s b, %s c LEFT JOIN %s d ON (c.id = d.user_id) ',
             $this->quoteTable($this->getTable()),
-            $this->quoteTable('course_pre_enrollment'),
+            $this->quoteTable('subject_pre_enrollment'),
             $this->quoteTable('UserIface'),
-            $this->quoteTable('course_has_user'));
-        $where = sprintf('a.id = b.course_id AND b.email = c.email AND a.institution_id = %d AND b.email = %s AND d.user_id IS NULL',
+            $this->quoteTable('subject_has_user'));
+        $where = sprintf('a.id = b.subject_id AND b.email = c.email AND a.institution_id = %d AND b.email = %s AND d.user_id IS NULL',
             (int)$institutionId, $this->quote($email));
         return $this->selectFrom($from, $where, $tool);
     }
 
     /**
-     * Find all pre enrolments for a course and return with an `enrolled` boolean field
+     * Find all pre enrolments for a subject and return with an `enrolled` boolean field
      *
-     * @param $courseId
+     * @param $subjectId
      * @param \Tk\Db\Tool $tool
      * @return array
      */
-    public function findPreEnrollments($courseId, $tool = null)
+    public function findPreEnrollments($subjectId, $tool = null)
     {
         $toolStr = '';
         if ($tool) {
@@ -263,25 +260,25 @@ class CourseMap extends Mapper
             $toolStr = ' '.$tool->toSql('', $this->getDb());
         }
 
-        $stm = $this->getDb()->prepare('SELECT a.course_id, a.email, a.uid, b.id as \'user_id\', IF(c.course_id IS NULL, 0, 1) as enrolled
-FROM  course_pre_enrollment a 
+        $stm = $this->getDb()->prepare('SELECT a.subject_id, a.email, a.uid, b.id as \'user_id\', IF(c.subject_id IS NULL, 0, 1) as enrolled
+FROM  subject_pre_enrollment a 
   LEFT JOIN  user b ON (b.email = a.email)  
-  LEFT JOIN course_has_user c ON (b.id = c.user_id AND c.course_id = ?)
-WHERE a.course_id = ? ' . $toolStr);
-        $stm->execute(array($courseId, $courseId));
+  LEFT JOIN subject_has_user c ON (b.id = c.user_id AND c.subject_id = ?)
+WHERE a.subject_id = ? ' . $toolStr);
+        $stm->execute(array($subjectId, $subjectId));
 
         $arr = $stm->fetchAll();
         return $arr;
 
 
 
-//        $sql = sprintf('SELECT a.course_id, a.email, a.uid, b.id as \'user_id\', IF(c.course_id IS NULL, 0, 1) as enrolled
+//        $sql = sprintf('SELECT a.subject_id, a.email, a.uid, b.id as \'user_id\', IF(c.subject_id IS NULL, 0, 1) as enrolled
 //FROM  %s a
 //  LEFT JOIN  %s b ON (b.email = a.email)
-//  LEFT JOIN %s c ON (b.id = c.user_id AND c.course_id = %d)
-//WHERE a.course_id = %d',
-//            $this->quoteTable('course_pre_enrollment'), $this->quoteTable('user'), $this->quoteTable('course_has_user'),
-//            (int)$courseId, (int)$courseId);
+//  LEFT JOIN %s c ON (b.id = c.user_id AND c.subject_id = %d)
+//WHERE a.subject_id = %d',
+//            $this->quoteTable('subject_pre_enrollment'), $this->quoteTable('user'), $this->quoteTable('subject_has_user'),
+//            (int)$subjectId, (int)$subjectId);
 //
 //        $toolStr = '';
 //        if ($tool) {
@@ -296,55 +293,55 @@ WHERE a.course_id = ? ' . $toolStr);
     }
 
     /**
-     * Find all students on a course pre-enrolment list
+     * Find all students on a subject pre-enrolment list
      *
-     * @param $courseId
+     * @param $subjectId
      * @return array|\StdClass[]
-     * @deprecated use findEnrolmentsByCourseId($courseId, $tool)
+     * @deprecated use findEnrolmentsBySubjectId($subjectId, $tool)
      */
-    public function findAllPreEnrollments($courseId)
+    public function findAllPreEnrollments($subjectId)
     {
-        $stm = $this->getDb()->prepare('SELECT * FROM user a LEFT JOIN course_pre_enrollment b ON (a.email = b.email) WHERE b.course_id = ?');
-        $stm->execute(array($courseId));
+        $stm = $this->getDb()->prepare('SELECT * FROM user a LEFT JOIN subject_pre_enrollment b ON (a.email = b.email) WHERE b.subject_id = ?');
+        $stm->execute(array($subjectId));
         return $stm->fetchAll();
     }
 
     /**
-     * @param $courseId
+     * @param $subjectId
      * @param $email
      * @return bool
      */
-    public function hasPreEnrollment($courseId, $email)
+    public function hasPreEnrollment($subjectId, $email)
     {
-        $stm = $this->getDb()->prepare('SELECT * FROM course_pre_enrollment WHERE course_id = ? AND email = ?');
-        $stm->execute(array($courseId, $email));
+        $stm = $this->getDb()->prepare('SELECT * FROM subject_pre_enrollment WHERE subject_id = ? AND email = ?');
+        $stm->execute(array($subjectId, $email));
         return ($stm->rowCount() > 0);
     }
 
     /**
-     * @param int $courseId
+     * @param int $subjectId
      * @param string $email
      * @param string $uid
      */
-    public function addPreEnrollment($courseId, $email, $uid = '')
+    public function addPreEnrollment($subjectId, $email, $uid = '')
     {
-        if (!$this->hasPreEnrollment($courseId, $email)) {
-            $stm = $this->getDb()->prepare('INSERT INTO course_pre_enrollment (course_id, email, uid)  VALUES (?, ?, ?)');
-            $stm->execute(array($courseId, $email, $uid));
+        if (!$this->hasPreEnrollment($subjectId, $email)) {
+            $stm = $this->getDb()->prepare('INSERT INTO subject_pre_enrollment (subject_id, email, uid)  VALUES (?, ?, ?)');
+            $stm->execute(array($subjectId, $email, $uid));
         }
-        // Do not add the user to the course_has_user table as this will be added automatically the next time the user logs in
+        // Do not add the user to the subject_has_user table as this will be added automatically the next time the user logs in
         // This part should be implemented in a auth.onLogin listener
     }
 
     /**
-     * @param int $courseId
+     * @param int $subjectId
      * @param string $email
      */
-    public function removePreEnrollment($courseId, $email)
+    public function removePreEnrollment($subjectId, $email)
     {
-        if ($this->hasPreEnrollment($courseId, $email)) {
-            $stm = $this->getDb()->prepare('DELETE FROM course_pre_enrollment WHERE course_id = ? AND email = ?');
-            $stm->execute(array($courseId, $email));
+        if ($this->hasPreEnrollment($subjectId, $email)) {
+            $stm = $this->getDb()->prepare('DELETE FROM subject_pre_enrollment WHERE subject_id = ? AND email = ?');
+            $stm->execute(array($subjectId, $email));
         }
     }
 

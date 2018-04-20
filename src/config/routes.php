@@ -64,9 +64,9 @@ $routes->add('client-institution-edit', new \Tk\Routing\Route('/client/instituti
 $routes->add('client-institution-plugin-manager', new \Tk\Routing\Route('/client/{zoneName}/{zoneId}/plugins.html', 'App\Controller\PluginZoneManager::doDefault',
     array('role' => \App\Db\User::ROLE_CLIENT, 'zoneName' => 'institution', 'zoneId' => '0') ));
 
-$routes->add('client-course-manager', new \Tk\Routing\Route('/client/courseManager.html', 'App\Controller\Course\Manager::doDefault', $params));
-$routes->add('client-course-edit', new \Tk\Routing\Route('/client/courseEdit.html', 'App\Controller\Course\Edit::doDefault', $params));
-$routes->add('client-course-enrollment', new \Tk\Routing\Route('/client/courseEnrollment.html', 'App\Controller\Course\EnrollmentManager::doDefault', $params));
+$routes->add('client-subject-manager', new \Tk\Routing\Route('/client/subjectManager.html', 'App\Controller\Subject\Manager::doDefault', $params));
+$routes->add('client-subject-edit', new \Tk\Routing\Route('/client/subjectEdit.html', 'App\Controller\Subject\Edit::doDefault', $params));
+$routes->add('client-subject-enrollment', new \Tk\Routing\Route('/client/subjectEnrollment.html', 'App\Controller\Subject\EnrollmentManager::doDefault', $params));
 
 
 
@@ -76,9 +76,9 @@ $params = array('role' => \App\Db\User::ROLE_STAFF);
 $routes->add('staff-dashboard', new \Tk\Routing\Route('/staff/index.html', 'App\Controller\Staff\Dashboard::doDefault', $params));
 $routes->add('staff-dashboard-base', new \Tk\Routing\Route('/staff/', 'App\Controller\Staff\Dashboard::doDefault', $params));
 
-$routes->add('staff-course-manager', new \Tk\Routing\Route('/staff/courseManager.html', 'App\Controller\Course\Manager::doDefault', $params));
-$routes->add('staff-course-edit', new \Tk\Routing\Route('/staff/courseEdit.html', 'App\Controller\Course\Edit::doDefault', $params));
-$routes->add('staff-course-enrollment', new \Tk\Routing\Route('/staff/courseEnrollment.html', 'App\Controller\Course\EnrollmentManager::doDefault', $params));
+$routes->add('staff-subject-manager', new \Tk\Routing\Route('/staff/subjectManager.html', 'App\Controller\Subject\Manager::doDefault', $params));
+$routes->add('staff-subject-edit', new \Tk\Routing\Route('/staff/subjectEdit.html', 'App\Controller\Subject\Edit::doDefault', $params));
+$routes->add('staff-subject-enrollment', new \Tk\Routing\Route('/staff/subjectEnrollment.html', 'App\Controller\Subject\EnrollmentManager::doDefault', $params));
 
 
 $routes->add('staff-student-manager', new \Tk\Routing\Route('/staff/studentManager.html', 'App\Controller\User\StudentManager::doDefault', $params));
@@ -103,7 +103,7 @@ $routes->add('student-user-profile', new \Tk\Routing\Route('/student/profile.htm
 // Ajax Urls
 $params = array('role' => array(\App\Db\User::ROLE_ADMIN, \App\Db\User::ROLE_CLIENT, \App\Db\User::ROLE_STAFF, \App\Db\User::ROLE_STUDENT));
 $routes->add('ajax-user-findFiltered', new \Tk\Routing\Route('/ajax/user/findFiltered.html', 'App\Ajax\User::doFindFiltered', $params));
-$routes->add('ajax-course-findFiltered', new \Tk\Routing\Route('/ajax/course/findFiltered.html', 'App\Ajax\Course::doFindFiltered', $params));
+$routes->add('ajax-subject-findFiltered', new \Tk\Routing\Route('/ajax/subject/findFiltered.html', 'App\Ajax\Subject::doFindFiltered', $params));
 
 
 

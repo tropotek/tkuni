@@ -122,6 +122,7 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\Db\UserI
             $this->displayName = $this->name;
         }
         $this->getHash();
+        vd();
         $this->getData()->save();
         parent::save();
     }
@@ -232,14 +233,6 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\Db\UserI
     }
 
     /**
-     * @return string
-     */
-    public function getRole()
-    {
-        return $this->role;
-    }
-
-    /**
      * Return the users home|dashboard relative url
      *
      * @note \Uni\Uri::createHomeUrl() uses this method to get the home path
@@ -257,6 +250,14 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\Db\UserI
         if ($this->isStudent())
             return \Tk\Uri::create('/student/index.html');
         return \Tk\Uri::create('/index.html');   // Should not get here unless their is no roles
+    }
+
+    /**
+     * @return string
+     */
+    public function getRole()
+    {
+        return $this->role;
     }
 
     /**
@@ -311,14 +312,15 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\Db\UserI
     }
 
     /**
-     * Returns true if the user is enrolled fully into the course
+     * Returns true if the user is enrolled fully into the subject
      *
-     * @param $courseId
+     * @param $subjectId
      * @return bool
+     * @throws \Tk\Db\Exception
      */
-    public function isEnrolled($courseId)
+    public function isEnrolled($subjectId)
     {
-        return \App\Db\CourseMap::create()->hasUser($courseId, $this->getVolatileId());
+        return \App\Db\SubjectMap::create()->hasUser($subjectId, $this->getVolatileId());
     }
 
     /**
@@ -327,6 +329,7 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\Db\UserI
      * objects for use within forms.
      *
      * @return array
+     * @throws \ReflectionException
      */
     public function validate()
     {
@@ -357,5 +360,4 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\Db\UserI
         }
         return $errors;
     }
-
 }

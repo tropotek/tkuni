@@ -231,7 +231,7 @@ class Edit extends \Uni\Controller\AdminIface
           <!--<ul class="nav nav-tabs" role="tablist">-->
             <!--<li role="presentation" class="active"><a href="#staff" aria-controls="staff" role="tab" data-toggle="tab">Staff</a></li>-->
             <!--<li role="presentation" class=""><a href="#students" aria-controls="students" role="tab" data-toggle="tab">Students</a></li>-->
-            <!--<li role="presentation" class=""><a href="#courses" aria-controls="courses" role="tab" data-toggle="tab">Courses</a></li>-->
+            <!--<li role="presentation" class=""><a href="#subjects" aria-controls="subjects" role="tab" data-toggle="tab">Subjects</a></li>-->
           <!--</ul>-->
           <!--<div class="tab-content">-->
             <!--<div role="tabpanel" class="tab-pane active" id="staff">-->
@@ -240,8 +240,8 @@ class Edit extends \Uni\Controller\AdminIface
             <!--<div role="tabpanel" class="tab-pane " id="students">-->
               <!--<div var="studentTable">Students ...</div>-->
             <!--</div>-->
-            <!--<div role="tabpanel" class="tab-pane " id="courses">-->
-              <!--<div var="courseTable">Courses ...</div>-->
+            <!--<div role="tabpanel" class="tab-pane " id="subjects">-->
+              <!--<div var="subjectTable">Subjects ...</div>-->
             <!--</div>-->
           <!--</div>-->
 

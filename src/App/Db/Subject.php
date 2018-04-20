@@ -9,7 +9,7 @@ use Tk\Db\Data;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Course extends \Tk\Db\Map\Model implements \Uni\Db\CourseIface
+class Subject extends \Tk\Db\Map\Model implements \Uni\Db\SubjectIface
 {
     
     /**
@@ -74,7 +74,6 @@ class Course extends \Tk\Db\Map\Model implements \Uni\Db\CourseIface
 
 
     /**
-     * Course constructor.
      */
     public function __construct()
     {
@@ -106,6 +105,7 @@ class Course extends \Tk\Db\Map\Model implements \Uni\Db\CourseIface
      * Get the data object
      *
      * @return \Tk\Db\Data
+     * @throws \Tk\Db\Exception
      */
     public function getData()
     {
@@ -118,10 +118,11 @@ class Course extends \Tk\Db\Map\Model implements \Uni\Db\CourseIface
      * Get the path for all file associated to this object
      *
      * @return string
+     * @throws \Tk\Db\Exception
      */
     public function getDataPath()
     {
-        return sprintf('%s/course/%s', $this->getInstitution()->getDataPath(), $this->getVolatileId());
+        return sprintf('%s/subject/%s', $this->getInstitution()->getDataPath(), $this->getVolatileId());
     }
 
     /**
@@ -131,11 +132,11 @@ class Course extends \Tk\Db\Map\Model implements \Uni\Db\CourseIface
      */
     public function isUserEnrolled($user)
     {
-        return CourseMap::create()->hasUser($this->id, $user->id);
+        return SubjectMap::create()->hasUser($this->id, $user->id);
     }
 
     /**
-     * Enroll a user in this course
+     * Enroll a user
      *
      * @param $user
      * @return $this
@@ -143,7 +144,7 @@ class Course extends \Tk\Db\Map\Model implements \Uni\Db\CourseIface
     public function enrollUser($user)
     {
         if (!$this->isUserEnrolled($user)) {
-            CourseMap::create()->addUser($this->id, $user->id);
+            SubjectMap::create()->addUser($this->id, $user->id);
         }
         return $this;
     }
@@ -207,15 +208,15 @@ class Course extends \Tk\Db\Map\Model implements \Uni\Db\CourseIface
             $errors['institutionId'] = 'Invalid Institution ID';
         }
         if (!$this->name) {
-            $errors['name'] = 'Please enter a valid course name';
+            $errors['name'] = 'Please enter a valid name';
         }
         if (!$this->code) {
-            $errors['code'] = 'Please enter a valid course code';
+            $errors['code'] = 'Please enter a valid code';
         } else {
-            // Look for existing courses with same code
-            $c = \App\Db\CourseMap::create()->findByCode($this->code, $this->institutionId);
+            // Look for existing subjects with same code
+            $c = \App\Db\SubjectMap::create()->findByCode($this->code, $this->institutionId);
             if ($c && $c->id != $this->id) {
-                $errors['code'] = 'Course code already exists';
+                $errors['code'] = 'Subject code already exists';
             }
         }
         

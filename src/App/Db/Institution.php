@@ -2,7 +2,7 @@
 namespace App\Db;
 
 use Tk\Db\Data;
-use Uni\Db\CourseIface;
+use Uni\Db\SubjectIface;
 
 /**
  *
@@ -233,20 +233,21 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\D
     }
 
     /**
-     * @param string $courseCode
-     * @return CourseIface
+     * @param string $subjectCode
+     * @return SubjectIface
      */
-    public function findCourseByCode($courseCode)
+    public function findSubjectByCode($subjectCode)
     {
-        return \App\Db\CourseMap::create()->findByCode($courseCode, $this->getId());
+        return \App\Db\SubjectMap::create()->findByCode($subjectCode, $this->getId());
     }
 
     /**
-     * @param int $courseId
-     * @return \Tk\Db\Map\Model|\Tk\Db\ModelInterface|CourseIface
+     * @param int $subjectId
+     * @return \Tk\Db\Map\Model|\Tk\Db\ModelInterface|SubjectIface
+     * @throws \Tk\Db\Exception
      */
-    public function findCourse($courseId)
+    public function findSubject($subjectId)
     {
-        return \App\Db\CourseMap::create()->find($courseId);
+        return \App\Db\SubjectMap::create()->find($subjectId);
     }
 }

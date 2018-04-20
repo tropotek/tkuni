@@ -51,49 +51,49 @@ class PluginApi implements \Uni\PluginApi
     }
 
     /**
-     * @param $courseId
-     * @return null|\Tk\Db\Map\Model|\app\Db\Course
+     * @param $subjectId
+     * @return null|\Tk\Db\Map\Model|\app\Db\Subject
      */
-    public function findCourse($courseId)
+    public function findSubject($subjectId)
     {
-        return \App\Db\CourseMap::create()->find($courseId);
+        return \App\Db\SubjectMap::create()->find($subjectId);
     }
 
     /**
-     * @param $courseCode
+     * @param $subjectCode
      * @param $institutionId
-     * @return null|Db\Course|\Tk\Db\ModelInterface
+     * @return null|Db\Subject|\Tk\Db\ModelInterface
      */
-    public function findCourseByCode($courseCode, $institutionId)
+    public function findSubjectByCode($subjectCode, $institutionId)
     {
-        return \App\Db\CourseMap::create()->findByCode($courseCode, $institutionId);
+        return \App\Db\SubjectMap::create()->findByCode($subjectCode, $institutionId);
     }
 
     /**
      * @param $params
-     * @return Db\Course|null
+     * @return Db\Subject|null
      */
-    public function createCourse($params)
+    public function createSubject($params)
     {
-        $course = null;
+        $subject = null;
         switch($params['type']) {
             case 'lti':
             case 'ldap':
-                $course = new \App\Db\Course();
-                \App\Db\CourseMap::create()->mapForm($params, $course);
-                $course->save();
-                $this->addUserToCourse($course, $params['UserIface']);
+                $subject = new \App\Db\Subject();
+                \App\Db\SubjectMap::create()->mapForm($params, $subject);
+                $subject->save();
+                $this->addUserToSubject($subject, $params['UserIface']);
         }
-        return $course;
+        return $subject;
     }
 
     /**
-     * @param \App\Db\Course $course
+     * @param \App\Db\Subject $subject
      * @param \app\Db\User $user
      */
-    public function addUserToCourse($course, $user)
+    public function addUserToSubject($subject, $user)
     {
-        \App\Db\CourseMap::create()->addUser($course->getId(), $user->getId());
+        \App\Db\SubjectMap::create()->addUser($subject->getId(), $user->getId());
     }
 
     /**
@@ -116,11 +116,11 @@ class PluginApi implements \Uni\PluginApi
      * Return the Uri to redirect to on successful LTI login
      *
      * @param \App\Db\User $user
-     * @param \App\Db\Course $course
+     * @param \App\Db\Subject $subject
      * @return \Tk\Uri
      * @throws \Exception
      */
-    public function getLtiHome($user, $course)
+    public function getLtiHome($user, $subject)
     {
         return $user->getHomeUrl();
     }

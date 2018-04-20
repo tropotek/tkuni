@@ -60,9 +60,12 @@ class Edit extends \Uni\Controller\AdminIface
     }
 
     /**
-     *
      * @param Request $request
+     * @throws Form\Exception
+     * @throws \ReflectionException
+     * @throws \Tk\Db\Exception
      * @throws \Tk\Exception
+     * @throws \Exception
      */
     public function doDefault(Request $request)
     {
@@ -131,11 +134,11 @@ class Edit extends \Uni\Controller\AdminIface
 
         //if ($this->user->id && $this->getUser()->isClient() ) {
         if ($this->user->id && ($this->getUser()->isStaff() || $this->getUser()->isClient()) ) {
-            $list = \Tk\Form\Field\Option\ArrayObjectIterator::create(\App\Db\CourseMap::create()->findActive($this->institution->id));
-            $this->form->addField(new Field\Select('selCourse[]', $list))->setLabel('Course Selection')->setNotes('This list only shows active and enrolled courses. Use the enrollment form in the edit course page if your course is not visible.')->
-                setTabGroup('Courses')->addCss('tk-dualSelect')->setAttr('data-title', 'Courses');
-            $arr = \App\Db\CourseMap::create()->findByUserId($this->user->id)->toArray('id');
-            $this->form->setFieldValue('selCourse', $arr);
+            $list = \Tk\Form\Field\Option\ArrayObjectIterator::create(\App\Db\SubjectMap::create()->findActive($this->institution->id));
+            $this->form->addField(new Field\Select('selSubject[]', $list))->setLabel('Subject Selection')->setNotes('This list only shows active and enrolled subjects. Use the enrollment form in the edit subject page if your subject is not visible.')->
+                setTabGroup('Subjects')->addCss('tk-dualSelect')->setAttr('data-title', 'Subjects');
+            $arr = \App\Db\SubjectMap::create()->findByUserId($this->user->id)->toArray('id');
+            $this->form->setFieldValue('selSubject', $arr);
         }
 
         $this->form->addField(new Event\Submit('update', array($this, 'doSubmit')));
@@ -187,16 +190,16 @@ class Edit extends \Uni\Controller\AdminIface
         if ($this->institution) {
             $this->user->institutionId = $this->institution->id;
 
-            // TODO: Add the ability to assign a staff member to courses.
-            $selected = $form->getFieldValue('selCourse');
+            // TODO: Add the ability to assign a staff member to subjects.
+            $selected = $form->getFieldValue('selSubject');
             if ($this->user->id && is_array($selected)) {
-                $list = \App\Db\CourseMap::create()->findActive($this->institution->id);
-                /** @var \App\Db\Course $course */
-                foreach ($list as $course) {
-                    if (in_array($course->id, $selected)) {
-                        \App\Db\CourseMap::create()->addUser($course->id, $this->user->id);
+                $list = \App\Db\SubjectMap::create()->findActive($this->institution->id);
+                /** @var \App\Db\Subject $subject */
+                foreach ($list as $subject) {
+                    if (in_array($subject->id, $selected)) {
+                        \App\Db\SubjectMap::create()->addUser($subject->id, $this->user->id);
                     } else {
-                        \App\Db\CourseMap::create()->removeUser($course->id, $this->user->id);
+                        \App\Db\SubjectMap::create()->removeUser($subject->id, $this->user->id);
                     }
                 }
             }

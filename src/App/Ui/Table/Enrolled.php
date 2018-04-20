@@ -1,10 +1,8 @@
 <?php
 namespace App\Ui\Table;
 
-use Dom\Template;
 
 /**
- * Class CourseTable
  *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
@@ -19,9 +17,9 @@ class Enrolled extends \Dom\Renderer\Renderer
     protected $table = null;
 
     /**
-     * @var \App\Db\Course
+     * @var \App\Db\Subject
      */
-    protected $course = null;
+    protected $subject = null;
 
     /**
      * @var null|\Tk\Uri
@@ -30,21 +28,22 @@ class Enrolled extends \Dom\Renderer\Renderer
 
 
     /**
-     * CourseTable constructor.
+     * constructor.
      *
-     * @param \App\Db\Course $course
+     * @param \App\Db\Subject $subject
      * @param null|\Tk\Uri $editUrl
+     * @throws \Tk\Exception
      */
-    public function __construct($course, $editUrl = null)
+    public function __construct($subject, $editUrl = null)
     {
-        $this->course = $course;
+        $this->subject = $subject;
         $this->editUrl = $editUrl;
         $this->doDefault();
     }
-    
+
     /**
-     *
-     * @return \Dom\Template|Template|string
+     * @throws \Tk\Exception
+     * @throws \Exception
      */
     public function doDefault()
     {
@@ -53,7 +52,7 @@ class Enrolled extends \Dom\Renderer\Renderer
         $this->table->addCss('tk-enrolled-users');
 
         $this->table->addCell(new \Tk\Table\Cell\Checkbox('id'));
-        $this->table->addCell(new ActionsCell($this->course));
+        $this->table->addCell(new ActionsCell($this->subject));
         $this->table->addCell(new NameCell('name'))->addCss('key')->setUrl($this->editUrl);
         $this->table->addCell(new \Tk\Table\Cell\Text('email'));
         $this->table->addCell(new \Tk\Table\Cell\Text('role'));
@@ -61,16 +60,16 @@ class Enrolled extends \Dom\Renderer\Renderer
         $this->table->addCell(new \Tk\Table\Cell\Date('created'));
 
         // Actions
-        $this->table->addAction(new DeleteUser())->setCourse($this->course);
+        $this->table->addAction(new DeleteUser())->setSubject($this->subject);
         $this->table->addAction(\Tk\Table\Action\Csv::create());
 
         // Set list
         $filter = $this->table->getFilterValues();
-        $filter['institutionId'] = $this->course->institutionId;
-        $filter['courseId'] = $this->course->getId();
+        $filter['institutionId'] = $this->subject->institutionId;
+        $filter['subjectId'] = $this->subject->getId();
         $filter['role'] = array(\App\Db\User::ROLE_STAFF, \App\Db\User::ROLE_STUDENT);
 
-        $users = \App\Db\UserMap::create()->findFiltered($filter, $this->table->makeDbTool('a.name'));
+        $users = \App\Db\UserMap::create()->findFiltered($filter, $this->table->getTool('a.name'));
         $this->table->setList($users);
 
     }
@@ -96,27 +95,27 @@ class ActionsCell extends \Tk\Table\Cell\Text
 {
 
     /**
-     * @var \App\Db\Course
+     * @var \App\Db\Subject
      */
-    protected $course = null;
+    protected $subject = null;
 
     /**
      * @var \App\Ui\Dialog\AjaxSelect
      */
-    protected $findCourseDialog = null;
+    protected $findSubjectDialog = null;
 
     /**
-     * @param \App\Db\Course $course
+     * @param \App\Db\Subject $subject
      */
-    public function __construct($course)
+    public function __construct($subject)
     {
         parent::__construct('actions');
         $this->setOrderProperty('');
-        $this->course = $course;
-        $this->findCourseDialog = new \App\Ui\Dialog\AjaxSelect('Migrate Student', array($this, 'onSelect'), \Tk\Uri::create('/ajax/course/findFiltered.html'));
-        $this->findCourseDialog->setAjaxParams(array('ignoreUser' => '1', 'courseId' => $this->course->getId()));
-        $this->findCourseDialog->setNotes('Select the course to migrate the student to...');
-        $this->findCourseDialog->execute(\App\Config::getInstance()->getRequest());
+        $this->subject = $subject;
+        $this->findSubjectDialog = new \App\Ui\Dialog\AjaxSelect('Migrate Student', array($this, 'onSelect'), \Tk\Uri::create('/ajax/subject/findFiltered.html'));
+        $this->findSubjectDialog->setAjaxParams(array('ignoreUser' => '1', 'subjectId' => $this->subject->getId()));
+        $this->findSubjectDialog->setNotes('Select the subject to migrate the student to...');
+        $this->findSubjectDialog->execute(\App\Config::getInstance()->getRequest());
     }
     
     public function setTable($table)
@@ -126,7 +125,7 @@ class ActionsCell extends \Tk\Table\Cell\Text
         if ($ren) {
             /** @var \Dom\Template $tableTemplate */
             $tableTemplate = $ren->getTemplate();
-            $tableTemplate->appendTemplate('tk-table', $this->findCourseDialog->show());
+            $tableTemplate->appendTemplate('tk-table', $this->findSubjectDialog->show());
         }
         return parent::setTable($table);
     }
@@ -134,29 +133,29 @@ class ActionsCell extends \Tk\Table\Cell\Text
     public function onSelect($data)
     {
         $dispatcher = \App\Config::getInstance()->getEventDispatcher();
-        // Migrate the user to the new course
+        // Migrate the user to the new subject
         $event = new \Tk\Event\Event();
-        $event->set('courseFromId', $this->course->getId());
-        $event->set('courseToId', $data['selectedId']);
+        $event->set('subjectFromId', $this->subject->getId());
+        $event->set('subjectToId', $data['selectedId']);
         $event->set('userId', $data['userId']);
-        $dispatcher->dispatch(\App\AppEvents::COURSE_MIGRATE_USER, $event);
+        $dispatcher->dispatch(\App\AppEvents::SUBJECT_MIGRATE_USER, $event);
         
         if (!$event->isPropagationStopped()) {
             /** @var \App\Db\User $user */
             $user = \App\Db\UserMap::create()->find($event->get('userId'));
             if ($user) {
-                if (\App\Db\CourseMap::create()->hasUser($event->get('courseFromId'), $user->getId())) {
-                    \App\Db\CourseMap::create()->removeUser($event->get('courseFromId'), $user->getId());
+                if (\App\Db\SubjectMap::create()->hasUser($event->get('subjectFromId'), $user->getId())) {
+                    \App\Db\SubjectMap::create()->removeUser($event->get('subjectFromId'), $user->getId());
                     // delete user from the pre-enrolment list if exists
-                    \App\Db\CourseMap::create()->removePreEnrollment($event->get('courseFromId'), $user->email);
+                    \App\Db\SubjectMap::create()->removePreEnrollment($event->get('subjectFromId'), $user->email);
                 }
-                if (!\App\Db\CourseMap::create()->hasUser($event->get('courseToId'), $user->getId())) {
-                    \App\Db\CourseMap::create()->addUser($event->get('courseToId'), $user->getId());
+                if (!\App\Db\SubjectMap::create()->hasUser($event->get('subjectToId'), $user->getId())) {
+                    \App\Db\SubjectMap::create()->addUser($event->get('subjectToId'), $user->getId());
                 }
             }
         }
         
-        \Tk\Uri::create()->reset()->set('courseId', $this->course->getId())->redirect();
+        \Tk\Uri::create()->reset()->set('subjectId', $this->subject->getId())->redirect();
     }
 
     /**
@@ -168,18 +167,18 @@ class ActionsCell extends \Tk\Table\Cell\Text
     {
         $template = $this->__makeTemplate();
 
-        // exclude any courses already enrolled in
-        $enrolledList  = \App\Db\CourseMap::create()->findFiltered(array('userId' => $obj->getId()));
-        $exclude = array($this->course->getId());
-        foreach ($enrolledList as $course) {
-            $exclude[] = $course->getId();
+        // exclude any subjects already enrolled in
+        $enrolledList  = \App\Db\SubjectMap::create()->findFiltered(array('userId' => $obj->getId()));
+        $exclude = array($this->subject->getId());
+        foreach ($enrolledList as $subject) {
+            $exclude[] = $subject->getId();
         }
-        $list = \App\Db\CourseMap::create()->findFiltered(array(
+        $list = \App\Db\SubjectMap::create()->findFiltered(array(
             'exclude' => $exclude
         ));
 
         if (count($list) && $obj->isStudent()) {
-            $template->setAttr('migrate', 'data-target', '#' . $this->findCourseDialog->getId());
+            $template->setAttr('migrate', 'data-target', '#' . $this->findSubjectDialog->getId());
             $template->setAttr('migrate', 'data-toggle', 'modal');
             $template->setAttr('migrate', 'data-user-id', $obj->getId());
             $template->setChoice('migrate');
@@ -197,7 +196,7 @@ class ActionsCell extends \Tk\Table\Cell\Text
     {
         $html = <<<HTML
 <div class="">
-  <a href="#" class="btn btn-default btn-xs migrateUser" title="Migrate user to another course " var="migrate" choice="migrate"><i class="fa fa-exchange"></i></a>
+  <a href="#" class="btn btn-default btn-xs migrateUser" title="Migrate user to another subject " var="migrate" choice="migrate"><i class="fa fa-exchange"></i></a>
 </div>
 HTML;
         return \Dom\Loader::load($html);
@@ -216,16 +215,16 @@ class NameCell extends \Tk\Table\Cell\Text
 
 class DeleteUser extends \Tk\Table\Action\Delete
 {
-    /** @var \App\Db\Course null */
-    private $course = null;
+    /** @var \App\Db\Subject null */
+    private $subject = null;
 
     /**
-     * @param \App\Db\Course  $course
+     * @param \App\Db\Subject  $subject
      * @return $this
      */
-    public function setCourse($course)
+    public function setSubject($subject)
     {
-        $this->course = $course;
+        $this->subject = $subject;
         return $this;
     }
     
@@ -239,13 +238,13 @@ class DeleteUser extends \Tk\Table\Action\Delete
         if (!is_array($selected)) return;
         $i = 0;
 
-        $courseId = $this->course->getId();
+        $subjectId = $this->subject->getId();
         /* @var \app\Db\User $obj */
         foreach($this->getTable()->getList() as $obj) {
             if (in_array($obj->getId(), $selected) && !in_array($obj->getId(), $this->excludeIdList)) {
-                $courseMap = \App\Db\CourseMap::create();
-                $courseMap->removePreEnrollment($courseId, $obj->email);
-                $courseMap->removeUser($courseId, $obj->getId());
+                $subjectMap = \App\Db\SubjectMap::create();
+                $subjectMap->removePreEnrollment($subjectId, $obj->email);
+                $subjectMap->removeUser($subjectId, $obj->getId());
                 $i++;
             }
         }
@@ -257,6 +256,6 @@ class DeleteUser extends \Tk\Table\Action\Delete
      */
     protected function getConfirmStr()
     {
-        return "'Delete ' + selected.length + ' selected records?\\nNote: Users will be removed from this course and the pending-enrollment list.'";
+        return "'Delete ' + selected.length + ' selected records?\\nNote: Users will be removed from this subject and the pending-enrollment list.'";
     }
 }

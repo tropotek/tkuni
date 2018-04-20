@@ -9,7 +9,7 @@ use Dom\Template;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class CourseDashboard extends \Uni\Controller\Iface
+class SubjectDashboard extends \Uni\Controller\Iface
 {
 
     /**
@@ -17,9 +17,9 @@ class CourseDashboard extends \Uni\Controller\Iface
      */
     public function __construct()
     {
-        $this->setPageTitle('Course Dashboard');
+        $this->setPageTitle('Subject Dashboard');
         if ($this->getUser()->isStaff()) {
-            \Uni\Ui\Crumbs::resetCourse($this->getCourse());
+            \Uni\Ui\Crumbs::resetSubject($this->getSubject());
         }
     }
 
@@ -29,31 +29,31 @@ class CourseDashboard extends \Uni\Controller\Iface
      */
     public function doDefault(Request $request)
     {
-        $course = $this->getCourse();
-        if ($course) {
-            $this->setPageTitle($course->name);
-            $this->getTemplate()->insertText('code', $course->code);
+        $subject = $this->getSubject();
+        if ($subject) {
+            $this->setPageTitle($subject->name);
+            $this->getTemplate()->insertText('code', $subject->code);
         }
 
-        $this->courseUserList = new \App\Ui\CourseUserList($course);
+        //$this->subjectUserList = new \App\Ui\SubjectUserList($course);
 
-        $this->statusTable = new \App\Ui\Table\StatusPending(\Tk\Uri::create());
-        $list = \App\Db\StatusMap::create()->findCurrentStatus(array(
-            'profileId' => $course->getProfile()->getId(),
-            'courseId' => $course->getId(),
-            'name' => 'pending',
-        ), $this->statusTable->getTable()->makeDbTool('created DESC'));
-        $this->statusTable->setList($list);
+//        $this->statusTable = new \App\Ui\Table\StatusPending(\Tk\Uri::create());
+//        $list = \App\Db\StatusMap::create()->findCurrentStatus(array(
+//            'profileId' => $subject->getProfile()->getId(),
+//            'subjectId' => $subject->getId(),
+//            'name' => 'pending',
+//        ), $this->statusTable->getTable()->makeDbTool('created DESC'));
+//        $this->statusTable->setList($list);
 
     }
 
     /**
-     * @return \App\Ui\CourseUserList
+     * @return \App\Ui\SubjectUserList
      */
-    public function getCourseUserList()
-    {
-        return $this->courseUserList;
-    }
+//    public function getSubjectUserList()
+//    {
+//        return $this->subjectUserList;
+//    }
 
     /**
      * @return \Dom\Template
@@ -63,8 +63,8 @@ class CourseDashboard extends \Uni\Controller\Iface
     {
         $template = parent::show();
 
-        $template->appendTemplate('studentList', $this->courseUserList->show());
-        $template->insertTemplate('statusList', $this->statusTable->getTable()->getRenderer()->show());
+//        $template->appendTemplate('studentList', $this->subjectUserList->show());
+//        $template->insertTemplate('statusList', $this->statusTable->getTable()->getRenderer()->show());
 
         $defaultTab = 1;
         if ($defaultTab == 2) {
