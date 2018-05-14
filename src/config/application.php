@@ -15,7 +15,7 @@ include_once(__DIR__ . '/session.php');
  * Default app config values
  **************************************/
 
-$config['site.title'] = 'New UNI Site';
+$config['site.title'] = 'New Site';
 $config['site.email'] = 'fvas-elearning@unimelb.edu.au';
 
 $config['google.map.apikey']           = 'AIzaSyCSGICa1zdV6i2LV5GKLymRwjix03qYIeM';

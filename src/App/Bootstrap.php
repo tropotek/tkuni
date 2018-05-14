@@ -53,17 +53,15 @@ class Bootstrap
         include($config->getSrcPath() . '/config/application.php');
 
         // This maybe should be created in a Factory or DI Container....
-        if (is_readable($config->getLogPath())) {
-            if (!$config->getRequest()->has('nolog')) {
-                $logger = new Logger('system');
-                $handler = new StreamHandler($config->getLogPath(), $config->getLogLevel());
-                $formatter = new \Tk\Log\MonologLineFormatter();
-                $formatter->setScriptTime($config->getScriptTime());
-                $handler->setFormatter($formatter);
-                $logger->pushHandler($handler);
-                $config->setLog($logger);
-                \Tk\Log::getInstance($logger);
-            }
+        if (is_readable($config->getLogPath()) && !$config->getRequest()->has('nolog')) {
+            $logger = new Logger('system');
+            $handler = new StreamHandler($config->getLogPath(), $config->getLogLevel());
+            $formatter = new \Tk\Log\MonologLineFormatter();
+            $formatter->setScriptTime($config->getScriptTime());
+            $handler->setFormatter($formatter);
+            $logger->pushHandler($handler);
+            $config->setLog($logger);
+            \Tk\Log::getInstance($logger);
         } else {
             error_log('Log Path not readable: ' . $config->getLogPath());
         }
@@ -93,7 +91,6 @@ class Bootstrap
 
         // * Session
         $config->getSession();
-
         return $config;
     }
 
