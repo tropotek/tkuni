@@ -4,7 +4,6 @@ namespace App\Controller\Institution;
 use Dom\Template;
 use Tk\Form\Field;
 use Tk\Request;
-use Uni\Controller\Iface;
 
 /**
  *
@@ -48,13 +47,14 @@ class Manager extends \Uni\Controller\AdminIface
 
 
     /**
-     *
      * @param Request $request
+     * @throws \Tk\Exception
+     * @throws \Tk\Form\Exception
+     * @throws \Exception
      */
     public function doDefault(Request $request)
     {
         $this->setPageTitle('Institution Manager');
-
 
         $this->actionsCell->addButton(\Tk\Table\Cell\ActionButton::create('Masquerade', \Tk\Uri::create(), 'fa  fa-user-secret', 'tk-masquerade'))
             ->setOnShow(function ($cell, $obj, $button) {
@@ -84,7 +84,7 @@ class Manager extends \Uni\Controller\AdminIface
         $this->table->addAction(\Tk\Table\Action\Delete::create());
         $this->table->addAction(\Tk\Table\Action\Csv::create());
 
-        $users = \App\Db\InstitutionMap::create()->findFiltered($this->table->getFilterValues(), $this->table->makeDbTool('a.id'));
+        $users = \App\Db\InstitutionMap::create()->findFiltered($this->table->getFilterValues(), $this->table->getTool('a.id'));
         $this->table->setList($users);
 
     }
@@ -97,7 +97,8 @@ class Manager extends \Uni\Controller\AdminIface
         $template = parent::show();
         $template->replaceTemplate('table', $this->table->getRenderer()->show());
 
-        $this->getActionPanel()->addButton(\Tk\Ui\Button::create('New Institution', \Uni\Uri::createHomeUrl('/institutionEdit.html'), 'fa fa-university'));
+        $this->getActionPanel()->add(\Tk\Ui\Button::create('New Institution',
+            \Uni\Uri::createHomeUrl('/institutionEdit.html'), 'fa fa-university'));
 
         return $template;
     }

@@ -63,7 +63,8 @@ class Bootstrap
             $config->setLog($logger);
             \Tk\Log::getInstance($logger);
         } else {
-            error_log('Log Path not readable: ' . $config->getLogPath());
+            var_dump('Log path not readable: ' . $config->getLogPath());
+            exit;
         }
 
         if (!$config->isDebug()) {

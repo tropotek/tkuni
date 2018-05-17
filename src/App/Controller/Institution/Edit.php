@@ -38,7 +38,10 @@ class Edit extends \Uni\Controller\AdminIface
 
     /**
      * @param Request $request
-     * @throws \Tk\Exception
+     * @throws Form\Exception
+     * @throws \ReflectionException
+     * @throws \Tk\Db\Exception
+     * @throws \Exception
      */
     public function doDefault(Request $request)
     {
@@ -96,6 +99,8 @@ class Edit extends \Uni\Controller\AdminIface
     /**
      * @param \Tk\Form $form
      * @throws Form\Exception
+     * @throws \ReflectionException
+     * @throws \Tk\Db\Exception
      * @throws \Tk\Exception
      */
     public function doSubmit($form)
@@ -184,10 +189,10 @@ class Edit extends \Uni\Controller\AdminIface
             $template->setChoice('update');
 
             if (\App\Listener\MasqueradeHandler::canMasqueradeAs($this->getUser(), $this->institution->getOwner())) {
-                $this->getActionPanel()->addButton(\Tk\Ui\Button::create('Masquerade',
+                $this->getActionPanel()->add(\Tk\Ui\Button::create('Masquerade',
                     \Uni\Uri::create()->reset()->set(\App\Listener\MasqueradeHandler::MSQ, $this->institution->getOwner()->hash), 'fa fa-user-secret'))->addCss('tk-masquerade');
             }
-            $this->getActionPanel()->addButton(\Tk\Ui\Button::create('Plugins',
+            $this->getActionPanel()->add(\Tk\Ui\Button::create('Plugins',
                 \Uni\Uri::createHomeUrl('/institution/'.$this->institution->getId().'/plugins.html'), 'fa fa-plug'));
 
             

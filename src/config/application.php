@@ -68,7 +68,7 @@ $config['date.timezone'] = 'Australia/Victoria';
 /*
  * Config for the \Tk\Auth\Adapter\DbTable
  */
-$config['system.auth.dbtable.tableName']      = 'UserIface';
+$config['system.auth.dbtable.tableName']      = 'user';
 $config['system.auth.dbtable.usernameColumn'] = 'username';
 $config['system.auth.dbtable.passwordColumn'] = 'password';
 $config['system.auth.dbtable.saltColumn']     = 'hash';

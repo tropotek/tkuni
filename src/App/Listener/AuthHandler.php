@@ -54,7 +54,7 @@ class AuthHandler implements Subscriber
         $role = $event->getRequest()->getAttribute('role');
         if (!$role || empty($role)) return;
         if (!$user) {
-            if ($controller instanceof \Uni\Controller\Iface) {
+            if ($controller instanceof \Tk\Controller\Iface) {
                 \Tk\Uri::create('/login.html')->redirect();
             } else {
                 throw new \Tk\Auth\Exception('Invalid access permissions');
