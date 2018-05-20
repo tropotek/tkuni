@@ -32,6 +32,7 @@ class Subject extends \Dom\Renderer\Renderer
      *
      * @param int $institutionId
      * @param \Tk\Uri|null $editUrl
+     * @throws \Exception
      */
     public function __construct($institutionId = 0, $editUrl = null)
     {

@@ -145,6 +145,7 @@ class OwnerCell extends \Tk\Table\Cell\Text
      * @param \App\Db\Institution $obj
      * @param string $property
      * @return mixed
+     * @throws \Tk\Db\Exception
      */
     public function getPropertyValue($obj, $property)
     {

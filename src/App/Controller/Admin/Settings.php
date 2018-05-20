@@ -30,6 +30,14 @@ class Settings extends \Uni\Controller\AdminIface
      *
      * @param Request $request
      * @throws \Tk\Exception
+     * @throws \Exception
+     * @throws Form\Exception
+     * @throws Form\Exception
+     * @throws Form\Exception
+     * @throws Form\Exception
+     * @throws Form\Exception
+     * @throws Form\Exception
+     * @throws Form\Exception
      */
     public function doDefault(Request $request)
     {
@@ -57,6 +65,7 @@ class Settings extends \Uni\Controller\AdminIface
      * doSubmit()
      *
      * @param Form $form
+     * @throws \Tk\Db\Exception
      */
     public function doSubmit($form)
     {

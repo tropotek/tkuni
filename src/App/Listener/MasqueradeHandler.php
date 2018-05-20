@@ -76,6 +76,7 @@ class MasqueradeHandler implements Subscriber
      * @param User|\Uni\Db\UserIface $user
      * @param User|\Uni\Db\UserIface $msqUser
      * @return bool
+     * @throws \Tk\Exception
      */
     public static function canMasqueradeAs($user, $msqUser)
     {
@@ -112,6 +113,8 @@ class MasqueradeHandler implements Subscriber
      * >0 The masquerading total (for nested masquerading)
      *
      * @return int
+     * @throws \Tk\Exception
+     * @throws \Tk\Exception
      */
     public static function isMasquerading()
     {
@@ -124,6 +127,9 @@ class MasqueradeHandler implements Subscriber
      * Get the user who is masquerading, ignoring any nested masqueraded users
      *
      * @return \App\Db\User|null
+     * @throws \Tk\Db\Exception
+     * @throws \Tk\Exception
+     * @throws \Tk\Exception
      */
     public static function getMasqueradingUser()
     {
@@ -141,6 +147,9 @@ class MasqueradeHandler implements Subscriber
      * @param User $user
      * @param User $msqUser
      * @return bool|void
+     * @throws \Tk\Exception
+     * @throws \Tk\Exception
+     * @throws \Tk\Exception
      */
     public static function masqueradeLogin($user, $msqUser)
     {
@@ -198,6 +207,7 @@ class MasqueradeHandler implements Subscriber
     /**
      * masqueradeLogout
      *
+     * @throws \Tk\Exception
      */
     public static function masqueradeClear()
     {

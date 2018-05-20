@@ -91,7 +91,7 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\D
     }
 
     /**
-     *
+     * @throws \Tk\Db\Exception
      */
     public function save()
     {
@@ -104,6 +104,7 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\D
      * Get the user hash or generate one if needed
      *
      * @return string
+     * @throws \Tk\Db\Exception
      */
     public function getHash()
     {
@@ -117,6 +118,7 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\D
      * Helper method to generate user hash
      *
      * @return string
+     * @throws \Tk\Db\Exception
      */
     public function generateHash()
     {
@@ -127,6 +129,7 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\D
      * Get the path for all file associated to this object
      *
      * @return string
+     * @throws \Tk\Db\Exception
      */
     public function getDataPath()
     {
@@ -137,11 +140,12 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\D
      * Get the institution data object
      *
      * @return Data
+     * @throws \Tk\Db\Exception
      */
     public function getData()
     {
         if (!$this->data)
-            $this->data = Data::create($this->id, get_class($this));
+            $this->data = Data::create(get_class($this), $this->id);
         return $this->data;
     }
 
@@ -154,12 +158,14 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\D
     {
         if ($this->logo)
             return \Tk\Uri::create(\App\Config::getInstance()->getDataUrl().$this->logo);
+        return null;
     }
 
     /**
      * Find this institutions owner user
      *
      * @return User
+     * @throws \Tk\Db\Exception
      */
     public function getOwner()
     {
@@ -204,6 +210,7 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\D
     /**
      * Implement the validating rules to apply.
      *
+     * @throws \Tk\Db\Exception
      */
     public function validate()
     {
@@ -235,6 +242,7 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\D
     /**
      * @param string $subjectCode
      * @return SubjectIface
+     * @throws \Tk\Db\Exception
      */
     public function findSubjectByCode($subjectCode)
     {

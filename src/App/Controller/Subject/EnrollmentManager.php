@@ -83,6 +83,7 @@ class EnrollmentManager extends \Uni\Controller\AdminIface
 
     /**
      * @return \Dom\Template
+     * @throws \Dom\Exception
      */
     public function show()
     {

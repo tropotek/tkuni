@@ -1,5 +1,6 @@
 <?php
 namespace App\Ui\Table;
+use Tk\Db\Exception;
 
 
 /**
@@ -106,6 +107,8 @@ class ActionsCell extends \Tk\Table\Cell\Text
 
     /**
      * @param \App\Db\Subject $subject
+     * @throws \Tk\Exception
+     * @throws \Tk\Exception
      */
     public function __construct($subject)
     {
@@ -117,10 +120,14 @@ class ActionsCell extends \Tk\Table\Cell\Text
         $this->findSubjectDialog->setNotes('Select the subject to migrate the student to...');
         $this->findSubjectDialog->execute(\App\Config::getInstance()->getRequest());
     }
-    
+
+    /**
+     * @param \Tk\Table $table
+     * @return ActionsCell|\Tk\Table\Cell\Text
+     * @throws \Dom\Exception
+     */
     public function setTable($table)
     {
-
         $ren = $table->getRenderer();
         if ($ren) {
             /** @var \Dom\Template $tableTemplate */
@@ -142,7 +149,10 @@ class ActionsCell extends \Tk\Table\Cell\Text
         
         if (!$event->isPropagationStopped()) {
             /** @var \App\Db\User $user */
-            $user = \App\Db\UserMap::create()->find($event->get('userId'));
+            try {
+                $user = \App\Db\UserMap::create()->find($event->get('userId'));
+            } catch (Exception $e) {
+            }
             if ($user) {
                 if (\App\Db\SubjectMap::create()->hasUser($event->get('subjectFromId'), $user->getId())) {
                     \App\Db\SubjectMap::create()->removeUser($event->get('subjectFromId'), $user->getId());
@@ -162,6 +172,8 @@ class ActionsCell extends \Tk\Table\Cell\Text
      * @param \App\Db\User $obj
      * @param int|null $rowIdx The current row being rendered (0-n) If null no rowIdx available.
      * @return string|\Dom\Template
+     * @throws Exception
+     * @throws Exception
      */
     public function getCellHtml($obj, $rowIdx = null)
     {

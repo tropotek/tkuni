@@ -98,5 +98,8 @@ class Bootstrap
 }
 
 // called by autoloader, see composer.json -> "autoload" : files []...
-Bootstrap::execute();
+try {
+    Bootstrap::execute();
+} catch (\Exception $e) {
+}
 

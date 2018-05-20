@@ -2,6 +2,7 @@
 namespace App\Controller\Subject;
 
 use Dom\Template;
+use Tk\Db\Exception;
 use Tk\Form;
 use Tk\Form\Event;
 use Tk\Form\Field;
@@ -43,6 +44,16 @@ class Edit extends \Uni\Controller\AdminIface
      *
      * @param Request $request
      * @throws \Tk\Exception
+     * @throws \Exception
+     * @throws \ReflectionException
+     * @throws Form\Exception
+     * @throws Form\Exception
+     * @throws Form\Exception
+     * @throws Form\Exception
+     * @throws Form\Exception
+     * @throws Form\Exception
+     * @throws Form\Exception
+     * @throws Form\Exception
      */
     public function doDefault(Request $request)
     {
@@ -82,11 +93,16 @@ class Edit extends \Uni\Controller\AdminIface
 
     /**
      * @param \Tk\Form $form
+     * @throws \Tk\Db\Exception
      */
     public function doSubmit($form)
     {
         // Load the object with data from the form using a helper object
-        \App\Db\SubjectMap::create()->mapForm($form->getValues(), $this->subject);
+        try {
+            \App\Db\SubjectMap::create()->mapForm($form->getValues(), $this->subject);
+        } catch (\ReflectionException $e) {
+        } catch (Exception $e) {
+        }
 
         $form->addFieldErrors($this->subject->validate());
 

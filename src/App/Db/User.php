@@ -122,7 +122,6 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\Db\UserI
             $this->displayName = $this->name;
         }
         $this->getHash();
-        vd();
         $this->getData()->save();
         parent::save();
     }
@@ -131,11 +130,12 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\Db\UserI
      * Get the data object
      *
      * @return \Tk\Db\Data
+     * @throws \Tk\Db\Exception
      */
     public function getData()
     {
         if (!$this->data)
-            $this->data = \Tk\Db\Data::create($this->id, get_class($this));
+            $this->data = \Tk\Db\Data::create(get_class($this), $this->id);
         return $this->data;
     }
 
@@ -201,6 +201,7 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\Db\UserI
 
     /**
      * Get the institution related to this user
+     * @throws \Tk\Db\Exception
      */
     public function getInstitution()
     {
@@ -330,6 +331,8 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\Db\UserI
      *
      * @return array
      * @throws \ReflectionException
+     * @throws \Tk\Db\Exception
+     * @throws \Tk\Db\Exception
      */
     public function validate()
     {

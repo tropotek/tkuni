@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use Dom\Exception;
 use Tk\Form;
 use Tk\Form\Field;
 use Tk\Form\Event;
@@ -35,11 +36,19 @@ class Register extends Iface
      * @var \Tk\Event\Dispatcher
      */
     private $dispatcher = null;
-    
+
 
     /**
      * @param Request $request
      * @throws \Tk\Exception
+     * @throws \Exception
+     * @throws \ReflectionException
+     * @throws Form\Exception
+     * @throws Form\Exception
+     * @throws Form\Exception
+     * @throws Form\Exception
+     * @throws Form\Exception
+     * @throws Form\Exception
      */
     public function doDefault(Request $request)
     {
@@ -82,6 +91,9 @@ class Register extends Iface
      *
      * @param \Tk\Form $form
      * @throws \Tk\Exception
+     * @throws \ReflectionException
+     * @throws \ReflectionException
+     * @throws \ReflectionException
      */
     public function doRegister($form)
     {
@@ -144,9 +156,11 @@ class Register extends Iface
 
     /**
      * Activate the user account if not activated already, then trash the request hash....
-     * 
-     * 
+     *
+     *
      * @param Request $request
+     * @throws \Tk\Db\Exception
+     * @throws \Tk\Exception
      */
     public function doConfirmation($request)
     {
@@ -196,7 +210,10 @@ class Register extends Iface
 
             // Render the form
             $fren = new \Tk\Form\Renderer\Dom($this->form);
-            $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());
+            try {
+                $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());
+            } catch (Exception $e) {
+            }
         }
         
         return $template;

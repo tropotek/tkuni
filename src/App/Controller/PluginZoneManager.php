@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use Tk\Db\Exception;
 use Tk\Request;
 use Dom\Template;
 use Uni\Controller\Iface;
@@ -66,7 +67,11 @@ class PluginZoneManager extends Iface
      */
     private function getPluginList()
     {
-        $pluginFactory = \App\Config::getInstance()->getPluginFactory();
+        try {
+            $pluginFactory = \App\Config::getInstance()->getPluginFactory();
+        } catch (Exception $e) {
+        } catch (\Tk\Plugin\Exception $e) {
+        }
         $plugins = $pluginFactory->getZonePluginList($this->zoneName);
         $list = array();
         /** @var \Tk\Plugin\Iface $plugin */
@@ -168,7 +173,11 @@ class IconCell extends \Tk\Table\Cell\Text
     {
         $template = $this->__makeTemplate();
 
-        $pluginName = \App\Config::getInstance()->getPluginFactory()->cleanPluginName($info->name);
+        try {
+            $pluginName = \App\Config::getInstance()->getPluginFactory()->cleanPluginName($info->name);
+        } catch (Exception $e) {
+        } catch (\Tk\Plugin\Exception $e) {
+        }
         if (is_file(\App\Config::getInstance()->getPluginPath() . '/' . $pluginName . '/icon.png')) {
             $template->setAttr('icon', 'src', \App\Config::getInstance()->getPluginUrl() . '/' . $pluginName . '/icon.png');
             $template->setChoice('icon');
@@ -239,11 +248,16 @@ class ActionsCell extends \Tk\Table\Cell\Text
      * @param \StdClass $info
      * @param int|null $rowIdx The current row being rendered (0-n) If null no rowIdx available.
      * @return string|\Dom\Template
+     * @throws \Tk\Db\Exception
      */
     public function getCellHtml($info, $rowIdx = null)
     {
         $template = $this->__makeTemplate();
-        $pluginFactory = \App\Config::getInstance()->getPluginFactory();
+        try {
+            $pluginFactory = \App\Config::getInstance()->getPluginFactory();
+        } catch (Exception $e) {
+        } catch (\Tk\Plugin\Exception $e) {
+        }
         $pluginName = $pluginFactory->cleanPluginName($info->name);
         /** @var \Tk\Plugin\Iface $plugin */
         $plugin = $pluginFactory->getPlugin($pluginName);
@@ -326,7 +340,11 @@ HTML;
             \Tk\Alert::addWarning('Cannot locate Plugin: ' . $pluginName);
             return;
         }
-        \App\Config::getInstance()->getPluginFactory()->disableZonePlugin($pluginName, $this->zoneName, $this->zoneId);
+        try {
+            \App\Config::getInstance()->getPluginFactory()->disableZonePlugin($pluginName, $this->zoneName, $this->zoneId);
+        } catch (Exception $e) {
+        } catch (\Tk\Plugin\Exception $e) {
+        }
         \Tk\Alert::addSuccess('Plugin `' . $pluginName . '` disabled');
         \Tk\Uri::create()->remove('disable')->redirect();
     }

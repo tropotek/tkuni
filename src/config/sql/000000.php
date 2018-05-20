@@ -7,7 +7,10 @@
  */
 
 $config = \App\Config::getInstance();
-$data = \Tk\Db\Data::create();
+try {
+    $data = \Tk\Db\Data::create();
+} catch (\Tk\Db\Exception $e) {
+}
 $data->set('site.title', 'tk2uni');
 $data->set('site.email', 'fvas-elearning@unimelb.edu.au');
 //$data->set('site.client.registration', 'site.client.registration');
@@ -18,7 +21,10 @@ $data->set('site.meta.description', '');
 $data->set('site.global.js', '');
 $data->set('site.global.css', '');
 
-$data->save();
+try {
+    $data->save();
+} catch (\Tk\Db\Exception $e) {
+}
 
 // TODO: Any other install procedures.
 

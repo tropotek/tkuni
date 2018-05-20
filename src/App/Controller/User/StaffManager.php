@@ -24,6 +24,8 @@ class StaffManager extends Manager
 
     /**
      *
+     * @throws \Tk\Db\Exception
+     * @throws \Exception
      */
     public function initTable()
     {

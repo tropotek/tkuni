@@ -161,6 +161,9 @@ class Edit extends \Uni\Controller\AdminIface
 
     /**
      * @return \Dom\Template
+     * @throws \Tk\Db\Exception
+     * @throws \Tk\Db\Exception
+     * @throws \Tk\Exception
      */
     public function show()
     {

@@ -38,6 +38,12 @@ class Manager extends \Uni\Controller\AdminIface
     /**
      *
      * @param Request $request
+     * @throws \Exception
+     * @throws \Tk\Exception
+     * @throws \Tk\Exception
+     * @throws \Tk\Form\Exception
+     * @throws \Tk\Form\Exception
+     * @throws \Tk\Exception
      */
     public function doDefault(Request $request)
     {

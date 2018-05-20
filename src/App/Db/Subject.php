@@ -82,7 +82,7 @@ class Subject extends \Tk\Db\Map\Model implements \Uni\Db\SubjectIface
     }
 
     /**
-     *
+     * @throws \Tk\Db\Exception
      */
     public function save()
     {
@@ -92,6 +92,7 @@ class Subject extends \Tk\Db\Map\Model implements \Uni\Db\SubjectIface
 
     /**
      * Get the institution related to this user
+     * @throws \Tk\Db\Exception
      */
     public function getInstitution()
     {
@@ -110,7 +111,7 @@ class Subject extends \Tk\Db\Map\Model implements \Uni\Db\SubjectIface
     public function getData()
     {
         if (!$this->data)
-            $this->data = \Tk\Db\Data::create($this->id, get_class($this));
+            $this->data = \Tk\Db\Data::create(get_class($this), $this->id);
         return $this->data;
     }
 
@@ -199,6 +200,7 @@ class Subject extends \Tk\Db\Map\Model implements \Uni\Db\SubjectIface
 
     /**
      *
+     * @throws \Tk\Db\Exception
      */
     public function validate()
     {

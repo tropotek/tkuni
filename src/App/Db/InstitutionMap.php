@@ -58,11 +58,11 @@ class InstitutionMap extends Mapper
     }
 
 
-
     /**
      *
      * @param null|\Tk\Db\Tool $tool
      * @return ArrayObject
+     * @throws \Tk\Db\Exception
      */
     public function findActive($tool = null)
     {
@@ -75,6 +75,7 @@ class InstitutionMap extends Mapper
      * @param $hash
      * @param int $active
      * @return Institution|null
+     * @throws \Tk\Db\Exception
      */
     public function findByhash($hash, $active = 1)
     {
@@ -86,6 +87,7 @@ class InstitutionMap extends Mapper
      *
      * @param $domain
      * @return Institution|null
+     * @throws \Tk\Db\Exception
      */
     public function findByDomain($domain)
     {
@@ -97,6 +99,7 @@ class InstitutionMap extends Mapper
      *
      * @param int $userId
      * @return Institution
+     * @throws \Tk\Db\Exception
      */
     public function findByOwnerId($userId)
     {
@@ -110,6 +113,7 @@ class InstitutionMap extends Mapper
      * @param array $filter
      * @param Tool $tool
      * @return ArrayObject
+     * @throws \Tk\Db\Exception
      */
     public function findFiltered($filter = array(), $tool = null)
     {

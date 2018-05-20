@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller\User;
 
+use Tk\Db\Exception;
 use Tk\Request;
 use Dom\Template;
 use Tk\Form;
@@ -154,11 +155,18 @@ class Edit extends \Uni\Controller\AdminIface
 
     /**
      * @param \Tk\Form $form
+     * @throws \Tk\Exception
+     * @throws \Tk\Exception
+     * @throws \ReflectionException
      */
     public function doSubmit($form)
     {
         // Load the object with data from the form using a helper object
-        \App\Db\UserMap::create()->mapForm($form->getValues(), $this->user);
+        try {
+            \App\Db\UserMap::create()->mapForm($form->getValues(), $this->user);
+        } catch (\ReflectionException $e) {
+        } catch (Exception $e) {
+        }
 
         // TODO: We have a unique issue here where if a user is to be created
         // TODO:  and the record has been marked deleted, then it will throw an error
@@ -215,6 +223,7 @@ class Edit extends \Uni\Controller\AdminIface
 
     /**
      * @return \Dom\Template
+     * @throws \Tk\Exception
      */
     public function show()
     {

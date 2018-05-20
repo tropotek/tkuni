@@ -16,6 +16,7 @@ class Logout extends Iface
 
     /**
      * @param Request $request
+     * @throws \Tk\Exception
      */
     public function doDefault(Request $request)
     {

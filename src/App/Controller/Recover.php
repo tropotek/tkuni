@@ -33,6 +33,9 @@ class Recover extends Iface
 
     /**
      * @param Request $request
+     * @throws \Exception
+     * @throws Form\Exception
+     * @throws Form\Exception
      */
     public function doDefault(Request $request)
     {
@@ -50,6 +53,7 @@ class Recover extends Iface
 
     /**
      * @param Form $form
+     * @throws \Tk\Exception
      */
     public function doRecover($form)
     {
