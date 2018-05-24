@@ -50,6 +50,9 @@ class Manager extends \Uni\Controller\AdminIface
     /**
      *
      * @param Request $request
+     * @throws \Tk\Db\Exception
+     * @throws \Tk\Exception
+     * @throws \Tk\Form\Exception
      */
     public function doDefault(Request $request)
     {
@@ -60,8 +63,8 @@ class Manager extends \Uni\Controller\AdminIface
             ->setOnShow(function ($cell, $obj, $button) {
                 /* @var $obj \App\Db\Institution */
                 /* @var $button \Tk\Table\Cell\ActionButton */
-                if (\App\Listener\MasqueradeHandler::canMasqueradeAs(\App\Config::getInstance()->getUser(), $obj->getOwner())) {
-                    $button->setUrl(\Uni\Uri::create()->set(\App\Listener\MasqueradeHandler::MSQ, $obj->getOwner()->getHash()));
+                if (\App\Listener\MasqueradeHandler::canMasqueradeAs(\App\Config::getInstance()->getUser(), $obj->getUser())) {
+                    $button->setUrl(\Uni\Uri::create()->set(\App\Listener\MasqueradeHandler::MSQ, $obj->getUser()->getHash()));
                 }
             });
             
@@ -71,7 +74,7 @@ class Manager extends \Uni\Controller\AdminIface
         $this->table->addCell(new \Tk\Table\Cell\Checkbox('id'));
         $this->table->addCell($this->actionsCell);
         $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCss('key')->setUrl(\Tk\Uri::create('admin/institutionEdit.html'));
-        $this->table->addCell(new OwnerCell('owner'));
+        $this->table->addCell(new InstitutionUserCell('user'));
         $this->table->addCell(new \Tk\Table\Cell\Text('email'));
         $this->table->addCell(new \Tk\Table\Cell\Text('description'))->setCharacterLimit(64);
         $this->table->addCell(new \Tk\Table\Cell\Boolean('active'));
@@ -84,7 +87,7 @@ class Manager extends \Uni\Controller\AdminIface
         $this->table->addAction(\Tk\Table\Action\Delete::create());
         $this->table->addAction(\Tk\Table\Action\Csv::create());
 
-        $users = \App\Db\InstitutionMap::create()->findFiltered($this->table->getFilterValues(), $this->table->makeDbTool('a.id'));
+        $users = \App\Db\InstitutionMap::create()->findFiltered($this->table->getFilterValues(), $this->table->getTool('a.id'));
         $this->table->setList($users);
 
     }
@@ -131,7 +134,7 @@ HTML;
 }
 
 
-class OwnerCell extends \Tk\Table\Cell\Text
+class InstitutionUserCell extends \Tk\Table\Cell\Text
 {
 
     public function __construct($property, $label = null)
@@ -144,12 +147,13 @@ class OwnerCell extends \Tk\Table\Cell\Text
      * @param \App\Db\Institution $obj
      * @param string $property
      * @return mixed
+     * @throws \Tk\Db\Exception
      */
     public function getPropertyValue($obj, $property)
     {
         //$val =  parent::getPropertyValue($obj, $property);
         $val =  '';
-        $owner = $obj->getOwner();
+        $owner = $obj->getUser();
         if ($owner) {
             $val = $owner->name;
         }

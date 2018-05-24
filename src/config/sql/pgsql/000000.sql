@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS "user" (
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS institution (
   id SERIAL PRIMARY KEY,
-  owner_id INTEGER NOT NULL DEFAULT 0,
+  user_id INTEGER NOT NULL DEFAULT 0,
   name VARCHAR(255) NOT NULL DEFAULT '',
   email VARCHAR(255) NOT NULL DEFAULT '',
   domain VARCHAR(255) NOT NULL DEFAULT '',
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS institution (
   del NUMERIC(1) NOT NULL DEFAULT 0,
   modified TIMESTAMP DEFAULT NOW(),
   created TIMESTAMP DEFAULT NOW(),
-  FOREIGN KEY (owner_id) REFERENCES "user"(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE,
   CONSTRAINT inst_hash UNIQUE (hash)
 );
 
@@ -106,7 +106,7 @@ VALUES
   (1, 'student', MD5(CONCAT('password', MD5('studentstudentstudent@unimelb.edu.au'))), 'student', 'Unimelb Student', 'student@unimelb.edu.au', 1, MD5('studentstudentstudent@unimelb.edu.au'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW())  )
 ;
 
-INSERT INTO institution (owner_id, name, email, description, logo, active, hash, modified, created)
+INSERT INTO institution (user_id, name, email, description, logo, active, hash, modified, created)
   VALUES
     (2, 'The University Of Melbourne', 'admin@unimelb.edu.au', 'This is a test institution for this app', '', 1, MD5('1'), date_trunc('seconds', NOW()) , date_trunc('seconds', NOW()))
 ;

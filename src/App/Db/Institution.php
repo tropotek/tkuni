@@ -21,7 +21,7 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\D
     /**
      * @var int
      */
-    public $ownerId = 0;
+    public $userId = 0;
 
     /**
      * @var string
@@ -72,7 +72,7 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\D
     /**
      * @var User
      */
-    private $owner = null;
+    private $user = null;
 
     /**
      * @var Data
@@ -91,7 +91,7 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\D
     }
 
     /**
-     *
+     * @throws \Tk\Db\Exception
      */
     public function save()
     {
@@ -104,6 +104,7 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\D
      * Get the user hash or generate one if needed
      *
      * @return string
+     * @throws \Tk\Db\Exception
      */
     public function getHash()
     {
@@ -117,6 +118,7 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\D
      * Helper method to generate user hash
      *
      * @return string
+     * @throws \Tk\Db\Exception
      */
     public function generateHash()
     {
@@ -127,6 +129,7 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\D
      * Get the path for all file associated to this object
      *
      * @return string
+     * @throws \Tk\Db\Exception
      */
     public function getDataPath()
     {
@@ -137,11 +140,12 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\D
      * Get the institution data object
      *
      * @return Data
+     * @throws \Tk\Db\Exception
      */
     public function getData()
     {
         if (!$this->data)
-            $this->data = Data::create($this->id, get_class($this));
+            $this->data = Data::create(get_class($this), $this->getVolatileId());
         return $this->data;
     }
 
@@ -160,20 +164,21 @@ class Institution extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\D
      * Find this institutions owner user
      *
      * @return User
+     * @throws \Tk\Db\Exception
      */
-    public function getOwner()
+    public function getUser()
     {
-        if (!$this->owner)
-            $this->owner = \App\Db\UserMap::create()->find($this->ownerId);
-        return $this->owner;
+        if (!$this->user)
+            $this->user = \App\Db\UserMap::create()->find($this->userId);
+        return $this->user;
     }
 
     /**
      * @return int
      */
-    public function getOwnerId()
+    public function getUserId()
     {
-        return $this->ownerId;
+        return $this->userId;
     }
 
     /**

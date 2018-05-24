@@ -23,7 +23,7 @@ class InstitutionMap extends Mapper
         if (!$this->dbMap) {
             $this->dbMap = new \Tk\DataMap\DataMap();
             $this->dbMap->addPropertyMap(new Db\Integer('id'), 'key');
-            $this->dbMap->addPropertyMap(new Db\Integer('ownerId', 'owner_id'));
+            $this->dbMap->addPropertyMap(new Db\Integer('userId', 'user_id'));
             $this->dbMap->addPropertyMap(new Db\Text('name'));
             $this->dbMap->addPropertyMap(new Db\Text('domain'));
             $this->dbMap->addPropertyMap(new Db\Text('email'));
@@ -46,7 +46,7 @@ class InstitutionMap extends Mapper
         if (!$this->formMap) {
             $this->formMap = new \Tk\DataMap\DataMap();
             $this->formMap->addPropertyMap(new Form\Integer('id'), 'key');
-            $this->formMap->addPropertyMap(new Form\Integer('ownerId'));
+            $this->formMap->addPropertyMap(new Form\Integer('userId'));
             $this->formMap->addPropertyMap(new Form\Text('name'));
             $this->formMap->addPropertyMap(new Form\Text('domain'));
             $this->formMap->addPropertyMap(new Form\Text('email'));
@@ -58,11 +58,11 @@ class InstitutionMap extends Mapper
     }
 
 
-
     /**
      *
      * @param null|\Tk\Db\Tool $tool
-     * @return ArrayObject
+     * @return ArrayObject|Institution[]
+     * @throws \Tk\Db\Exception
      */
     public function findActive($tool = null)
     {
@@ -74,7 +74,8 @@ class InstitutionMap extends Mapper
      *
      * @param $hash
      * @param int $active
-     * @return Institution|null
+     * @return \Tk\Db\Map\Model|Institution
+     * @throws \Tk\Db\Exception
      */
     public function findByhash($hash, $active = 1)
     {
@@ -85,7 +86,8 @@ class InstitutionMap extends Mapper
     /**
      *
      * @param $domain
-     * @return Institution|null
+     * @return \Tk\Db\Map\Model|Institution
+     * @throws \Tk\Db\Exception
      */
     public function findByDomain($domain)
     {
@@ -96,11 +98,12 @@ class InstitutionMap extends Mapper
     /**
      *
      * @param int $userId
-     * @return Institution
+     * @return \Tk\Db\Map\Model|Institution
+     * @throws \Tk\Db\Exception
      */
-    public function findByOwnerId($userId)
+    public function findByUserId($userId)
     {
-        $where = sprintf('owner_id = %s', (int)$userId);
+        $where = sprintf('user_id = %s', (int)$userId);
         return $this->select($where)->current();
     }
 
@@ -109,7 +112,8 @@ class InstitutionMap extends Mapper
      *
      * @param array $filter
      * @param Tool $tool
-     * @return ArrayObject
+     * @return ArrayObject|Institution[]
+     * @throws \Tk\Db\Exception
      */
     public function findFiltered($filter = array(), $tool = null)
     {
@@ -134,6 +138,10 @@ class InstitutionMap extends Mapper
 
         if (!empty($filter['email'])) {
             $where .= sprintf('a.email = %s AND ', $this->getDb()->quote($filter['email']));
+        }
+
+        if (!empty($filter['userId'])) {
+            $where .= sprintf('a.user_id = %s AND ', (int)$filter['userId']);
         }
 
         if (!empty($filter['active'])) {

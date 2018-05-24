@@ -123,7 +123,7 @@ class Register extends Iface
         $this->user->setNewPassword($pass);
         $this->user->save();
 
-        $this->institution->ownerId = $this->user->id;
+        $this->institution->userId = $this->user->getId();
         $this->institution->active = false;
         $this->institution->save();
 
@@ -165,7 +165,7 @@ class Register extends Iface
             \Tk\Uri::create('/login.html')->redirect();
         }
 
-        $institution = \App\Db\InstitutionMap::create()->findByOwnerId($user->id);
+        $institution = \App\Db\InstitutionMap::create()->findByUserId($user->id);
 
         $user->active = true;
         $user->save();

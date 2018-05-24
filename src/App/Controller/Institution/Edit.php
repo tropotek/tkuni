@@ -49,11 +49,11 @@ class Edit extends \Uni\Controller\AdminIface
 
         if ($request->get('institutionId')) {
             $this->institution = \App\Db\InstitutionMap::create()->find($request->get('institutionId'));
-            $this->owner = $this->institution->getOwner();
+            $this->owner = $this->institution->getUser();
         }
         if ($this->getUser()->isClient()) {
-            $this->institution = \App\Db\InstitutionMap::create()->findByOwnerId($this->getuser()->getId());
-            $this->owner = $this->institution->getOwner();
+            $this->institution = \App\Db\InstitutionMap::create()->findByUserId($this->getuser()->getId());
+            $this->owner = $this->institution->getUser();
         }
 
         $this->form = \App\Config::getInstance()->createForm('institutionEdit');
@@ -145,7 +145,7 @@ class Edit extends \Uni\Controller\AdminIface
         }
 
         $this->owner->save();
-        $this->institution->ownerId = $this->owner->id;
+        $this->institution->userId = $this->owner->getId();
         $this->institution->save();
 
         \Tk\Alert::addSuccess('Record saved!');
@@ -156,6 +156,7 @@ class Edit extends \Uni\Controller\AdminIface
 
     /**
      * @return \Dom\Template
+     * @throws \Tk\Db\Exception
      */
     public function show()
     {
@@ -183,11 +184,11 @@ class Edit extends \Uni\Controller\AdminIface
             }
             $template->setChoice('update');
 
-            if (\App\Listener\MasqueradeHandler::canMasqueradeAs($this->getUser(), $this->institution->getOwner())) {
-                $this->getActionPanel()->addButton(\Tk\Ui\Button::create('Masquerade',
-                    \Uni\Uri::create()->reset()->set(\App\Listener\MasqueradeHandler::MSQ, $this->institution->getOwner()->hash), 'fa fa-user-secret'))->addCss('tk-masquerade');
+            if (\App\Listener\MasqueradeHandler::canMasqueradeAs($this->getUser(), $this->institution->getUser())) {
+                $this->getActionPanel()->add(\Tk\Ui\Button::create('Masquerade',
+                    \Uni\Uri::create()->reset()->set(\App\Listener\MasqueradeHandler::MSQ, $this->institution->getUser()->hash), 'fa fa-user-secret'))->addCss('tk-masquerade');
             }
-            $this->getActionPanel()->addButton(\Tk\Ui\Button::create('Plugins',
+            $this->getActionPanel()->add(\Tk\Ui\Button::create('Plugins',
                 \Uni\Uri::createHomeUrl('/institution/'.$this->institution->getId().'/plugins.html'), 'fa fa-plug'));
 
             

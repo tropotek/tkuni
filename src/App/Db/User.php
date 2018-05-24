@@ -131,11 +131,12 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\Db\UserI
      * Get the data object
      *
      * @return \Tk\Db\Data
+     * @throws \Tk\Db\Exception
      */
     public function getData()
     {
         if (!$this->data)
-            $this->data = \Tk\Db\Data::create($this->id, get_class($this));
+            $this->data = \Tk\Db\Data::create(get_class($this), $this->getVolatileId());
         return $this->data;
     }
 
@@ -201,13 +202,14 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\Db\UserI
 
     /**
      * Get the institution related to this user
+     * @throws \Tk\Db\Exception
      */
     public function getInstitution()
     {
         if (!$this->institution) {
             $this->institution = \App\Db\InstitutionMap::create()->find($this->institutionId);
             if (!$this->institution && $this->hasRole(\App\Db\User::ROLE_CLIENT)) {
-                $this->institution = \App\Db\InstitutionMap::create()->findByOwnerId($this->id);
+                $this->institution = \App\Db\InstitutionMap::create()->findByUserId($this->id);
             }
         }
         return $this->institution;

@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `institution` (
   `id` INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  `owner_id` INT(10) UNSIGNED NOT NULL DEFAULT 0,
+  `user_id` INT(10) UNSIGNED NOT NULL DEFAULT 0,
   `name` VARCHAR(255) NOT NULL DEFAULT '',
   `email` VARCHAR(255) NOT NULL DEFAULT '',
   `domain` VARCHAR(255) NOT NULL DEFAULT '',
@@ -107,7 +107,7 @@ VALUES
   (1, 'student', MD5(CONCAT('password', MD5('1studentstudentstudent@unimelb.edu.au'))), 'student', 'Unimelb Student', 'student@unimelb.edu.au', 1, MD5('1studentstudentstudent@unimelb.edu.au'), NOW(), NOW())
 ;
 
-INSERT INTO `institution` (`owner_id`, `name`, `email`, `description`, `logo`, `active`, `hash`, `modified`, `created`)
+INSERT INTO `institution` (`user_id`, `name`, `email`, `description`, `logo`, `active`, `hash`, `modified`, `created`)
   VALUES
     (2, 'The University Of Melbourne', 'admin@unimelb.edu.au', 'This is a test institution for this app', '', 1, MD5('1'), NOW(), NOW())
 ;
