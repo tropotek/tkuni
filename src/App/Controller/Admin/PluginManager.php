@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller\Admin;
 
+use Tk\Db\Exception;
 use Tk\Request;
 use Dom\Template;
 use Tk\Form;
@@ -32,12 +33,19 @@ class PluginManager extends \Uni\Controller\AdminIface
     /**
      *
      * @param Request $request
+     * @throws \Exception
+     * @throws Form\Exception
+     * @throws Form\Exception
      */
     public function doDefault(Request $request)
     {
         $this->setPageTitle('Plugin Manager');
 
-        $this->pluginFactory = \App\Config::getInstance()->getPluginFactory();
+        try {
+            $this->pluginFactory = \App\Config::getInstance()->getPluginFactory();
+        } catch (Exception $e) {
+        } catch (\Tk\Plugin\Exception $e) {
+        }
 
         // Upload plugin
         $this->form = \App\Config::getInstance()->createForm('pluginEdit');
@@ -66,7 +74,11 @@ class PluginManager extends \Uni\Controller\AdminIface
      */
     private function getPluginList()
     {
-        $pluginFactory = \App\Config::getInstance()->getPluginFactory();
+        try {
+            $pluginFactory = \App\Config::getInstance()->getPluginFactory();
+        } catch (Exception $e) {
+        } catch (\Tk\Plugin\Exception $e) {
+        }
         $list = array();
         $names = $pluginFactory->getAvailablePlugins();
         foreach ($names as $pluginName) {
@@ -83,6 +95,7 @@ class PluginManager extends \Uni\Controller\AdminIface
 
     /**
      * @param \Tk\Form $form
+     * @throws Form\Exception
      */
     public function doUpload($form)
     {
@@ -204,7 +217,11 @@ class IconCell extends \Tk\Table\Cell\Text
     {
         $template = $this->__makeTemplate();
 
-        $pluginName = \App\Config::getInstance()->getPluginFactory()->cleanPluginName($info->name);
+        try {
+            $pluginName = \App\Config::getInstance()->getPluginFactory()->cleanPluginName($info->name);
+        } catch (Exception $e) {
+        } catch (\Tk\Plugin\Exception $e) {
+        }
 
         if (is_file(\App\Config::getInstance()->getPluginPath().'/'.$pluginName.'/icon.png')) {
             $template->setAttr('icon', 'src', \App\Config::getInstance()->getPluginUrl() . '/' . $pluginName . '/icon.png');
@@ -269,11 +286,17 @@ class ActionsCell extends \Tk\Table\Cell\Text
      * @param \StdClass $info
      * @param int|null $rowIdx The current row being rendered (0-n) If null no rowIdx available.
      * @return string|\Dom\Template
+     * @throws \Tk\Exception
+     * @throws \Tk\Db\Exception
      */
     public function getCellHtml($info, $rowIdx = null)
     {
         $template = $this->__makeTemplate();
-        $pluginFactory = \App\Config::getInstance()->getPluginFactory();
+        try {
+            $pluginFactory = \App\Config::getInstance()->getPluginFactory();
+        } catch (Exception $e) {
+        } catch (\Tk\Plugin\Exception $e) {
+        }
         $pluginName = $pluginFactory->cleanPluginName($info->name);
 
         if ($pluginFactory->isActive($pluginName)) {
@@ -351,7 +374,11 @@ HTML;
 
     protected function doActivatePlugin(Request $request)
     {
-        $pluginFactory = \App\Config::getInstance()->getPluginFactory();
+        try {
+            $pluginFactory = \App\Config::getInstance()->getPluginFactory();
+        } catch (Exception $e) {
+        } catch (\Tk\Plugin\Exception $e) {
+        }
         $pluginName = strip_tags(trim($request->get('act')));
         if (!$pluginName) {
             \Tk\Alert::addWarning('Cannot locate Plugin: ' . $pluginName);
@@ -389,7 +416,11 @@ HTML;
             \Tk\Alert::addWarning('Cannot locate Plugin: ' . $pluginName);
             return;
         }
-        $pluginPath = \App\Config::getInstance()->getPluginFactory()->getPluginPath($pluginName);
+        try {
+            $pluginPath = \App\Config::getInstance()->getPluginFactory()->getPluginPath($pluginName);
+        } catch (Exception $e) {
+        } catch (\Tk\Plugin\Exception $e) {
+        }
 
         if (!is_dir($pluginPath)) {
             \Tk\Alert::addWarning('Plugin `' . $pluginName . '` path not found');

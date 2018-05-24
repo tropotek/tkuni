@@ -76,6 +76,7 @@ class Config extends \Uni\Config
      *
      * @param array $submittedData
      * @return \Tk\Auth\Adapter\Iface
+     * @throws \Tk\Db\Exception
      */
     public function getAuthDbTableAdapter($submittedData = array())
     {

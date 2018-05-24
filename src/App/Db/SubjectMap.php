@@ -63,6 +63,7 @@ class SubjectMap extends Mapper
      * @param string $code
      * @param int $institutionId
      * @return Subject|\Tk\Db\ModelInterface
+     * @throws \Tk\Db\Exception
      */
     public function findByCode($code, $institutionId)
     {
@@ -75,6 +76,7 @@ class SubjectMap extends Mapper
      * @param int $institutionId
      * @param Tool $tool
      * @return ArrayObject
+     * @throws \Tk\Db\Exception
      */
     public function findByUserId($userId, $institutionId = 0, $tool = null)
     {
@@ -92,6 +94,7 @@ class SubjectMap extends Mapper
      * @param int $institutionId
      * @param Tool $tool
      * @return ArrayObject|Subject[]
+     * @throws \Tk\Db\Exception
      */
     public function findActive($institutionId = 0, $tool = null)
     {
@@ -111,6 +114,7 @@ class SubjectMap extends Mapper
      * @param array $filter
      * @param Tool $tool
      * @return ArrayObject
+     * @throws \Tk\Db\Exception
      */
     public function findFiltered($filter = array(), $tool = null)
     {
@@ -232,6 +236,7 @@ class SubjectMap extends Mapper
      * @param $email
      * @param null $tool
      * @return ArrayObject|Subject[]
+     * @throws \Tk\Db\Exception
      */
     public function findPendingPreEnrollments($institutionId, $email, $tool = null)
     {

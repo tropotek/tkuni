@@ -122,7 +122,6 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\Db\UserI
             $this->displayName = $this->name;
         }
         $this->getHash();
-        vd();
         $this->getData()->save();
         parent::save();
     }

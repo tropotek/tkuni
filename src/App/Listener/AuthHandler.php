@@ -20,6 +20,8 @@ class AuthHandler implements Subscriber
      * do any auth init setup
      *
      * @param GetResponseEvent $event
+     * @throws \Tk\Db\Exception
+     * @throws \Tk\Exception
      */
     public function onSystemInit(GetResponseEvent $event)
     {
@@ -52,7 +54,7 @@ class AuthHandler implements Subscriber
         $role = $event->getRequest()->getAttribute('role');
         if (!$role || empty($role)) return;
         if (!$user) {
-            if ($controller instanceof \Uni\Controller\Iface) {
+            if ($controller instanceof \Tk\Controller\Iface) {
                 \Tk\Uri::create('/login.html')->redirect();
             } else {
                 throw new \Tk\Auth\Exception('Invalid access permissions');
@@ -145,8 +147,7 @@ class AuthHandler implements Subscriber
 
     /**
      * @param \Tk\Event\Event $event
-     * @throws \Tk\Exception
-     * @throws \Tk\Mail\Exception
+     * @throws \Exception
      */
     public function onRegister(\Tk\Event\Event $event)
     {
@@ -167,8 +168,7 @@ class AuthHandler implements Subscriber
 
     /**
      * @param \Tk\Event\Event $event
-     * @throws \Tk\Exception
-     * @throws \Tk\Mail\Exception
+     * @throws \Exception
      */
     public function onRegisterConfirm(\Tk\Event\Event $event)
     {
@@ -189,8 +189,7 @@ class AuthHandler implements Subscriber
 
     /**
      * @param \Tk\Event\Event $event
-     * @throws \Tk\Exception
-     * @throws \Tk\Mail\Exception
+     * @throws \Exception
      */
     public function onRecover(\Tk\Event\Event $event)
     {

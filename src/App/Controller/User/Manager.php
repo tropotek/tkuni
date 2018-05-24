@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller\User;
 
+use Tk\Db\Exception;
 use Tk\Request;
 use Dom\Template;
 use Tk\Form\Field;
@@ -113,10 +114,16 @@ class Manager extends \Uni\Controller\AdminIface
     {
         if ($this->getUser()->hasRole(array(\App\Db\User::ROLE_CLIENT, \App\Db\User::ROLE_STAFF))) {
             $list = array('-- Role --' => '', 'Staff' => \App\Db\User::ROLE_STAFF, 'Student' => \App\Db\User::ROLE_STUDENT);
-            $this->table->addFilter(new Field\Select('role', $list))->setLabel('');
+            try {
+                $this->table->addFilter(new Field\Select('role', $list))->setLabel('');
+            } catch (\Tk\Form\Exception $e) {
+            }
         }
 
-        $filter = $this->table->getFilterValues();
+        try {
+            $filter = $this->table->getFilterValues();
+        } catch (\Exception $e) {
+        }
         if ($this->getUser()->getInstitution())
             $filter['institutionId'] = $this->getUser()->getInstitution()->id;
 
@@ -127,7 +134,10 @@ class Manager extends \Uni\Controller\AdminIface
             }
         }
 
-        $users = \App\Db\UserMap::create()->findFiltered($filter, $this->table->makeDbTool('a.name'));
+        try {
+            $users = \App\Db\UserMap::create()->findFiltered($filter, $this->table->makeDbTool('a.name'));
+        } catch (Exception $e) {
+        }
         $this->table->setList($users);
     }
 

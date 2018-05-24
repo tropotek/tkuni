@@ -15,6 +15,7 @@ class User
     /**
      * @param Request $request
      * @return \Tk\Response
+     * @throws \Tk\Db\Exception
      */
     public function doFindFiltered(Request $request)
     {

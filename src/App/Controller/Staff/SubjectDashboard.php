@@ -14,6 +14,7 @@ class SubjectDashboard extends \Uni\Controller\Iface
 
     /**
      * Iface constructor.
+     * @throws \Tk\Exception
      */
     public function __construct()
     {

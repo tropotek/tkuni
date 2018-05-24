@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use Dom\Exception;
 use Tk\Request;
 use Tk\Form;
 use Tk\Form\Event;
@@ -25,6 +26,13 @@ class Contact extends Iface
      * doDefault
      *
      * @param Request $request
+     * @throws \Exception
+     * @throws Form\Exception
+     * @throws Form\Exception
+     * @throws Form\Exception
+     * @throws Form\Exception
+     * @throws Form\Exception
+     * @throws Form\Exception
      */
     public function doDefault(Request $request)
     {
@@ -58,7 +66,11 @@ class Contact extends Iface
         $template = parent::show();
         
         // Render the form
-        \Tk\Form\Renderer\DomStatic::create($this->form, $template)->show();
+        try {
+            \Tk\Form\Renderer\DomStatic::create($this->form, $template)->show();
+        } catch (Exception $e) {
+        } catch (Form\Exception $e) {
+        }
 
         return $template;
     }
@@ -110,6 +122,7 @@ class Contact extends Iface
      * @param Form $form
      * @return bool
      * @throws \Tk\Mail\Exception
+     * @throws \Exception
      */
     private function sendEmail($form)
     {

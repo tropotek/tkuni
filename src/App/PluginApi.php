@@ -1,5 +1,6 @@
 <?php
 namespace App;
+use Tk\Db\Exception;
 
 
 /**
@@ -20,6 +21,8 @@ class PluginApi implements \Uni\PluginApi
      * @param $username
      * @param $institutionId
      * @return null|Db\User|\Tk\Db\Map\Model
+     * @throws Exception
+     * @throws Exception
      */
     public function findUser($username, $institutionId)
     {
@@ -53,6 +56,7 @@ class PluginApi implements \Uni\PluginApi
     /**
      * @param $subjectId
      * @return null|\Tk\Db\Map\Model|\app\Db\Subject
+     * @throws \Tk\Db\Exception
      */
     public function findSubject($subjectId)
     {
@@ -63,6 +67,7 @@ class PluginApi implements \Uni\PluginApi
      * @param $subjectCode
      * @param $institutionId
      * @return null|Db\Subject|\Tk\Db\ModelInterface
+     * @throws Exception
      */
     public function findSubjectByCode($subjectCode, $institutionId)
     {
@@ -72,6 +77,7 @@ class PluginApi implements \Uni\PluginApi
     /**
      * @param $params
      * @return Db\Subject|null
+     * @throws \Tk\Db\Exception
      */
     public function createSubject($params)
     {
@@ -80,7 +86,11 @@ class PluginApi implements \Uni\PluginApi
             case 'lti':
             case 'ldap':
                 $subject = new \App\Db\Subject();
+            try {
                 \App\Db\SubjectMap::create()->mapForm($params, $subject);
+            } catch (\ReflectionException $e) {
+            } catch (Exception $e) {
+            }
                 $subject->save();
                 $this->addUserToSubject($subject, $params['UserIface']);
         }
@@ -101,6 +111,7 @@ class PluginApi implements \Uni\PluginApi
      *
      * @param $user
      * @return \Tk\Auth\Result
+     * @throws \Tk\Exception
      */
     public function autoAuthenticate($user)
     {

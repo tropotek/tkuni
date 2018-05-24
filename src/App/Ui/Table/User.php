@@ -49,6 +49,7 @@ class User extends \Dom\Renderer\Renderer
      * @param null|array|string $role
      * @param int $subjectId
      * @param null|\Tk\Uri $editUrl
+     * @throws \Tk\Db\Exception
      */
     public function __construct($institutionId = 0, $role = null, $subjectId = 0, $editUrl = null)
     {
@@ -63,6 +64,8 @@ class User extends \Dom\Renderer\Renderer
     /**
      *
      * @return \Dom\Template|Template|string
+     * @throws \Tk\Db\Exception
+     * @throws \Exception
      */
     public function doDefault()
     {

@@ -2,6 +2,7 @@
 namespace App\Ui\Table;
 
 use Dom\Template;
+use Tk\Db\Exception;
 
 /**
  * @author Michael Mifsud <info@tropotek.com>
@@ -45,6 +46,12 @@ class PreEnrollment extends \Dom\Renderer\Renderer
     /**
      *
      * @return \Dom\Template|Template|string
+     * @throws \Tk\Db\Exception
+     * @throws \Exception
+     * @throws \Tk\Exception
+     * @throws \Tk\Exception
+     * @throws \Tk\Exception
+     * @throws \Tk\Exception
      */
     public function doDefault()
     {
@@ -81,6 +88,7 @@ class PreEnrollment extends \Dom\Renderer\Renderer
 
     /**
      * @return \Dom\Template
+     * @throws \Dom\Exception
      */
     public function show()
     {
@@ -148,6 +156,10 @@ class EnrolledCell extends \Tk\Table\Cell\Text
 
 class ActionUnEnroll extends \Tk\Table\Action\Delete
 {
+    /**
+     * @return mixed|void
+     * @throws Exception
+     */
     public function execute()
     {
         $request = $this->getTable()->getRequest();
@@ -164,7 +176,10 @@ class ActionUnEnroll extends \Tk\Table\Action\Delete
                 $subjectMap = \App\Db\SubjectMap::create();
                 $subjectMap->removePreEnrollment($obj->subject_id, $obj->email);
                 /** @var \App\Db\Subject $subject */
-                $subject = $subjectMap->find($obj->subject_id);
+                try {
+                    $subject = $subjectMap->find($obj->subject_id);
+                } catch (Exception $e) {
+                }
                 if ($subject) {  // Delete user from subject enrolment
                     $user = \App\Db\UserMap::create()->findByEmail($obj->email, $subject->institutionId);
                     if ($user) {

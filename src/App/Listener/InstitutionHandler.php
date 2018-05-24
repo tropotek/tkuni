@@ -21,6 +21,10 @@ class InstitutionHandler implements Subscriber
      * If no institution is set then we know we are either an admin or public user...
      *
      * @param GetResponseEvent $event
+     * @throws \Tk\Exception
+     * @throws \Tk\Db\Exception
+     * @throws \Tk\Exception
+     * @throws \Tk\Db\Exception
      */
     public function onRequest(GetResponseEvent $event)
     {

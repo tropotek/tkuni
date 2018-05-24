@@ -26,6 +26,7 @@ abstract class Mapper extends \Tk\Db\Mapper
      * Mapper constructor.
      *
      * @param \Tk\Db\Pdo|null $db
+     * @throws \Tk\Db\Exception
      */
     public function __construct($db = null)
     {

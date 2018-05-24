@@ -43,6 +43,7 @@ class Uri extends \Tk\Uri
      * @param null|string|\Tk\Uri $spec
      * @param null|\App\Db\Subject $subject
      * @return string|\Tk\Uri|static
+     * @throws \Tk\Exception
      */
     public static function createSubjectUrl($spec = null, $subject = null)
     {

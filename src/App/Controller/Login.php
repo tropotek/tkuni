@@ -28,10 +28,11 @@ class Login extends Iface
      * @var \App\Db\Institution
      */
     protected $institution = null;
-    
-    
-    
-    
+
+
+    /**
+     * @throws Form\Exception
+     */
     private function init()
     {
         /** @var Auth $auth */
@@ -50,6 +51,8 @@ class Login extends Iface
 
     /**
      * @param Request $request
+     * @throws Form\Exception
+     * @throws \Exception
      */
     public function doDefault(Request $request)
     {
@@ -69,6 +72,9 @@ class Login extends Iface
 
     /**
      * @param Request $request
+     * @param $instHash
+     * @throws Form\Exception
+     * @throws \Exception
      */
     public function doInsLogin(Request $request, $instHash)
     {
@@ -144,6 +150,7 @@ class Login extends Iface
      * show()
      *
      * @return \Dom\Template
+     * @throws \Dom\Exception
      */
     public function show()
     {

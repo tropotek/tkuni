@@ -25,6 +25,7 @@ class UserSubjects extends \Tk\Table\Cell\Text
      * @param \App\Db\User $obj
      * @param string $property
      * @return mixed
+     * @throws \Tk\Db\Exception
      */
     public function getPropertyValue($obj, $property)
     {

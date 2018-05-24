@@ -102,6 +102,7 @@ class FindUser extends Iface
 
     /**
      * @return \Dom\Template
+     * @throws \Dom\Exception
      */
     public function show()
     {
