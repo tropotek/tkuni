@@ -331,6 +331,7 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\Db\UserI
      *
      * @return array
      * @throws \ReflectionException
+     * @throws \Tk\Db\Exception
      */
     public function validate()
     {
@@ -340,7 +341,7 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\Db\UserI
             $errors['name'] = 'Invalid field name value';
         }
         
-        if (!$this->role || !in_array($this->role, \Tk\Object::getClassConstants($this, 'ROLE_'))) {
+        if (!$this->role || !in_array($this->role, \Tk\ObjectUtil::getClassConstants($this, 'ROLE_'))) {
             $errors['role'] = 'Invalid field role value';
         }
         if (!$this->username) {

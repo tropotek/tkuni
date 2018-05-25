@@ -26,7 +26,7 @@ class SystemEvents extends \Uni\Controller\AdminIface
     {
         $this->setPageTitle('Available Events');
 
-        $this->table = \App\Config::getInstance()->createTable(\Tk\Object::basename($this).'PluEventList');
+        $this->table = \App\Config::getInstance()->createTable(\Tk\ObjectUtil::basename($this).'PluEventList');
         $this->table->setRenderer(\App\Config::getInstance()->createTableRenderer($this->table));
 
         $this->table->addCell(new \Tk\Table\Cell\Text('name'));
