@@ -1,21 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
-
     <title>Account Activated</title>
-    
   </head>
   <body>
     <h2>Account Successfully Activated.</h2>
     <p>
-      Welcome <span var="name">Name</span>
+      Welcome {name}
     </p>
     <p>
-      Your account has been successfully activated click here to <a href="#" var="url">login</a>.
+      Your account has been successfully activated click here to <a href="{login-url}">login</a>.
     </p>
     <p>&nbsp;</p>
     <hr/>
-    <p var="footer">
+    <p>
       &copy; Some Happy Feelgood Footer. 
     </p>
     

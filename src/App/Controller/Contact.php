@@ -1,7 +1,6 @@
 <?php
 namespace App\Controller;
 
-use Dom\Exception;
 use Tk\Request;
 use Tk\Form;
 use Tk\Form\Event;
@@ -26,31 +25,30 @@ class Contact extends Iface
      * doDefault
      *
      * @param Request $request
-     * @throws \Exception
      * @throws Form\Exception
-     * @throws Form\Exception
-     * @throws Form\Exception
-     * @throws Form\Exception
-     * @throws Form\Exception
-     * @throws Form\Exception
+     * @throws \Tk\Exception
      */
     public function doDefault(Request $request)
     {
         $this->setPageTitle('Contact');
-        
+
         $this->form = new Form('contactForm');
-        
+
         $this->form->addField(new Field\Input('name'));
         $this->form->addField(new Field\Input('email'));
-        
+
         $opts = new Field\Option\ArrayIterator(array('General', 'Services', 'Orders'));
         $this->form->addField(new Field\Select('type[]', $opts));
-        
+
         $this->form->addField(new Field\File('attach[]'));
         $this->form->addField(new Field\Textarea('message'));
-        
+
+        if ($this->getConfig()->get('google.recaptcha.publicKey'))
+            $this->form->addField(new Field\ReCapture('capture', $this->getConfig()->get('google.recaptcha.publicKey'),
+                $this->getConfig()->get('google.recaptcha.privateKey')));
+
         $this->form->addField(new Event\Submit('send', array($this, 'doSubmit')));
-        
+
         // Find and Fire submit event
         $this->form->execute();
 
@@ -60,17 +58,15 @@ class Contact extends Iface
      * show()
      *
      * @return mixed
+     * @throws Form\Exception
+     * @throws \Dom\Exception
      */
     public function show()
     {
         $template = parent::show();
-        
+
         // Render the form
-        try {
-            \Tk\Form\Renderer\DomStatic::create($this->form, $template)->show();
-        } catch (Exception $e) {
-        } catch (Form\Exception $e) {
-        }
+        \Tk\Form\Renderer\DomStatic::create($this->form, $template)->show();
 
         return $template;
     }
@@ -104,12 +100,14 @@ class Contact extends Iface
         if ($this->form->hasErrors()) {
             return;
         }
-        if ($attach->hasFile()) {
-            //$attach->moveTo($this->getConfig()->getDataPath() . '/contact/' . date('d-m-Y') . '-' . str_replace('@', '_', $values['email']));
-        }
+//        if ($attach->hasFile()) {
+//            $attach->moveFile($this->getConfig()->getDataPath() . '/contact/' . date('d-m-Y') . '-' . str_replace('@', '_', $values['email']));
+//        }
 
         if ($this->sendEmail($form)) {
             \Tk\Alert::addSuccess('<strong>Success!</strong> Your form has been sent.');
+        } else {
+            \Tk\Alert::addError('<strong>Error!</strong> Something went wrong and your message has not been sent.');
         }
 
         \Tk\Uri::create()->redirect();
@@ -132,14 +130,19 @@ class Contact extends Iface
         if (is_array($form->getFieldValue('type')))
             $type = implode(', ', $form->getFieldValue('type'));
         $msg = nl2br($form->getFieldValue('message'));
+
         $attachCount = '';
         /** @var Field\File $field */
         $field = $form->getField('attach');
         if ($field->hasFile()) {
-            $attachCount = 'Attachments: ' . $field->getUploadedFile()->getFilename();
+            $attachCount = '<br/><b>Attachments:</b> ';
+            foreach ($field->getUploadedFiles() as $file) {
+                $attachCount = $file->getFilename() . ', ';
+            }
+            $attachCount = rtrim($attachCount, ', ');
         }
 
-        $body = <<<MSG
+        $content = <<<MSG
 <div>
 <p>
 <b>Name:</b> $name<br/>
@@ -154,16 +157,16 @@ class Contact extends Iface
 $attachCount
 </p>
 MSG;
-        
 
-        $message = new \Tk\Mail\Message(\App\Config::getInstance()->createMailTemplate($body), $this->getConfig()->get('site.name') . ':'. $name .' Contact Form Submission', $this->getConfig()->get('site.email'), $email);
 
+        $message = $this->getConfig()->createMessage();
+        $message->addTo($email);
+        $message->setSubject($this->getConfig()->get('site.title') . ':  Contact Form Submission - ' . $name);
+        $message->set('content', $content);
         if ($field->hasFile()) {
             $message->addAttachment($field->getUploadedFile()->getFile(), $field->getUploadedFile()->getFilename());
         }
-        \App\Config::getInstance()->getEmailGateway()->send($message);
-
-        return true;
+        return $this->getConfig()->getEmailGateway()->send($message);
     }
 
 

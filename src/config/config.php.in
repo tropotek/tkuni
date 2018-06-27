@@ -14,14 +14,15 @@ $config['db.user'] = 'username';
 $config['db.pass'] = 'password';
 
 
-// Required for CLI scripts to have correctly Formed URLS
-$config['site.host'] = 'example.com.au';
-$config['site.url']  = '';
+// Required for ./bin scripts to have correctly Formed URLS
+//$config['site.host'] = '';
+//$config['site.url']  = '';
+
+$config['system.email.exception'] = 'user@example.com';
 
 
 // Debug settings
 //$config['debug'] = true;
 //$config['log.path'] = '/home/user/log/error.log';
 //$config['log.level'] = \Psr\Log\LogLevel::DEBUG;
-//$config['system.debug.email'] = 'root@localhost';
-
+//$config['system.debug.email'] = 'user@example.com';

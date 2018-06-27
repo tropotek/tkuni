@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Recover Password</title>
+  </head>
+  <body>
+    <h2>Recover Password</h2>
+    <p>
+      Welcome {name}
+    </p>
+    <p>
+      You have requested to revocer your account access details. <a href="{login-url}">Login</a>
+      with the supplied password and change it as needed.
+    </p>
+    <p>
+      NEW PASSWORD: {password}
+    </p>
+    <p>&nbsp;</p>
+    <hr/>
+    <p>
+      &copy; Some Happy Feelgood Footer. 
+    </p>
+    
+  </body>
+</html>
+
+
+

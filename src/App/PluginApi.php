@@ -13,7 +13,7 @@ use Tk\Db\Exception;
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  */
-class PluginApi implements \Uni\PluginApi
+class PluginApi extends \Uni\PluginApi
 {
 
 
