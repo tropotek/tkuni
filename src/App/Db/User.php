@@ -179,10 +179,10 @@ class User extends \Tk\Db\Map\Model implements \Tk\ValidInterface, \Uni\Db\UserI
      */
     public function generateHash() 
     {
-        if (!$this->username || !$this->role || !$this->email) {
+        if (!$this->username || !$this->role) {
             throw new \Tk\Exception('The username, role and email must be set before generating a valid hash');
         }
-        return \App\Config::getInstance()->hash(sprintf('%s%s%s%s', $this->getVolatileId(), $this->institutionId, $this->username, $this->email));
+        return \App\Config::getInstance()->hash(sprintf('%s%s%s', $this->getVolatileId(), $this->institutionId, $this->username));
     }
 
     /**

@@ -27,9 +27,9 @@ CREATE TABLE IF NOT EXISTS `user` (
   `del` TINYINT(1) NOT NULL DEFAULT 0,
   `modified` DATETIME NOT NULL,
   `created` DATETIME NOT NULL,
-  UNIQUE KEY `user_username` (`institution_id`, `username`),
-  UNIQUE KEY `user_email` (`institution_id`, `email`),
-  UNIQUE KEY `user_hash` (`institution_id`, `hash`)
+  KEY `user_username` (`institution_id`, `username`),
+  KEY `user_email` (`institution_id`, `email`),
+  KEY `user_hash` (`institution_id`, `hash`)
 ) ENGINE=InnoDB;
 
 -- ----------------------------
@@ -101,10 +101,10 @@ CREATE TABLE IF NOT EXISTS `subject_pre_enrollment` (
 -- ----------------------------
 INSERT INTO `user` (`institution_id`, `username`, `password` ,`role` ,`name`, `email`, `active`, `hash`, `modified`, `created`)
 VALUES
-  (NULL, 'admin', MD5(CONCAT('password', MD5('0adminadminadmin@example.com'))), 'admin', 'Administrator', 'admin@example.com', 1, MD5('0adminadminadmin@example.com'), NOW(), NOW()),
-  (NULL, 'unimelb', MD5(CONCAT('password', MD5('0unimelbclientfvas@unimelb.edu.au'))), 'client', 'Unimelb Client', 'fvas@unimelb.edu.au', 1, MD5('0unimelbclientfvas@unimelb.edu.au'), NOW(), NOW()),
-  (1, 'staff', MD5(CONCAT('password', MD5('1staffstaffstaff@unimelb.edu.au'))), 'staff', 'Unimelb Staff', 'staff@unimelb.edu.au', 1, MD5('1staffstaffstaff@unimelb.edu.au'), NOW(), NOW()),
-  (1, 'student', MD5(CONCAT('password', MD5('1studentstudentstudent@unimelb.edu.au'))), 'student', 'Unimelb Student', 'student@unimelb.edu.au', 1, MD5('1studentstudentstudent@unimelb.edu.au'), NOW(), NOW())
+  (NULL, 'admin', MD5(CONCAT('password', MD5('10adminadmin'))), 'admin', 'Administrator', 'admin@example.com', 1, MD5('10adminadmin'), NOW(), NOW()),
+  (NULL, 'unimelb', MD5(CONCAT('password', MD5('20unimelbclient'))), 'client', 'Unimelb Client', 'fvas@unimelb.edu.au', 1, MD5('20unimelbclient'), NOW(), NOW()),
+  (1, 'staff', MD5(CONCAT('password', MD5('31staffstaff'))), 'staff', 'Unimelb Staff', 'staff@unimelb.edu.au', 1, MD5('31staffstaff'), NOW(), NOW()),
+  (1, 'student', MD5(CONCAT('password', MD5('41studentstudent'))), 'student', 'Unimelb Student', 'student@unimelb.edu.au', 1, MD5('41studentstudent'), NOW(), NOW())
 ;
 
 INSERT INTO `institution` (`user_id`, `name`, `email`, `description`, `logo`, `active`, `hash`, `modified`, `created`)

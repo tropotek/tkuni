@@ -41,13 +41,18 @@ class AuthHandler implements Subscriber
             if ($event->getRequest()->getUri()->getRelativePath() != '/login.html') {
                 \Tk\Uri::create('/login.html')->redirect();
             } else {
-                throw new \Tk\Auth\Exception('Invalid access permissions');
+                \Tk\Alert::addWarning('You do not have access to the requested page.');
+                $user->getHomeUrl()->redirect();
             }
-        }
-
-        if (!$user->hasRole($role)) {
-            \Tk\Alert::addWarning('You do not have access to the requested page.');
-            $user->getHomeUrl()->redirect();
+        } else {
+            if (!$user->hasRole($role)) {
+                \Tk\Alert::addWarning('You do not have access to the requested page.');
+                $user->getHomeUrl()->redirect();
+            }
+            if ($user->sessionId != $config->getSession()->getId()) {
+                $user->sessionId = $config->getSession()->getId();
+                $user->save();
+            }
         }
     }
 
@@ -68,12 +73,13 @@ class AuthHandler implements Subscriber
     }
 
     /**
-     * @param \Tk\Event\AuthAdapterEvent $event
+     * @param \Tk\Event\AuthEvent $event
      * @return null|void
+     * @throws \ReflectionException
      * @throws \Tk\Db\Exception
      * @throws \Tk\Exception
      */
-    public function onLoginProcess(\Tk\Event\AuthAdapterEvent $event)
+    public function onLoginProcess(\Tk\Event\AuthEvent $event)
     {
         if ($event->getAdapter() instanceof \Tk\Auth\Adapter\Ldap) {
             /** @var \Tk\Auth\Adapter\Ldap $adapter */
@@ -86,13 +92,50 @@ class AuthHandler implements Subscriber
                 $sr = @ldap_search($adapter->getLdap(), $adapter->getBaseDn(), $filter);
                 $ldapData = @ldap_get_entries($adapter->getLdap(), $sr);
                 if ($ldapData) {
+                    $email = $ldapData[0]['mail'][0];   // Email format = firstname.lastname@unimelb
+
                     // Use this info to create an LDAP user for their first login or to update their details
                     /* @var \App\Db\User $user */
                     $user = \App\Db\UserMap::create()->findByUsername($adapter->get('username'), $config->getInstitutionId());
-//                    if (!$user) {
-//                        // Create user???
+//                    if (!$user) { // Create a user record if none exists
+//                        $role = 'student';
+//                        if (preg_match('/(staff|student)/', strtolower($ldapData[0]['auedupersontype'][0]), $reg)) {
+//                            if ($reg[1] == 'staff') {
+//                                $role = 'staff';
+//                            } else if ($reg[1] == 'student') {
+//                                $role = 'student';
+//                            }
+//                        }
+//                        if ($role == 'student') {
+//                            // To check if a user is pre-enrolled get an array of uid and emails for a user
+//                            $isPreEnrolled = \App\Db\Subject::isPreEnrolled($config->getInstitutionId(),
+//                                array_merge($ldapData[0]['mail'], $ldapData[0]['mailalternateaddress']),
+//                                $ldapData[0]['auedupersonid'][0]
+//                            );
+//                            if (!$isPreEnrolled) return;  // Only create users accounts for enrolled students
+//
+//                            $userData = array(
+//                                'type' => 'ldap',
+//                                'institutionId' => $config->getInstitutionId(),
+//                                'username' => $event->get('username'),
+//                                'userGroupId' => $role,
+//                                'active' => true,
+//                                'email' => $email,
+//                                'name' => $ldapData[0]['displayname'][0],
+//                                'uid' => $ldapData[0]['auedupersonid'][0],
+//                                'ldapData' => $ldapData
+//                            );
+//                            $user = new \App\Db\User();
+//                            \App\Db\UserMap::create()->mapForm($userData, $user);
+//                            $user->setNewPassword($event->get('password'));
+//                            $user->save();
+//
+//                            // Save the last ldap data for reference
+//                            $user->getData()->set('ldap.data', json_encode($ldapData, \JSON_PRETTY_PRINT));
+//                            $user->getData()->save();
+//                        }
 //                    }
-                    if ($user) {
+                    if ($user && $user->active) {
                         if (!$user->uid && !empty($ldapData[0]['auedupersonid'][0]))
                             $user->uid = $ldapData[0]['auedupersonid'][0];
                         if (!$user->email && !empty($ldapData[0]['mail'][0]))
@@ -105,14 +148,62 @@ class AuthHandler implements Subscriber
                             $data = $user->getData();
                             $data->set('ldap.last.login', json_encode($ldapData));
                             if (!empty($ldapData[0]['ou'][0]))
-                            $data->set('faculty', $ldapData[0]['ou'][0]);
+                                $data->set('faculty', $ldapData[0]['ou'][0]);
                             $data->save();
                         }
-                        $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::SUCCESS, $user->getId(), 'User Found!'));
+                        $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::SUCCESS, $user->getId()));
                     }
                 }
             }
         }
+
+
+        // TODO: This may need further work, getting a nested session save issue..
+        // There is an issue here with going from LDAP and LTI
+        //  LTI we only have their name email, however with LDAP the email is their username one GGGRRRR!!
+        // EG:
+        //  LTI: michael.mifsud@unimelb...
+        //  LDAP: mifsudm@unimelb....
+
+        if ($event->getAdapter() instanceof \Lti\Auth\LtiAdapter) {
+            /** @var \Lti\Auth\LtiAdapter $adapter */
+            $adapter = $event->getAdapter();
+            $userData = $adapter->get('userData');
+
+            $user = \App\Db\UserMap::create()->findByEmail($userData['email'], $adapter->getInstitution()->getId());
+//            if (!$user) {   // Find user by username (this is the start pat of the email address, not reliable
+//                $user = \App\Db\UserMap::create()->findByUsername($userData['username'], $adapter->getInstitution()->getId());
+//            }
+
+//            if (!$user) {   // Create the new user account
+//                // optional to check the pre-enrollment list before creation
+//                $isPreEnrolled = \App\Db\Subject::isPreEnrolled($adapter->getInstitution()->getId(), array($userData['email']) );
+//                if (!$isPreEnrolled) {  // Only create users accounts for enrolled students
+//                    return;
+//                }
+//                $user = new \App\Db\User();
+//                \App\Db\UserMap::create()->mapForm($userData, $user);
+//                $user->save();
+//                $adapter->setUser($user);
+//            }
+            if (!$user) {
+                return;
+            }
+            $subjectData = $adapter->get('subjectData');
+            $subject = \App\Db\SubjectMap::create()->find($subjectData['id']);
+            if (!$subject) {
+                $subject = \App\Db\SubjectMap::create()->findByCode($subjectData['code'], $adapter->getInstitution()->getId());
+            }
+            if (!$subject) {
+                throw new \Tk\Exception('Subject not available, Please contact subject coordinator.');
+                // Create a new subject here if needed ????
+            }
+            $config->getSession()->set('lti.subjectId', $subject->getId());   // Limit the dashboard to one subject for LTI logins
+            $config->getSession()->set('auth.password.access', false);
+            $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::SUCCESS, $user->getId()));
+        }
+
+
     }
 
     /**
@@ -142,9 +233,6 @@ class AuthHandler implements Subscriber
             $event->setRedirect($user->getHomeUrl());
         }
 
-        //store the type of adapter for allowing the staff student to modify their password
-        \App\Config::getInstance()->getSession()->set('auth.password.access', ($event->get('auth.password.access') === true) );
-
         // Update the user record.
         if ($user->sessionId != \App\Config::getInstance()->getSession()->getId()) {
             $user->sessionId = \App\Config::getInstance()->getSession()->getId();
@@ -172,11 +260,12 @@ class AuthHandler implements Subscriber
             $event->setRedirect($url);
         }
 
-        if ($user) {
+        if ($user && $user->getRole() != \App\Db\User::ROLE_PUBLIC) {
             $user->sessionId = '';
             $user->save();
         }
-
+        $config->getSession()->remove('lti.subjectId'); // Remove limit the dashboard to one subject for LTI logins
+        $config->getSession()->remove('auth.password.access');
         $auth->clearIdentity();
         $config->getSession()->destroy();
     }
