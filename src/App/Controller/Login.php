@@ -29,6 +29,13 @@ class Login extends Iface
      */
     protected $institution = null;
 
+    /**
+     * Login constructor.
+     */
+    public function __construct()
+    {
+        $this->setPageTitle('Login');
+    }
 
     /**
      * @throws Form\Exception
@@ -43,10 +50,7 @@ class Login extends Iface
             $this->form = new Form('loginForm');
         $this->form->addField(new Field\Input('username'));
         $this->form->addField(new Field\Password('password'));
-
         $this->form->addField(new Event\Submit('login', array($this, 'doLogin')));
-        
-        
     }
 
     /**
@@ -56,18 +60,13 @@ class Login extends Iface
      */
     public function doDefault(Request $request)
     {
-        $this->setPageTitle('Login');
-        
         $this->institution = \App\Db\InstitutionMap::create()->findByDomain($request->getUri()->getHost());
         if ($this->institution) {
             $this->doInsLogin($request, $this->institution->getHash());
         }
         $this->init();
         $this->form->addField(new Event\Link('forgotPassword', \Tk\Uri::create('/recover.html')));
-
-        // Find and Fire submit event
         $this->form->execute();
-
     }
 
     /**
@@ -78,21 +77,16 @@ class Login extends Iface
      */
     public function doInsLogin(Request $request, $instHash)
     {
-
         if (!$this->institution)
             $this->institution = \App\Db\InstitutionMap::create()->findByHash($instHash);
-
         if (!$this->institution || !$this->institution->active ) {
-            throw new \Tk\NotFoundHttpException('Institution not found.');
+            \Tk\Alert::addWarning('Invalid or inactive Institution.');
+            \App\Uri::create('/index.html');
         }
-
         $this->init();
         $this->form->addField(new Field\Hidden('instHash', $instHash));
         $this->form->addField(new Event\Link('forgotPassword', \Tk\Uri::create('/recover.html')));
-
-        // Find and Fire submit event
         $this->form->execute();
-
     }
 
     /**
@@ -103,9 +97,6 @@ class Login extends Iface
      */
     public function doLogin($form)
     {
-        /** @var Auth $auth */
-        $auth = \App\Config::getInstance()->getAuth();
-
         if (!$form->getFieldValue('username')) {
             $form->addFieldError('username', 'Please enter a valid username');
         }
@@ -118,8 +109,10 @@ class Login extends Iface
 
         try {
             // Fire the login event to allow developing of misc auth plugins
-            $event = new AuthEvent($auth, $form->getValues());
+            $event = new AuthEvent();
+            $event->replace($form->getValues());
             $this->getConfig()->getEventDispatcher()->dispatch(AuthEvents::LOGIN, $event);
+
             $result = $event->getResult();
             if (!$result) {
                 $form->addError('Invalid username or password');
@@ -130,13 +123,12 @@ class Login extends Iface
                 return;
             }
 
-            // Copy the event to avoid propagation
-            $sEvent = new AuthEvent($auth, $form->getValues());
+            // Copy the event to avoid propagation issues
+            $sEvent = new AuthEvent($event->getAdapter());
+            $sEvent->replace($event->all());
             $sEvent->setResult($event->getResult());
             $sEvent->setRedirect($event->getRedirect());
-            $sEvent->replace($event->all());
             $this->getConfig()->getEventDispatcher()->dispatch(AuthEvents::LOGIN_SUCCESS, $sEvent);
-
             if ($sEvent->getRedirect())
                 $sEvent->getRedirect()->redirect();
 
