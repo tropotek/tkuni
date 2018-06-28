@@ -251,6 +251,24 @@ class SubjectMap extends Mapper
     }
 
     /**
+     * @param int $institutionId
+     * @param string $uid
+     * @param null|\Tk\Db\Tool $tool
+     * @return ArrayObject|Subject[]
+     * @throws \Tk\Db\Exception
+     */
+    public function findPendingPreEnrollmentsByUid($institutionId, $uid, $tool = null)
+    {
+        $from = sprintf('%s a, %s b, %s c LEFT JOIN %s d ON (c.id = d.user_id) ',
+            $this->quoteTable($this->getTable()), $this->quoteTable('subject_pre_enrollment'),
+            $this->quoteTable('user'), $this->quoteTable('subject_has_student'));
+        $where = sprintf('a.id = b.subject_id AND b.uid = c.uid AND a.institution_id = %d AND b.uid = %s AND d.user_id IS NULL', (int)$institutionId, $this->quote($uid));
+
+        $ret = $this->selectFrom($from, $where, $tool);
+        return $ret;
+    }
+
+    /**
      * Find all pre enrolments for a subject and return with an `enrolled` boolean field
      *
      * @param $subjectId

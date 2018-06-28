@@ -90,6 +90,32 @@ class Subject extends \Tk\Db\Map\Model implements \Uni\Db\SubjectIface
         parent::save();
     }
 
+
+    /**
+     * @param $institutionId
+     * @param array $emailList
+     * @param string $uid
+     * @return bool
+     * @throws \Tk\Db\Exception
+     */
+    public static function isPreEnrolled($institutionId, $emailList = array(), $uid = '')
+    {
+        $found = false;
+        if ($uid) {
+            $subjectList = SubjectMap::create()->findPendingPreEnrollmentsByUid($institutionId, $uid);
+            $found = (count($subjectList) > 0);
+        }
+        if (!$found) {
+            foreach ($emailList as $email) {
+                if ($found) break;
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) continue;
+                $subjectList = \App\Db\SubjectMap::create()->findPendingPreEnrollments($institutionId, $email);
+                $found = (count($subjectList) > 0);
+            }
+        }
+        return $found;
+    }
+
     /**
      * Get the institution related to this user
      * @throws \Tk\Db\Exception
