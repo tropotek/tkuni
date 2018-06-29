@@ -4,7 +4,6 @@ namespace App\Controller;
 use Tk\Request;
 use Tk\Auth\AuthEvents;
 use Tk\Event\AuthEvent;
-use Uni\Controller\Iface;
 
 /**
  * @author Michael Mifsud <info@tropotek.com>

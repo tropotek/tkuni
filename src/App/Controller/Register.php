@@ -1,13 +1,11 @@
 <?php
 namespace App\Controller;
 
-use Dom\Exception;
 use Tk\Form;
 use Tk\Form\Field;
 use Tk\Form\Event;
 use Tk\Request;
 use Tk\Auth\AuthEvents;
-use Uni\Controller\Iface;
 
 
 /**
@@ -59,7 +57,7 @@ class Register extends Iface
         }
 
         $this->user = new \App\Db\User();
-        $this->user->role = \App\Db\User::ROLE_USER;
+        $this->user->role = \App\Db\User::ROLE_CLIENT;
 
 
         $this->form = \App\Config::createForm('register-account');

@@ -2,7 +2,6 @@
 namespace App\Controller;
 
 use Tk\Request;
-use Uni\Controller\Iface;
 
 /**
  * @author Michael Mifsud <info@tropotek.com>

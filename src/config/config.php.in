@@ -44,3 +44,16 @@ $config['db.pass'] = 'password';
 //$config['log.path'] = '/home/user/log/error.log';
 //$config['log.level'] = \Psr\Log\LogLevel::DEBUG;
 //$config['system.debug.email'] = 'user@example.com';
+
+
+if ($config->isDebug()) {
+    $config['live.db'] = array(
+        'type' => 'mysql',
+        'host' => 'localhost',
+        'name' => 'ems_live',
+        'user' => 'ems',
+        'pass' => ''
+    );
+    $config['live.data.path'] = 'user@252s-live.vet.unimelb.edu.au:/home/user/public_html/data';
+}
+

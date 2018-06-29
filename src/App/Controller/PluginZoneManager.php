@@ -4,7 +4,6 @@ namespace App\Controller;
 use Tk\Db\Exception;
 use Tk\Request;
 use Dom\Template;
-use Uni\Controller\Iface;
 
 /**
  *
