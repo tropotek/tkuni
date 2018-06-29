@@ -32,11 +32,14 @@ class Register extends Iface
      */
     private $institution = null;
 
-    /**
-     * @var \Tk\Event\Dispatcher
-     */
-    private $dispatcher = null;
 
+    /**
+     * Login constructor.
+     */
+    public function __construct()
+    {
+        $this->setPageTitle('Register New Account');
+    }
 
     /**
      * @param Request $request
@@ -44,45 +47,34 @@ class Register extends Iface
      * @throws \Exception
      * @throws \ReflectionException
      * @throws Form\Exception
-     * @throws Form\Exception
-     * @throws Form\Exception
-     * @throws Form\Exception
-     * @throws Form\Exception
-     * @throws Form\Exception
      */
     public function doDefault(Request $request)
     {
-        $this->setPageTitle('Register New Account');
-        
         if (!$this->getConfig()->get('site.client.registration')) {
-            throw new \Tk\Exception('User registration disabled.');
+            \Tk\Alert::addError('User registration has been disabled on this site.');
+            \Tk\Uri::create('/')->redirect();
         }
         if ($request->has('h')) {
             $this->doConfirmation($request);
         }
-        if ($this->getUser()) {
-            \Tk\Uri::create($this->getUser()->getHomeUrl())->redirect();
-        }
 
         $this->user = new \App\Db\User();
-        $this->user->role = \App\Db\User::ROLE_CLIENT;
+        $this->user->role = \App\Db\User::ROLE_USER;
 
-        $this->institution = new \App\Db\Institution();
-        
-        $this->form = new Form('registerForm', $request);
 
-        $this->form->addField(new Field\Input('name'))->setLabel('Institution Name');
+        $this->form = \App\Config::createForm('register-account');
+        $this->form->setRenderer(\App\Config::createFormRenderer($this->form));
+
+        $this->form->addField(new Field\Input('name'));
         $this->form->addField(new Field\Input('email'));
         $this->form->addField(new Field\Input('username'));
         $this->form->addField(new Field\Password('password'));
-        $this->form->addField(new Field\Password('passwordConf'));
-        $this->form->addField(new Event\Submit('register', array($this, 'doRegister')));
+        $this->form->addField(new Field\Password('passwordConf'))->setLabel('Password Confirm');
+        $this->form->addField(new Event\Submit('register', array($this, 'doRegister')))->addCss('btn btn-lg btn-primary btn-ss');
+        $this->form->addField(new Event\Link('forgotPassword', \Tk\Uri::create('/recover.html'), ''))->removeCss('btn btn-sm btn-default btn-once');
 
         $this->form->load(\App\Db\UserMap::create()->unmapForm($this->user));
-        
-        // Find and Fire submit event
         $this->form->execute();
-
     }
 
 
@@ -142,7 +134,7 @@ class Register extends Iface
         // Fire the login event to allow developing of misc auth plugins
         $event = new \Tk\Event\Event();
         $event->set('form', $form);
-        $event->set('UserIface', $this->user);
+        $event->set('user', $this->user);
         $event->set('pass', $this->form->getFieldValue('password'));
         $event->set('institution', $this->institution);
         \App\Config::getInstance()->getEventDispatcher()->dispatch(AuthEvents::REGISTER, $event);
@@ -189,7 +181,7 @@ class Register extends Iface
         
         $event = new \Tk\Event\Event();
         $event->set('request', $request);
-        $event->set('UserIface', $user);
+        $event->set('user', $user);
         $event->set('institution', $institution);
         \App\Config::getInstance()->getEventDispatcher()->dispatch(AuthEvents::REGISTER_CONFIRM, $event);
         
@@ -197,25 +189,26 @@ class Register extends Iface
         \Tk\Uri::create('/login.html')->redirect();
     }
 
-
+    /**
+     * @return \Dom\Template
+     */
     public function show()
     {
         $template = parent::show();
 
+        if ($this->getConfig()->get('site.client.registration')) {
+            $template->setChoice('register');
+        }
+
         if ($this->getConfig()->getSession()->getOnce('h')) {
             $template->setChoice('success');
-            
+
         } else {
             $template->setChoice('form');
-
             // Render the form
-            $fren = new \Tk\Form\Renderer\Dom($this->form);
-            try {
-                $template->insertTemplate($this->form->getId(), $fren->show()->getTemplate());
-            } catch (Exception $e) {
-            }
+            $template->insertTemplate('form', $this->form->getRenderer()->show());
         }
-        
+
         return $template;
     }
 

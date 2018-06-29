@@ -1,35 +1,16 @@
-<div>
-
-  <div class="section">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-5">
-
-
-          <div class="basic-login clearfix">
-            <div choice="success">
-              <h2>Success</h2>
-              <p>
-                An confirmation email has been sent to <span var="email">example@example.com</span> please
-                follow the link in that email to activate your new account.
-              </p>
-              <p>
-                Thank You!
-              </p>
-            </div>
-
-            <div var="registerForm" choice="form"></div>
-          </div>
-
-
-        </div>
-        <div class="col-sm-7 social-login text-center clearfix well">
-          <div class="not-member">
-            <p>Forgot your password? <a href="/recover.html">Recover It Here</a></p>
-          </div>
-        </div>
-      </div>
-    </div>
+<div class="tk-login-panel tk-register">
+  <div choice="success">
+    <h2>Success</h2>
+    <p>
+      An confirmation email has been sent to <span var="email">example@example.com</span> please
+      follow the link in that email to activate your new account.
+    </p>
+    <p>
+      Thank You!
+    </p>
   </div>
+
+  <form role="form" id="registerForm" method="post" choice="form" var="form"></form>
+
 
 </div>

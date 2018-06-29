@@ -42,15 +42,15 @@ class Login extends Iface
      */
     private function init()
     {
-        /** @var Auth $auth */
-        if ($this->getUser()) {
-            \Tk\Uri::create($this->getUser()->getHomeUrl())->redirect();
+        if (!$this->form) {
+            $this->form = \App\Config::createForm('login-form');
+            $this->form->setRenderer(\App\Config::createFormRenderer($this->form));
         }
-        if (!$this->form)
-            $this->form = new Form('loginForm');
+
         $this->form->addField(new Field\Input('username'));
         $this->form->addField(new Field\Password('password'));
         $this->form->addField(new Event\Submit('login', array($this, 'doLogin')));
+        //$this->form->addField(new Event\Link('forgotPassword', \Tk\Uri::create('/recover.html'), ''))->removeCss('btn btn-sm btn-default btn-once');
     }
 
     /**
@@ -149,8 +149,7 @@ class Login extends Iface
         $template = parent::show();
 
         // Render the form
-        $fren = new \Tk\Form\Renderer\Dom($this->form);
-        $template->insertTemplate($this->form->getId(), $fren->show());
+        $template->insertTemplate('form', $this->form->getRenderer()->show());
 
         if ($this->institution) {
             if ($this->institution->getLogoUrl()) {

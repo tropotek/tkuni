@@ -32,6 +32,15 @@ class Recover extends Iface
 
 
     /**
+     * Login constructor.
+     */
+    public function __construct()
+    {
+        $this->setPageTitle('Recover Password');
+    }
+
+
+    /**
      * @param Request $request
      * @throws \Exception
      * @throws Form\Exception
@@ -39,16 +48,14 @@ class Recover extends Iface
      */
     public function doDefault(Request $request)
     {
-        $this->setPageTitle('Recover Password');
-
-        $this->form = new Form('loginForm', $request);
+        $this->form = \App\Config::createForm('recover-account');
+        $this->form->setRenderer(\App\Config::createFormRenderer($this->form));
 
         $this->form->addField(new Field\Input('account'));
-        $this->form->addField(new Event\Submit('recover', array($this, 'doRecover')));
+        $this->form->addField(new Event\Submit('recover', array($this, 'doRecover')))->addCss('btn btn-lg btn-primary btn-ss');
+        $this->form->addField(new Event\Link('login', \Tk\Uri::create('/login.html'), ''))->removeCss('btn btn-sm btn-default btn-once');
 
-        // Find and Fire submit event
         $this->form->execute();
-
     }
 
     /**
@@ -57,22 +64,17 @@ class Recover extends Iface
      */
     public function doRecover($form)
     {
-        
         if (!$form->getFieldValue('account')) {
             $form->addFieldError('account', 'Please enter a valid username or email');
         }
-        
+
         if ($form->hasErrors()) {
             return;
         }
-        
+
         // TODO: This should be made a bit more secure for larger sites.
 
-        // For Admin and Client users only
-        // TODO: Do an institution recovery system if possible.
-
         $account = $form->getFieldValue('account');
-
         /** @var \App\Db\User $user */
         $user = null;
         if (filter_var($account, FILTER_VALIDATE_EMAIL)) {
@@ -85,19 +87,18 @@ class Recover extends Iface
             return;
         }
 
-        $newPass = $user->createPassword();
-        $user->password = \App\Config::getInstance()->hashPassword($newPass, $user);
+        $newPass = $this->getConfig()->generatePassword();
+        $user->password = $this->getConfig()->hashPassword($newPass, $user);
         $user->save();
-        
+
         // Fire the login event to allow developing of misc auth plugins
         $event = new \Tk\Event\Event();
         $event->set('form', $form);
-        $event->set('UserIface', $user);
+        $event->set('user', $user);
         $event->set('password', $newPass);
-        $event->set('templatePath', $this->getPage()->getTemplatePath());
-        
-        \App\Config::getInstance()->getEventDispatcher()->dispatch(AuthEvents::RECOVER, $event);
-        
+        //$event->set('templatePath', $this->getTemplatePath());
+        $this->getConfig()->getEventDispatcher()->dispatch(AuthEvents::RECOVER, $event);
+
         \Tk\Alert::addSuccess('You new access details have been sent to your email address.');
         \Tk\Uri::create()->redirect();
         
@@ -107,9 +108,14 @@ class Recover extends Iface
     public function show()
     {
         $template = parent::show();
+
+        // Render the form
+        $template->insertTemplate('form', $this->form->getRenderer()->show());
+
         if ($this->getConfig()->get('site.client.registration')) {
             $template->setChoice('register');
         }
+
         return $template;
     }
 

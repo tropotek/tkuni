@@ -38,9 +38,9 @@ $config['template.public']    = $config['system.template.path'] . '/sbadmin2/pub
  * EG: $path = dirname($config['template.admin']) . $config['template.xtpl.path'];
  * @var {templatePath} will be replaced by the path of the current user page template
  */
-$config['template.xtpl.path'] = '{templatePath}/xtpl';
+$config['template.xtpl.path'] = $config->getSitePath() . $config['system.template.path'] . '/app/xtpl';
+//$config['template.xtpl.path'] = '{templatePath}/xtpl';
 $config['template.xtpl.ext'] = '.xtpl';
-
 
 
 /*
@@ -49,9 +49,39 @@ $config['template.xtpl.ext'] = '.xtpl';
 $config['date.timezone'] = 'Australia/Victoria';
 
 /*
- * TODO: implement this into the base config....
+ * Enable logging of triggered events
+ * Default: false
  */
-//$config['system.https'] = true;
+$config['event.dispatcher.log'] = false;
+
+/*
+ * Max size for profile images
+ * Default; 1028*1028*2 (2M)
+ */
+$config['upload.profile.imagesize'] = 1028*1028*2;
+
+/*
+ * The session log allows us to add the log to exception emails
+ */
+$config['log.session'] = $config->getTempPath().'/session.log';
+
+/*
+ * if set to true then all required form fields will render the required="required" attribute
+ * currently disabled by default as the errors do not play well with tabs, wizards and fields that are hidden
+ * it causes the error popup to float to the top of the screen.
+ */
+//$config['system.form.required.attr.enabled'] = false;
+
+/*
+ * Enable exception emails
+ */
+//$config['system.email.exception'] = array('user@example.com');
+
+/*
+ * Send copies of all system emails to these recipients (not error emails)
+ */
+//$config['mail.bcc'] = array('user1@example.edu.au');
+
 
 
 /*  
@@ -74,18 +104,6 @@ $config['system.auth.dbtable.passwordColumn'] = 'password';
 $config['system.auth.dbtable.saltColumn']     = 'hash';
 $config['system.auth.dbtable.activeColumn']   = 'active';
 
-/*
- * Auth adapters to use in logging into the site
- */
-//$config['system.auth.adapters'] = array(
-//    'DbTable' => '\App\Auth\Adapter\DbTable'
-//);
-
-
-/*
- * Set this to true to allow extended email addresses in the format of "User Name <username@domain.com>"
- */
-// \Tk\Mail\Message::$ENABLE_EXTENDED_ADDRESS = false;
 
 
 // ------------------------------------------------------------

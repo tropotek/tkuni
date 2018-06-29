@@ -5,7 +5,6 @@ use Tk\Request;
 use Tk\Form;
 use Tk\Form\Event;
 use Tk\Form\Field;
-use Uni\Controller\Iface;
 
 /**
  * @author Michael Mifsud <info@tropotek.com>
@@ -30,7 +29,8 @@ class Contact extends Iface
      */
     public function doDefault(Request $request)
     {
-        $this->setPageTitle('Contact');
+        $this->setPageTitle('Contact Us');
+
 
         $this->form = new Form('contactForm');
 
@@ -40,7 +40,7 @@ class Contact extends Iface
         $opts = new Field\Option\ArrayIterator(array('General', 'Services', 'Orders'));
         $this->form->addField(new Field\Select('type[]', $opts));
 
-        $this->form->addField(new Field\File('attach[]'));
+        $this->form->addField(new Field\File('attach', '/contact/' . date('d-m-Y') . '-___'));
         $this->form->addField(new Field\Textarea('message'));
 
         if ($this->getConfig()->get('google.recaptcha.publicKey'))
@@ -49,7 +49,6 @@ class Contact extends Iface
 
         $this->form->addField(new Event\Submit('send', array($this, 'doSubmit')));
 
-        // Find and Fire submit event
         $this->form->execute();
 
     }
@@ -57,7 +56,7 @@ class Contact extends Iface
     /**
      * show()
      *
-     * @return mixed
+     * @return \Dom\Template
      * @throws Form\Exception
      * @throws \Dom\Exception
      */
@@ -66,7 +65,8 @@ class Contact extends Iface
         $template = parent::show();
 
         // Render the form
-        \Tk\Form\Renderer\DomStatic::create($this->form, $template)->show();
+        $ren = new \Tk\Form\Renderer\DomStatic($this->form, $template);
+        $ren->show();
 
         return $template;
     }
@@ -75,12 +75,11 @@ class Contact extends Iface
      * doSubmit()
      *
      * @param Form $form
-     * @throws \Tk\Mail\Exception
+     * @throws \Tk\Exception
      */
     public function doSubmit($form)
     {
         $values = $form->getValues();
-
         /** @var Field\File $attach */
         $attach = $form->getField('attach');
 
@@ -119,7 +118,7 @@ class Contact extends Iface
      *
      * @param Form $form
      * @return bool
-     * @throws \Tk\Mail\Exception
+     * @throws \Tk\Exception
      * @throws \Exception
      */
     private function sendEmail($form)
@@ -129,7 +128,7 @@ class Contact extends Iface
         $type = '';
         if (is_array($form->getFieldValue('type')))
             $type = implode(', ', $form->getFieldValue('type'));
-        $msg = nl2br($form->getFieldValue('message'));
+        $message = $form->getFieldValue('message');
 
         $attachCount = '';
         /** @var Field\File $field */
@@ -143,21 +142,16 @@ class Contact extends Iface
         }
 
         $content = <<<MSG
-<div>
-<p>
-<b>Name:</b> $name<br/>
-<b>Email:</b> $email<br/>
-<b>Type:</b> $type<br/>
-</p>
-<p>
-<b>Message:</b><br/>
-  $msg
-</p>
-<p>
-$attachCount
-</p>
-MSG;
+Dear $name,
 
+Email: $email
+Type: $type
+
+Message:
+  $message
+
+$attachCount
+MSG;
 
         $message = $this->getConfig()->createMessage();
         $message->addTo($email);
@@ -169,17 +163,4 @@ MSG;
         return $this->getConfig()->getEmailGateway()->send($message);
     }
 
-
-//    /**
-//     * @return \Dom\Template
-//     */
-//    public function __makeTemplate()
-//    {
-//        $html = <<<HTML
-//<div></div>
-//HTML;
-//        return \Dom\Loader::load($html);
-//        // OR FOR A FILE
-//        //return \Dom\Loader::loadFile($this->getTemplatePath().'/public.xtpl');
-//    }
 }
