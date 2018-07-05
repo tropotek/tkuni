@@ -59,7 +59,6 @@ class Register extends Iface
         $this->user = new \App\Db\User();
         $this->user->role = \App\Db\User::ROLE_CLIENT;
 
-
         $this->form = \App\Config::createForm('register-account');
         $this->form->setRenderer(\App\Config::createFormRenderer($this->form));
 
@@ -68,8 +67,9 @@ class Register extends Iface
         $this->form->addField(new Field\Input('username'));
         $this->form->addField(new Field\Password('password'));
         $this->form->addField(new Field\Password('passwordConf'))->setLabel('Password Confirm');
-        $this->form->addField(new Event\Submit('register', array($this, 'doRegister')))->addCss('btn btn-lg btn-primary btn-ss');
-        $this->form->addField(new Event\Link('forgotPassword', \Tk\Uri::create('/recover.html'), ''))->removeCss('btn btn-sm btn-default btn-once');
+        $this->form->addField(new Event\Submit('register', array($this, 'doRegister')))->addCss('btn btn-primary btn-ss');
+        $this->form->addField(new Event\Link('forgotPassword', \Tk\Uri::create('/recover.html'), ''))
+            ->removeCss('btn btn-sm btn-default btn-once');
 
         $this->form->load(\App\Db\UserMap::create()->unmapForm($this->user));
         $this->form->execute();
@@ -80,12 +80,11 @@ class Register extends Iface
      * doLogin()
      *
      * @param \Tk\Form $form
+     * @param \Tk\Form\Event\Iface $event
      * @throws \Tk\Exception
      * @throws \ReflectionException
-     * @throws \ReflectionException
-     * @throws \ReflectionException
      */
-    public function doRegister($form)
+    public function doRegister($form, $event)
     {
         \App\Db\UserMap::create()->mapForm($form->getValues(), $this->user);
         \App\Db\InstitutionMap::create()->mapForm($form->getValues(), $this->institution);
@@ -130,23 +129,21 @@ class Register extends Iface
         $this->institution->save();
 
         // Fire the login event to allow developing of misc auth plugins
-        $event = new \Tk\Event\Event();
-        $event->set('form', $form);
-        $event->set('user', $this->user);
-        $event->set('pass', $this->form->getFieldValue('password'));
-        $event->set('institution', $this->institution);
-        \App\Config::getInstance()->getEventDispatcher()->dispatch(AuthEvents::REGISTER, $event);
+        $e = new \Tk\Event\Event();
+        $e->set('form', $form);
+        $e->set('user', $this->user);
+        $e->set('pass', $this->form->getFieldValue('password'));
+        $e->set('institution', $this->institution);
+        \App\Config::getInstance()->getEventDispatcher()->dispatch(AuthEvents::REGISTER, $e);
 
         // Redirect with message to check their email
         \Tk\Alert::addSuccess('Your New Account Has Been Created.');
         $this->getConfig()->getSession()->set('h', $this->user->getHash());
-
-        \Tk\Uri::create()->redirect();
+        $event->setRedirect(\Tk\Uri::create());
     }
 
     /**
      * Activate the user account if not activated already, then trash the request hash....
-     *
      *
      * @param Request $request
      * @throws \Tk\Db\Exception
@@ -177,11 +174,11 @@ class Register extends Iface
         $institution->active = true;
         $institution->save();
         
-        $event = new \Tk\Event\Event();
-        $event->set('request', $request);
-        $event->set('user', $user);
-        $event->set('institution', $institution);
-        \App\Config::getInstance()->getEventDispatcher()->dispatch(AuthEvents::REGISTER_CONFIRM, $event);
+        $e = new \Tk\Event\Event();
+        $e->set('request', $request);
+        $e->set('user', $user);
+        $e->set('institution', $institution);
+        \App\Config::getInstance()->getEventDispatcher()->dispatch(AuthEvents::REGISTER_CONFIRM, $e);
         
         \Tk\Alert::addSuccess('Account Activation Successful.');
         \Tk\Uri::create('/login.html')->redirect();

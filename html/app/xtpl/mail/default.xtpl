@@ -30,10 +30,10 @@
 <hr />
 <div class="footer">
   <p>
-    IP: {_ip}<br/>
-    URI: {_uri}<br/>
-    Referer: {_referer}<br/>
-    User Agent: {_user_agent}
+    {_ip}IP: {_ip}<br/>{/_ip}
+    {_uri}URI: {_uri}<br/>{/_uri}
+    {_referer}Referer: {_referer}<br/>{/_referer}
+    {_user_agent}User Agent: {_user_agent}<br/>{/_user_agent}
   </p>
 </div>
 </body>
