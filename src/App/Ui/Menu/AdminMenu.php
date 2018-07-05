@@ -69,9 +69,14 @@ class AdminMenu extends Iface
       <div class="sidebar-nav navbar-collapse">
         <ul class="nav" id="side-menu">
           <li><a href="/admin/index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
-          <li><a href="/admin/settings.html"><i class="fa fa-cogs fa-fw"></i> Settings</a></li>
-          <li><a href="/admin/userManager.html"><i class="fa fa-users fa-fw"></i> Users</a></li>
-          <li><a href="/admin/institutionManager.html"><i class="fa fa-university fa-fw"></i> Institutions</a></li>
+          
+          <li><a href="#"><i class="fa fa-cogs fa-fw"></i> System<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level" var="system-menu">
+              <li><a href="/admin/settings.html"><i class="fa fa-cog fa-fw"></i> Settings</a></li>
+              <li><a href="/admin/userManager.html"><i class="fa fa-users fa-fw"></i> Users</a></li>
+              <li><a href="/admin/institutionManager.html"><i class="fa fa-university fa-fw"></i> Institutions</a></li>
+            </ul>
+          </li>
           
           <li choice="debug"><a href="#"><i class="fa fa-bug fa-fw"></i> Development<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">
