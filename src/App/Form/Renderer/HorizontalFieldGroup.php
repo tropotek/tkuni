@@ -27,7 +27,9 @@ class HorizontalFieldGroup extends \Tk\Form\Renderer\FieldGroup
 
 
     /**
-     * Render
+     * @return \Dom\Renderer\Renderer|\Dom\Template|null
+     * @throws \Dom\Exception
+     * @throws \ReflectionException
      */
     public function show()
     {

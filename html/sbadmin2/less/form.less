@@ -1,0 +1,133 @@
+/**
+ * Tk Form Styles
+ *
+ * @author Michael Mifsud <info@tropotek.com>
+ * @link http://www.tropotek.com/
+ * @license Copyright 2015 Michael Mifsud
+ */
+
+/**
+ * \Tk\Form\Renderer\Dom\Form
+ */
+.tk-form {
+
+  &.form-inline {
+    .tk-form-events {
+      border-top: none;
+      padding-top: 0;
+    }
+    .tk-form-fields, .tk-form-events {
+      display: inline-block;
+    }
+    .tk-form-fields .form-group {
+      margin-right: 5px;
+    }
+  }
+
+  .form-group {
+    &.tk-checkbox {
+      .checkbox {
+        display: inline-block;
+        margin: 0;
+        margin-left: 10px;
+        > label {
+          vertical-align: middle;
+          padding: 0;
+          input[type="checkbox"] {
+            margin: 0 0 5px 0;
+            padding: 0;
+            position: relative;
+            vertical-align: middle;
+          }
+        }
+      }
+      .checkbox {
+        &.is-cbl {
+          display: inline-block;
+          margin: 0;
+          padding: 0;
+          > label {
+            vertical-align: middle;
+            display: inline-block;
+            margin-bottom: 0;
+            padding-left: 0;
+            input {
+              margin: 0;
+              padding: 0;
+              position: relative;
+              vertical-align: middle;
+            }
+            .cb-label {
+              vertical-align: middle;
+              display: inline-block;
+              margin-bottom: 0px;
+              margin-left: 5px;
+              white-space: nowrap;
+              line-height: 1;
+              font-weight: bold;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .tk-form-events {
+    padding-top: 15px;
+    .btn, a {
+      margin-right: 5px;
+    }
+  }
+
+  .tab-pane {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  textarea.form-control {
+    min-height: 120px;
+  }
+  .required label:before {
+    content: "* ";
+    color: #e70000;
+    font-weight: bold;
+  }
+
+  select[multiple] {
+    min-height: 150px;
+  }
+
+  select .first {
+    color: #CCC;
+  }
+
+  .help-block {
+    em, small {
+      color: lighten(@text-color, 50%);
+    }
+  }
+}
+
+// END tk-form
+
+.tk-uploadfile .projectFileNotes {
+  border-top: 1px solid #CCC;
+  display: block;
+  padding: 5px;
+}
+
+.tk-uploadfile .projectFileNotes span {
+  display: block;
+}
+
+.tk-uploadfile .projectFileNotes span:nth-child(odd) {
+  float: left;
+  text-align: left;
+  width: 48%
+}
+
+.tk-uploadfile .projectFileNotes span:nth-child(even) {
+  float: right;
+  text-align: right;
+  width: 48%
+}
+

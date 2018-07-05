@@ -1,16 +1,13 @@
 <div class="tk-login-panel tk-register">
+
   <div choice="success">
     <h2>Success</h2>
     <p>
       An confirmation email has been sent to <span var="email">example@example.com</span> please
       follow the link in that email to activate your new account.
     </p>
-    <p>
-      Thank You!
-    </p>
+    <p>Thank You!</p>
   </div>
-
-  <form role="form" id="registerForm" method="post" choice="form" var="form"></form>
-
+  <div var="form" choice="form"></div>
 
 </div>

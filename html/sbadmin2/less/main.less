@@ -1,0 +1,184 @@
+/******************************************/
+/** Public Styles                        **/
+/******************************************/
+
+
+@import '../bower_components/bootstrap/less/bootstrap';
+@import 'table';
+@import 'form';
+
+
+// Variable "templateUrl" comes from the site defined variables see the Dom Modifier Less class
+//@siteUrl: '/';
+//@dataUrl: '/data';
+//@templateUrl: '/html';
+@template-path:  '@{templateUrl}/sbadmin2';
+
+
+@icon-font-path:  '@{template-path}/bower_components/bootstrap/fonts/';
+
+
+
+.page-header {
+  /*margin: 40px 0 20px;*/
+  margin-top: 20px;
+}
+
+body.public {
+  padding-top: 40px;
+  padding-bottom: 30px;
+  background: #FFF;
+}
+
+.public .container.content {
+  margin-top: 20px;
+}
+
+.public .theme-dropdown .dropdown-menu {
+  display: block;
+  position: static;
+  margin-bottom: 20px;
+}
+
+.public .footer {
+  margin-top: 40px;
+  padding-top: 10px;
+  border-top: 2px outset #CCC;
+}
+
+.nav > li > a > img.profile-image {
+  width: 26px;
+  height: 26px;
+  box-shadow: #c0c0c0 1px 2px 2px;
+  margin-top: -10px;
+}
+.navbar-brand {
+
+}
+
+
+
+/******************************************/
+/** General Styles                       **/
+/******************************************/
+.nopadding {
+  padding: 0;
+}
+
+
+.tk-alert-container {
+  font-size: 0.8em;
+  margin-top: 25px;
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  z-index: 9999;
+}
+.tk-alert-container .alert {
+  box-shadow: 2px 2px 2px #EFEFEF;
+  min-width: 300px;
+}
+
+.tk-login-panel {
+  margin: 40px auto;
+  width: 40%;
+  .tk-form-events {
+
+  }
+  .btn {
+    margin-right: 10px;
+  }
+}
+.not-member {
+  margin-top: 20px;
+}
+
+#contactForm .form-group {
+  &.has-error .form-control {
+    border-color: #CCC;
+  }
+  .field-error {
+    .make-sm-column(9);
+    .make-sm-column-offset(3);
+    margin-bottom: 5px;
+  }
+}
+
+.tk-ui-action-panel {
+  .btn {
+    margin-right: 5px;
+  }
+}
+
+.carousel-caption {
+  color: #333;
+  text-shadow: 2px 2px 2px rgba(155, 155, 155,.9);
+  text-align: left;
+  &.slide-one {
+    top: 10px;
+    right: 0;
+    left: auto;
+    width: 50%;
+  }
+  &.slide-two {
+    top: 25px;
+    right: auto;
+    left: 18px;
+    width: 50%;
+  }
+  &.slide-three {
+    top: 25px;
+    right: auto;
+    left: 18px;
+    width: 50%;
+  }
+}
+.carousel-indicators {
+
+  li {
+    border: 1px solid #999;
+  }
+  .active {
+    border: 1px solid transparent;
+    background-color: #333;
+  }
+}
+
+
+
+.thumbnail (@width: 110px, @height: 110px, @margin: 0px) {
+  width: @width;
+  height: @height;
+  margin: @margin;
+  padding: 0px;
+  overflow:hidden;
+  position:relative;
+  text-align: left;
+
+  img.nailthumb-image {
+    margin: 0px;
+    padding: 0px;
+    max-width: none;
+    text-align: left;
+    float: left;
+  }
+  span.nailthumb-title {
+    background:none repeat scroll 0 0 rgba(0, 0, 0, 0.5);
+    bottom:0;
+    color:White;
+    display:block;
+    font-size:9px;
+    height:20px;
+    left:0;
+    margin-top: 2px;
+    line-height:20px;
+    position:relative;
+    text-align:center;
+    width:100%;
+    overflow: hidden;
+    float: left;
+    .nailthumb-title-scroller {
+      padding-left: 2px;
+    }
+  }
+}
