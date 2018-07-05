@@ -37,8 +37,12 @@ class Edit extends \Uni\Controller\AdminIface
     protected $url = null;
 
 
+    /**
+     *
+     */
     public function __construct()
     {
+        $this->setPageHeading();
         parent::__construct();
     }
 
@@ -70,7 +74,6 @@ class Edit extends \Uni\Controller\AdminIface
      */
     public function doDefault(Request $request)
     {
-        $this->setPageHeading();
         $this->institution = $this->getUser()->getInstitution();
 
         $this->user = new \App\Db\User();
@@ -95,49 +98,60 @@ class Edit extends \Uni\Controller\AdminIface
         $this->form = \App\Config::getInstance()->createForm('userEdit');
         $this->form->setRenderer(\App\Config::getInstance()->createFormRenderer($this->form));
 
+
+        $tabGroup = 'Details';
+
         if (!$this->getuser()->isStudent()) {
-            $this->form->addField(new Field\Input('name'))->setTabGroup('Details')->setRequired(true);
+            $this->form->addField(new Field\Input('name'))->setTabGroup($tabGroup)->setRequired(true);
         } else {
-            $this->form->addField(new Field\Html('name'))->setTabGroup('Details')->setRequired(true);
+            $this->form->addField(new Field\Html('name'))->setTabGroup($tabGroup)->setRequired(true);
         }
-        $this->form->addField(new Field\Input('displayName'))->setTabGroup('Details')->setRequired(true);
+        $this->form->addField(new Field\Input('displayName'))->setTabGroup($tabGroup)->setRequired(true);
         if ($this->getUser()->isAdmin() || $this->getUser()->isClient()) {
-            $this->form->addField(new Field\Input('username'))->setTabGroup('Details')->setRequired(true);
-            $this->form->addField(new Field\Input('email'))->setTabGroup('Details')->setRequired(true);
+            $this->form->addField(new Field\Input('username'))->setTabGroup($tabGroup)->setRequired(true);
+            $this->form->addField(new Field\Input('email'))->setTabGroup($tabGroup)->setRequired(true);
         } else {
-            $this->form->addField(new Field\Html('username'))->setTabGroup('Details');
-            $this->form->addField(new Field\Html('email'))->setTabGroup('Details');
+            $this->form->addField(new Field\Html('username'))->setTabGroup($tabGroup);
+            $this->form->addField(new Field\Html('email'))->setTabGroup($tabGroup);
         }
         if ($this->user->hasRole(array(\App\Db\User::ROLE_STAFF, \App\Db\User::ROLE_STUDENT))) {
-            $this->form->addField(new Field\Input('uid'))->setLabel('UID')->setTabGroup('Details')->setNotes('The student or staff number assigned by the institution.');
+            $this->form->addField(new Field\Input('uid'))->setLabel('UID')->setTabGroup($tabGroup)
+                ->setNotes('The student or staff number assigned by the institution.');
         }
         if ($this->getUser()->isAdmin()) {
             if ($this->getUser()->hasRole(array(\App\Db\User::ROLE_STAFF, \App\Db\User::ROLE_CLIENT))) {
                 $list = array('-- Select --' => '', 'Staff' => \App\Db\User::ROLE_STAFF, 'Student' => \App\Db\User::ROLE_STUDENT);
-                $this->form->addField(new Field\Select('role', $list))->setNotes('Select the access level for this user')->setRequired(true)->setTabGroup('Details');
+                $this->form->addField(new Field\Select('role', $list))->setNotes('Select the access level for this user')
+                    ->setRequired(true)->setTabGroup($tabGroup);
             }
         }
         if (!$this->getuser()->isStudent()) {
-            $this->form->addField(new Field\Checkbox('active'))->setTabGroup('Details');
+            $this->form->addField(new Field\Checkbox('active'))->setTabGroup($tabGroup);
         }
 
-        if ($this->getUser()->isAdmin()) {
+        $tabGroup = 'Password';
+        if ($this->user->isAdmin() || $this->user->isClient()) {
             $this->form->setAttr('autocomplete', 'off');
-            $f = $this->form->addField(new Field\Password('newPassword'))->setAttr('placeholder', 'Click to edit')->
-            setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setTabGroup('Password');
-            if (!$this->user->getId())
+            $f = $this->form->addField(new Field\Password('newPassword'))->setAttr('placeholder', 'Click to edit')
+                ->setAttr('readonly', 'true')->setTabGroup($tabGroup)
+                ->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');");
+            if (!$this->user->getId()) {
                 $f->setRequired(true);
-            $f = $this->form->addField(new Field\Password('confPassword'))->setAttr('placeholder', 'Click to edit')->
-            setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');")->setNotes('Change this users password.')->setTabGroup('Password');
-            if (!$this->user->getId())
+            }
+            $f = $this->form->addField(new Field\Password('confPassword'))->setAttr('placeholder', 'Click to edit')
+                ->setNotes('Change this users password.')->setTabGroup($tabGroup)
+                ->setAttr('readonly', 'true')->setAttr('onfocus', "this.removeAttribute('readonly');this.removeAttribute('placeholder');");
+            if (!$this->user->getId()) {
                 $f->setRequired(true);
+            }
         }
 
-        //if ($this->user->id && $this->getUser()->isClient() ) {
-        if ($this->user->id && ($this->getUser()->isStaff() || $this->getUser()->isClient()) ) {
+        $tabGroup = 'Subjects';
+        if ($this->user->id && ($this->user->isStaff() || $this->user->isClient()) ) {
             $list = \Tk\Form\Field\Option\ArrayObjectIterator::create(\App\Db\SubjectMap::create()->findActive($this->institution->id));
-            $this->form->addField(new Field\Select('selSubject[]', $list))->setLabel('Subject Selection')->setNotes('This list only shows active and enrolled subjects. Use the enrollment form in the edit subject page if your subject is not visible.')->
-                setTabGroup('Subjects')->addCss('tk-dualSelect')->setAttr('data-title', 'Subjects');
+            $this->form->addField(new Field\Select('selSubject[]', $list))->setLabel('Subject Selection')
+                ->setNotes('This list only shows active and enrolled subjects. Use the enrollment form in the edit subject page if your subject is not visible.')
+                ->setTabGroup($tabGroup)->addCss('tk-dualSelect')->setAttr('data-title', 'Subjects');
             $arr = \App\Db\SubjectMap::create()->findByUserId($this->user->id)->toArray('id');
             $this->form->setFieldValue('selSubject', $arr);
         }
