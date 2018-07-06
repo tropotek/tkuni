@@ -17,15 +17,23 @@ class SystemEvents extends \Uni\Controller\AdminIface
     protected $table = null;
 
 
+
     /**
-     *
+     * @throws \Tk\Exception
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->setPageTitle('Available Events');
+        \Uni\Ui\Crumbs::reset();
+    }
+
+    /**
      * @param Request $request
      * @throws \Tk\Exception
      */
     public function doDefault(Request $request)
     {
-        $this->setPageTitle('Available Events');
-
         $this->table = \App\Config::getInstance()->createTable(\Tk\ObjectUtil::basename($this).'PluEventList');
         $this->table->setRenderer(\App\Config::getInstance()->createTableRenderer($this->table));
 

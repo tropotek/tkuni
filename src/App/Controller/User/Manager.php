@@ -37,15 +37,15 @@ class Manager extends \Uni\Controller\AdminIface
     protected $actionsCell = null;
 
 
-
     /**
-     * Iface constructor.
+     * @throws \Tk\Exception
      */
     public function __construct()
     {
         parent::__construct();
         $this->setPageHeading();
         $this->actionsCell = new \Tk\Table\Cell\Actions();
+        \Uni\Ui\Crumbs::reset();
     }
 
     /**

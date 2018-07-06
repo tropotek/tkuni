@@ -224,8 +224,8 @@ var project_core = function () {
     $('.tk-alert-container .alert').each(function() {
       var a = $(this);
       setTimeout(function () {
-        a.fadeOut(1000);
-      }, 5000);
+        a.fadeOut(500);
+      }, 3000);
     });
   };
 

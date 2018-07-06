@@ -147,23 +147,6 @@ body.public {
   margin: 5px 0 5px 27.5%;
 }
 
-
-
-
-
-.tk-alert-container {
-  font-size: 0.8em;
-  margin-top: 25px;
-  position: fixed;
-  right: 20px;
-  top: 20px;
-  z-index: 9999;
-}
-.tk-alert-container .alert {
-  box-shadow: 2px 2px 2px #EFEFEF;
-  min-width: 300px;
-}
-
 .tk-login-panel {
   margin: 40px auto;
   width: 40%;

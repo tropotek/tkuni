@@ -26,22 +26,25 @@ class Settings extends \Uni\Controller\AdminIface
 
 
     /**
+     * @throws \Tk\Exception
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->setPageTitle('Site Settings');
+        \Uni\Ui\Crumbs::reset();
+    }
+
+    /**
      * doDefault
      *
      * @param Request $request
      * @throws \Tk\Exception
      * @throws \Exception
      * @throws Form\Exception
-     * @throws Form\Exception
-     * @throws Form\Exception
-     * @throws Form\Exception
-     * @throws Form\Exception
-     * @throws Form\Exception
-     * @throws Form\Exception
      */
     public function doDefault(Request $request)
     {
-        $this->setPageTitle('Site Settings');
         $this->data = \Tk\Db\Data::create();
         
         $this->form = \App\Config::getInstance()->createForm('settingsEdit');
