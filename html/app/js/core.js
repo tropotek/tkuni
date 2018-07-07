@@ -48,7 +48,6 @@ var project_core = function () {
     if (!config.datepickerFormat)
       config.datepickerFormat = 'dd/mm/yyyy';
 
-    console.log(config);
     // single date
     $('.date').datetimepicker({
       format: config.datepickerFormat,

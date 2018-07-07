@@ -76,7 +76,8 @@ class Edit extends \Uni\Controller\AdminIface
         $this->form->addField(new Field\Input('name'))->setRequired(true);
         $this->form->addField(new Field\Input('code'))->setRequired(true);
         $this->form->addField(new Field\Input('email'))->setRequired(true);
-        $this->form->addField(new \App\Form\Field\DateRange('date'))->setRequired(true)->setLabel('Dates')->setNotes('The start and end dates of the subject. Placements cannot be created outside these dates.');
+        $this->form->addField(new Field\DateRange('date'))->setRequired(true)->setLabel('Dates')
+            ->setNotes('The start and end dates of the subject. Placements cannot be created outside these dates.');
 //        $this->form->addField(new Field\Input('dateStart'))->addCss('date')->setRequired(true);
 //        $this->form->addField(new Field\Input('dateEnd'))->addCss('date')->setRequired(true);
         $this->form->addField(new Field\Textarea('description'));
