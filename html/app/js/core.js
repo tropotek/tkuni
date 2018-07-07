@@ -9,7 +9,7 @@ var project_core = function () {
   /**
    * Dual select list box renderer
    */
-  var initDualListBox = function() {
+  var initDualListBox = function () {
     if ($.fn.DualListBox === undefined) {
       console.warn('DualListBox plugin not available.');
       return;
@@ -22,7 +22,7 @@ var project_core = function () {
   /**
    * init the file field renderer
    */
-  var initTkFileInput = function() {
+  var initTkFileInput = function () {
     if ($.fn.tkFileInput === undefined) {
       console.warn('tkFileInput plugin not available.');
       return;
@@ -39,14 +39,16 @@ var project_core = function () {
    * `.date` = single date text field
    * `.input-datetimerange` = 2 text box range field group
    */
-  var initDatetimePicker = function() {
+  var initDatetimePicker = function () {
     if ($.fn.datetimepicker === undefined) {
       console.warn('datetimepicker plugin not available.');
       return;
     }
-    if(!config.datepickerFormat)
+
+    if (!config.datepickerFormat)
       config.datepickerFormat = 'dd/mm/yyyy';
 
+    console.log(config);
     // single date
     $('.date').datetimepicker({
       format: config.datepickerFormat,
@@ -58,13 +60,58 @@ var project_core = function () {
       maxView: 2
     });
 
-    $('.input-datetimerange').each(function() {
+    $('.input-daterange').each(function () {
+      // TODO we need to fix the initialDate bug when the date format has the time.
       var inputGroup = $(this);
       var start = inputGroup.find('input').first();
       var end = inputGroup.find('input').last();
       start.datetimepicker({
         todayHighlight: true,
-        format: 'dd/mm/yyyy hh:ii',
+        format: config.datepickerFormat,
+        autoclose: true,
+        todayBtn: true,
+        //initialDate: new Date(),
+        initialDate: start.val(),
+        minView: 2,
+        maxView: 2
+      });
+      end.datetimepicker({
+        todayHighlight: true,
+        format: config.datepickerFormat,
+        autoclose: true,
+        todayBtn: true,
+        //initialDate: new Date(),
+        initialDate: end.val(),
+        minView: 2,
+        maxView: 2
+      });
+
+      start.datetimepicker().on('changeDate', function (e) {
+        //end.datetimepicker('setStartDate', e.date);
+        var startDate = start.datetimepicker('getDate');
+        var endDate = end.datetimepicker('getDate');
+        if (startDate > endDate) {
+          end.datetimepicker('setDate', startDate);
+        }
+      });
+      end.datetimepicker().on('changeDate', function (e) {
+        //start.datetimepicker('setEndDate', e.date);
+        var startDate = start.datetimepicker('getDate');
+        var endDate = end.datetimepicker('getDate');
+        if (endDate < startDate) {
+          start.datetimepicker('setDate', endDate);
+        }
+      });
+    });
+
+
+    $('.input-datetimerange').each(function () {
+      var inputGroup = $(this);
+      var start = inputGroup.find('input').first();
+      var end = inputGroup.find('input').last();
+      start.datetimepicker({
+        todayHighlight: true,
+        format: config.datepickerFormat + ' hh:ii',
         autoclose: true,
         todayBtn: true,
         //startDate: new Date(),
@@ -81,7 +128,7 @@ var project_core = function () {
         initialDate: end.val()
       });
 
-      start.datetimepicker().on('changeDate', function(e) {
+      start.datetimepicker().on('changeDate', function (e) {
         //end.datetimepicker('setStartDate', e.date);
         var startDate = start.datetimepicker('getDate');
         var endDate = end.datetimepicker('getDate');
@@ -89,7 +136,7 @@ var project_core = function () {
           end.datetimepicker('setDate', startDate);
         }
       });
-      end.datetimepicker().on('changeDate', function(e) {
+      end.datetimepicker().on('changeDate', function (e) {
         //start.datetimepicker('setEndDate', e.date);
         var startDate = start.datetimepicker('getDate');
         var endDate = end.datetimepicker('getDate');
@@ -104,7 +151,7 @@ var project_core = function () {
   /**
    * Tiny MCE setup
    */
-  var initTinymce = function() {
+  var initTinymce = function () {
     if ($.fn.tinymce === undefined) {
       console.warn('tinymce plugin not available.');
       return;
@@ -121,7 +168,7 @@ var project_core = function () {
       toolbar3: 'table | visualchars visualblocks ltr rtl | nonbreaking insertdatetime | charmap emoticons | print preview | removeformat fullscreen code codesample',
       content_css: [
         '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i'
-        ,'//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'
+        , '//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'
       ],
       menubar: false,
       toolbar_items_size: 'small',
@@ -129,7 +176,7 @@ var project_core = function () {
       content_style: 'body {padding: 10px}',
       convert_urls: false,
       browser_spellcheck: true,
-      file_picker_callback : _elFinderPickerCallback
+      file_picker_callback: _elFinderPickerCallback
     };
     $('textarea.mce').each(function () {
       var el = $(this);
@@ -157,7 +204,7 @@ var project_core = function () {
    * @returns {boolean}
    * @private
    */
-  var _elFinderPickerCallback  = function() {
+  var _elFinderPickerCallback = function () {
     tinymce.activeEditor.windowManager.open({
       file: config.templateUrl + '/app/js/elFinder/elfinder.html', // use an absolute path!
       title: 'File Manager',
@@ -193,7 +240,7 @@ var project_core = function () {
   /**
    * remove focus on menu links
    */
-  var initLinkBlur = function() {
+  var initLinkBlur = function () {
     $('body').on('click', 'a[role=tab]', function () {
       $(this).blur();
     });
@@ -203,29 +250,29 @@ var project_core = function () {
   /**
    *
    */
-  var initMasqueradeConfirm = function() {
+  var initMasqueradeConfirm = function () {
     $('body').on('click', '.tk-msq, .tk-masquerade', function () {
-        return confirm('You are about to masquerade as the selected user?');
-      });
+      return confirm('You are about to masquerade as the selected user?');
+    });
   };
 
   /**
    *
    */
-  var initTableDeleteConfirm = function() {
+  var initTableDeleteConfirm = function () {
     $('body').on('click', '.tk-remove', function () {
-        return confirm('Are you sure you want to remove this item?');
-      });
+      return confirm('Are you sure you want to remove this item?');
+    });
   };
 
   //**
   var initGrowLikeAlerts = function () {
     // Growl like alert messages that fade out.
-    $('.tk-alert-container .alert').each(function() {
+    $('.tk-alert-container .alert').each(function () {
       var a = $(this);
       setTimeout(function () {
-        a.fadeOut(500);
-      }, 3000);
+        a.fadeOut(1000);
+      }, 5000);
     });
   };
 
@@ -237,12 +284,9 @@ var project_core = function () {
     , initDualListBox: initDualListBox
     , initTinymce: initTinymce
     , initMasqueradeConfirm: initMasqueradeConfirm
-    , initTableDeleteConfirm : initTableDeleteConfirm
-    , initGrowLikeAlerts : initGrowLikeAlerts
+    , initTableDeleteConfirm: initTableDeleteConfirm
+    , initGrowLikeAlerts: initGrowLikeAlerts
   }
 
 }();
-
-
-
 

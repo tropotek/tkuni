@@ -18,7 +18,7 @@ include_once(__DIR__ . '/session.php');
 $config['site.title'] = 'New Site';
 $config['site.email'] = 'fvas-elearning@unimelb.edu.au';
 
-$config['google.map.apikey']           = 'AIzaSyCSGICa1zdV6i2LV5GKLymRwjix03qYIeM';
+$config['google.map.key']         = 'AIzaSyCSGICa1zdV6i2LV5GKLymRwjix03qYIeM';
 $config['google.recaptcha.publicKey']  = '6Ldg2wsUAAAAALpMHPiHEtZJ_SGycdDa11Kt_IOh';
 $config['google.recaptcha.privateKey'] = '6Ldg2wsUAAAAANCLllmQfCg5jSWUbJD6rSjEmtSL';
 

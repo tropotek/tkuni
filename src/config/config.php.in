@@ -47,6 +47,7 @@ $config['db.pass'] = 'password';
 
 
 if ($config->isDebug()) {
+//Used for the Mirror command
     $config['live.db'] = array(
         'type' => 'mysql',
         'host' => 'localhost',

@@ -109,4 +109,8 @@ $routes->add('ajax-user-findFiltered', new \Tk\Routing\Route('/ajax/user/findFil
 $routes->add('ajax-subject-findFiltered', new \Tk\Routing\Route('/ajax/subject/findFiltered.html', 'App\Ajax\Subject::doFindFiltered', $params));
 
 
-
+// Example: How to do a simple inline controller all-in-one
+//$routes->add('simpleTest', new \Tk\Routing\Route('/test.html', function ($request) use ($config) {
+//    vd($config->toString());
+//    return '<p>This is a simple test</p>';
+//}, $params));
