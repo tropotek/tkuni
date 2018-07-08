@@ -15,6 +15,16 @@ $config['db.pass'] = 'password';
 
 
 /*
+ * Setup what paths to check when migrating SQL
+ */
+$config['sql.migrate.list'] = array(
+    'App Sql' => $config->getSrcPath() . '/config',
+    'Plugin Sql' => $config->getPluginPath(),
+    'Lib Sql' => $config->getVendorPath() . '/ttek/tk-uni'
+);
+
+
+/*
  * Required for ./bin scripts to have correctly Formed URLS
  */
 //$config['site.host'] = 'example.edu.au';
