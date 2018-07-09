@@ -8,7 +8,7 @@ use Tk\Request;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Index extends Iface
+class Index extends \Bs\Controller\Index
 {
     
     /**
@@ -16,6 +16,17 @@ class Index extends Iface
      */
     public function doDefault(Request $request)
     {
-        //TODO: 
+        parent::doDefault($request);
+    }
+
+
+    /**
+     * @return \Dom\Template
+     */
+    public function show()
+    {
+        $template = parent::show();
+
+        return $template;
     }
 }

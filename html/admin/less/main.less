@@ -2,19 +2,27 @@
 /** Public Styles                        **/
 /******************************************/
 
-
-@import '../bower_components/bootstrap/less/bootstrap';
-@import '../../app/less/app';
-
-
 // Variable "templateUrl" comes from the site defined variables see the Dom Modifier Less class
 //@siteUrl: '/';
 //@dataUrl: '/data';
 //@templateUrl: '/html';
-@template-path:  '@{templateUrl}/sbadmin2';
+@template-path:  '@{templateUrl}/admin';
+@base-lib-path:  '../../../vendor/ttek/tk-base';
 
+@import '../bower_components/bootstrap/less/bootstrap';
+@import '../bower_components/font-awesome/less/font-awesome';
+@import '../../../vendor/ttek/tk-form/js/fileinput/jquery.tkFileInput';
 
-@icon-font-path:  '@{template-path}/bower_components/bootstrap/fonts/';
+@fa-font-path:      "@{template-path}/bower_components/font-awesome/fonts";
+@icon-font-path:    '@{template-path}/bower_components/bootstrap/fonts/';
+
+// Tk base lib ()
+@import '@{base-lib-path}/assets/less/bootstrap3/table';
+@import '@{base-lib-path}/assets/less/bootstrap3/form';
+@import '@{base-lib-path}/assets/less/bootstrap3/ribbon';
+@import '@{base-lib-path}/assets/less/bootstrap3/starRating';
+@import '@{base-lib-path}/assets/less/bootstrap3/growlLike';
+@import '@{base-lib-path}/assets/js/bootstrap-datetimepicker/less/datetimepicker';
 
 
 
@@ -87,12 +95,24 @@ body.public {
     .make-sm-column-offset(3);
     margin-bottom: 5px;
   }
+  div.text-danger {
+    margin: 5px 0 5px 27.5%;
+  }
 }
 
 .tk-ui-action-panel {
   .btn {
     margin-right: 5px;
   }
+}
+
+#contactForm div.text-danger {
+  margin: 5px 0 5px 27.5%;
+}
+
+.tk-login-panel {
+  margin: 40px auto;
+  width: 40%;
 }
 
 .carousel-caption {

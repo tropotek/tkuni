@@ -18,8 +18,8 @@ class NavRendererHandler implements Subscriber
     public function onShow(\Tk\Event\Event $event)
     {
         $controller = $event->get('controller');
-        if ($controller instanceof \Uni\Controller\Iface) {
-            /** @var \Uni\Page\Iface $page */
+        if ($controller instanceof \Bs\Controller\Iface) {
+            /** @var \Uni\Page $page */
             $page = $controller->getPage();
             $template = $page->getTemplate();
             if ($template->keyExists('var', 'nav')) {

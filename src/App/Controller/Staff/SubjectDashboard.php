@@ -3,24 +3,24 @@ namespace App\Controller\Staff;
 
 use Tk\Request;
 use Dom\Template;
+use Bs\Controller\AdminIface;
 
 /**
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class SubjectDashboard extends \Uni\Controller\Iface
+class SubjectDashboard extends AdminIface
 {
 
     /**
      * Iface constructor.
-     * @throws \Tk\Exception
      */
     public function __construct()
     {
         $this->setPageTitle('Subject Dashboard');
         if ($this->getUser()->isStaff()) {
-            \Uni\Ui\Crumbs::resetSubject($this->getSubject());
+            //\Uni\Ui\Crumbs::resetSubject($this->getSubject());
         }
     }
 
@@ -36,9 +36,9 @@ class SubjectDashboard extends \Uni\Controller\Iface
             $this->getTemplate()->insertText('code', $subject->code);
         }
 
-        //$this->subjectUserList = new \App\Ui\SubjectUserList($course);
+        //$this->subjectUserList = new \Uni\Ui\SubjectUserList($course);
 
-//        $this->statusTable = new \App\Ui\Table\StatusPending(\Tk\Uri::create());
+//        $this->statusTable = new \Uni\Ui\Table\StatusPending(\Tk\Uri::create());
 //        $list = \App\Db\StatusMap::create()->findCurrentStatus(array(
 //            'profileId' => $subject->getProfile()->getId(),
 //            'subjectId' => $subject->getId(),
@@ -49,7 +49,7 @@ class SubjectDashboard extends \Uni\Controller\Iface
     }
 
     /**
-     * @return \App\Ui\SubjectUserList
+     * @return \Uni\Ui\SubjectUserList
      */
 //    public function getSubjectUserList()
 //    {

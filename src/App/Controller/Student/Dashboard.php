@@ -3,14 +3,13 @@ namespace App\Controller\Student;
 
 use Tk\Request;
 use Dom\Template;
-use Uni\Controller\Iface;
 
 /**
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Dashboard extends Iface
+class Dashboard extends \Bs\Controller\AdminIface
 {
     
     /**
@@ -19,9 +18,7 @@ class Dashboard extends Iface
     public function doDefault(Request $request)
     {
         $this->setPageTitle('Dashboard');
-        
-        
-        
+
     }
 
     /**

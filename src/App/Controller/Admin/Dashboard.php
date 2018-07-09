@@ -3,7 +3,7 @@ namespace App\Controller\Admin;
 
 use Tk\Request;
 use Dom\Template;
-use Uni\Controller\Iface;
+use Bs\Controller\AdminIface;
 
 /**
  *
@@ -12,19 +12,27 @@ use Uni\Controller\Iface;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Dashboard extends Iface
+class Dashboard extends AdminIface
 {
 
+    /**
+     * @throws \Exception
+     */
+    public function __construct()
+    {
+        $this->setPageTitle('Dashboard');
+        $this->getCrumbs()->reset();
+    }
 
     /**
-     *
      * @param Request $request
      * @return \Dom\Template|Template|string
      * @throws \Exception
      */
     public function doDefault(Request $request)
     {
-        $this->setPageTitle('Dashboard');
+        $this->getActionPanel()->setEnabled(false);
+
         
     }
 
