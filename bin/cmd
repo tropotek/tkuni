@@ -43,13 +43,14 @@ try {
 
     $app->setDispatcher($dispatcher);
     $app->add(new \App\Console\Cron());
-    $app->add(new \App\Console\Upgrade());
+    $app->add(new \Bs\Console\Upgrade());
 
     if ($config->isDebug()) {
-        $app->add(new \App\Console\Debug());
-        $app->add(new \App\Console\Mirror());
+        $app->add(new \Bs\Console\Debug());
+        $app->add(new \Bs\Console\Mirror());
         $app->add(new \App\Console\Test());
     }
+
 
     $app->run($input, $output);
 } catch (Exception $e) {

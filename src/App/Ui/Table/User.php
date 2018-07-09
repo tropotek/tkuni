@@ -43,8 +43,6 @@ class User extends \Dom\Renderer\Renderer
 
 
     /**
-     *  constructor.
-     *
      * @param int $institutionId
      * @param null|array|string $role
      * @param int $subjectId
@@ -62,33 +60,43 @@ class User extends \Dom\Renderer\Renderer
 
 
     /**
-     *
      * @return \Dom\Template|Template|string
      * @throws \Tk\Db\Exception
      * @throws \Exception
      */
     public function doDefault()
     {
-
         $this->table = new \Tk\Table('StaffList');
         $this->table->setRenderer(\Tk\Table\Renderer\Dom\Table::create($this->table));
-
 
         $this->actionsCell = new \Tk\Table\Cell\Actions();
         $this->actionsCell->addButton(\Tk\Table\Cell\ActionButton::create('Masquerade', \Tk\Uri::create(), 'fa  fa-user-secret', 'tk-masquerade'))
             ->setOnShow(function ($cell, $obj, $button) {
                 /* @var $obj \App\Db\User */
                 /* @var $button \Tk\Table\Cell\ActionButton */
-                if (\App\Listener\MasqueradeHandler::canMasqueradeAs(\App\Config::getInstance()->getUser(), $obj)) {
-                    $button->setUrl(\Uni\Uri::create()->set(\App\Listener\MasqueradeHandler::MSQ, $obj->getHash()));
+                if (\Uni\Listener\MasqueradeHandler::canMasqueradeAs(\App\Config::getInstance()->getUser(), $obj)) {
+                    $button->setUrl(\Uni\Uri::create()->set(\Uni\Listener\MasqueradeHandler::MSQ, $obj->getHash()));
                 }
             });
         $this->table->addCell($this->actionsCell);
         $this->table->addCell(new \Tk\Table\Cell\Text('name'))->addCss('key')->setUrl($this->editUrl);
 
-        if ($this->institutionId)
-            $this->table->addCell(new \App\Table\Cell\UserSubjects('subject', $this->institutionId));
 
+        //    $this->table->addCell(new \App\Table\Cell\UserSubjects('subject', $this->institutionId));
+        if ($this->institutionId) {
+            $this->table->addCell(new \Tk\Table\Cell\Text('subject'))
+                ->setOnPropertyValue(function ($csll, $obj, $value) {
+                    $list = \App\Db\SubjectMap::create()->findByUserId($obj->id, $this->institutionId, \Tk\Db\Tool::create('a.name'));
+                    $val = '';
+                    /** @var \App\Db\Subject $subject */
+                    foreach ($list as $subject) {
+                        $val .= $subject->code . ', ';
+                    }
+                    if ($val)
+                        $val = rtrim($val, ', ');
+                    return $val;
+                });
+        }
         $this->table->addCell(new \Tk\Table\Cell\Text('email'));
 
         if (!$this->role)
@@ -109,7 +117,7 @@ class User extends \Dom\Renderer\Renderer
         $filter['subjectId'] = $this->subjectId;
         $filter['role'] = $this->role;
 
-        $users = \App\Db\UserMap::create()->findFiltered($filter, $this->table->makeDbTool('a.name'));
+        $users = \App\Db\UserMap::create()->findFiltered($filter, $this->table->getTool('a.name'));
         $this->table->setList($users);
 
     }
