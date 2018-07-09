@@ -12,8 +12,7 @@
  * );
  */
 $config = \App\Config::getInstance();
-$routes = new \Tk\Routing\RouteCollection();
-$config['site.routes'] = $routes;
+$routes = $config->getRouteCollection();
 
 
 // Default Home catchall
@@ -34,7 +33,7 @@ $routes->add('register', new \Tk\Routing\Route('/register.html', 'App\Controller
 
 
 // Admin Pages
-$params = array('role' => \App\Db\User::ROLE_ADMIN);
+$params = array('role' => \Uni\Db\User::ROLE_ADMIN);
 $routes->add('admin-dashboard', new \Tk\Routing\Route('/admin/index.html', 'App\Controller\Admin\Dashboard::doDefault', $params));
 $routes->add('admin-dashboard-base', new \Tk\Routing\Route('/admin/', 'App\Controller\Admin\Dashboard::doDefault', $params));
 $routes->add('dev-events', new \Tk\Routing\Route('/admin/dev/events.html', 'App\Controller\Admin\Dev\SystemEvents::doDefault', $params));
@@ -42,7 +41,7 @@ $routes->add('dev-events', new \Tk\Routing\Route('/admin/dev/events.html', 'App\
 $routes->add('admin-institution-manager', new \Tk\Routing\Route('/admin/institutionManager.html', 'App\Controller\Institution\Manager::doDefault', $params));
 $routes->add('admin-institution-edit', new \Tk\Routing\Route('/admin/institutionEdit.html', 'App\Controller\Institution\Edit::doDefault', $params));
 $routes->add('admin-institution-plugin-manager', new \Tk\Routing\Route('/admin/{zoneName}/{zoneId}/plugins.html', 'App\Controller\PluginZoneManager::doDefault',
-    array('role' => \App\Db\User::ROLE_ADMIN, 'zoneName' => 'institution', 'zoneId' => '0') ));
+    array('role' => \Uni\Db\User::ROLE_ADMIN, 'zoneName' => 'institution', 'zoneId' => '0') ));
 
 $routes->add('admin-user-manager', new \Tk\Routing\Route('/admin/userManager.html', 'App\Controller\User\Manager::doDefault', $params));
 $routes->add('admin-user-edit', new \Tk\Routing\Route('/admin/userEdit.html', 'App\Controller\User\Edit::doDefault', $params));
@@ -53,7 +52,7 @@ $routes->add('admin-plugin-manager', new \Tk\Routing\Route('/admin/plugins.html'
 
 
 // Client Pages
-$params = array('role' => \App\Db\User::ROLE_CLIENT);
+$params = array('role' => \Uni\Db\User::ROLE_CLIENT);
 $routes->add('client-dashboard', new \Tk\Routing\Route('/client/index.html', 'App\Controller\Client\Dashboard::doDefault', $params));
 $routes->add('client-dashboard-base', new \Tk\Routing\Route('/client/', 'App\Controller\Client\Dashboard::doDefault', $params));
 
@@ -65,7 +64,7 @@ $routes->add('client-student-edit', new \Tk\Routing\Route('/client/studentEdit.h
 
 $routes->add('client-institution-edit', new \Tk\Routing\Route('/client/institutionEdit.html', 'App\Controller\Institution\Edit::doDefault', $params));
 $routes->add('client-institution-plugin-manager', new \Tk\Routing\Route('/client/{zoneName}/{zoneId}/plugins.html', 'App\Controller\PluginZoneManager::doDefault',
-    array('role' => \App\Db\User::ROLE_CLIENT, 'zoneName' => 'institution', 'zoneId' => '0') ));
+    array('role' => \Uni\Db\User::ROLE_CLIENT, 'zoneName' => 'institution', 'zoneId' => '0') ));
 
 $routes->add('client-subject-manager', new \Tk\Routing\Route('/client/subjectManager.html', 'App\Controller\Subject\Manager::doDefault', $params));
 $routes->add('client-subject-edit', new \Tk\Routing\Route('/client/subjectEdit.html', 'App\Controller\Subject\Edit::doDefault', $params));
@@ -75,7 +74,7 @@ $routes->add('client-subject-enrollment', new \Tk\Routing\Route('/client/subject
 
 
 // Staff Pages
-$params = array('role' => \App\Db\User::ROLE_STAFF);
+$params = array('role' => \Uni\Db\User::ROLE_STAFF);
 $routes->add('staff-dashboard', new \Tk\Routing\Route('/staff/index.html', 'App\Controller\Staff\Dashboard::doDefault', $params));
 $routes->add('staff-dashboard-base', new \Tk\Routing\Route('/staff/', 'App\Controller\Staff\Dashboard::doDefault', $params));
 
