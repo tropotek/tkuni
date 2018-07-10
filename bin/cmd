@@ -40,7 +40,6 @@ try {
     // Initiate the email gateway
     $config->getEmailGateway();
 
-
     $app->setDispatcher($dispatcher);
     $app->add(new \App\Console\Cron());
     $app->add(new \Bs\Console\Upgrade());
