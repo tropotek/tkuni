@@ -1,5 +1,8 @@
-
-
+-- ---------------------------------
+-- Install SQL
+-- 
+-- Author: Michael Mifsud <info@tropotek.com>
+-- ---------------------------------
 
 
 
@@ -15,12 +18,12 @@ VALUES
 ;
 
 INSERT INTO `institution` (`user_id`, `name`, `email`, `description`, `logo`, `active`, `hash`, `modified`, `created`)
-VALUES
-  (2, 'The University Of Melbourne', 'admin@unimelb.edu.au', 'This is a test institution for this app', '', 1, MD5('1'), NOW(), NOW())
+  VALUES
+    (2, 'The University Of Melbourne', 'admin@unimelb.edu.au', 'This is a test institution for this app', '', 1, MD5('1'), NOW(), NOW())
 ;
 
 INSERT INTO `subject` (`institution_id`, `name`, `code`, `email`, `description`, `date_start`, `date_end`, `modified`, `created`)
-VALUES (1, 'Poultry Industry Field Work', 'VETS50001_2014_SM1', 'subject@unimelb.edu.au', '',  NOW(), DATE_ADD(NOW(), INTERVAL 190 DAY), NOW(), NOW() )
+  VALUES (1, 'Poultry Industry Field Work', 'VETS50001_2014_SM1', 'subject@unimelb.edu.au', '',  NOW(), DATE_ADD(NOW(), INTERVAL 190 DAY), NOW(), NOW() )
 --  VALUES (1, 'Poultry Industry Field Work', 'VETS50001_2014_SM1', 'subject@unimelb.edu.au', '',  NOW(), DATE_ADD(CURRENT_DATETIME, INTERVAL 190 DAY), NOW(), NOW() )
 ;
 
@@ -38,7 +41,4 @@ VALUES
 
 -- Use this to upgrade the ems- to plg- naming convention if required
 -- UPDATE _plugin SET `name` = REPLACE(`name`, 'ems-', 'plg-');
--- UPDATE _plugin_zone SET `plugin_name` = REPLACE(`plugin_name`, 'ems-', 'plg-')
-
-
-
+-- UPDATE _plugin_zone SET `plugin_name` = REPLACE(`plugin_name`, 'ems-', 'plg-');
