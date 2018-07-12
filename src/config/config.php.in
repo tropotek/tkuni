@@ -31,7 +31,7 @@ $config['db.pass'] = 'password';
  * Enable logging of triggered events
  * Default: false
  */
-//$config['event.dispatcher.log'] = false;
+//$config['event.dispatcher.log'] = true;
 
 
 /*

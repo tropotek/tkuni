@@ -42,3 +42,4 @@ VALUES
 -- Use this to upgrade the ems- to plg- naming convention if required
 -- UPDATE _plugin SET `name` = REPLACE(`name`, 'ems-', 'plg-');
 -- UPDATE _plugin_zone SET `plugin_name` = REPLACE(`plugin_name`, 'ems-', 'plg-');
+
