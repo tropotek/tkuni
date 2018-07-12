@@ -6,10 +6,11 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
-
 set_time_limit(0);
+
 $input = new ArgvInput();
 $output = new ConsoleOutput();
+
 //Determine Environment
 $env = $input->getParameterOption(array('--env', '-e'), getenv('MYAPP_ENV') ?: 'prod');
 $app['environment'] = $env;
@@ -27,6 +28,7 @@ try {
     $config->setupDispatcher($dispatcher);
     $app->setDispatcher($dispatcher);
 
+    // Setup Console Commands
 
     $app->add(new \App\Console\Cron());
     $app->add(new \Bs\Console\Upgrade());

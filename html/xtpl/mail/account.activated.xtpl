@@ -12,15 +12,15 @@
       Your account has been successfully activated click here to <a href="{login-url}">login</a>.
     </p>
     <p>&nbsp;</p>
-    <hr/>
-    <p>
+    <hr />
+    <div class="footer">
       <p>
         {_ip}IP: {_ip}<br/>{/_ip}
         {_uri}URI: {_uri}<br/>{/_uri}
         {_referer}Referer: {_referer}<br/>{/_referer}
         {_user_agent}User Agent: {_user_agent}<br/>{/_user_agent}
       </p>
-    </p>
+    </div>
     
   </body>
 </html>

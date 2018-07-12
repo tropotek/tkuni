@@ -13,6 +13,10 @@ $config['db.name'] = 'table';
 $config['db.user'] = 'username';
 $config['db.pass'] = 'password';
 
+//$config['google.map.apikey'] = '';
+//$config['google.recaptcha.publicKey'] = '';
+//$config['google.recaptcha.privateKey'] = '';
+
 /*
  * Enable exception emails
  */

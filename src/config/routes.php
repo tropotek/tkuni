@@ -27,6 +27,7 @@ $routes->add('contact', new \Tk\Routing\Route('/contact.html', 'App\Controller\C
 $params = array('role' => \Uni\Db\User::ROLE_ADMIN);
 $routes->add('admin-dashboard', new \Tk\Routing\Route('/admin/index.html', 'App\Controller\Admin\Dashboard::doDefault', $params));
 $routes->add('admin-dashboard-base', new \Tk\Routing\Route('/admin/', 'App\Controller\Admin\Dashboard::doDefault', $params));
+$routes->add('admin-settings', new \Tk\Routing\Route('/admin/settings.html', 'App\Controller\Admin\Settings::doDefault', $params));
 
 
 // Client Pages

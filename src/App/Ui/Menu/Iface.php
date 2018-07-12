@@ -27,7 +27,7 @@ abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
     }
 
     /**
-     * @return \App\Db\User|\Uni\Db\UserIface
+     * @return \Uni\Db\User|\Uni\Db\UserIface
      */
     public function getUser()
     {
