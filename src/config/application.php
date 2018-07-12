@@ -23,7 +23,6 @@ $config = \App\Config::getInstance();
 //    'App Sql' => $config->getSrcPath() . '/config'
 //);
 
-vd($config['sql.migrate.list']);
 
 /*
  * Template folders for pages

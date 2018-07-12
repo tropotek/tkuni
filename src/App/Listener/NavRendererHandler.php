@@ -42,16 +42,16 @@ class NavRendererHandler implements Subscriber
     {
         $nav = null;
         switch ($role) {
-            case \Uni\Db\UserIface::ROLE_ADMIN:
+            case \Uni\Db\User::ROLE_ADMIN:
                 $nav = \App\Ui\Menu\AdminMenu::create();
                 break;
-            case \Uni\Db\UserIface::ROLE_CLIENT:
+            case \Uni\Db\User::ROLE_CLIENT:
                 $nav = \App\Ui\Menu\ClientMenu::create();
                 break;
-            case \Uni\Db\UserIface::ROLE_STAFF:
+            case \Uni\Db\User::ROLE_STAFF:
                 $nav = \App\Ui\Menu\StaffMenu::create();
                 break;
-            case \Uni\Db\UserIface::ROLE_STUDENT:
+            case \Uni\Db\User::ROLE_STUDENT:
                 $nav = \App\Ui\Menu\StudentMenu::create();
                 break;
         }

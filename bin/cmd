@@ -33,6 +33,7 @@ try {
     $config->setupDispatcher($dispatcher);
 
     $app->setDispatcher($dispatcher);
+
     $app->add(new \App\Console\Cron());
     $app->add(new \Bs\Console\Upgrade());
 
