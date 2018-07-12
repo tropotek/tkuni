@@ -24,19 +24,12 @@ try {
     }
     $dispatcher = new \Tk\Sym\EventDispatcher($log);
     $config->set('event.dispatcher', $dispatcher);
-
-    // Init the plugins
-    $config->getPluginFactory();
-    // Initiate the email gateway
-    $config->getEmailGateway();
-
     $config->setupDispatcher($dispatcher);
-
     $app->setDispatcher($dispatcher);
+
 
     $app->add(new \App\Console\Cron());
     $app->add(new \Bs\Console\Upgrade());
-
     if ($config->isDebug()) {
         $app->add(new \Bs\Console\Debug());
         $app->add(new \Bs\Console\Mirror());
