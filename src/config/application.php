@@ -17,11 +17,11 @@ $config = \App\Config::getInstance();
 /*
  * Setup what paths to check when migrating SQL
  */
-$config['sql.migrate.list'] = array(
-    'Lib Sql' => $config->getVendorPath() . '/ttek/tk-uni',
-    'Plugin Sql' => $config->getPluginPath(),
-    'App Sql' => $config->getSrcPath() . '/config'
-);
+//$config['sql.migrate.list'] = array(
+//    'Lib Sql' => $config->getVendorPath() . '/ttek/tk-uni',
+//    'Plugin Sql' => $config->getPluginPath(),
+//    'App Sql' => $config->getSrcPath() . '/config'
+//);
 
 
 /*
