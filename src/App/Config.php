@@ -19,8 +19,6 @@ class Config extends \Uni\Config
     public function setupDispatcher($dispatcher)
     {
         \App\Dispatch::create($dispatcher);
-
-        $dispatcher->addSubscriber(new \App\Listener\NavRendererHandler());
     }
 
 }

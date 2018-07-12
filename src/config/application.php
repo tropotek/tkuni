@@ -14,14 +14,6 @@ $config = \App\Config::getInstance();
  * Default app config values
  **************************************/
 
-/*
- * Setup what paths to check when migrating SQL
- */
-//$config['sql.migrate.list'] = array(
-//    'Lib Sql' => $config->getVendorPath() . '/ttek/tk-uni',
-//    'Plugin Sql' => $config->getPluginPath(),
-//    'App Sql' => $config->getSrcPath() . '/config'
-//);
 
 
 /*
