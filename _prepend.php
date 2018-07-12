@@ -11,7 +11,8 @@ $sitePath = dirname(__FILE__);
 /** @var \Composer\Autoload\ClassLoader $composer */
 $composer = include($sitePath . '/vendor/autoload.php');
 
-$config = \App\Config::create();
+$config = \App\Config::getInstance();
 \App\Bootstrap::execute();
+
 $config->set('composer', $composer);
 

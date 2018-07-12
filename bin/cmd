@@ -7,25 +7,15 @@ use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
 
-// Ensure only one instance running
-//exec("ps aux | grep " . basename(__FILE__), $output, $return);
-//if (count($output) > 3) exit();
 set_time_limit(0);
-
 $input = new ArgvInput();
 $output = new ConsoleOutput();
-
 //Determine Environment
 $env = $input->getParameterOption(array('--env', '-e'), getenv('MYAPP_ENV') ?: 'prod');
 $app['environment'] = $env;
 
 try {
-
     $config = \App\Config::getInstance();
-
-    if ($config->getSiteHost())
-      $_SERVER['HTTP_HOST'] = $config->getSiteHost();
-
     $app = new Application($config->get('site.title') , $config->get('system.info.version'));
 
     $log = null;
@@ -39,6 +29,8 @@ try {
     $config->getPluginFactory();
     // Initiate the email gateway
     $config->getEmailGateway();
+
+    $config->setupDispatcher($dispatcher);
 
     $app->setDispatcher($dispatcher);
     $app->add(new \App\Console\Cron());
