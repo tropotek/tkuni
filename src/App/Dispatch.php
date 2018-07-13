@@ -21,6 +21,8 @@ class Dispatch extends \Uni\Dispatch
         $dispatcher = $this->getDispatcher();
 
 
+        $dispatcher->addSubscriber(new \App\Listener\NavRendererHandler());
+        $dispatcher->addSubscriber(new \App\Listener\SubjectHandler());
     }
 
 }
