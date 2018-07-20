@@ -21,9 +21,12 @@ class NavRendererHandler implements Subscriber
         if ($controller instanceof \Bs\Controller\Iface) {
             /** @var \Uni\Page $page */
             $page = $controller->getPage();
+            $config = \App\Config::getInstance();
             $template = $page->getTemplate();
             if ($template->keyExists('var', 'nav')) {
-                $role = $controller->getRequest()->getAttribute('role');
+                $role = 'public';
+                if ($config->getUser())
+                    $role = $config->getUser()->role;
                 if (is_array($role)) $role = current($role);
                 $nav = $this->createNavbar($role);
                 if ($nav) {

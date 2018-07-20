@@ -22,8 +22,7 @@ class SubjectHandler implements Subscriber
      * for global accessibility.
      *
      * @param GetResponseEvent $event
-     * @throws \Tk\Db\Exception
-     * @throws \Tk\Exception
+     * @throws \Exception
      */
     public function onRequest(GetResponseEvent $event)
     {
