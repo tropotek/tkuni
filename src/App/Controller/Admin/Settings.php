@@ -5,7 +5,6 @@ use Tk\Request;
 use Tk\Form;
 use Tk\Form\Event;
 use Tk\Form\Field;
-use Bs\Controller\AdminIface;
 
 
 /**
@@ -13,7 +12,7 @@ use Bs\Controller\AdminIface;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Settings extends AdminIface
+class Settings extends \Uni\Controller\AdminIface
 {
 
     /**

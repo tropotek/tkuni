@@ -3,14 +3,13 @@ namespace App\Controller\Staff;
 
 use Tk\Request;
 use Dom\Template;
-use Bs\Controller\AdminIface;
 
 /**
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class SubjectDashboard extends AdminIface
+class SubjectDashboard extends \Uni\Controller\AdminIface
 {
 
     /**

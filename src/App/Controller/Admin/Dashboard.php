@@ -3,7 +3,6 @@ namespace App\Controller\Admin;
 
 use Tk\Request;
 use Dom\Template;
-use Bs\Controller\AdminIface;
 
 /**
  *
@@ -12,7 +11,7 @@ use Bs\Controller\AdminIface;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Dashboard extends AdminIface
+class Dashboard extends \Uni\Controller\AdminIface
 {
 
     /**

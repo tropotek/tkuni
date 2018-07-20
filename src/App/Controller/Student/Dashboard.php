@@ -9,7 +9,7 @@ use Dom\Template;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Dashboard extends \Bs\Controller\AdminIface
+class Dashboard extends \Uni\Controller\AdminIface
 {
     
     /**
