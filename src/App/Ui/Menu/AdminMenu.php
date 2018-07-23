@@ -17,13 +17,10 @@ class AdminMenu extends Iface
      */
     public function show()
     {
-        $template = $this->getTemplate();
+        $template = parent::show();
 
-        $template->insertText('username', $this->getUser()->getName());
 
-        if ($this->getConfig()->isDebug()) {
-            $template->setChoice('debug');
-        }
+
 
         return $template;
     }
@@ -46,7 +43,7 @@ class AdminMenu extends Iface
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/admin/index.html" var="siteTitle">Tk2Uni v2.0</a>
+      <a class="navbar-brand" href="/admin/index.html" var="siteTitle">System Administration</a>
     </div>
     <!-- /.navbar-header -->
 

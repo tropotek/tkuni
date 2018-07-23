@@ -18,6 +18,25 @@ abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
         return new static();
     }
 
+
+    /**
+     *
+     * @return \Dom\Template
+     */
+    public function show()
+    {
+        $template = $this->getTemplate();
+
+        $template->setText('site-title', $this->getConfig()->get('site.title'));
+        $template->insertText('username', $this->getUser()->getName());
+
+        if ($this->getConfig()->isDebug()) {
+            $template->setChoice('debug');
+        }
+
+        return $template;
+    }
+
     /**
      * @return \App\Config
      */

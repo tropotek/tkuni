@@ -17,9 +17,9 @@ class ClientMenu extends Iface
      */
     public function show()
     {
-        $template = $this->getTemplate();
+        $template = parent::show();
 
-        $template->insertText('username', $this->getUser()->getName());
+
 
         return $template;
     }
@@ -41,7 +41,7 @@ class ClientMenu extends Iface
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/client/index.html" var="siteTitle">Tk2Uni v2.0</a>
+      <a class="navbar-brand" href="/client/index.html" var="siteTitle">System Administration</a>
     </div>
     <!-- /.navbar-header -->
 
