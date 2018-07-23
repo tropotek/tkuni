@@ -11,13 +11,26 @@ use Dom\Template;
  */
 class Dashboard extends \Uni\Controller\AdminIface
 {
-    
+
+    /**
+     * Dashboard constructor.
+     * @throws \Exception
+     */
+    public function __construct()
+    {
+        $this->setPageTitle('Dashboard');
+        $this->getCrumbs()->setVisible(false);
+        $this->getActionPanel()->setVisible(false);
+        $this->getConfig()->unsetSubject();
+    }
+
     /**
      * @param Request $request
      */
     public function doDefault(Request $request)
     {
-        $this->setPageTitle('Dashboard');
+
+
 
     }
 

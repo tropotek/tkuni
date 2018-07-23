@@ -11,14 +11,25 @@ use Dom\Template;
  */
 class Dashboard extends \Uni\Controller\AdminIface
 {
+
+    /**
+     * Dashboard constructor.
+     * @throws \Exception
+     */
+    public function __construct()
+    {
+        $this->setPageTitle('Dashboard');
+        $this->getCrumbs()->setVisible(false);
+        $this->getActionPanel()->setVisible(false);
+        $this->getConfig()->unsetSubject();
+
+    }
     
     /**
      * @param Request $request
      */
     public function doDefault(Request $request)
     {
-        $this->setPageTitle('Dashboard');
-        
         
     }
 
@@ -36,13 +47,13 @@ class Dashboard extends \Uni\Controller\AdminIface
     <div class="panel-heading">
       <i class="fa fa-university fa-fw"></i> TODO
     </div>
-    <div class="panel-body ">
+    <div class="panel-body">
       Things the institution staff member should be able to do:
       <ul>
         <li>Edit profile</li>
         <li>Manage Subject setup and data</li>
         <li>Manage Student accounts</li>
-        <li>Manage student ssubject enrollments</li>
+        <li>Manage student subject enrollments</li>
       </ul>
     </div>
   </div>

@@ -14,15 +14,36 @@ class StaffMenu extends Iface
 
 
     /**
-     *
      * @return \Dom\Template
+     * @throws \Exception
      */
     public function show()
     {
         $template = $this->getTemplate();
 
         $template->insertText('username', $this->getUser()->getName());
+        $subject = $this->getConfig()->getSubject();
 
+        if($subject) {
+            $template->setAttr('subject-dashboard', 'href', \Uni\Uri::createSubjectUrl('/index.html', $subject));
+            $template->setChoice('subject');
+
+        } else {
+            $list = $this->getConfig()->getSubjectMapper()->findFiltered(array(
+                'userId' => $this->getUser()->getId(),
+                'active' => true
+            ), \Tk\Db\Tool::create('date_start DESC', 10));
+            if ($list->count()) {
+                foreach ($list as $i => $subject) {
+                    $url = \Uni\Uri::createSubjectUrl('/index.html', $subject);
+                    $r = $template->getRepeat('subject-item');
+                    $r->insertText('text', $subject->name);
+                    $r->setAttr('link', 'href', $url);
+                    $r->appendRepeat();
+                }
+                $template->setChoice('subject-list');
+            }
+        }
         return $template;
     }
 
@@ -64,9 +85,15 @@ class StaffMenu extends Iface
     <div class="navbar-default sidebar" role="navigation">
       <div class="sidebar-nav navbar-collapse">
         <ul class="nav" id="side-menu">
-          <li><a href="/staff/index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
-          <li><a href="/staff/subjectManager.html"><i class="fa fa-graduation-cap fa-fw"></i> Subjects</a></li>
-          <!--<li><a href="/staff/staffManager.html"><i class="fa fa-users fa-fw"></i> Staff</a></li>-->
+          <li choice="subject"><a href="/staff/index.html" var="subject-dashboard"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a></li>
+          
+          <li choice="subject"><a href="#"><i class="fa fa-fw fa-file "></i> Subject Item</a></li>
+          <li choice="subject"><a href="#"><i class="fa fa-fw fa-file "></i> Subject Item</a></li>
+          <li choice="subject"><a href="#"><i class="fa fa-fw fa-file "></i> Subject Item</a></li>
+          
+          <!-- Subject list -->
+          <li var="subject-item" repeat="subject-item"><a href="#" var="link"><i class="fa fa-file-text-o"></i> <span var="text"></span></a></li>
+          <li class="text-center active" var="subject-list-all" choice="subject-list"><a href="/student/subjectManager.html" var="managerUrl">All Subjects</a></li>
         </ul>
       </div>
     </div>

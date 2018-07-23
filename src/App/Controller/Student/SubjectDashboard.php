@@ -1,5 +1,5 @@
 <?php
-namespace App\Controller\Staff;
+namespace App\Controller\Student;
 
 use Tk\Request;
 use Dom\Template;
@@ -18,7 +18,7 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
     protected $subject = null;
 
     /**
-     * Iface constructor.
+     * SubjectDashboard constructor.
      * @throws \Exception
      */
     public function __construct()
@@ -28,6 +28,7 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
         //$this->getCrumbs()->setVisible(false);
         $this->getActionPanel()->setVisible(false);
     }
+
 
     /**
      * @param Request $request
@@ -50,6 +51,7 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
     {
         $template = parent::show();
 
+        $template->insertText('code', $this->subject->getCode());
 
         return $template;
     }
@@ -59,7 +61,6 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
      * DomTemplate magic method
      *
      * @return Template
-     * @throws \Dom\Exception
      */
     public function __makeTemplate()
     {
@@ -74,7 +75,7 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
       
     </div>
   </div>
-  
+
 </div>
 HTML;
 

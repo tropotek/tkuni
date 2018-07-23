@@ -36,12 +36,13 @@ $routes->add('client-dashboard-base', new \Tk\Routing\Route('/client/', 'App\Con
 // Staff Pages
 $routes->add('staff-dashboard', new \Tk\Routing\Route('/staff/index.html', 'App\Controller\Staff\Dashboard::doDefault'));
 $routes->add('staff-dashboard-base', new \Tk\Routing\Route('/staff/', 'App\Controller\Staff\Dashboard::doDefault'));
-
+$routes->add('staff-subject-dashboard', new \Tk\Routing\Route('/staff/{subjectCode}/index.html', 'App\Controller\Staff\SubjectDashboard::doDefault'));
 
 
 // Student Pages
 $routes->add('student-dashboard', new \Tk\Routing\Route('/student/index.html', 'App\Controller\Student\Dashboard::doDefault'));
 $routes->add('student-dashboard-base', new \Tk\Routing\Route('/student/', 'App\Controller\Student\Dashboard::doDefault'));
+$routes->add('student-subject-dashboard', new \Tk\Routing\Route('/student/{subjectCode}/index.html', 'App\Controller\Student\SubjectDashboard::doDefault'));
 
 
 
