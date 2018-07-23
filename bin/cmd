@@ -32,6 +32,9 @@ try {
 
     $app->add(new \App\Console\Cron());
     $app->add(new \Bs\Console\Upgrade());
+    $app->add(new \Bs\Console\MakeModel());
+    $app->add(new \Bs\Console\MakeTable());
+    $app->add(new \Bs\Console\MakeForm());
     if ($config->isDebug()) {
         $app->add(new \Bs\Console\Debug());
         $app->add(new \Bs\Console\Mirror());
