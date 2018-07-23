@@ -21,16 +21,12 @@ class StudentMenu extends Iface
     {
         $template = parent::show();
 
-
-
-        $subject = $this->getConfig()->getSubject();
-        if($subject) {
+        if($this->getConfig()->isSubjectUrl()) {
+            $subject = $this->getConfig()->getSubject();
             $template->setAttr('subject-dashboard', 'href', \Uni\Uri::createSubjectUrl('/index.html', $subject));
             $template->setText('subject-name', $subject->code);
             $template->setChoice('subject');
-
         }
-
 
         return $template;
     }
