@@ -3,15 +3,12 @@ namespace App\Ui\Menu;
 
 
 /**
- * Class StaffMenu
- *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  */
 class StaffMenu extends Iface
 {
-
 
     /**
      * @return \Dom\Template
