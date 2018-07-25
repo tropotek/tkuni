@@ -3,11 +3,9 @@ namespace App\Ui\Menu;
 
 
 /**
- * Class StudentMenu
- *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
- * @license Copyright 2016 Michael Mifsud
+ * @license Copyright 2018 Michael Mifsud
  */
 class StudentMenu extends Iface
 {
@@ -21,12 +19,12 @@ class StudentMenu extends Iface
     {
         $template = parent::show();
 
-        if($this->getConfig()->isSubjectUrl()) {
-            $subject = $this->getConfig()->getSubject();
-            $template->setAttr('subject-dashboard', 'href', \Uni\Uri::createSubjectUrl('/index.html', $subject));
-            $template->setText('subject-name', $subject->code);
-            $template->setChoice('subject');
-        }
+//        if($this->getConfig()->isSubjectUrl()) {
+//            $subject = $this->getConfig()->getSubject();
+//            $template->setAttr('subject-dashboard', 'href', \Uni\Uri::createSubjectUrl('/index.html', $subject));
+//            $template->setText('subject-name', $subject->code);
+//            $template->setChoice('subject');
+//        }
 
         return $template;
     }
@@ -73,7 +71,6 @@ class StudentMenu extends Iface
           <li choice="subject"><a href="#"><i class="fa fa-cogs fa-fw"></i> <span var="subject-name">Subject</span> <span class="fa arrow"></span></a>
             <ul class="nav nav-second-level" var="subject-menu">
               <li><a href="/index.html" var="subject-dashboard"><i class="fa fa-fw fa-dashboard"></i> Subject Dashboard</a></li>
-              
             </ul>
           </li>
         

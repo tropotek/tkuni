@@ -2,10 +2,10 @@
 namespace App\Ui\Menu;
 
 
-
-
 /**
- * Class AdminMenu
+ * @author Michael Mifsud <info@tropotek.com>
+ * @link http://www.tropotek.com/
+ * @license Copyright 2018 Michael Mifsud
  */
 class AdminMenu extends Iface
 {
