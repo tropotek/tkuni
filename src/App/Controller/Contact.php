@@ -1,8 +1,6 @@
 <?php
 namespace App\Controller;
 
-use Tk\Request;
-use Tk\Form;
 use Tk\Form\Event;
 use Tk\Form\Field;
 

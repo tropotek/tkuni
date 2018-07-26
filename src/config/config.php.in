@@ -48,10 +48,10 @@ if ($config->isDebug()) {
     $config['live.db'] = array(
         'type' => 'mysql',
         'host' => 'localhost',
-        'name' => 'ems_live',
-        'user' => 'ems',
+        'name' => 'live_site',
+        'user' => 'username',
         'pass' => ''
     );
-    $config['live.data.path'] = 'user@252s-live.vet.unimelb.edu.au:/home/user/public_html/data';
+    $config['live.data.path'] = 'user@example.edu.au:/home/user/public_html/data';
 }
 

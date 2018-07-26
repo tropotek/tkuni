@@ -3,25 +3,28 @@ namespace App\Ui\Menu;
 
 
 /**
- * Class StudentMenu
- *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
- * @license Copyright 2016 Michael Mifsud
+ * @license Copyright 2018 Michael Mifsud
  */
 class StudentMenu extends Iface
 {
 
 
     /**
-     *
      * @return \Dom\Template
+     * @throws \Exception
      */
     public function show()
     {
-        $template = $this->getTemplate();
+        $template = parent::show();
 
-        $template->insertText('username', $this->getUser()->getName());
+//        if($this->getConfig()->isSubjectUrl()) {
+//            $subject = $this->getConfig()->getSubject();
+//            $template->setAttr('subject-dashboard', 'href', \Uni\Uri::createSubjectUrl('/index.html', $subject));
+//            $template->setText('subject-name', $subject->code);
+//            $template->setChoice('subject');
+//        }
 
         return $template;
     }
@@ -43,28 +46,34 @@ class StudentMenu extends Iface
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/student/index.html" var="siteTitle">Tk2Uni v2.0</a>
+      <a class="navbar-brand" href="/student/index.html" var="site-title">Student</a>
     </div>
     <!-- /.navbar-header -->
 
     <ul class="nav navbar-top-links navbar-right">
       <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-          <i class="fa fa-user fa-fw"></i> <span var="username">Admin</span> <i class="fa fa-caret-down"></i>
+          <i class="fa fa-fw fa-user"></i> <span var="username">Admin</span> <i class="fa fa-caret-down"></i>
         </a>
         <ul class="dropdown-menu dropdown-user">
-          <li><a href="/student/profile.html"><i class="fa fa-user fa-fw"></i> My Profile</a></li>
+          <li><a href="/student/profile.html"><i class="fa fa-fw fa-user"></i> My Profile</a></li>
           <li class="divider"></li>
-          <li><a href="/logout.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
+          <li><a href="/logout.html"><i class="fa fa-fw fa-sign-out"></i> Logout</a></li>
         </ul>
       </li>
     </ul>
 
     <div class="navbar-default sidebar" role="navigation">
       <div class="sidebar-nav navbar-collapse">
-        <ul class="nav" id="side-menu">
-          <li><a href="/student/index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
-          <!-- li><a href="/student/subjectManager.html"><i class="fa fa-university fa-fw"></i> Subjects</a></li -->
+        <ul class="nav" id="side-menu" var="side-menu">
+          <li><a href="/student/index.html"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a></li>
+        
+          <li choice="subject"><a href="#"><i class="fa fa-cogs fa-fw"></i> <span var="subject-name">Subject</span> <span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level" var="subject-menu">
+              <li><a href="/index.html" var="subject-dashboard"><i class="fa fa-fw fa-dashboard"></i> Subject Dashboard</a></li>
+            </ul>
+          </li>
+        
         </ul>
       </div>
     </div>

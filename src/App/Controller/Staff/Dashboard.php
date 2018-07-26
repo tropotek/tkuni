@@ -11,15 +11,47 @@ use Dom\Template;
  */
 class Dashboard extends \Uni\Controller\AdminIface
 {
-    
+
+    /**
+     * @var \Uni\Ui\Table\Subject
+     */
+    protected $subjectTable = null;
+
+    /**
+     * Dashboard constructor.
+     * @throws \Exception
+     */
+    public function __construct()
+    {
+        $this->setPageTitle('Dashboard');
+        $this->getCrumbs()->setVisible(false);
+        $this->getActionPanel()->setVisible(false);
+        $this->getConfig()->unsetSubject();
+
+    }
+
     /**
      * @param Request $request
+     * @throws \Exception
      */
     public function doDefault(Request $request)
     {
-        $this->setPageTitle('Dashboard');
-        
-        
+        $this->subjectTable = new \Uni\Ui\Table\Subject($this->getConfig()->getInstitutionId(), function ($cell, $obj, $value) {
+            $url = \Uni\Uri::createSubjectUrl('/index.html', $obj);
+            $cell->setUrl($url);
+            return $value;
+        }, $this->getUser());
+
+
+    }
+
+    public function show()
+    {
+        $template = parent::show();
+
+        $template->insertTemplate('table', $this->subjectTable->show());
+
+        return $template;
     }
 
     /**
@@ -34,16 +66,10 @@ class Dashboard extends \Uni\Controller\AdminIface
 
   <div class="panel panel-default">
     <div class="panel-heading">
-      <i class="fa fa-university fa-fw"></i> TODO
+      <i class="fa fa-university fa-fw"></i> Subject List
     </div>
-    <div class="panel-body ">
-      Things the institution staff member should be able to do:
-      <ul>
-        <li>Edit profile</li>
-        <li>Manage Subject setup and data</li>
-        <li>Manage Student accounts</li>
-        <li>Manage student ssubject enrollments</li>
-      </ul>
+    <div class="panel-body">
+      <div var="table"></div>
     </div>
   </div>
 

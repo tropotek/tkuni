@@ -9,26 +9,26 @@ use Dom\Template;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Dashboard extends \Uni\Controller\AdminIface
+class SubjectDashboard extends \Uni\Controller\AdminIface
 {
 
     /**
-     * @var \Uni\Ui\Table\Subject
+     * @var null|\Uni\Db\Subject
      */
-    protected $subjectTable = null;
+    protected $subject = null;
 
     /**
-     * Dashboard constructor.
+     * SubjectDashboard constructor.
      * @throws \Exception
      */
     public function __construct()
     {
-        $this->setPageTitle('Dashboard');
-        $this->getCrumbs()->setVisible(false);
+        $this->subject = $this->getConfig()->getSubject();
+        $this->setPageTitle($this->subject->name);
+        //$this->getCrumbs()->setVisible(false);
         $this->getActionPanel()->setVisible(false);
-        $this->getConfig()->unsetSubject();
-
     }
+
 
     /**
      * @param Request $request
@@ -36,23 +36,26 @@ class Dashboard extends \Uni\Controller\AdminIface
      */
     public function doDefault(Request $request)
     {
-        $this->subjectTable = new \Uni\Ui\Table\Subject($this->getConfig()->getInstitutionId(), function ($cell, $obj, $value) {
-            $url = \Uni\Uri::createSubjectUrl('/index.html', $obj);
-            $cell->setUrl($url);
-            return $value;
-        }, $this->getUser());
-
-
+        $subject = $this->getConfig()->getSubject();
+        if ($subject) {
+            $this->setPageTitle($subject->name);
+            $this->getTemplate()->insertText('code', $subject->code);
+        }
     }
 
+    /**
+     * @return \Dom\Template
+     * @throws \Exception
+     */
     public function show()
     {
         $template = parent::show();
 
-        $template->insertTemplate('table', $this->subjectTable->show());
+        $template->insertText('code', $this->subject->getCode());
 
         return $template;
     }
+
 
     /**
      * DomTemplate magic method
@@ -62,14 +65,14 @@ class Dashboard extends \Uni\Controller\AdminIface
     public function __makeTemplate()
     {
         $xhtml = <<<HTML
-<div class="">
+<div>
 
   <div class="panel panel-default">
-    <div class="panel-heading">
-      <i class="fa fa-university fa-fw"></i> Subject List
-    </div>
+    <div class="panel-heading"><i class="fa fa-fw fa-institution"></i> <span var="code">Subject Dashboard</span></div>
     <div class="panel-body">
-      <div var="table"></div>
+      
+      <p>&nbsp;</p>
+      
     </div>
   </div>
 
