@@ -3,9 +3,11 @@ namespace App\Ui\Menu;
 
 
 /**
+ * Class ClientMenu
+ *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
- * @license Copyright 2018 Michael Mifsud
+ * @license Copyright 2016 Michael Mifsud
  */
 class ClientMenu extends Iface
 {
@@ -46,12 +48,12 @@ class ClientMenu extends Iface
     <ul class="nav navbar-top-links navbar-right">
       <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-          <i class="fa fa-user fa-fw"></i> <span var="username">Admin</span> <i class="fa fa-caret-down"></i>
+          <i class="fa fa-fw fa-user"></i> <span var="username">Admin</span> <i class="fa fa-caret-down"></i>
         </a>
         <ul class="dropdown-menu dropdown-user">
-          <li><a href="/client/profile.html"><i class="fa fa-user fa-fw"></i> My Profile</a></li>
+          <li><a href="/client/profile.html"><i class="fa fa-fw fa-user"></i> My Profile</a></li>
           <li class="divider"></li>
-          <li><a href="/logout.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
+          <li><a href="/logout.html"><i class="fa fa-fw fa-sign-out"></i> Logout</a></li>
         </ul>
       </li>
     </ul>
@@ -59,10 +61,8 @@ class ClientMenu extends Iface
     <div class="navbar-default sidebar" role="navigation">
       <div class="sidebar-nav navbar-collapse">
         <ul class="nav" id="side-menu">
-          <li><a href="/client/index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
-          <li><a href="/client/institutionEdit.html"><i class="fa fa-university fa-fw"></i> Institution</a></li>
-          <li><a href="/client/subjectManager.html"><i class="fa fa-graduation-cap fa-fw"></i> Subjects</a></li>
-          <li><a href="/client/staffManager.html"><i class="fa fa-group fa-fw"></i> Staff</a></li>
+          <li><a href="/client/index.html"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a></li>
+          <li><a href="/client/settings.html"><i class="fa fa-fw fa-cogs"></i> Settings</a></li>
         </ul>
       </div>
     </div>

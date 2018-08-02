@@ -15,7 +15,7 @@ VALUES
   (2, 'The University Of Melbourne', 'admin@unimelb.edu.au', 'This is a test institution for this app', '', 1, MD5('1'), NOW(), NOW())
 ;
 
-INSERT INTO `user` (`roleId`, `institution_id`, `username`, `password` ,`name`, `email`, `active`, `hash`, `modified`, `created`)
+INSERT INTO `user` (`role_id`, `institution_id`, `username`, `password` ,`name`, `email`, `active`, `hash`, `modified`, `created`)
 VALUES
   (1, NULL, 'admin', MD5(CONCAT('password', MD5('10admin'))), 'Administrator', 'admin@example.com', 1, MD5('10admin'), NOW(), NOW()),
   (2, NULL, 'unimelb', MD5(CONCAT('password', MD5('20unimelb'))), 'Unimelb Client', 'fvas@unimelb.edu.au', 1, MD5('20unimelb'), NOW(), NOW()),
