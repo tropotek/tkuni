@@ -26,7 +26,7 @@ class NavRendererHandler implements Subscriber
             if ($template->keyExists('var', 'nav')) {
                 $role = 'public';
                 if ($config->getUser())
-                    $role = $config->getUser()->role;
+                    $role = $config->getUser()->getRoleType();
                 if (is_array($role)) $role = current($role);
                 $nav = $this->createNavbar($role);
                 if ($nav) {
@@ -45,16 +45,16 @@ class NavRendererHandler implements Subscriber
     {
         $nav = null;
         switch ($role) {
-            case \Uni\Db\User::ROLE_ADMIN:
+            case \Uni\Db\Role::TYPE_ADMIN:
                 $nav = \App\Ui\Menu\AdminMenu::create();
                 break;
-            case \Uni\Db\User::ROLE_CLIENT:
+            case \Uni\Db\Role::TYPE_CLIENT:
                 $nav = \App\Ui\Menu\ClientMenu::create();
                 break;
-            case \Uni\Db\User::ROLE_STAFF:
+            case \Uni\Db\Role::TYPE_STAFF:
                 $nav = \App\Ui\Menu\StaffMenu::create();
                 break;
-            case \Uni\Db\User::ROLE_STUDENT:
+            case \Uni\Db\Role::TYPE_STUDENT:
                 $nav = \App\Ui\Menu\StudentMenu::create();
                 break;
         }

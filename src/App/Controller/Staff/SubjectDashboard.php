@@ -17,6 +17,9 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
      */
     protected $subject = null;
 
+
+
+
     /**
      * Iface constructor.
      * @throws \Exception
@@ -35,11 +38,8 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
      */
     public function doDefault(Request $request)
     {
-        $subject = $this->getConfig()->getSubject();
-        if ($subject) {
-            $this->setPageTitle($subject->name);
-            $this->getTemplate()->insertText('code', $subject->code);
-        }
+        $this->setPageTitle('');
+
     }
 
     /**
@@ -50,6 +50,14 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
     {
         $template = parent::show();
 
+        $subject = $this->getConfig()->getSubject();
+        if ($subject) {
+            $template->insertText('code', $subject->code);
+        }
+        $url = \Uni\Uri::create('/');
+        $subjectUserList = new \Uni\Ui\Table\User($this->getConfig()->getInstitutionId(), null, $this->getConfig()->getSubjectId(), $url);
+        $template->appendTemplate('table', $subjectUserList->show());
+
 
         return $template;
     }
@@ -59,7 +67,6 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
      * DomTemplate magic method
      *
      * @return Template
-     * @throws \Dom\Exception
      */
     public function __makeTemplate()
     {
@@ -67,10 +74,10 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
 <div>
 
   <div class="panel panel-default">
-    <div class="panel-heading"><i class="fa fa-fw fa-institution"></i> <span var="code">Subject Dashboard</span></div>
+    <div class="panel-heading"><i class="fa fa-fw fa-institution"></i> <span var="code"></span> Users</div>
     <div class="panel-body">
       
-      <p>&nbsp;</p>
+      <div var="table"></div>
       
     </div>
   </div>
