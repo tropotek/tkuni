@@ -53,7 +53,7 @@ class AdminMenu extends Iface
           <i class="fa fa-user fa-fw"></i> <span var="username">Admin</span> <i class="fa fa-caret-down"></i>
         </a>
         <ul class="dropdown-menu dropdown-user">
-          <li><a href="/index.html"><i class="fa fa-home fa-fw"></i> Site Home</a></li>
+          <li><a href="/index.html" target="_blank"><i class="fa fa-home fa-fw"></i> Site Home</a></li>
           <li><a href="/admin/profile.html"><i class="fa fa-user fa-fw"></i> My Profile</a></li>
           <li><a href="/admin/settings.html"><i class="fa fa-gear fa-fw"></i> Settings</a></li>
           <li class="divider"></li>
@@ -76,7 +76,7 @@ class AdminMenu extends Iface
           
           <li choice="debug"><a href="#"><i class="fa fa-bug fa-fw"></i> Development<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">
-              <li choice="debug"><a href="/admin/dev/events.html"><i class="fa fa-empire fa-fw"></i> Events</a></li>
+              <li choice="debug"><a href="/admin/dev/dispatcherEvents.html"><i class="fa fa-empire fa-fw"></i> Events</a></li>
             </ul>
           </li>
           
