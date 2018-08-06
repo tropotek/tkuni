@@ -1,6 +1,5 @@
 <?php
-
-/* 
+/*
  * NOTE: Be sure to add routes in correct order as the first match will win
  * 
  * Route Structure
@@ -11,6 +10,7 @@
  *     array('GET', 'POST', 'HEAD')     // methods
  * );
  */
+
 $config = \App\Config::getInstance();
 $routes = $config->getRouteCollection();
 if (!$routes) return;
