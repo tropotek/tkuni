@@ -10,7 +10,6 @@ namespace App\Ui\Menu;
 class StaffMenu extends Iface
 {
 
-
     /**
      * @return \Dom\Template
      * @throws \Exception
@@ -36,7 +35,6 @@ class StaffMenu extends Iface
 
         return $template;
     }
-
 
     /**
      * DomTemplate magic method
