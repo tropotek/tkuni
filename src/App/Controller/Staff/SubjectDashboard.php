@@ -17,7 +17,10 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
      */
     protected $subject = null;
 
-
+    /**
+     * @var \Uni\Table\User
+     */
+    protected $userTable = null;
 
 
     /**
@@ -40,6 +43,14 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
     {
         $this->setPageTitle('');
 
+        $this->userTable = \Uni\Table\User::create()->init();
+        $this->userTable->findCell('name')->setUrl(\Uni\Uri::createSubjectUrl('/studentEdit.html'));
+        $filter = array();
+        $filter['institutionId'] = $this->getConfig()->getInstitutionId();
+        $filter['subjectId'] = $this->getConfig()->getSubjectId();
+        $filter['type'] = \Uni\Db\Role::TYPE_STUDENT;
+        $this->userTable->setList($this->userTable->findList($filter));
+
     }
 
     /**
@@ -49,15 +60,9 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
     public function show()
     {
         $template = parent::show();
+        $template->insertText('code', $this->getConfig()->getSubject()->code);
 
-        $subject = $this->getConfig()->getSubject();
-        if ($subject) {
-            $template->insertText('code', $subject->code);
-        }
-        $url = \Uni\Uri::create('/');
-        $subjectUserList = new \Uni\Ui\Table\User($this->getConfig()->getInstitutionId(), null, $this->getConfig()->getSubjectId(), $url);
-        $template->appendTemplate('table', $subjectUserList->show());
-
+        $template->appendTemplate('table', $this->userTable->getRenderer()->show());
 
         return $template;
     }
@@ -74,7 +79,7 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
 <div>
 
   <div class="panel panel-default">
-    <div class="panel-heading"><i class="fa fa-fw fa-institution"></i> <span var="code"></span> Users</div>
+    <div class="panel-heading"><i class="fa fa-fw fa-institution"></i> <span var="code"></span> Student List</div>
     <div class="panel-body">
       
       <div var="table"></div>

@@ -45,7 +45,6 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
 
     /**
      * @return \Dom\Template
-     * @throws \Exception
      */
     public function show()
     {

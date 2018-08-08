@@ -19,7 +19,6 @@ if (!$routes) return;
 // Default Home catchall
 $routes->add('home', new \Tk\Routing\Route('/index.html', 'App\Controller\Index::doDefault'));
 $routes->add('home-base', new \Tk\Routing\Route('/', 'App\Controller\Index::doDefault'));
-$routes->add('contact', new \Tk\Routing\Route('/contact.html', 'App\Controller\Contact::doDefault'));
 
 
 // Admin Pages
