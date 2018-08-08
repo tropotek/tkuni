@@ -76,9 +76,9 @@ class StaffMenu extends Iface
       <div class="sidebar-nav navbar-collapse">
         <ul class="nav" id="side-menu">
           <li><a href="/staff/index.html"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a></li>
-          <li choice="manage.subject"><a href="/staff/subjectEdit.html"><i class="fa fa-fw fa-graduation-cap"></i> Create Subject</a></li>
-          <li choice="manage.roles"><a href="/staff/roleManager.html"><i class="fa fa-fw fa-id-card"></i> Roles</a></li>
-          <li choice="manage.staff"><a href="/staff/staffManager.html"><i class="fa fa-fw fa-user-md"></i> Staff</a></li>
+          <li choice="perm.manage.subject"><a href="/staff/subjectEdit.html"><i class="fa fa-fw fa-graduation-cap"></i> Create Subject</a></li>
+          <li choice="perm.manage.roles"><a href="/staff/roleManager.html"><i class="fa fa-fw fa-id-card"></i> Roles</a></li>
+          <li choice="perm.manage.staff"><a href="/staff/staffManager.html"><i class="fa fa-fw fa-user-md"></i> Staff</a></li>
 
           <li choice="subject"><a href="#"><i class="fa fa-cogs fa-fw"></i> <span var="subject-name">Subject</span> <span class="fa arrow"></span></a>
             <ul class="nav nav-second-level" var="subject-menu">
