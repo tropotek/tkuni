@@ -1,0 +1,270 @@
+/* ERROR PAGE */
+#error-page {
+	background-color: #eeeeee;
+}
+#error-box {
+	min-width: 280px;
+	text-align: center;
+	margin: 40px auto 20px;
+
+	h1 {
+		margin-top: 40px;
+		color: #605f5f;
+		padding: 0;
+	}
+	p {
+		margin: 20px 0;
+	}
+}
+
+/* PACE PRELOADER */
+.pace {
+	-webkit-pointer-events: none;
+	pointer-events: none;
+
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+}
+.pace-inactive {
+	display: none;
+}
+.pace .pace-progress {
+	background: #ffffff;
+	position: fixed;
+	z-index: 2000;
+	top: 0;
+	right: 100%;
+	width: 100%;
+	height: 2px;
+}
+
+
+.daterange-filter {
+	background: none repeat scroll 0 0 #FFFFFF;
+	border: 1px solid #CCCCCC;
+	cursor: pointer;
+	padding: 5px 10px;
+}
+.main-box-header .daterange-filter {
+	margin-top: 7px;
+	margin-bottom: 7px;
+}
+.filter-block {
+	margin-top: 7px;
+
+	@media only screen and (max-width: 440px) {
+		float: none !important;
+		clear: both
+	}
+
+	.form-group {
+		margin-right: 10px;
+		position: relative;
+
+		@media only screen and (max-width: 440px) {
+			float: none !important;
+			margin-right: 0;
+		}
+	
+		.form-control {
+			height: 34px;
+		}
+		.search-icon {
+			position: absolute;
+			color: #707070;
+			right: 8px;
+			top: 11px;
+		}
+	}
+	.btn {
+		margin-left: 5px;
+
+		@media only screen and (max-width: 440px) {
+			display: block;
+			float: none !important;
+			margin-bottom: 15px;
+			margin-left: 0;
+		}
+	}
+}
+#reportrange {
+	@media only screen and (max-width: 440px) {
+		clear: both;
+		float: none !important;
+		margin-bottom: 15px;
+	}
+}
+
+.the-icons {
+	font-size: 0.875em;
+	line-height: 2;
+
+	.glyphicon {
+		width: 30px;
+		text-align: center;
+	}
+}
+.tabs-wrapper {
+	.nav-tabs {
+	    margin-bottom: 15px;
+	}
+	.tab-content {
+		margin-bottom: 20px;
+	    padding: 0 10px;
+	}
+}
+.dropdown-example ul.dropdown-menu {
+	display: block;
+}
+svg {
+	width: 100% !important;
+}
+
+.top-page-ui {
+	margin-top: -10px;
+}
+
+//Summernote panel override
+.note-editor.panel-default > .panel-heading {
+    color: #333;
+    background-color: #f5f5f5 !important;
+    border-color: #ddd !important;
+    border-top-left-radius: 3px !important;
+    border-top-right-radius: 3px !important;
+}
+
+//clockpicker
+.btn.btn-secondary.clockpicker-button {
+	color: #333;
+	border-top: 1px solid #ccc;
+
+	&:hover {
+		color: #333;
+	}
+}
+
+/* DROPZONE */
+.dropzone-wrapper {
+	margin-bottom: 3rem;
+
+	.dropzone {
+		border: 2px dashed $primary-color;
+		border-radius: 5px;
+		background: white; 
+		padding: 54px;
+	
+		.dz-message {
+			font-weight: 400; 
+			font-size: 1.5em;
+
+			.note {
+				font-size: 0.8em;
+				font-weight: 200;
+				display: block;
+				margin-top: 1.4rem; 
+			}
+		}
+	}
+}
+
+//Callout box design
+.main-box {
+	.pagecallout {
+	    padding: 20px;
+	    margin: 15px 0;
+	    border: 1px solid $main-bg-color;
+	    border-left-width: 5px;
+	    border-radius: $border-radius-base;
+
+	    h4 {
+
+	    }
+
+	    &.pagecallout-info {
+		    border-left-color: $primary-color;
+		}
+	}
+}
+
+//jvectormap styling
+.jvectormap-container {
+	.jvectormap-label {
+	    position: absolute;
+	    display: none;
+	    -webkit-border-radius: 3px;
+	    -moz-border-radius: 3px;
+	    border-radius: 3px;
+	    background: #292929;
+	    color: white;
+	    font-size: smaller;
+	    padding: 3px;
+	}
+	.jvectormap-zoomin, 
+	.jvectormap-zoomout {
+	    position: absolute;
+		left: 10px;
+		background: #fff;
+		border: 1px solid #e1e1e1;
+		color: #3498db;
+		cursor: pointer;
+		text-align: center;
+		height: 16px;
+		line-height: 16px;
+		font-weight: bold;
+		width: 16px;
+		font-size: 0.75em;
+	}
+	.jvectormap-zoomin {
+	    top: 10px;
+	    border-radius: 3px 3px 0 0;
+	}
+	.jvectormap-zoomout {
+	    top: 33px;
+	    border-radius: 0 0 3px 3px;
+	}
+	.jvectormap-zoomin:hover, 
+	.jvectormap-zoomout:hover {
+		background-color: #eeeeee;
+	}
+}
+
+.daterangepicker .calendar th, 
+.daterangepicker .calendar td {
+	padding: 5px;
+}
+
+//NOTIFICATIONS AND ALERTS
+.ns-box {
+	.ns-box-inner {
+		a {
+			color: #fff;
+
+			&:hover {
+				color: #fff;
+			}
+		}
+	}
+}
+
+//X-editable
+.editableform {
+	.editable-buttons {
+		padding-top: 4px;
+	}
+	.has-error {
+		.editable-error-block {
+			padding-left: 7px;
+		}
+	}
+	.editable-checklist {
+		label {
+			display: block;
+		}
+	}
+}
+
+//Select2
+.select2-container {
+	max-width: 100%;
+}

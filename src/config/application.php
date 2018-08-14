@@ -20,10 +20,28 @@ $config = \App\Config::getInstance();
  * Template folders for pages
  */
 $config['system.template.path'] = '/html';
-$config['template.admin']     = $config['system.template.path'] . '/admin/admin.html';
-$config['template.client']    = $config['system.template.path'] . '/admin/admin.html';
-$config['template.staff']     = $config['system.template.path'] . '/admin/admin.html';
-$config['template.student']   = $config['system.template.path'] . '/admin/admin.html';
-$config['template.public']    = $config['system.template.path'] . '/admin/public.html';
+
+$config['system.theme.admin']   = $config['system.template.path'] . '/admin';
+$config['system.theme.admin']   = $config['system.template.path'] . '/cube';
+
+$config['template.admin']       = $config['system.theme.admin'].'/admin.html';
+$config['template.client']      = $config['system.theme.admin'].'/client.html';
+$config['template.staff']       = $config['system.theme.admin'].'/staff.html';
+$config['template.student']     = $config['system.theme.admin'].'/student.html';
+
+$config['template.error']       = $config['system.theme.admin'] . '/error.html';
+$config['template.login']       = $config['system.theme.admin'] . '/login.html';
+
+
+
+
+
+
+/* **********************************************
+ *  Common URL for the base controllers
+ * **********************************************/
+
+$config['url.auth.home'] = '/';
+$config['url.auth.login'] = '/';
 
 

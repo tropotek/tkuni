@@ -1,0 +1,6 @@
+<div class="tk-ui-action-panel main-box" var="panel">
+  <header class="main-box-header clearfix" var="heading">
+    <h2 class="float-left" var="title"><span><i var="icon"></i> <span var="text"></span></span></h2>
+  </header>
+  <div class="main-box-body clearfix" var="body"></div>
+</div>

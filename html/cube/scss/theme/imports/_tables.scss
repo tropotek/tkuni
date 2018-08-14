@@ -1,0 +1,403 @@
+/* TABLES */
+.table-hover > tbody > tr:hover > td,
+.table-hover > tbody > tr:hover > th {
+	background-color: $default-bg-hover-color;
+}
+.table {
+	thead > tr {
+		> th {
+			border-bottom: 2px solid $main-bg-color;
+			border-top-width: 0px;
+			text-transform: uppercase;
+			font-size: 0.875em;
+
+			> a span {
+				color: $text-color;
+			}
+		}
+	}
+	tbody > tr {
+		> td {
+			font-size: 0.875em;
+			vertical-align: middle;
+			border-top: 1px solid $main-bg-color;
+			padding: 12px 8px;
+
+			&:first-child {
+				font-size: 1.125em;
+				font-weight: 300;
+			}
+		}
+		td {
+			.call-type {
+				display: block;
+				font-size: 0.75em;
+				text-align: center;
+			}
+			.first-line {
+				line-height: 1.5;
+				font-weight: 400;
+				font-size: 1.125em;
+
+				span {
+					font-size: 0.875em;
+					color: #969696;
+					font-weight: 300;
+				}
+			}
+			.second-line {
+				font-size: 0.875em;
+				line-height: 1.2;
+			}
+		}
+		&.table-line-fb > td {
+			background-color: #9daccb;
+			color: #262525;
+		}
+		&.table-line-twitter > td {
+			background-color: #9fccff;
+			color: #262525;
+		}
+		&.table-line-plus > td {
+			background-color: #eea59c;
+			color: #262525;
+		}
+	}
+
+	a {
+		&.table-link {
+			margin: 0 5px;
+			font-size: 1.125em;
+		
+			&:hover {
+				text-decoration: none;
+				color: #2980b9;
+			}
+			&.danger {
+				color: $red-color;
+			
+				&:hover {
+					color: $red-color-dark;
+				}
+			}
+		}
+	}
+
+	&.table-sm {
+		tbody > tr {
+			> td {
+				padding: 8px 5px;
+			}
+		}
+	}
+
+	&.table-bordered {
+		thead > tr > th {
+			border-top-width: 1px;
+		}
+	}
+
+	&.dataTable {
+		border-collapse: collapse !important;
+	}
+}
+.dataTable thead th:hover {
+	color: $primary-color;
+}
+.table thead > tr > th > a span:after,
+.dataTable .sorting:after,
+.dataTable .sorting_asc:after,
+.dataTable .sorting_desc:after {
+	content: "\f0dc";
+	font-family: FontAwesome;
+	font-style: normal;
+	font-weight: normal;
+	text-decoration: inherit;
+	margin-left: 5px;
+	font-size: 0.75em;
+}
+.table thead > tr > th > a:hover {
+	text-decoration: none;
+}
+.table thead > tr > th > a.asc span:after,
+.dataTable .sorting_desc:after {
+	content: "\f0dd";
+}
+.table thead > tr > th > a.desc span:after,
+.dataTable .sorting_asc:after {
+	content: "\f0de";
+}
+.table thead > tr > th > a:hover span {
+	text-decoration: none;
+	color: $primary-color;
+	border-color: $primary-color;
+}
+.table.table-hover tbody > tr > td {
+	@include transition(background-color 0.15s ease-in-out 0s);
+}
+
+.table-products {
+	tbody > tr {
+		> td {
+			background: none;
+			border: none;
+			border-bottom: 1px solid #ebebeb;
+			@include transition(background-color 0.15s ease-in-out 0s);
+			position: relative;
+		}
+		&:hover > td {
+			text-decoration: none;
+			background-color: #f6f6f6;
+		}
+	}
+	.name {
+		display: block;
+		font-weight: 600;
+		padding-bottom: 7px;
+	}
+	.price {
+		display: block;
+		text-decoration: none;
+		width: 50%;
+		float: left;
+		font-size: 0.875em;
+	
+		> i {
+			color: $green-color;
+		}
+	}
+	.warranty {
+		display: block;
+		text-decoration: none;
+		width: 50%;
+		float: left;
+		font-size: 0.875em;
+	
+		> i {
+			color: $yellow-color;
+		}
+	}
+}
+.table-stats {
+	.status-social-icon {
+		font-size: 1.9em;
+		vertical-align: bottom;
+	}
+	.table-line-fb .status-social-icon {
+		color: #556484;
+	}
+	.table-line-twitter .status-social-icon {
+		color: #5885b8;
+	}
+	.table-line-plus .status-social-icon {
+		color: #a75d54;
+	}
+}
+.dataTables_length {
+	margin-top: 10px;
+	margin-bottom: 15px;
+	margin-right: 30px;
+	float: left;
+
+	@media (max-width: $break-xs-max) {
+		display: none;
+	}
+}
+.dataTables_filter {
+	float: right;
+	margin-top: 10px;
+	margin-bottom: 15px;
+
+	@media (max-width: $break-xs-max) {
+		display: none;
+	}
+
+	input {
+		margin-left: 10px;
+	}
+}
+.DTTT {
+	@media (max-width: $break-xs-max) {
+		display: none;
+	}
+
+	&.btn-group {
+		float: right;
+		margin-left: 10px;
+		margin-top: 10px;
+	}
+	&.btn-group a.btn {
+		height: 30px;
+		line-height: 16px;
+	}
+}
+
+/* USER LIST TABLE */
+.user-list {
+	tbody td {
+		> img {
+			position: relative;
+			max-width: 50px;
+			float: left;
+			margin-right: 15px;
+			@include border-radius(18%);
+		}
+		.user-link {
+			display: block;
+			font-size: 1.25em;
+			padding-top: 3px;
+			margin-left: 60px;
+		}
+		.user-subhead {
+			font-size: 0.875em;
+			font-style: italic;
+		}
+	}
+}
+
+.map-stats {
+	padding-top: 20px;
+
+	.table {
+		tbody > tr {
+			> td {
+				padding-top: 10px;
+				padding-bottom: 10px;
+
+				&:first-child {
+					font-size: 1em;
+					font-weight: 400;
+				}
+				&.status {
+					font-size: 1.2em;
+					font-weight: 600;
+				}
+			}
+		}
+	}
+}
+
+//footable override
+.main-box-body table.footable-editing-no-delete tbody td.footable-editing, 
+.main-box-body table.footable-editing-no-edit tbody td.footable-editing, 
+.main-box-body table.footable-editing-no-view tbody td.footable-editing {
+	width: 90px;
+	max-width: 90px;
+
+	.fooicon {
+		    top: 1px;
+		    padding: 6px;
+		    font-size: 1.125em;
+	}
+}
+table.footable-filtering {
+	.footable-filtering {
+		.form-inline {
+			display: block;
+
+			.form-group {
+				display: inline-block;
+
+				.input-group-btn {
+					&.open {
+						> .dropdown-menu {
+							opacity: 1;
+							visibility: visible;
+							transform: scale(1, 1);
+						}
+					}
+
+					> .dropdown-menu.dropdown-menu-right {
+						left: auto;
+						right: 0;	
+					}
+				}
+			}
+		}
+	}
+}
+table.footable{
+	.btn-group-xs > .btn {
+	    padding: .25rem .5rem;
+	    font-size: .875rem;
+	    line-height: 1.5;
+	    border-radius: .2rem;
+	}
+	.btn-group>.btn-group:not(:first-child)>.btn, 
+	.btn-group>.btn:not(:first-child),
+	.input-group-btn > button:not(:first-child) {
+	    border-top-left-radius: 0;
+	    border-bottom-left-radius: 0;
+	}
+	.btn-group>.btn-group:not(:last-child)>.btn, 
+	.btn-group>.btn:not(:last-child):not(.dropdown-toggle),
+	.input-group-btn > button:not(:last-child):not(.dropdown-toggle) {
+	    border-top-right-radius: 0;
+	    border-bottom-right-radius: 0;
+	}
+	.footable-paging {
+		.footable-pagination-wrapper {
+			.pagination {
+				-webkit-box-pack: center !important;
+  				-ms-flex-pack: center !important;
+				justify-content: center!important;
+			}
+		}
+	}
+}
+table.footable-details {
+	tbody {
+		tr {
+			th {
+				font-size: 0.75em;
+				padding: 12px 8px;
+			}
+			td {
+				font-size: 0.75em;
+				padding: 12px 8px;
+				text-align: left !important;
+			}
+		}
+	}
+}
+table > tbody > tr > td > span.footable-toggle {
+	cursor: pointer;
+}
+.footable .footable-row-detail .footable-row-detail-cell {
+	font-size: 1em;
+}
+
+.main-box table.dataTable tr.group td {
+	background-color: $main-bg-color;
+	font-size: 1em;
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+.main-box table.dataTable tbody>tr.selected, 
+.main-box table.dataTable tbody>tr>.selected,
+.main-box table.dataTable.order-column tbody>tr.selected>.sorting_1, 
+.main-box table.dataTable.order-column tbody>tr.selected>.sorting_2, 
+.main-box table.dataTable.order-column tbody>tr.selected>.sorting_3, 
+.main-box table.dataTable.order-column tbody>tr>.selected, 
+.main-box table.dataTable.display tbody>tr.selected>.sorting_1, 
+.main-box table.dataTable.display tbody>tr.selected>.sorting_2, 
+.main-box table.dataTable.display tbody>tr.selected>.sorting_3, 
+.main-box table.dataTable.display tbody>tr>.selected,
+.main-box table.dataTable.stripe tbody>tr.odd.selected, 
+.main-box table.dataTable.stripe tbody>tr.odd>.selected, 
+.main-box table.dataTable.display tbody>tr.odd.selected, 
+.main-box table.dataTable.display tbody>tr.odd>.selected,
+.main-box table.dataTable.display tbody>tr.odd.selected>.sorting_1, 
+.main-box table.dataTable.order-column.stripe tbody>tr.odd.selected>.sorting_1,
+.main-box table.dataTable.display tbody>tr.even.selected>.sorting_1, 
+.main-box table.dataTable.order-column.stripe tbody>tr.even.selected>.sorting_1,
+.main-box table.dataTable.hover tbody>tr.selected:hover, 
+.main-box table.dataTable.hover tbody>tr>.selected:hover, 
+.main-box table.dataTable.display tbody>tr.selected:hover, 
+.main-box table.dataTable.display tbody>tr>.selected:hover {
+	background-color: $gray-color !important;
+}
+
+.dataTables_wrapper.form-inline {
+	display: block;
+}

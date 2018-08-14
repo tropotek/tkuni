@@ -1,0 +1,25 @@
+
+
+
+pre.trace {
+  text-align: left;
+  width: 70%;
+  margin: auto;
+  background: #efefef;
+  padding: 0 10px 20px 10px;
+  border: 1px solid #CCC;
+}
+pre.trace code {
+  display: block;
+  padding: 0 10px;
+}
+
+.log-dump {
+
+
+}
+
+
+
+
+

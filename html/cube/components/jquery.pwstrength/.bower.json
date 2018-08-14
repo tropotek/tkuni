@@ -1,0 +1,14 @@
+{
+  "name": "jquery.pwstrength",
+  "homepage": "https://github.com/matoilic/jquery.pwstrength",
+  "version": "0.1.1",
+  "_release": "0.1.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.1.1",
+    "commit": "d6f07a13eba1479f481d0beceb612f439db406ae"
+  },
+  "_source": "https://github.com/matoilic/jquery.pwstrength.git",
+  "_target": "0.1.x",
+  "_originalSource": "jquery.pwstrength"
+}

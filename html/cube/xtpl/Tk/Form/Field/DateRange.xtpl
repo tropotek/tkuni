@@ -1,0 +1,7 @@
+<div class="input-group" var="group">
+  <input type="text" class="form-control dateStart" var="dateStart" data-parsley-error-message="Please enter a valid Start Date" />
+  <div class="input-group-prepend input-group-append">
+    <span class="input-group-text">to</span>
+  </div>
+  <input type="text" class="form-control dateEnd" var="dateEnd" data-parsley-error-message="Please enter a valid End Date" />
+</div>

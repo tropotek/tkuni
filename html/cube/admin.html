@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link type="image/x-icon" href="./img/favicon.png" rel="shortcut icon" />
+
+    <title></title>
+
+    <!-- bootstrap -->
+    <!--<link rel="stylesheet" type="text/css" href="./components/bootstrap/dist/css/bootstrap.min.css" />-->
+    <link rel="stylesheet" type="text/css" href="./components/bootstrap-4.1.3/css/bootstrap.min.css" />
+    <!-- libraries -->
+    <link rel="stylesheet" type="text/css" href="./components/pw-bootstrap-timepicker/css/timepicker.css" />
+    <link rel="stylesheet" type="text/css" href="./components/select2/dist/css/select2.min.css" />
+    <link rel="stylesheet" type="text/css" href="./components/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" type="text/css" href="./components/nanoscroller/bin/css/nanoscroller.scss" />
+
+    <!-- global styles -->
+    <link rel="stylesheet" type="text/css" href="./scss/main.scss" />
+    <link href="/vendor/ttek/tk-form/js/fileinput/jquery.tkFileInput.less" rel="stylesheet"/>
+
+    <link rel="stylesheet" type="text/css" href="/vendor/ttek/tk-base/assets/js/codemirror/lib/codemirror.css" />
+    <link rel="stylesheet" type="text/css" href="/vendor/ttek/tk-base/assets/js/codemirror/theme/idea.css" />
+
+    <!-- this page specific styles -->
+
+    <!-- google font libraries -->
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:400,600,700,300' rel='stylesheet' type='text/css' />
+    <!--[if lt IE 9]>
+      <script src="./js/html5shiv.js"></script>
+      <script src="./js/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<body class="theme-tropotek fixed-header fixed-leftmenu">
+
+  <div id="theme-wrapper">
+
+    <header class="navbar navbar-expand-lg navbar-light container d-block d-lg-flex" id="header-navbar">
+        <a class="navbar-brand float-left float-lg-none" href="/" id="logo" var="user-url">
+            <span var="site-title">Site Administration</span>
+        </a>
+        <button aria-controls="navbar-ex1-collapse" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler float-right float-lg-none" data-target=".navbar-ex1-collapse" data-toggle="collapse" type="button">
+            <span class="fa fa-bars"></span>
+        </button>
+
+
+        <!-- header-nav-left -->
+        <ul class="nav navbar-nav mr-auto d-none d-lg-block mrg-l-none" var="header-nav-left">
+          <li><a class="btn" id="make-small-nav"><i class="fa fa-bars"></i></a></li>
+        </ul>
+
+        <!-- Top Right Menu Items -->
+        <ul class="nav navbar-nav ml-auto float-right float-lg-none" id="header-nav">
+            <li class="dropdown profile-dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                  <img alt="" src="./img/samples/scarlet-159.png" var="user-image"/>
+                  <span class="d-none d-md-block" var="user-name">Scarlett Johansson</span> <b class="caret"></b>
+                </a>
+                <!-- dropdown-nav -->
+                <ul class="dropdown-menu dropdown-menu-right" var="nav-dropdown">
+                  <li class="item"><a href="/index.html" target="_blank"><i class="fa fa-home"></i>View Site</a></li>
+                  <li class="item"><a href="/admin/profile.html"><i class="fa fa-user"></i>Profile</a></li>
+                  <li class="item"><a href="/admin/settings.html"><i class="fa fa-cog"></i>Settings</a></li>
+                  <li class="item"><a href="#" data-toggle="modal" data-target="#aboutModal"><i class="fa fa-info-circle"></i>About</a></li>
+                  <li class="dropdown-divider"></li>
+                  <li class="item"><a href="#" data-toggle="modal" data-target="#logoutModal"><i class="fa fa-power-off"></i>Logout</a></li>
+                </ul>
+            </li>
+            <li class="d-none d-sm-block">
+              <a class="btn" data-toggle="modal" data-target="#logoutModal"><i class="fa fa-power-off"></i></a>
+            </li>
+        </ul>
+    </header>
+
+    <div id="page-wrapper" class="container">
+      <div class="row">
+
+        <div id="nav-col">
+          <section id="col-left" class="col-left-nano has-scrollbar">
+            <div id="col-left-inner" class="col-left-nano-content">
+              <div id="user-left-box" class="clearfix d-none d-lg-block profile2-dropdown">
+                <a href="#" var="user-url" title="Dashboard"><img alt="" src="./img/samples/scarlet-159.png" var="user-image"/></a>
+                <div class="user-box">
+                  <span class="dropdown name">
+                    <a href="#" class="dropdown-nocaret dropdown-toggle" data-toggle="dropdown">
+                      <span var="username">Scarlett J.</span>
+                      <i class="fa fa-angle-down"></i>
+                    </a>
+                    <!-- dropdown-nav -->
+                    <ul class="dropdown-menu dropdown-menu-right" var="nav-dropdown">
+                      <li class="item"><a href="/index.html" target="_blank"><i class="fa fa-home"></i>View Site</a></li>
+                      <li class="item"><a href="/admin/profile.html"><i class="fa fa-user"></i>Profile</a></li>
+                      <li class="item"><a href="/admin/settings.html"><i class="fa fa-cog"></i>Settings</a></li>
+                      <li class="item"><a href="#" data-toggle="modal" data-target="#aboutModal"><i class="fa fa-info-circle"></i>About</a></li>
+                      <li class="dropdown-divider"></li>
+                      <li class="item"><a href="#" data-toggle="modal" data-target="#logoutModal"><i class="fa fa-power-off"></i>Logout</a></li>
+                    </ul>
+                  </span>
+                  <span class="status">
+                    <i class="fa fa-circle"></i> Online
+                  </span>
+                </div>
+              </div>
+
+              <div class="navbar navbar-expand-lg navbar-light">
+                <div class="collapse navbar-collapse navbar-ex1-collapse" id="sidebar-nav">
+                  <ul class="nav navbar-nav nav-pills nav-stacked" var="nav-side">
+                    <li class="nav-header nav-header-first d-none d-lg-block">Navigation</li>
+                    <li><a href="/admin"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+                    <li><a href="/admin/settings.html"><i class="fa fa-cogs"></i> <span>Settings</span></a></li>
+                    <li choice="debug">
+                      <a href="#" class="dropdown-toggle dropdown-nocaret"><i class="fa fa-bug"></i><span>Development</span> <i class="fa fa-angle-right drop-icon"></i></a>
+                      <ul class="submenu" var="debug-nav">
+                        <li><a href="/admin/dev/dispatcherEvents.html"><span>Event Dispatcher</span></a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+
+              </div>
+            </div>
+          </section>
+          <div id="nav-col-submenu"></div>
+          </div>
+
+
+        <div id="content-wrapper">
+          <div class="row">
+            <div class="col-lg-12">
+
+
+              <div class="row">
+                <div class="col-lg-12">
+                  <div id="content-header" class="clearfix">
+                    <div class="float-left content-header-left" var="content-header-left">
+                      <ol class="breadcrumb" var="breadcrumb" choice="breadcrumb"></ol>
+                      <h1 class="page-header"  var="page-header" choice="page-header">Typography (page header h1)</h1>
+                    </div>
+                    <div class="float-right d-none d-sm-block content-header-right" var="content-header-right"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-12">
+                  <div choice="alerts"><div var="alerts"></div></div>
+                </div>
+              </div>
+
+              <div class="clearfix" var="content"></div>
+
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+            </div>
+          </div>
+
+
+          <footer id="footer-bar" class="row">
+            <div class="container"><p id="footer-copyright" class="col-12">Copyright © <a href="https://www.tropotek.com/">tropotek.com</a> 2018</p></div>
+          </footer>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <!-- global scripts -->
+  <script src="./components/jquery/dist/jquery.min.js"></script>
+  <script src="./components/bootstrap-4.1.3/js/popper.min.js"></script>
+  <script src="./components/bootstrap-4.1.3/js/bootstrap.min.js"></script>
+  <script src="./components/nanoscroller/bin/javascripts/jquery.nanoscroller.min.js"></script>
+  <script src="./components/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
+  <script src="./components/pw-bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
+  <script src="./components/select2/dist/js/select2.min.js"></script>
+
+  <!-- Tk2 Lib Js -->
+  <script src="/vendor/ttek/tk-form/js/dualListBox/jquery.dualListBox.js"></script>
+  <script src="/vendor/ttek/tk-form/js/fileinput/jquery.tkFileInput.js"></script>
+  <script src="/vendor/ttek/tk-table/js/jquery.tableOrderBy.js"></script>
+  <script src="/vendor/ttek/tk-base/assets/js/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+  <script src="/vendor/ttek/tk-base/assets/js/tinymce/tinymce.min.js"></script>
+  <script src="/vendor/ttek/tk-base/assets/js/tinymce/jquery.tinymce.min.js"></script>
+
+  <script src="/vendor/ttek/tk-base/assets/js/codemirror/lib/codemirror.js"></script>
+  <script src="/vendor/ttek/tk-base/assets/js/codemirror/mode/javascript/javascript.js"></script>
+  <script src="/vendor/ttek/tk-base/assets/js/codemirror/mode/css/css.js"></script>
+  <script src="/vendor/ttek/tk-base/assets/js/codemirror/addon/edit/matchbrackets.js"></script>
+
+  <script src="/vendor/ttek/tk-base/assets/js/core.js"></script>
+  <script src="/vendor/ttek/tk-base/assets/js/common.js"></script>
+  <script src="/html/app/js/app.js"></script>
+  <script src="./js/main.js"></script>
+
+
+	<!-- theme scripts -->
+	<script src="./components/PACE/pace.min.js"></script>
+  <script src="./js/scripts.js"></script>
+  <script src="./js/header-sparks.js"></script>
+
+
+</body>
+</html>

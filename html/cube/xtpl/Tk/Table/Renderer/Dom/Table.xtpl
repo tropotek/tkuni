@@ -1,0 +1,26 @@
+<div class="tk-table" var="tk-table">
+  <a name="" var="fragment"/>
+  <div class="tk-filters" var="filters" choice="filters"></div>
+
+  <form var="form">
+    <div class="tk-actions" var="actions" choice="actions"></div>
+
+    <div class="tk-table-wrap table-responsive">
+      <table border="0" cellpadding="0" cellspacing="0" class="" var="table">
+        <thead var="head">
+        <tr>
+          <th var="th" repeat="th"></th>
+        </tr>
+        </thead>
+        <tbody class="table-body" var="body">
+        <tr var="tr" repeat="tr">
+          <td var="td" repeat="td">&#160;</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tk-foot row" choice="foot" var="foot"></div>
+  </form>
+
+</div>
