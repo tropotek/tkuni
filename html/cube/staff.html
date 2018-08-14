@@ -40,7 +40,7 @@
 
     <header class="navbar navbar-expand-lg navbar-light container d-block d-lg-flex" id="header-navbar">
         <a class="navbar-brand float-left float-lg-none" href="/" id="logo" var="user-url">
-            <span>My Account</span>
+            <span var="site-title">Site Administration</span>
         </a>
         <button aria-controls="navbar-ex1-collapse" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler float-right float-lg-none" data-target=".navbar-ex1-collapse" data-toggle="collapse" type="button">
             <span class="fa fa-bars"></span>
@@ -56,13 +56,14 @@
         <ul class="nav navbar-nav ml-auto float-right float-lg-none" id="header-nav">
             <li class="dropdown profile-dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                  <img alt="" src="./img/samples/scarlet-159.png" var="user-image"/>
+                  <img alt="" src="./img/user.png" var="user-image"/>
                   <span class="d-none d-md-block" var="user-name">Scarlett Johansson</span> <b class="caret"></b>
                 </a>
                 <!-- dropdown-nav -->
                 <ul class="dropdown-menu dropdown-menu-right" var="nav-dropdown">
                   <li class="item"><a href="/index.html" target="_blank"><i class="fa fa-home"></i>View Site</a></li>
-                  <li class="item"><a href="/user/profile.html"><i class="fa fa-user"></i>Profile</a></li>
+                  <li class="item"><a href="/admin/profile.html"><i class="fa fa-user"></i>Profile</a></li>
+                  <li class="item"><a href="/admin/settings.html"><i class="fa fa-cog"></i>Settings</a></li>
                   <li class="item"><a href="#" data-toggle="modal" data-target="#aboutModal"><i class="fa fa-info-circle"></i>About</a></li>
                   <li class="dropdown-divider"></li>
                   <li class="item"><a href="#" data-toggle="modal" data-target="#logoutModal"><i class="fa fa-power-off"></i>Logout</a></li>
@@ -81,7 +82,7 @@
           <section id="col-left" class="col-left-nano has-scrollbar">
             <div id="col-left-inner" class="col-left-nano-content">
               <div id="user-left-box" class="clearfix d-none d-lg-block profile2-dropdown">
-                <a href="#" var="user-url" title="Dashboard"><img alt="" src="./img/samples/scarlet-159.png" var="user-image"/></a>
+                <a href="#" var="user-url" title="Dashboard"><img alt="" src="./img/user.png" var="user-image"/></a>
                 <div class="user-box">
                   <span class="dropdown name">
                     <a href="#" class="dropdown-nocaret dropdown-toggle" data-toggle="dropdown">
@@ -91,7 +92,8 @@
                     <!-- dropdown-nav -->
                     <ul class="dropdown-menu dropdown-menu-right" var="nav-dropdown">
                       <li class="item"><a href="/index.html" target="_blank"><i class="fa fa-home"></i>View Site</a></li>
-                      <li class="item"><a href="/user/profile.html"><i class="fa fa-user"></i>Profile</a></li>
+                      <li class="item"><a href="/admin/profile.html"><i class="fa fa-user"></i>Profile</a></li>
+                      <li class="item"><a href="/admin/settings.html"><i class="fa fa-cog"></i>Settings</a></li>
                       <li class="item"><a href="#" data-toggle="modal" data-target="#aboutModal"><i class="fa fa-info-circle"></i>About</a></li>
                       <li class="dropdown-divider"></li>
                       <li class="item"><a href="#" data-toggle="modal" data-target="#logoutModal"><i class="fa fa-power-off"></i>Logout</a></li>
@@ -107,9 +109,14 @@
                 <div class="collapse navbar-collapse navbar-ex1-collapse" id="sidebar-nav">
                   <ul class="nav navbar-nav nav-pills nav-stacked" var="nav-side">
                     <li class="nav-header nav-header-first d-none d-lg-block">Navigation</li>
-                    <li><a href="/user"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-
-
+                    <li><a href="/admin"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+                    <li><a href="/admin/settings.html"><i class="fa fa-cogs"></i> <span>Settings</span></a></li>
+                    <li choice="debug">
+                      <a href="#" class="dropdown-toggle dropdown-nocaret"><i class="fa fa-bug"></i><span>Development</span> <i class="fa fa-angle-right drop-icon"></i></a>
+                      <ul class="submenu" var="debug-nav">
+                        <li><a href="/admin/dev/dispatcherEvents.html"><span>Event Dispatcher</span></a></li>
+                      </ul>
+                    </li>
                   </ul>
                 </div>
 
@@ -193,7 +200,7 @@
 	<!-- theme scripts -->
 	<script src="./components/PACE/pace.min.js"></script>
   <script src="./js/scripts.js"></script>
-  <!--<script src="./js/header-sparks.js"></script>-->
+  <script src="./js/header-sparks.js"></script>
 
 
 </body>

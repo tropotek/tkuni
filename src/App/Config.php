@@ -21,4 +21,16 @@ class Config extends \Uni\Config
         \App\Dispatch::create($dispatcher);
     }
 
+    /**
+     * @return \Bs\Listener\PageTemplateHandler
+     */
+    public function getPageTemplateHandler()
+    {
+        if (!$this->get('page.template.handler')) {
+            $this->set('page.template.handler', new \App\Listener\PageTemplateHandler());
+        }
+        return $this->get('page.template.handler');
+    }
+
+
 }
