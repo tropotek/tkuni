@@ -1,0 +1,40 @@
+<html>
+<head>
+  <title></title>
+
+  <style type="text/css">
+    body {
+      font-family: arial,sans-serif;
+      font-size: 90%;
+      padding: 5px;
+      background-color: #FFF;
+    }
+    .content {
+      padding: 0px 0px 0px 20px;
+    }
+    p {
+      margin: 0px 0px 10px 0px;
+      padding: 0px;
+    }
+  </style>
+</head>
+<body>
+<div class="content">
+
+
+  {content}
+
+  <p>&nbsp;</p>
+</div>
+<p>&#160;</p>
+<hr />
+<div class="footer">
+  <p>
+    {_ip}IP: {_ip}<br/>{/_ip}
+    {_uri}URI: {_uri}<br/>{/_uri}
+    {_referer}Referer: {_referer}<br/>{/_referer}
+    {_user_agent}User Agent: {_user_agent}<br/>{/_user_agent}
+  </p>
+</div>
+</body>
+</html>
