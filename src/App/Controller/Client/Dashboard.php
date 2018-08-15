@@ -53,7 +53,7 @@ class Dashboard extends \Uni\Controller\AdminIface
     public function show()
     {
         $template = parent::show();
-        
+
         $template->appendTemplate('table', $this->userTable->getRenderer()->show());
 
         return $template;
