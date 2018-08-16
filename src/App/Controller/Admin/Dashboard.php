@@ -15,24 +15,60 @@ class Dashboard extends \Uni\Controller\AdminIface
 {
 
     /**
-     * @throws \Exception
+     * @var \Tk\Table
+     */
+    protected $table = null;
+
+    /**
      */
     public function __construct()
     {
         $this->setPageTitle('Dashboard');
-        $this->getCrumbs()->reset();
+        $this->getActionPanel()->setEnabled(false);
     }
 
     /**
+     *
      * @param Request $request
      * @return \Dom\Template|Template|string
      * @throws \Exception
      */
     public function doDefault(Request $request)
     {
-        $this->getActionPanel()->setEnabled(false);
 
-        
+        $this->table = \Uni\Table\Institution::create()->init();
+        $this->table->setList($this->table->findList());
+
+    }
+
+    /**
+     * @return \Dom\Template
+     */
+    public function show()
+    {
+        $template = parent::show();
+
+        $template->appendTemplate('table', $this->table->getRenderer()->show());
+
+        return $template;
+    }
+
+    /**
+     * DomTemplate magic method
+     *
+     * @return Template
+     */
+    public function __makeTemplate()
+    {
+        $xhtml = <<<HTML
+<div class="">
+
+  <div class="tk-panel" data-panel-title="Institution" data-panel-icon="fa fa-university" var="table"></div>
+  
+</div>
+HTML;
+
+        return \Dom\Loader::load($xhtml);
     }
 
 

@@ -1,0 +1,88 @@
+.noUi-base {
+	.noUi-connect {
+		background: $primary-color;
+		border-radius: 0;
+		box-shadow: none;
+	}
+}
+.noUi-target {
+	background: #e8e8e8 !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+	border: 1px solid #fff !important;
+
+	&.noUi-horizontal {
+		height: 8px;
+	}
+	&.noUi-vertical {
+		width: 8px;	
+	}
+	.noUi-value-sub {
+		margin-top: 4px;
+
+		@media (max-width: $break-md-max) {
+			margin-top: 3px;
+			font-size: 0.65em;
+		}
+	}
+	.noUi-value-large {
+		margin-top: 8px;
+		font-size: 0.95em;
+
+		@media (max-width: $break-md-max) {
+			margin-top: 9px;
+			font-size: 0.9em;
+		}
+	}
+	.noUi-handle {
+		border-radius: 50%;
+		transition: box-shadow .2s,-webkit-transform .2s;
+		transition: box-shadow .2s,transform .2s;
+		transition: box-shadow .2s,transform .2s,-webkit-transform .2s;
+	}
+	&.noUi-horizontal .noUi-handle {
+		width: 22px;
+		height: 22px;
+		left: -10px;
+		top: -8px;
+
+		&:focus {
+			outline: none !important;
+		}
+	}
+	&.noUi-vertical .noUi-handle {
+		width: 22px;
+		height: 22px;
+		left: -8px;
+		top: -10px;
+
+		&:focus {
+			outline: none !important;
+		}
+	}
+	.noUi-handle:after, 
+	.noUi-handle:before {
+		content: none;
+		width: 0;
+		height: 0;
+	}
+	&.noUi-horizontal .noUi-handle.noUi-active, 
+	&.noUi-vertical .noUi-handle.noUi-active {
+		-webkit-transform: scale(1.2);
+		transform: scale(1.2);
+	}
+	&.noUi-horizontal .noUi-active, 
+	&.noUi-vertical .noUi-active {
+		// box-shadow: 0 0 0 12px rgba(0,0,0,.04);
+	}
+	.noUi-pips-horizontal {
+		padding: 6px 0;
+	}
+	.noUi-marker-horizontal.noUi-marker {
+		margin-left: 0.5px;
+    	width: 1px;
+	}
+	.noUi-marker-vertical.noUi-marker {
+		height: 1px;
+	}
+}

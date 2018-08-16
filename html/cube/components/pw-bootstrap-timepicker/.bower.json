@@ -1,0 +1,52 @@
+{
+  "name": "bootstrap-pw-timepicker",
+  "description": "A timepicker component for Twitter Bootstrap",
+  "version": "0.5.3",
+  "main": "js/bootstrap-pw-timepicker.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "_layouts",
+    "node_modules",
+    "_config.yml",
+    "assets",
+    "spec",
+    "index.html",
+    "Gruntfile.js",
+    "package.json",
+    "composer.json",
+    "bower_components",
+    "spec/js/libs/",
+    "test",
+    "tests"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pancara/bootstrap-timepicker"
+  },
+  "dependencies": {
+    "bootstrap": "^3.0",
+    "jquery": "^2.0"
+  },
+  "devDependencies": {
+    "autotype": "https://raw.github.com/mmonteleone/jquery.autotype/master/jquery.autotype.js"
+  },
+  "keywords": [
+    "widget",
+    "timepicker",
+    "time"
+  ],
+  "homepage": "https://github.com/pancara/bootstrap-timepicker",
+  "authors": [
+    "pancara <pancara.k.wijonarko@gmail.com>"
+  ],
+  "_release": "0.5.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.5.3",
+    "commit": "d471621ba05a5ba82ae60674d993dfa8d398b569"
+  },
+  "_source": "https://github.com/pancara/bootstrap-timepicker.git",
+  "_target": "0.5.x",
+  "_originalSource": "pw-bootstrap-timepicker"
+}

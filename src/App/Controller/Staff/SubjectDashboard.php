@@ -60,9 +60,9 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
     public function show()
     {
         $template = parent::show();
-        $template->insertText('code', $this->getConfig()->getSubject()->code);
 
         $template->appendTemplate('table', $this->userTable->getRenderer()->show());
+        $template->setAttr('table', 'data-panel-title', $this->getConfig()->getSubject()->code . ' Student List');
 
         return $template;
     }
@@ -78,14 +78,13 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
         $xhtml = <<<HTML
 <div>
 
-  <div class="panel panel-default">
-    <div class="panel-heading"><i class="fa fa-fw fa-institution"></i> <span var="code"></span> Student List</div>
-    <div class="panel-body">
-      
-      <div var="table"></div>
-      
-    </div>
-  </div>
+  <div class="tk-panel" data-panel-title="Student List" data-panel-icon="fa fa-users" var="table"></div>
+  <!--<div class="panel panel-default">-->
+    <!--<div class="panel-heading"><i class="fa fa-fw fa-users"></i> <span var="code"></span> Student List</div>-->
+    <!--<div class="panel-body">-->
+      <!--<div var="table"></div>-->
+    <!--</div>-->
+  <!--</div>-->
   
 </div>
 HTML;

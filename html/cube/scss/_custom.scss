@@ -1,0 +1,169 @@
+/*
+ *
+ */
+
+
+
+
+// Content
+
+.input-group-prepend,
+.input-group-append  {
+
+  .input-group-text {
+    border-width: 1px;
+  }
+  .btn {
+    border-width: 0 !important;
+  }
+}
+
+/* Font awesome actions */
+.faa-add {
+  position: relative;
+  &:after {
+    display: block;
+    position: absolute;
+    content: "\f055";
+    font-size: 70%;
+    margin-top: -50%;
+    margin-left: 50%;
+    background-color: white;
+    border-radius: 100%;
+  }
+}
+.faa-del,
+.faa-remove {
+  position: relative;
+  &:after {
+    display: block;
+    position: absolute;
+    content: "\f056";
+    font-size: 70%;
+    margin-top: -50%;
+    margin-left: 50%;
+    background-color: white;
+    border-radius: 100%;
+  }
+}
+
+
+
+
+
+
+// Top Nav
+
+
+// Side nav
+
+#sidebar-nav ul.nav.navbar-nav {
+  margin-bottom: 70px;
+}
+
+
+
+
+// Panel conversion to main-box
+
+.panel {
+  @extend .main-box;
+  .panel-heading {
+    @extend .main-box-header;
+    //@extend .clearfix;
+    .panel-title {
+      //@extend .float-left;
+    }
+  }
+  .panel-body {
+    @extend .main-box-body;
+  }
+  .panel-footer {
+    //@extend .main-box-footer;
+  }
+
+}
+
+
+
+
+// Other
+
+
+// Table
+
+
+// Form
+.tk-form {
+  
+  .nav-tabs {
+    > li.nav-item.has-error {
+      > a.active,
+      > a.active:hover,
+      > a.active:focus {
+        border-top: 2px solid $red-color-dark;
+      }
+    }
+  }
+
+  .tk-check-select {
+
+    .status-notes {
+      margin-top: -2px;
+      z-index: 999;
+
+    }
+  }
+  .form-control::placeholder {
+    color: $gray-color-light;
+  }
+  .input-group-prepend.input-group-append {
+    margin-right: -2px;
+    margin-left: 0;
+  }
+  .input-group-text {
+    background: #e7ebee;
+  }
+
+  @media (min-width: $break-sm-max) {
+    .form-group {
+      label {
+        text-align: right;
+      }
+    }
+  }
+
+
+}
+
+
+
+
+// Buttons
+#content-wrapper {
+  .btn-default,
+  a.btn {
+    color: $text-color !important;
+    background-color: #f8f9fa;
+    border-color: #e0e1e2;
+  }
+
+  .btn-default:hover,
+  .btn-default:focus,
+  .btn-default:active,
+  a.btn.show .dropdown-toggle.default,
+  a.btn:hover,
+  a.btn:focus,
+  a.btn:active,
+  a.btn.show .dropdown-toggle.btn-light {
+    color: $text-color !important;
+    background-color: #e0e1e2;
+  }
+}
+
+// ActionPanel
+.tk-ui-action-panel {
+  .btn {
+    margin-right: 10px;
+  }
+}
