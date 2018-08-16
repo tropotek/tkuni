@@ -11,17 +11,53 @@ use Dom\Template;
  */
 class Dashboard extends \Uni\Controller\AdminIface
 {
-    
+
+    /**
+     * Iface constructor.
+     * @throws \Exception
+     */
+    public function __construct()
+    {
+        $this->setPageTitle('Dashboard');
+        //$this->getCrumbs()->setVisible(false);
+        $this->getActionPanel()->setVisible(false);
+    }
+
+    /**
+     * @var \Uni\Table\User
+     */
+    protected $userTable = null;
+
+
     /**
      * @param Request $request
+     * @throws \Exception
      */
     public function doDefault(Request $request)
     {
-        $this->setPageTitle('Dashboard');
+        $this->setPageTitle('');
 
-        /** @var \Lti\Provider $provider */
-        //$provider = $this->getConfig()->get('lti.provider');
-        
+        $this->userTable = \Uni\Table\User::create()->init();
+        $this->userTable->findCell('name')->setUrl(\Uni\Uri::createSubjectUrl('/staffEdit.html'));
+        $filter = array();
+        $filter['institutionId'] = $this->getConfig()->getInstitutionId();
+        $filter['type'] = \Uni\Db\Role::TYPE_STAFF;
+        $this->userTable->setList($this->userTable->findList($filter));
+
+    }
+
+    /**
+     * @return \Dom\Template
+     * @throws \Exception
+     */
+    public function show()
+    {
+        $template = parent::show();
+        $template->insertText('code', $this->getConfig()->getSubject()->code);
+
+        $template->appendTemplate('table', $this->userTable->getRenderer()->show());
+
+        return $template;
     }
 
 
@@ -33,23 +69,17 @@ class Dashboard extends \Uni\Controller\AdminIface
     public function __makeTemplate()
     {
         $xhtml = <<<HTML
-<div class="">
+<div>
 
   <div class="panel panel-default">
-    <div class="panel-heading">
-      <i class="fa fa-university fa-fw"></i> TODO
-    </div>
-    <div class="panel-body ">
-      Things the institution Client/Institution member should be able to do:
-      <ul>
-        <li>Edit profile</li>
-        <li>Manage Subject setup and data</li>
-        <li>Manage Student accounts</li>
-        <li>Manage student subject enrollments</li>
-      </ul>
+    <div class="panel-heading"><i class="fa fa-fw fa-institution"></i> Staff List</div>
+    <div class="panel-body">
+      
+      <div var="table"></div>
+      
     </div>
   </div>
-
+  
 </div>
 HTML;
 

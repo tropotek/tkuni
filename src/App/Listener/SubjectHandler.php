@@ -49,8 +49,7 @@ class SubjectHandler implements Subscriber
      * Ensure this is run after App\Listener\CrumbsHandler::onFinishRequest()
      *
      * @param AuthEvent $event
-     * @throws \Tk\Db\Exception
-     * @throws \Tk\Exception
+     * @throws \Exception
      */
     public function onLoginSuccess(AuthEvent $event)
     {
@@ -60,7 +59,7 @@ class SubjectHandler implements Subscriber
         $institution = $user->getInstitution();
 
         // Enroll to any pending subjects
-        if ($institution && $user->hasRole(array(\Uni\Db\User::ROLE_STUDENT, \Uni\Db\User::ROLE_STAFF)) ) {
+        if ($institution && $user->getRole()->hasType(array(\Uni\Db\Role::TYPE_STUDENT, \Uni\Db\Role::TYPE_STAFF)) ) {
             // Get any alias email addresses
             $ldapData = $user->getData()->get('ldap.data');
             $alias = array();

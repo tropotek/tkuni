@@ -1,6 +1,5 @@
 <?php
-
-/* 
+/*
  * NOTE: Be sure to add routes in correct order as the first match will win
  * 
  * Route Structure
@@ -11,6 +10,7 @@
  *     array('GET', 'POST', 'HEAD')     // methods
  * );
  */
+
 $config = \App\Config::getInstance();
 $routes = $config->getRouteCollection();
 if (!$routes) return;
@@ -19,7 +19,6 @@ if (!$routes) return;
 // Default Home catchall
 $routes->add('home', new \Tk\Routing\Route('/index.html', 'App\Controller\Index::doDefault'));
 $routes->add('home-base', new \Tk\Routing\Route('/', 'App\Controller\Index::doDefault'));
-$routes->add('contact', new \Tk\Routing\Route('/contact.html', 'App\Controller\Contact::doDefault'));
 
 
 // Admin Pages

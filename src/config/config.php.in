@@ -33,6 +33,11 @@ $config['db.pass'] = 'password';
  */
 //$config['event.dispatcher.log'] = true;
 
+/**
+ * This is to be set to the sites default domain name so we can use it for links from the
+ * institution pages back to the site
+ */
+//$config['site.public.domain'] = '252s-live.vet.unimelb.edu.au';
 
 /*
  * Debug

@@ -36,26 +36,25 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a href="/" var="homeUrl" class="navbar-brand"><b var="site-title">Tk2Uni v2.0</b></a>
+        <a href="/" class="navbar-brand" var="default-url"><b var="site-title">Tk2Uni v2.0</b></a>
       </div>
 
       <div class="navbar-collapse collapse" var="_topNav1_">
         <ul class="nav navbar-nav">
-          <li><a href="/index.html">Home</a></li>
-          <!--<li><a href="/contact.html">Contact</a></li>-->
-          <li><a href="/institutions.html">Institutions</a></li>
-          <li choice="login"><a href="/login.html">Login</a></li>
-          <li choice="logout"><a href="/logout.html">Logout</a></li>
+          <li><a href="/index.html" var="default-url">Home</a></li>
+          <li><a href="/institutions.html" var="default-url">Institutions</a></li>
+          <li choice="login"><a href="/login.html" var="default-url">Login</a></li>
+          <li choice="logout"><a href="/logout.html" var="default-url">Logout</a></li>
         </ul>
 
         <ul class="nav navbar-nav navbar-right" choice="logout">
           <li class="dropdown">
             <a data-toggle="dropdown" class="dropdown-toggle" href="javascript:;"><span var="username">user</span> <b class="caret"></b></a>
             <ul class="dropdown-menu">
-              <li><a href="#" var="dashUrl"><span class="glyphicon glyphicon-dashboard"></span> Dashboard</a></li>
-              <!--<li><a href="#"><span class="glyphicon glyphicon-user"></span> My Profile</a></li>-->
-              <!--<li><a href="#"><span class="glyphicon glyphicon-random"></span> Change Password</a></li>-->
-              <li><a href="/logout.html"><span class="glyphicon glyphicon-log-out"></span> Sign Out</a></li>
+              <li><a href="#" var="user-url"><span class="fa fa-dashboard"></span> Dashboard</a></li>
+              <!--<li><a href="#"><span class="fa fa-user"></span> My Profile</a></li>-->
+              <!--<li><a href="#"><span class="fa fa-random"></span> Change Password</a></li>-->
+              <li><a href="/logout.html" var="default-url"><span class="fa fa-sign-out"></span> Sign Out</a></li>
             </ul>
           </li>
         </ul>
@@ -85,6 +84,7 @@
   <div class="container">
     <div class="footer" var="_footer_">
       <div class="pull-left">&copy; Tropotek 2018</div>
+      <div class="pull-right"><a href="/login.html" var="default-url">Client Access</a></div>
     </div>
   </div>
 

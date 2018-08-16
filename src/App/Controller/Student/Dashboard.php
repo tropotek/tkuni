@@ -13,7 +13,7 @@ class Dashboard extends \Uni\Controller\AdminIface
 {
 
     /**
-     * @var \Uni\Ui\Table\Subject
+     * @var \Uni\Table\Subject
      */
     protected $subjectTable = null;
 
@@ -36,11 +36,17 @@ class Dashboard extends \Uni\Controller\AdminIface
      */
     public function doDefault(Request $request)
     {
-        $this->subjectTable = new \Uni\Ui\Table\Subject($this->getConfig()->getInstitutionId(), function ($cell, $obj, $value) {
+        $this->subjectTable = \Uni\Table\Subject::create()->init();
+        $this->subjectTable->findCell('name')->setUrl(function ($cell, $obj) {
+            /** @var \Tk\Table\Cell\iface $cell */
             $url = \Uni\Uri::createSubjectUrl('/index.html', $obj);
             $cell->setUrl($url);
-            return $value;
-        }, $this->getUser());
+        });
+
+        $filter = array();
+        $filter['institutionId'] = $this->getConfig()->getInstitutionId();
+        $filter['userId'] = $this->getUser()->getId();
+        $this->subjectTable->setList($this->subjectTable->findList($filter));
 
 
     }
@@ -49,7 +55,7 @@ class Dashboard extends \Uni\Controller\AdminIface
     {
         $template = parent::show();
 
-        $template->insertTemplate('table', $this->subjectTable->show());
+        $template->appendTemplate('table', $this->subjectTable->getRenderer()->show());
 
         return $template;
     }

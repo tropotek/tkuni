@@ -18,6 +18,12 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
     protected $subject = null;
 
     /**
+     * @var \Uni\Table\User
+     */
+    protected $userTable = null;
+
+
+    /**
      * Iface constructor.
      * @throws \Exception
      */
@@ -35,11 +41,16 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
      */
     public function doDefault(Request $request)
     {
-        $subject = $this->getConfig()->getSubject();
-        if ($subject) {
-            $this->setPageTitle($subject->name);
-            $this->getTemplate()->insertText('code', $subject->code);
-        }
+        $this->setPageTitle('');
+
+        $this->userTable = \Uni\Table\User::create()->init();
+        $this->userTable->findCell('name')->setUrl(\Uni\Uri::createSubjectUrl('/studentEdit.html'));
+        $filter = array();
+        $filter['institutionId'] = $this->getConfig()->getInstitutionId();
+        $filter['subjectId'] = $this->getConfig()->getSubjectId();
+        $filter['type'] = \Uni\Db\Role::TYPE_STUDENT;
+        $this->userTable->setList($this->userTable->findList($filter));
+
     }
 
     /**
@@ -49,7 +60,9 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
     public function show()
     {
         $template = parent::show();
+        $template->insertText('code', $this->getConfig()->getSubject()->code);
 
+        $template->appendTemplate('table', $this->userTable->getRenderer()->show());
 
         return $template;
     }
@@ -59,7 +72,6 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
      * DomTemplate magic method
      *
      * @return Template
-     * @throws \Dom\Exception
      */
     public function __makeTemplate()
     {
@@ -67,10 +79,10 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
 <div>
 
   <div class="panel panel-default">
-    <div class="panel-heading"><i class="fa fa-fw fa-institution"></i> <span var="code">Subject Dashboard</span></div>
+    <div class="panel-heading"><i class="fa fa-fw fa-institution"></i> <span var="code"></span> Student List</div>
     <div class="panel-body">
       
-      <p>&nbsp;</p>
+      <div var="table"></div>
       
     </div>
   </div>

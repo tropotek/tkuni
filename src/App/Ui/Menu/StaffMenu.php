@@ -5,7 +5,7 @@ namespace App\Ui\Menu;
 /**
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
- * @license Copyright 2018 Michael Mifsud
+ * @license Copyright 2016 Michael Mifsud
  */
 class StaffMenu extends Iface
 {
@@ -25,11 +25,16 @@ class StaffMenu extends Iface
             $template->setAttr('subject-students', 'href', \Uni\Uri::createSubjectUrl('/studentManager.html', $subject));
             $template->setText('subject-name', $subject->code);
             $template->setChoice('subject');
+        } else {
+            $permissions = $this->getUser()->getRole()->getPermissions();
+            foreach ($permissions as $permission) {
+                $template->setChoice($permission);
+            }
+            $template->setChoice('no-subject');
         }
 
         return $template;
     }
-
 
     /**
      * DomTemplate magic method
@@ -69,12 +74,15 @@ class StaffMenu extends Iface
       <div class="sidebar-nav navbar-collapse">
         <ul class="nav" id="side-menu">
           <li><a href="/staff/index.html"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a></li>
+          <li choice="perm.manage.subject"><a href="/staff/subjectEdit.html"><i class="fa fa-fw fa-graduation-cap"></i> Create Subject</a></li>
+          <li choice="perm.manage.roles"><a href="/staff/roleManager.html"><i class="fa fa-fw fa-id-card"></i> Roles</a></li>
+          <li choice="perm.manage.staff"><a href="/staff/staffManager.html"><i class="fa fa-fw fa-user-md"></i> Staff</a></li>
 
           <li choice="subject"><a href="#"><i class="fa fa-cogs fa-fw"></i> <span var="subject-name">Subject</span> <span class="fa arrow"></span></a>
             <ul class="nav nav-second-level" var="subject-menu">
               <li><a href="/index.html" var="subject-dashboard"><i class="fa fa-fw fa-dashboard"></i> Subject Dashboard</a></li>
               <li><a href="/subjectEdit.html" var="subject-settings"><i class="fa fa-cog fa-fw"></i> Settings</a></li>
-              <li><a href="/studentManager.html" var="subject-students"><i class="fa fa-users fa-fw"></i> Students</a></li>
+              <!--<li><a href="/studentManager.html" var="subject-students"><i class="fa fa-users fa-fw"></i> Students</a></li>-->
             </ul>
           </li>
           
