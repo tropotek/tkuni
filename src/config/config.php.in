@@ -18,6 +18,16 @@ $config['db.pass'] = 'password';
 //$config['google.recaptcha.privateKey'] = '';
 
 /*
+ * The email address of the system developer
+ */
+//$config['system.email.developer'] = 'developer@example.com';
+
+/*
+ * The email address of the department maintaining this system
+ */
+//$config['system.email.department'] = 'department@example.com';
+
+/*
  * Enable exception emails
  */
 //$config['system.email.exception'] = array('user@example.com');
