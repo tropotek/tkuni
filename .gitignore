@@ -1,22 +1,21 @@
+# System Files
+[Tt]humbs.db
+*.DS_Store
+/.idea
+.directory
 
-/_notes
-/data
+# Project directories
 /assets
 /vendor
 /plugin
+composer.lock
+/_notes
+/data
+/data_*
 /docs/api
+
+# Project Files
 /src/config/config.php
-
-/*.iml
 /.htaccess
-.idea
-.directory
-*.swp
-*.bak
-~*
-.DS_Store
+/*.bak
 
-
-
-!/src/App/Listener/AuthHandler.php
-!/src/App/Db/User.php
