@@ -8,7 +8,6 @@
 /assets
 /vendor
 /plugin
-composer.lock
 /_notes
 /data
 /data_*
