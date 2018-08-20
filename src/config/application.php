@@ -23,7 +23,7 @@ $config['system.template.path'] = '/html';
 
 $config['system.theme.public']   = $config['system.template.path'] . '/admin';
 
-//$config['system.theme.admin']   = $config['system.template.path'] . '/admin';
+$config['system.theme.admin']   = $config['system.template.path'] . '/admin';
 $config['system.theme.admin']   = $config['system.template.path'] . '/cube';
 
 $config['template.admin']       = $config['system.theme.admin']  . '/admin.html';
