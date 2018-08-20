@@ -50,7 +50,7 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
     {
         $template = parent::show();
 
-        $template->insertText('code', $this->subject->getCode());
+        $template->setAttr('content', 'data-panel-title', $this->subject->getCode() . ' Dashboard');
 
         return $template;
     }
@@ -66,13 +66,13 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
         $xhtml = <<<HTML
 <div>
 
-  <div class="panel panel-default">
-    <div class="panel-heading"><i class="fa fa-fw fa-institution"></i> <span var="code">Subject Dashboard</span></div>
-    <div class="panel-body">
-      
-      <p>&nbsp;</p>
-      
-    </div>
+  <div class="tk-panel" data-panel-title="Subject Dashboard" data-panel-icon="fa fa-institution" var="content">
+   <p>&nbsp;</p>
+   <p>TODO: Add application content for the sutdent to access...</p>
+   <p>&nbsp;</p>
+   <p>&nbsp;</p>
+   <p>&nbsp;</p>
+  
   </div>
 
 </div>
