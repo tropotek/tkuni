@@ -17,8 +17,14 @@ if (!$routes) return;
 
 
 // Default Home catchall
-$routes->add('home', new \Tk\Routing\Route('/index.html', 'App\Controller\Index::doDefault'));
-$routes->add('home-base', new \Tk\Routing\Route('/', 'App\Controller\Index::doDefault'));
+$routes->add('home', new \Tk\Routing\Route('/index.html', 'App\Controller\Login::doDefault'));
+$routes->add('home-base', new \Tk\Routing\Route('/', 'App\Controller\Login::doDefault'));
+//$routes->add('home', new \Tk\Routing\Route('/index.html', 'App\Controller\Index::doDefault'));
+//$routes->add('home-base', new \Tk\Routing\Route('/', 'App\Controller\Index::doDefault'));
+
+$routes->add('login', new \Tk\Routing\Route('/login.html', 'App\Controller\Login::doDefault'));
+$routes->add('institution-login', new \Tk\Routing\Route('/inst/{instHash}/login.html', 'App\Controller\Login::doInsLogin'));
+$routes->add('recover', new \Tk\Routing\Route('/recover.html', 'App\Controller\Recover::doDefault'));
 
 
 // Admin Pages

@@ -33,4 +33,26 @@ class Config extends \Uni\Config
     }
 
 
+    /**
+     * @return bool
+     */
+    public function isBootsrap4()
+    {
+        return !preg_match('|\/admin$|', $this->get('system.theme.admin'));
+        //return ($this->get('template.css.framework') == \Bs\Config::CSS_FW_BOOTSTRAP_4);
+    }
+
+    /**
+     * @param $form
+     * @return \Tk\Form\Renderer\Dom
+     */
+    public function createFormRenderer($form)
+    {
+        $obj = \Tk\Form\Renderer\Dom::create($form);
+        $obj->setFieldGroupRenderer($this->getFormFieldGroupRenderer($form));
+        $form->addCss('form-horizontal');
+        //$obj->setFieldGroupRenderer(null);
+        return $obj;
+    }
+
 }

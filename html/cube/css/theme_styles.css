@@ -3928,8 +3928,8 @@ input[type="radio"] {
   height: 34px; }
 
 /* line 155, Applications/MAMP/htdocs/cube/source/scss/theme/imports/_forms.scss */
-.input-group-prepend .input-group-text,
-.input-group-append .input-group-text {
+div.input-group-prepend .input-group-text,
+div.input-group-append .input-group-text {
   background: transparent;
   border-color: #e7ebee;
   border-width: 2px;
