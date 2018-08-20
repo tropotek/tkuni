@@ -72,7 +72,6 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
    <p>&nbsp;</p>
    <p>&nbsp;</p>
    <p>&nbsp;</p>
-  
   </div>
 
 </div>
