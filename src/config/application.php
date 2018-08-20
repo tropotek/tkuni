@@ -22,8 +22,7 @@ $config = \App\Config::getInstance();
 $config['system.template.path'] = '/html';
 
 $config['system.theme.public']   = $config['system.template.path'] . '/admin';
-
-$config['system.theme.admin']   = $config['system.template.path'] . '/admin';
+//$config['system.theme.admin']   = $config['system.template.path'] . '/admin';
 $config['system.theme.admin']   = $config['system.template.path'] . '/cube';
 
 $config['template.admin']       = $config['system.theme.admin'] . '/admin.html';
@@ -33,8 +32,11 @@ $config['template.student']     = $config['system.theme.admin'] . '/student.html
 $config['template.public']      = $config['system.theme.public'].'/public.html';
 
 $config['template.error']       = $config['system.theme.admin'] . '/error.html';
-$config['template.login']       = $config['system.theme.public'] . '/login.html';
+$config['template.login']       = $config['system.theme.admin'] . '/login.html';
 
+
+$config['url.auth.home'] = '/';
+$config['url.auth.login'] = '/';
 
 
 
