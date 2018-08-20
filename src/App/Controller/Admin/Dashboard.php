@@ -35,7 +35,6 @@ class Dashboard extends \Uni\Controller\AdminIface
      */
     public function doDefault(Request $request)
     {
-
         $this->table = \Uni\Table\Institution::create()->init();
         $this->table->setList($this->table->findList());
 
