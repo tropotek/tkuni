@@ -2,7 +2,7 @@
 
 jQuery(function($) {
 
-  // TODO:
+  //
   project_core.initDualListBox();
   project_core.initTinymce();
   project_core.initCodemirror();

@@ -39,6 +39,9 @@ class NavRendererHandler implements Subscriber
         $this->dropdownMenu = $config->getMenuManager()->getMenu('nav-dropdown', $role);
         $this->sideMenu = $config->getMenuManager()->getMenu('nav-side', $role);
 
+        $this->dropdownMenu->setAttr('style', 'visibility:hidden;');
+        $this->sideMenu->setAttr('style', 'visibility:hidden;');
+
         $this->initDropdownMenu($this->dropdownMenu);
         $this->initSideMenu($this->sideMenu);
 

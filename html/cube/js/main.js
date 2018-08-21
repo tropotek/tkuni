@@ -14,7 +14,6 @@ config.tkPanel = {
 
 jQuery(function ($) {
 
-  $('.tk-ui-menu.nav-side').hide();
   // dropdown menu
   $('.tk-ui-menu.nav-dropdown').each(function () {
     $(this).addClass('dropdown-menu dropdown-menu-right');
@@ -27,7 +26,7 @@ jQuery(function ($) {
     $(this).find('li.submenu > a').addClass('dropdown-toggle dropdown-nocaret').append('<i class="fa fa-angle-right drop-icon"></i>');
     $(this).find('li.submenu').removeClass('submenu');
   });
-  $('.tk-ui-menu.nav-side').fadeIn();
+  $('.tk-ui-menu').css('visibility', 'visible');
 
 
 
