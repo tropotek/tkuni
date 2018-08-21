@@ -23,6 +23,7 @@ class Dispatch extends \Uni\Dispatch
 
         $dispatcher->addSubscriber(new \App\Listener\NavRendererHandler());
         $dispatcher->addSubscriber(new \App\Listener\SubjectHandler());
+        $dispatcher->addSubscriber(new \App\Listener\PageLoaderHandler());
     }
 
 }

@@ -59,7 +59,7 @@ body.theme-tropotek {
 		color: $whblSidebarLinkColor;
 	}
 	#sidebar-nav .nav-pills > li.active > a > i {
-		color: #2980b9;
+		//color: #2980b9;
 	}
 	#sidebar-nav .nav > li > a:hover {
 		background-color: darken($whblNavColBg, 4%);
@@ -77,9 +77,11 @@ body.theme-tropotek {
 	#header-navbar .nav .show > a:focus {
 		background-color: #2980b9;
 	}
+	#sidebar-nav .nav li a.dropdown-toggle,
 	#sidebar-nav .nav li .submenu,
 	#nav-col-submenu .submenu {
-		background-color: darken($whblNavColBg, 4%);
+		//background-color: darken($whblNavColBg, 4%);
+		background-color: transparent;
 	}
 	#sidebar-nav .nav li .submenu > li > a,
 	.nav-small #nav-col-submenu .submenu > li > a {
@@ -110,6 +112,7 @@ body.theme-tropotek {
 	.nav-small #nav-col-submenu .submenu > li > a.active,
 	.nav-small #nav-col-submenu .submenu > li.active > a {
 		background-color: darken($whblNavColBg, 8%);
+		//background-color: transparent;
 	}
 	.navbar > .container .navbar-brand {
 		color: #fff;

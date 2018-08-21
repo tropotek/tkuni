@@ -71,7 +71,7 @@ class Dashboard extends \Uni\Controller\AdminIface
     {
         $xhtml = <<<HTML
 <div class="">
-
+  <a href="#" class="togLoader">Click Me</a>
   <div class="tk-panel" data-panel-title="Subject List" data-panel-icon="fa fa-university" var="table"></div>
   <!--<div class="panel panel-default">-->
     <!--<div class="panel-heading">-->

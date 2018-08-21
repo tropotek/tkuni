@@ -28,9 +28,7 @@ class PageTemplateHandler extends \Bs\Listener\PageTemplateHandler
             $template = $page->getTemplate();
             /** @var \Bs\Db\User $user */
             $user = $controller->getUser();
-
-
-            $uri = \Bs\Uri::create();
+            //$uri = \Bs\Uri::create();
             //if ($user && $uri->getRoleType(\Tk\ObjectUtil::getClassConstants($this->getConfig()->createRole(), 'TYPE')) != '') {
             if ($user) {
                 // About dialog

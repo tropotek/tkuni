@@ -38,7 +38,7 @@ class Dashboard extends \Uni\Controller\AdminIface
         $this->setPageTitle('');
 
         $this->userTable = \Uni\Table\User::create()->init();
-        $this->userTable->findCell('name')->setUrl(\Uni\Uri::createSubjectUrl('/staffEdit.html'));
+        $this->userTable->findCell('name')->setUrl(\Uni\Uri::createHomeUrl('/staffEdit.html'));
         $filter = array();
         $filter['institutionId'] = $this->getConfig()->getInstitutionId();
         $filter['type'] = \Uni\Db\Role::TYPE_STAFF;

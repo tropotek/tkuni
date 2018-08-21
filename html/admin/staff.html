@@ -46,7 +46,7 @@
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
           <i class="fa fa-user fa-fw"></i> <span var="username">Admin</span> <i class="fa fa-caret-down"></i>
         </a>
-        <ul class="dropdown-menu dropdown-user">
+        <ul class="dropdown-menu dropdown-user" var="nav-dropdown">
           <li><a href="/index.html" target="_blank"><i class="fa fa-home fa-fw"></i> Site Home</a></li>
           <li><a href="/admin/profile.html"><i class="fa fa-user fa-fw"></i> My Profile</a></li>
           <li><a href="/admin/settings.html"><i class="fa fa-gear fa-fw"></i> Settings</a></li>
@@ -58,16 +58,14 @@
 
     <div class="navbar-default sidebar" role="navigation">
       <div class="sidebar-nav navbar-collapse">
-        <ul class="nav" id="side-menu">
-          <li><a href="/admin/index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
-          <li><a href="/admin/settings.html"><i class="fa fa-cog fa-fw"></i> Settings</a></li>
-          <li><a href="/admin/institutionManager.html"><i class="fa fa-university fa-fw"></i> Institutions</a></li>
+        <ul class="nav" id="side-menu" var="nav-side">
+          <li><a href="/staff/index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
+          <li><a href="/staff/settings.html"><i class="fa fa-cog fa-fw"></i> Settings</a></li>
+          <li choice="perm.manage.subject"><a href="/staff/subjectEdit.html"><i class="fa fa-graduation-cap"></i> <span>Create Subject</span></a></li>
+          <li choice="perm.manage.roles"><a href="/staff/roleManager.html"><i class="fa fa-id-card"></i> <span>Roles</span></a></li>
+          <li choice="perm.manage.staff"><a href="/staff/staffManager.html"><i class="fa fa-user-md"></i> <span>Staff</span></a></li>
+          <!--<li><a href="/admin/institutionManager.html"><i class="fa fa-university fa-fw"></i> Institutions</a></li>-->
 
-          <li choice="debug"><a href="#"><i class="fa fa-bug fa-fw"></i> Development<span class="fa arrow"></span></a>
-            <ul class="nav nav-second-level">
-              <li choice="debug"><a href="/admin/dev/dispatcherEvents.html"><i class="fa fa-empire fa-fw"></i> Events</a></li>
-            </ul>
-          </li>
 
         </ul>
       </div>
