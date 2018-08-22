@@ -232,12 +232,7 @@ form.tk-form {
 
   .btn-default:hover,
   .btn-default:focus,
-  .btn-default:active,
-  a.btn.show .dropdown-toggle.default,
-  a.btn:hover,
-  a.btn:focus,
-  a.btn:active,
-  a.btn.show .dropdown-toggle.btn-light {
+  .btn-default:active {
     color: $text-color !important;
     background-color: #e0e1e2;
   }

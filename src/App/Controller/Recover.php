@@ -26,13 +26,9 @@ class Recover extends \Uni\Controller\Recover
 
         if (!$this->getConfig()->isBootsrap4()) return;
 
-        $this->form->getRenderer()->setFieldGroupRenderer(null);
-        $this->form->removeCss('form-horizontal');
-
         $this->form->removeField('account');
 
-
-        $f = $this->form->appendField(Field\InputGroup::create('account'))->setLabel(null)->setAttr('placeholder', 'Username');
+        $f = $this->form->appendField(Field\InputGroup::create('account'))->setRequired()->setLabel(null)->setAttr('placeholder', 'Username');
         $f->prepend('<span class="input-group-text"><i class="fa fa-user mx-auto"></i></span>');
 
         $this->form->getField('recover')->addCss('col-12');
