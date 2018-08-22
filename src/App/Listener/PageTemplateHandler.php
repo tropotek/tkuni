@@ -49,7 +49,8 @@ class PageTemplateHandler extends \Bs\Listener\PageTemplateHandler
             }
 
             // Add anything to the page template here ...
-
+            $url = \Bs\Uri::create('/html/app/img/unimelb-logo-lge.png');
+            $template->appendHtml('nav-footer', sprintf('<a href="https://fvas.unimelb.edu.au/" target="_blank" title="Visit FVAS"><img src="%s" class="img-fluid" alt="Logo" /></a>', $url));
 
         }
     }

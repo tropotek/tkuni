@@ -2,6 +2,18 @@
  *
  */
 
+
+
+
+body #content-wrapper {
+  //position: relative;
+	min-height: 1000px;
+}
+
+
+
+
+
 .tk-login-panel {
   div.input-group-prepend .input-group-text, div.input-group-append .input-group-text {
     background: transparent;
@@ -45,24 +57,16 @@
   }
 }
 
-
-
 .fixed-header #header-navbar {
   max-height: 50px;
 }
 
 // Content
 
-.input-group-prepend,
-.input-group-append  {
-
-  .input-group-text {
-    border-width: 1px;
-  }
-  .btn {
-    border-width: 0 !important;
-  }
+.CodeMirror {
+  border: 2px solid #EFEFEF;
 }
+
 
 /* Font awesome actions */
 .faa-add {
@@ -94,11 +98,6 @@
 }
 
 
-form.tk-form .form-group label {
-  text-align: left;
-}
-
-
 
 // Top Nav
 
@@ -108,10 +107,17 @@ form.tk-form .form-group label {
 #sidebar-nav ul.nav.navbar-nav {
   margin-bottom: 70px;
 }
-
-.CodeMirror {
-  border: 2px solid #EFEFEF;
+.nav-footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  padding: 10px;
+  background: $primary-color;
 }
+
+
+
 
 
 // Panel conversion to main-box
@@ -144,7 +150,19 @@ form.tk-form .form-group label {
 
 
 // Form
-.tk-form {
+
+.input-group-prepend,
+.input-group-append  {
+  .input-group-text {
+    border-width: 1px;
+  }
+  .btn {
+    border-width: 0 !important;
+  }
+}
+
+
+form.tk-form {
   
   .nav-tabs {
     > li.nav-item.has-error {
@@ -174,7 +192,9 @@ form.tk-form .form-group label {
   .input-group-text {
     background: #e7ebee;
   }
-
+  .form-group label {
+    text-align: left;
+  }
   @media (min-width: $break-sm-max) {
     .form-group {
       label {
