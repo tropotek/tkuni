@@ -130,6 +130,13 @@ body.no-side-nav {
 #sidebar-nav ul.nav.navbar-nav {
   margin-bottom: 70px;
 }
+#sidebar-nav .nav li .submenu {
+  padding: 0 0 5px 0;
+  > li > a {
+    padding-left: 35px;
+  }
+}
+
 .nav-footer {
   position: absolute;
   bottom: 0;
@@ -138,7 +145,6 @@ body.no-side-nav {
   padding: 10px;
   background: $primary-color;
 }
-
 
 
 
