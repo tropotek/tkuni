@@ -48,6 +48,15 @@ class PageTemplateHandler extends \Bs\Listener\PageTemplateHandler
 
             }
 
+            if ($this->getConfig()->getInstitution()) {
+                $template->insertText('login-title', $this->getConfig()->getInstitution()->getName());
+                $template->show('has-inst');
+            } else {
+                $template->insertText('login-title', $this->getConfig()->get('site.title'));
+                $template->show('no-inst');
+            }
+
+
             // Add anything to the page template here ...
             $url = \Bs\Uri::create('/html/app/img/unimelb-logo-lge.png');
             $template->appendHtml('nav-footer', sprintf('<a href="https://fvas.unimelb.edu.au/" target="_blank" title="Visit FVAS"><img src="%s" class="img-fluid" alt="Logo" /></a>', $url));

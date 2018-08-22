@@ -26,8 +26,6 @@ class Recover extends \Uni\Controller\Recover
 
         if (!$this->getConfig()->isBootsrap4()) return;
 
-//        $this->form = $this->getConfig()->createForm('recover-account');
-//        $this->form->setRenderer($this->getConfig()->createFormRenderer($this->form));
         $this->form->getRenderer()->setFieldGroupRenderer(null);
         $this->form->removeCss('form-horizontal');
 
@@ -38,8 +36,6 @@ class Recover extends \Uni\Controller\Recover
         $f->prepend('<span class="input-group-text"><i class="fa fa-user mx-auto"></i></span>');
 
         $this->form->getField('recover')->addCss('col-12');
-//        $this->form->appendField(new Event\Submit('recover', array($this, 'doRecover')))->addCss('btn btn-primary btn-ss');
-//        $this->form->appendField(new Event\Link('login', \Tk\Uri::create('/login.html'), ''))->removeCss('btn btn-sm btn-default btn-once');
 
     }
 

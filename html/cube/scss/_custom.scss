@@ -5,11 +5,18 @@
 
 
 
-body #content-wrapper {
-  //position: relative;
+#content-wrapper {
 	min-height: 1000px;
 }
 
+
+body.no-side-nav {
+  #content-wrapper {
+    margin-left:0;
+  }
+
+
+}
 
 
 
@@ -21,11 +28,18 @@ body #content-wrapper {
     border-width: 2px;
     border-right-width: 0;
   }
-  .tk-recover-url, .tk-login-url {
-    text-align: right;
-    display: block;
+  .tk-recover-url, .tk-login-url, .tk-unstitutions-url {
+    float: right;
+    display: inline-block;
     margin: 15px 0px 0px 0px;
   }
+  .tk-unstitutions-url {
+    float: left;
+
+  }
+
+
+
 }
 #login-logo {
   font-family: 'Patua One', cursive;
@@ -60,6 +74,17 @@ body #content-wrapper {
 .fixed-header #header-navbar {
   max-height: 50px;
 }
+
+
+.tk-admin-nav {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+  a, a:link {
+    color: $primary-color;
+  }
+}
+
 
 // Content
 
@@ -211,8 +236,7 @@ form.tk-form {
 
 // Buttons
 #content-wrapper {
-  .btn-default,
-  a.btn {
+  .btn-default {
     color: $text-color !important;
     background-color: #f8f9fa;
     border-color: #e0e1e2;

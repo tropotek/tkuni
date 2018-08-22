@@ -30,7 +30,7 @@ $config['template.admin']       = $config['system.theme.admin']    . '/admin.htm
 $config['template.client']      = $config['system.theme.admin']    . '/client.html';
 $config['template.staff']       = $config['system.theme.admin']    . '/staff.html';
 $config['template.student']     = $config['system.theme.admin']    . '/student.html';
-$config['template.public']      = $config['system.theme.admin']    . '/login.html';
+$config['template.public']      = $config['system.theme.admin']    . '/public.html';
 
 $config['template.error']       = $config['system.theme.admin']    . '/error.html';
 $config['template.login']       = $config['system.theme.admin']    . '/login.html';

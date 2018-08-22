@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use Tk\Form\Field;
+use Tk\Form\Event;
 
 
 /**
@@ -40,6 +41,25 @@ class Login extends \Uni\Controller\Login
             $f->addCss('');
         }
 
+        $this->form->appendField(new Event\Link('selectInstitution', \Tk\Uri::create('/institutions.html'), ''))
+            ->removeCss('btn btn-sm btn-default btn-once')->addCss('tk-unstitutions-url');
+    }
+
+    /**
+     * @return \Dom\Template
+     */
+    public function __makeTemplate()
+    {
+        $xhtml = <<<HTML
+<div class="tk-login-panel tk-login">
+
+  <div var="form"></div>
+  
+
+</div>
+HTML;
+
+        return \Dom\Loader::load($xhtml);
     }
 
 }
