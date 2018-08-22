@@ -14,8 +14,6 @@ body.no-side-nav {
   #content-wrapper {
     margin-left:0;
   }
-
-
 }
 
 
@@ -200,11 +198,9 @@ form.tk-form {
   }
 
   .tk-check-select {
-
     .status-notes {
       margin-top: -2px;
       z-index: 999;
-
     }
   }
   .form-control::placeholder {
@@ -220,14 +216,6 @@ form.tk-form {
   .form-group label {
     text-align: left;
   }
-  @media (min-width: $break-sm-max) {
-    .form-group {
-      label {
-        text-align: right;
-      }
-    }
-  }
-
 
 }
 

@@ -50,7 +50,7 @@ class Config extends \Uni\Config
     {
         $obj = \Tk\Form\Renderer\Dom::create($form);
         $obj->setFieldGroupRenderer($this->getFormFieldGroupRenderer($form));
-        $form->addCss('form-horizontal');
+        //$form->addCss('form-horizontal');
         //$obj->setFieldGroupRenderer(null);
         return $obj;
     }
