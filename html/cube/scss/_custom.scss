@@ -144,6 +144,17 @@ body.no-side-nav {
   left: 0;
   padding: 10px;
   background: $primary-color;
+
+  opacity: 0.04;
+  transition: opacity .25s ease-in-out;
+  -moz-transition: opacity .25s ease-in-out;
+  -webkit-transition: opacity .25s ease-in-out;
+  &:hover {
+    opacity: 1;
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
+  }
 }
 
 
