@@ -17,7 +17,7 @@ $app['environment'] = $env;
 
 try {
     $config = \App\Config::getInstance();
-    $app = new Application($config->get('site.title') , $config->get('system.info.version'));
+    $app = $config->getConsoleApplication();
 
     $log = null;
     if ($config->get('event.dispatcher.log')) {
