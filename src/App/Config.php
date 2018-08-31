@@ -42,17 +42,5 @@ class Config extends \Uni\Config
         //return ($this->get('template.css.framework') == \Bs\Config::CSS_FW_BOOTSTRAP_4);
     }
 
-    /**
-     * @param $form
-     * @return \Tk\Form\Renderer\Dom
-     */
-    public function createFormRenderer($form)
-    {
-        $obj = \Tk\Form\Renderer\Dom::create($form);
-        $obj->setFieldGroupRenderer($this->getFormFieldGroupRenderer($form));
-        //$form->addCss('form-horizontal');
-        //$obj->setFieldGroupRenderer(null);
-        return $obj;
-    }
 
 }

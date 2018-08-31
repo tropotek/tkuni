@@ -310,5 +310,11 @@ body.theme-unimelb {
 		.navbar > .container .navbar-brand {
 			background-color: $primary-color;
 		}
+		.navbar .navbar-brand {
+			color: #fff;
+		}
+	}
+	.nav-footer {
+		display: none;
 	}
 }
