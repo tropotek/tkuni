@@ -51,10 +51,11 @@ jQuery(function ($) {
     }
   });
   // Check breadcrumbs if no menu item active
-  if (!$('#nav-col a.active').length) {
+  if (!$('#sidebar-nav a.active').length) {
     $($('.breadcrumb a').get().reverse()).each(function () {
       var linkHref = $(this).attr('href').split("?")[0];
-      var a = $('#nav-col a[href="' + linkHref + '"]');
+      console.log(linkHref);
+      var a = $('#sidebar-nav a[href="' + linkHref + '"]');
       if (a.length) {
         activateItem(a);
         return false;
