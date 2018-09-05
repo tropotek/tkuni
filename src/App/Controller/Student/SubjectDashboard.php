@@ -24,11 +24,10 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
     public function __construct()
     {
         $this->subject = $this->getConfig()->getSubject();
-        $this->setPageTitle($this->subject->name);
+        $this->setPageTitle('Subject Dashboard');
         //$this->getCrumbs()->setVisible(false);
         $this->getActionPanel()->setVisible(false);
     }
-
 
     /**
      * @param Request $request
@@ -36,10 +35,10 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
      */
     public function doDefault(Request $request)
     {
-        $subject = $this->getConfig()->getSubject();
-        if ($subject) {
-            $this->setPageTitle($subject->name);
-            $this->getTemplate()->insertText('code', $subject->code);
+        $this->setPageTitle($this->subject->getName());
+        if ($this->subject) {
+            $this->setPageTitle($this->subject->getName());
+            $this->getTemplate()->insertText('code', $this->subject->getCode());
         }
     }
 
@@ -66,7 +65,7 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
         $xhtml = <<<HTML
 <div>
 
-  <div class="tk-panel" data-panel-title="Subject Dashboard" data-panel-icon="fa fa-institution" var="content">
+  <div class="tk-panel" data-panel-title="Subject Dashboard" data-panel-icon="fa fa-graduation-cap" var="content">
    <p>&nbsp;</p>
    <p>TODO: Add application content for the sutdent to access...</p>
    <p>&nbsp;</p>

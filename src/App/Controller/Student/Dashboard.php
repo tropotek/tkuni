@@ -70,7 +70,7 @@ class Dashboard extends \Uni\Controller\AdminIface
         $xhtml = <<<HTML
 <div class="">
 
-  <div class="tk-panel" data-panel-title="Subject List" data-panel-icon="fa fa-users" var="table"></div>
+  <div class="tk-panel" data-panel-title="Subject List" data-panel-icon="fa fa-graduation-cap" var="table"></div>
 
 </div>
 HTML;
