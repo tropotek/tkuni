@@ -43,8 +43,9 @@ jQuery(function ($) {
   }
   // First check the page URL for a match
   $('#nav-col a').removeClass('active').each(function () {
-    var uri = location.href;
-    var href = $(this).attr('href');
+    var uri = location.href.split("?")[0];
+    var href = $(this).attr('href').split("?")[0];
+
     if (uri === href) {
       activateItem($(this));
     }
@@ -52,10 +53,9 @@ jQuery(function ($) {
   // Check breadcrumbs if no menu item active
   if (!$('#nav-col a.active').length) {
     $($('.breadcrumb a').get().reverse()).each(function () {
-      var linkHref = $(this).attr('href');
+      var linkHref = $(this).attr('href').split("?")[0];
       var a = $('#nav-col a[href="' + linkHref + '"]');
       if (a.length) {
-        console.log(linkHref);
         activateItem(a);
         return false;
       }
