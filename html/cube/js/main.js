@@ -30,19 +30,37 @@ jQuery(function ($) {
 
 
 
+
   // Activate the appropriate side nav for this url, expands any sub-nav items
+  function activateItem(a) {
+    if (!a) return;
+    a.addClass('active');
+    var parent = a.closest('ul');
+    do {
+      parent.closest('li').addClass('active');
+      parent = parent.closest('li').closest('ul');
+    } while (parent && parent.hasClass('submenu'));
+  }
+  // First check the page URL for a match
   $('#nav-col a').removeClass('active').each(function () {
     var uri = location.href;
-    var a = $(this).attr('href');
-    if (uri === a) {
-      $(this).addClass('active');
-      var parent = $(this).closest('ul');
-      do {
-          parent.closest('li').addClass('active');
-          parent = parent.closest('li').closest('ul');
-      } while (parent && parent.hasClass('submenu'));
+    var href = $(this).attr('href');
+    if (uri === href) {
+      activateItem($(this));
     }
   });
+  // Check breadcrumbs if no menu item active
+  if (!$('#nav-col a.active').length) {
+    $($('.breadcrumb a').get().reverse()).each(function () {
+      var linkHref = $(this).attr('href');
+      var a = $('#nav-col a[href="' + linkHref + '"]');
+      if (a.length) {
+        console.log(linkHref);
+        activateItem(a);
+        return false;
+      }
+    });
+  }
 
 
 
