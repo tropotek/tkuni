@@ -19,6 +19,8 @@ if (!$routes) return;
 // Default Home catchall
 $routes->add('home', new \Tk\Routing\Route('/index.html', 'Uni\Controller\Institution\Listing::doDefault'));
 $routes->add('home-base', new \Tk\Routing\Route('/', 'Uni\Controller\Institution\Listing::doDefault'));
+
+
 //$routes->add('home', new \Tk\Routing\Route('/index.html', 'App\Controller\Index::doDefault'));
 //$routes->add('home-base', new \Tk\Routing\Route('/', 'App\Controller\Index::doDefault'));
 
@@ -54,5 +56,7 @@ $routes->add('student-subject-dashboard', new \Tk\Routing\Route('/student/{subje
 
 
 
+// Dev
+$routes->add('admin-dev-forms', new \Tk\Routing\Route('/admin/dev/forms.html', 'App\Controller\Dev\Forms::doDefault'));
 
 
