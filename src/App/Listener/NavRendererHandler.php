@@ -90,6 +90,7 @@ class NavRendererHandler implements Subscriber
                 if ($this->getConfig()->isDebug()) {
                     $sub = $menu->append(Item::create('Development', '#', 'fa fa-bug'));
                     $sub->append(Item::create('Events', \Uni\Uri::createHomeUrl('/dev/dispatcherEvents.html'), 'fa fa-empire'));
+                    $sub->append(Item::create('Forms', \Uni\Uri::createHomeUrl('/dev/forms.html'), 'fa fa-rebel'));
                 }
                 break;
             case \Uni\Db\Role::TYPE_CLIENT:
