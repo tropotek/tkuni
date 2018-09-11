@@ -4,19 +4,18 @@
     <div class="full-width">
       <nav class="desktop-nav" role="tablist">
         <a href="#welcome" role="tab">Welcome</a>
+        <a href="#institutions" role="tab">Institutions</a>
         <a href="#contact" role="tab">Contact</a>
       </nav>
     </div>
 
     <div class="tab" id="welcome" role="tabpanel">
       <section class="with-figure">
-        <h2 class="title">
-          FVAS VOCE
-        </h2>
+        <h2 class="title" var="site-title">FVAS VOCE</h2>
         <div>
-          <h1>The VOCE Project</h1>
+          <h1>The Project</h1>
           <p>
-            Welcome to the VOCE Project, a Veterinary Oral Communication Exercise.<br/>
+            Welcome to the <span var="site-title">Project</span>.<br/>
             This project has been developed by FVAS staff to provide academics and students with an
             tool where students can upload videos and have them peer reviewed by others within their class.<br/>
             The system was also developed to upload the videos to an external repository such as YouTube or VIMEO
@@ -24,17 +23,21 @@
           </p>
           <h1>Access Via LMS</h1>
           <p>
-            The VOCE application is accessed as an <a href="https://www.imsglobal.org/activity/learning-tools-interoperability" target="_blank">LTI</a>
+            The application is accessed as an <a href="https://www.imsglobal.org/activity/learning-tools-interoperability" target="_blank">LTI</a>
             Web Link within the LMS.
           </p>
           <p>
-            If you wish to use the VOCE Tool in your course all you need to do is add a web link into your
+            If you wish to use this LTI Tool in your course all you need to do is add a web link into your
             LMS course content. Contact our team today if you want to find out more.
           </p>
         </div>
       </section>
       <hr class="spacer" />
       <p class="center"><a class="button-hero" href="https://app.lms.unimelb.edu.au/">Access The LMS</a></p>
+    </div>
+
+    <div class="tab" id="institutions" role="tabpanel">
+      <section var="table"></section>
     </div>
 
     <div class="tab" id="contact" role="tabpanel">
@@ -53,6 +56,7 @@
         <div class="gmap__canvas" data-grayscale="" data-latlng="-37.889149, 144.693133" data-pin="-37.889149, 144.693133"></div>
       </section>
     </div>
+
 
   </div>
 

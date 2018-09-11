@@ -38,7 +38,7 @@ class Login extends \Uni\Controller\Login
             $f->addCss('');
         }
 
-        $this->form->appendField(new Event\Link('selectInstitution', \Tk\Uri::create('/institutions.html'), ''))
+        $this->form->appendField(new Event\Link('selectInstitution', \Tk\Uri::create('/')->setFragment('institutions'), ''))
             ->removeCss('btn btn-sm btn-default btn-once')->addCss('tk-unstitutions-url');
     }
 
