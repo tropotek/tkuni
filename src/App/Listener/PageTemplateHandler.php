@@ -11,7 +11,7 @@ use Tk\Kernel\KernelEvents;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class PageTemplateHandler extends \Bs\Listener\PageTemplateHandler
+class PageTemplateHandler extends \Uni\Listener\PageTemplateHandler
 {
 
     /**
