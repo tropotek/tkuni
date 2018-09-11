@@ -7,7 +7,7 @@
 	outline: none;
 	@include border-radius($border-radius-base);
 }
-.btn-group-sm > .btn, 
+.btn-group-sm > .btn,
 .btn-sm {
 	padding: .25rem .5rem;
 }
@@ -21,7 +21,7 @@
 .btn-secondary:hover,
 .btn-secondary:focus,
 .btn-secondary:active,
-.btn-secondary.active, 
+.btn-secondary.active,
 .show .dropdown-toggle.btn-secondary,
 .wizard-cancel:hover,
 .wizard-cancel:focus,
@@ -41,10 +41,42 @@
 .btn-secondary:hover,
 .btn-secondary:focus,
 .btn-secondary:active,
-.btn-secondary.active, 
+.btn-secondary.active,
 .show .dropdown-toggle.btn-secondary {
 	background-color: $gray-color-dark;
 	border-color: #5c6667;
+}
+.btn-light {
+	background-color: #f8f9fa;
+	border-color: #e0e1e2;
+}
+.btn-light:hover,
+.btn-light:focus,
+.btn-light:active,
+.btn-light.active,
+.show .dropdown-toggle.btn-light {
+	background-color: #e0e1e2;
+}
+.btn-default {
+	@extend .btn-light;
+}
+.btn-default:hover,
+.btn-default:focus,
+.btn-default:active,
+.btn-default.active,
+.show .dropdown-toggle.btn-default {
+	@extend .btn-light:hover;
+}
+.btn-dark {
+	background-color: #343a40;
+	border-color: #171a1d;
+}
+.btn-dark:hover,
+.btn-dark:focus,
+.btn-dark:active,
+.btn-dark.active,
+.show .dropdown-toggle.btn-dark {
+	background-color: #171a1d;
 }
 .btn-info {
 	background-color: #01b9fe;
@@ -53,7 +85,7 @@
 .btn-info:hover,
 .btn-info:focus,
 .btn-info:active,
-.btn-info.active, 
+.btn-info.active,
 .show .dropdown-toggle.btn-info {
 	background-color: #0298d1;
 	border-color: #0178a5;
@@ -68,7 +100,7 @@
 .btn-primary:hover,
 .btn-primary:focus,
 .btn-primary:active,
-.btn-primary.active, 
+.btn-primary.active,
 .show .dropdown-toggle.btn-primary {
 	background-color: #2980b9;
 	border-color: #1c5c87;
@@ -80,7 +112,7 @@
 .btn-success:hover,
 .btn-success:focus,
 .btn-success:active,
-.btn-success.active, 
+.btn-success.active,
 .show .dropdown-toggle.btn-success {
 	background-color: $green-color-dark;
 }
@@ -91,31 +123,9 @@
 .btn-danger:hover,
 .btn-danger:focus,
 .btn-danger:active,
-.btn-danger.active, 
+.btn-danger.active,
 .show .dropdown-toggle.btn-danger {
 	background-color: $red-color-dark;
-}
-.btn-light {
-	background-color: #f8f9fa;
-	border-color: #e0e1e2;
-}
-.btn-light:hover,
-.btn-light:focus,
-.btn-light:active,
-.btn-light.active, 
-.show .dropdown-toggle.btn-light {
-	background-color: #e0e1e2;
-}
-.btn-dark {
-	background-color: #343a40;
-	border-color: #171a1d;
-}
-.btn-dark:hover,
-.btn-dark:focus,
-.btn-dark:active,
-.btn-dark.active, 
-.show .dropdown-toggle.btn-dark {
-	background-color: #171a1d;
 }
 .btn-warning {
 	background-color: $yellow-color;
@@ -124,7 +134,7 @@
 .btn-warning:hover,
 .btn-warning:focus,
 .btn-warning:active,
-.btn-warning.active, 
+.btn-warning.active,
 .show .dropdown-toggle.btn-warning {
 	background-color: #e0b50a;
 	border-color: #bd9804;
@@ -156,7 +166,7 @@
 		border: 2px solid #e1e1e1;
 		margin-left: 3px;
 		margin-right: 0;
-	
+
 		&:hover {
 			background-color: #eee;
 			color: $primary-color;
@@ -273,14 +283,14 @@
 .pagination {
 	margin: 5px 0;
 
-	> li:first-child > a, 
+	> li:first-child > a,
 	> li:first-child > span,
-	> li:last-child > a, 
+	> li:last-child > a,
 	> li:last-child > span {
 		@include border-radius($border-radius-base);
 	}
 	> li {
-		> a, 
+		> a,
 		> span,
 		> a:hover,
 		> span:hover,
@@ -294,11 +304,11 @@
 		}
 	}
 	> .active {
-		> a, 
-		> span, 
-		> a:hover, 
-		> span:hover, 
-		> a:focus, 
+		> a,
+		> span,
+		> a:hover,
+		> span:hover,
+		> a:focus,
 		> span:focus {
 			background-color: $primary-color;
 			border-color: $primary-color;
@@ -321,8 +331,8 @@
 		float: right;
 	}
 }
-a.list-group-item.active, 
-a.list-group-item.active:hover, 
+a.list-group-item.active,
+a.list-group-item.active:hover,
 a.list-group-item.active:focus {
 	background-color: $primary-color;
 	border-color: $primary-color;
@@ -380,8 +390,8 @@ a.list-group-item.active:focus {
 	> li.nav-item:last-child > a:focus {
 		@include border-radius(0 3px 0 0);
 	}
-	> li.nav-item > a.active, 
-	> li.nav-item > a.active:hover, 
+	> li.nav-item > a.active,
+	> li.nav-item > a.active:hover,
 	> li.nav-item > a.active:focus {
 		@include border-radius(0 0 0 0);
 		border-left: 0;
@@ -390,22 +400,22 @@ a.list-group-item.active:focus {
 		border-bottom: 0;
 		background-color: #fff;
 	}
-	> li.nav-item:first-child > a.active, 
-	> li.nav-item:first-child > a.active:hover, 
+	> li.nav-item:first-child > a.active,
+	> li.nav-item:first-child > a.active:hover,
 	> li.nav-item:first-child > a.active:focus {
 		@include border-radius(3px 0 0 0);
 	}
 	> li.nav-item:last-child > a {
 		margin-right: 0;
 	}
-	> li.nav-item:last-child > a.active, 
-	> li.nav-item:last-child > a.active:hover, 
+	> li.nav-item:last-child > a.active,
+	> li.nav-item:last-child > a.active:hover,
 	> li.nav-item:last-child > a.active:focus {
 		@include border-radius(0 3px 0 0);
 	}
 }
-.nav .show > a, 
-.nav .show > a:hover, 
+.nav .show > a,
+.nav .show > a:hover,
 .nav .show > a:focus {
 	border-color: $main-bg-color;
 }
@@ -566,19 +576,19 @@ a.list-group-item.active:focus {
 
 /* POPOVER */
 .popover {
-	
+
 }
 .popover.right .arrow {
-	
+
 }
 .popover.left .arrow {
-	
+
 }
 .popover.bottom .arrow {
-	
+
 }
 .popover.top .arrow {
-	
+
 }
 .popover-content {
 	font-size: 0.875em;
@@ -614,21 +624,21 @@ blockquote p {
 blockquote:before {
 	content: "\f10d";
 	color: $gray-color-light;
-    display: inline;
-    font-family: FontAwesome;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: normal;
-    height: auto;
-    line-height: normal;
-    margin-left: -28px;
-    margin-top: 0;
-    position: absolute;
-    width: auto;
+	display: inline;
+	font-family: FontAwesome;
+	font-size: 20px;
+	font-style: normal;
+	font-weight: normal;
+	height: auto;
+	line-height: normal;
+	margin-left: -28px;
+	margin-top: 0;
+	position: absolute;
+	width: auto;
 }
 blockquote.float-right:before {
 	margin-left: 0;
-    right: 50px;
+	right: 50px;
 }
 
 /* BREADCRUMBS */
@@ -655,8 +665,8 @@ blockquote.float-right:before {
 		content: "\f105";
 	}
 	> .active {
-	    font-weight: 600;
-	    text-transform: none;
+		font-weight: 600;
+		text-transform: none;
 		color: #616161;
 	}
 	> li:first-child {
@@ -669,7 +679,7 @@ blockquote.float-right:before {
 	// -webkit-transform: scale(1, 1);
 	// transform: scale(1, 1);  
 	// opacity:1;
- //    visibility: visible;
+	//    visibility: visible;
 }
 .dropdown-menu {
 	// opacity: 0;
@@ -689,17 +699,17 @@ blockquote.float-right:before {
 .datepicker.dropdown-menu,
 .daterangepicker.dropdown-menu,
 .bootstrap-timepicker-widget.dropdown-menu {
-  // opacity: 1;
-  // visibility: visible;
-  // transform: none;
-  // transition: none;
-  // display: none;
+	// opacity: 1;
+	// visibility: visible;
+	// transform: none;
+	// transition: none;
+	// display: none;
 }
 .bootstrap-timepicker-widget.dropdown-menu {
-  // display: none;
+	// display: none;
 }
 .bootstrap-timepicker-widget.dropdown-menu.show {
-  // display: block;
+	// display: block;
 }
 .clockpicker-popover .popover-title {
 	@include border-radius(0.3rem 0.3rem 0 0);
@@ -711,20 +721,20 @@ blockquote.float-right:before {
 	}
 	.btn-group > .btn:not(:last-of-type) {
 		border-top-right-radius: 0;
-    	border-bottom-right-radius: 0;
+		border-bottom-right-radius: 0;
 	}
 	.btn-group > .btn.last-child {
 		border-top-right-radius: $border-radius-base;
-    	border-bottom-right-radius: $border-radius-base;
+		border-bottom-right-radius: $border-radius-base;
 	}
 }
 .note-editor .note-toolbar .note-btn-group .note-btn.btn {
 	color: #fff;
 	background-color: $gray-color;
-    border-color: $gray-color-dark;
+	border-color: $gray-color-dark;
 
-    &:hover {
-    	background-color: $gray-color-dark;
-    	border-color: #5c6667;
-    }
+	&:hover {
+		background-color: $gray-color-dark;
+		border-color: #5c6667;
+	}
 }
