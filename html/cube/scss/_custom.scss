@@ -246,24 +246,6 @@ form.tk-form {
 }
 
 
-
-
-// Buttons
-#content-wrapper {
-  .btn-default {
-    color: $text-color !important;
-    background-color: #f8f9fa;
-    border-color: #e0e1e2;
-  }
-
-  .btn-default:hover,
-  .btn-default:focus,
-  .btn-default:active {
-    color: $text-color !important;
-    background-color: #e0e1e2;
-  }
-}
-
 // ActionPanel
 .tk-ui-action-panel {
   .btn {
