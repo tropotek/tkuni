@@ -54,7 +54,6 @@ jQuery(function ($) {
   if (!$('#sidebar-nav a.active').length) {
     $($('.breadcrumb a').get().reverse()).each(function () {
       var linkHref = $(this).attr('href').split("?")[0];
-      console.log(linkHref);
       var a = $('#sidebar-nav a[href="' + linkHref + '"]');
       if (a.length) {
         activateItem(a);
