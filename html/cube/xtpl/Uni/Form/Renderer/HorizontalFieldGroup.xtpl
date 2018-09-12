@@ -1,8 +1,0 @@
-<div class="form-group row" var="field-group">
-  <label class="col-sm-12 col-form-label control-label" var="label" choice="label"></label>
-  <div class="col-sm-12" var="field-cell">
-    <div var="element" class="controls"></div>
-    <div class="help-block" var="errorText"></div>
-    <div class="help-block help-text" var="notes" choice="notes"></div>
-  </div>
-</div>
