@@ -4,7 +4,7 @@ namespace App\Listener;
 use Tk\Event\Subscriber;
 use Tk\Kernel\KernelEvents;
 use Tk\Ui\Menu\Item;
-use UNi\Ui\Menu;
+use Bs\Ui\Menu;
 
 /**
  * @author Michael Mifsud <info@tropotek.com>
@@ -13,17 +13,6 @@ use UNi\Ui\Menu;
  */
 class NavRendererHandler implements Subscriber
 {
-    /**
-     * @var Menu
-     */
-    protected $dropdownMenu = null;
-
-    /**
-     * @var Menu
-     */
-    protected $sideMenu = null;
-
-
 
     /**
      * @param \Tk\Event\GetResponseEvent $event
@@ -31,19 +20,15 @@ class NavRendererHandler implements Subscriber
     public function onRequest(\Tk\Event\GetResponseEvent $event)
     {
         $config = $this->getConfig();
-        $role = 'public';
-        if ($config->getUser())
-            $role = $config->getUser()->getRoleType();
-        if (is_array($role)) $role = current($role);
 
-        $this->dropdownMenu = $config->getMenuManager()->getMenu('nav-dropdown', $role);
-        $this->sideMenu = $config->getMenuManager()->getMenu('nav-side', $role);
+        $dropdownMenu = $config->getMenuManager()->getMenu('nav-dropdown');
+        $sideMenu = $config->getMenuManager()->getMenu('nav-side');
 
-        $this->dropdownMenu->setAttr('style', 'visibility:hidden;');
-        $this->sideMenu->setAttr('style', 'visibility:hidden;');
+        $dropdownMenu->setAttr('style', 'visibility:hidden;');
+        $sideMenu->setAttr('style', 'visibility:hidden;');
 
-        $this->initDropdownMenu($this->dropdownMenu);
-        $this->initSideMenu($this->sideMenu);
+        $this->initDropdownMenu($dropdownMenu);
+        $this->initSideMenu($sideMenu);
 
     }
 
@@ -55,7 +40,7 @@ class NavRendererHandler implements Subscriber
         $menu->append(Item::create('Profile', \Uni\Uri::createHomeUrl('/profile.html'), 'fa fa-user'));
         $menu->append(Item::create('About', '#', 'fa fa-info-circle')
             ->setAttr('data-toggle', 'modal')->setAttr('data-target', '#aboutModal'));
-        switch ($menu->getRoleType()) {
+        switch ($this->getRoleType()) {
             case \Uni\Db\Role::TYPE_ADMIN:
                 $menu->prepend(Item::create('Site Preview', \Uni\Uri::create('/index.html'), 'fa fa-home'))->getLink()->setAttr('target', '_blank');
                 $menu->append(Item::create('Settings', \Uni\Uri::createHomeUrl('/settings.html'), 'fa fa-cogs'), 'Profile');
@@ -80,10 +65,8 @@ class NavRendererHandler implements Subscriber
     protected function initSideMenu($menu)
     {
         $user = $this->getConfig()->getUser();
-
         $menu->append(Item::create('Dashboard', \Uni\Uri::createHomeUrl('/index.html'), 'fa fa-dashboard'));
-
-        switch ($menu->getRoleType()) {
+        switch ($this->getRoleType()) {
             case \Uni\Db\Role::TYPE_ADMIN:
                 $menu->append(Item::create('Settings', \Uni\Uri::createHomeUrl('/settings.html'), 'fa fa-cogs'));
                 //$menu->append(Item::create('Institutions', \Uni\Uri::createHomeUrl('/institutionManager.html'), 'fa fa-university'));
@@ -135,7 +118,7 @@ class NavRendererHandler implements Subscriber
             foreach ($this->getConfig()->getMenuManager()->getMenuList() as $menu) {
                 $renderer = \Tk\Ui\Menu\ListRenderer::create($menu);
                 $tpl = $renderer->show();
-                $template->replaceTemplate($menu->getTemplateVar(), $tpl);
+                $template->replaceTemplate($menu->getName(), $tpl);
             }
         }
     }
@@ -158,5 +141,16 @@ class NavRendererHandler implements Subscriber
     public function getConfig()
     {
         return \Uni\Config::getInstance();
+    }
+
+    /**
+     * @return string
+     */
+    public function getRoleType()
+    {
+        $t = 'public';
+        if ($this->getConfig()->getUser())
+            $t = $this->getConfig()->getUser()->getRoleType();
+        return $t;
     }
 }
