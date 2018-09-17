@@ -33,14 +33,5 @@ class Config extends \Uni\Config
     }
 
 
-    /**
-     * @return bool
-     */
-    public function isBootsrap4()
-    {
-        return !preg_match('|\/admin$|', $this->get('system.theme.admin'));
-        //return ($this->get('template.css.framework') == \Bs\Config::CSS_FW_BOOTSTRAP_4);
-    }
-
 
 }

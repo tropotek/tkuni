@@ -1,56 +1,53 @@
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8"/>
-  <title>Server Error</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <style>
-* {
-  line-height: 1.2;
-  margin: 0;
-}
+  <base href="/" var="base-url" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-html {
-  color: #333;
-  font-family: sans-serif;
-}
+  <title>Error</title>
 
-body {
-  padding: 30px;
-}
+  <!-- bootstrap -->
+  <link rel="stylesheet" type="text/css" href="../theme-cube/components/bootstrap/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../theme-cube/components/font-awesome/css/font-awesome.css" />
 
-h1 {
-  color: #555;
-  font-size: 2em;
-  font-weight: 400;
-}
+  <!-- global styles -->
+  <link rel="stylesheet" type="text/css" href="../theme-cube/css/theme_styles.css" />
+  <link rel="stylesheet" type="text/css" href="../theme-cube/css/error.css" />
 
-p {
-  margin: 0 auto;
-}
-pre.trace {
-  line-height: 1.4em;
-  padding: 0;margin: 0;
-  overflow: auto;
-  border: 1px solid #EFEFEF;
-  padding: 10px;
-}
-@media only screen and (max-width: 280px) {
-  h1 {
-    font-size: 1.5em;
-    margin: 0 0 0.3em;
-  }
-}
+  <!-- google font libraries -->
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300|Titillium+Web:200,300,400' rel='stylesheet' type='text/css' />
 
-  </style>
 </head>
-<body>
+<body id="error-page">
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-sm-12">
+      <div id="error-box">
+        <div class="row">
+          <div class="col-12 col-sm-12">
+            <div id="error-box-inner">
+              <img src="../theme-cube/img/error-500-v1.png" alt="Error 500" var="error-img"/>
+            </div>
+            <h1 var="class"></h1>
+            <p var="message"></p>
 
-<h1 var="class"></h1>
-<p class="message"><strong var="message"></strong></p>
-<p>&nbsp;</p>
-<pre class="trace" var="trace" choice="trace"></pre>
-<p>&nbsp;</p>
-<div class="log-dump" var="log" choice="log"></div>
+            <p>&nbsp;</p>
+            <pre class="trace" var="trace" choice="trace"></pre>
+            <p>&nbsp;</p>
+            <div class="log-dump" var="log" choice="log"></div>
+
+            <p>Go back to <a href="/" var="home-url">homepage</a>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../theme-cube/components/jquery/dist/jquery.min.js"></script>
+<script src="../theme-cube/components/bootstrap/dist/js/bootstrap.bundle.js"></script>
 
 </body>
 </html>

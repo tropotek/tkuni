@@ -1,0 +1,5 @@
+<div class="checkbox checkbox-nice" var="checkbox">
+  <input type="hidden" var="hidden" value=""/>
+  <input type="checkbox" var="element"/>
+  <label var="checkbox-label"><span var="label" class="cb-label">&nbsp;</span></label>
+</div>

@@ -20,7 +20,6 @@ class Login extends \Uni\Controller\Login
     protected function init()
     {
         parent::init();
-        if (!$this->getConfig()->isBootsrap4()) return;
 
         $this->form->removeField('username');
         $this->form->removeField('password');

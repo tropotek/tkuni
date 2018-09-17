@@ -1,116 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="utf-8"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="description" content=""/>
-  <meta name="author" content=""/>
+  <meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link type="image/x-icon" href="./img/favicon.png" rel="shortcut icon" />
 
-  <title></title>
+	<title></title>
 
-  <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
-  <link rel="icon" type="image/png" href="./favicon_64.png" />
+	<!-- bootstrap -->
+  <link rel="stylesheet" type="text/css" href="./scss/main.scss" />
 
-  <!-- Bootstrap Core CSS -->
-  <link href="./less/main.less" rel="stylesheet" />
-  <link href="./bower_components/jquery-ui/jquery-ui.min.css" rel="stylesheet"/>
-
-  <!-- sbadmin2 CSS -->
-  <link href="./bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet"/>
-  <link href="./dist/css/sb-admin-2.css" rel="stylesheet"/>
-
-
+  <!-- google font libraries -->
+  <link href='//fonts.googleapis.com/css?family=Open+Sans:400,600,700,300|Titillium+Web:200,300,400|Patua+One:200,300,400|Baloo+Bhai:200,300,400' rel='stylesheet' type='text/css' />
 
 </head>
-<body class="public">
-<a id="t-top"></a>
+<body id="login-page">
 
+	<div class="tk-admin-nav" choice="has-inst">
+		<a href="/login.html" title="Administrators"><i class="fa fa-graduation-cap"></i></a>
+	</div>
 
-  <div role="navigation" class="navbar navbar-default navbar-fixed-top user-public">
-    <div class="container">
-      <div class="navbar-header">
-        <button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a href="/" class="navbar-brand" var="default-url"><b var="site-title">Tk2Uni v2.0</b></a>
-      </div>
-
-      <div class="navbar-collapse collapse" var="_topNav1_">
-        <ul class="nav navbar-nav">
-          <li><a href="/index.html" var="default-url">Home</a></li>
-          <li><a href="/institutions.html" var="default-url">Institutions</a></li>
-          <li choice="login"><a href="/login.html" var="default-url">Login</a></li>
-          <li choice="logout"><a href="/logout.html" var="default-url">Logout</a></li>
-        </ul>
-
-        <ul class="nav navbar-nav navbar-right" choice="logout">
-          <li class="dropdown">
-            <a data-toggle="dropdown" class="dropdown-toggle" href="javascript:;"><span var="username">user</span> <b class="caret"></b></a>
-            <ul class="dropdown-menu">
-              <li><a href="#" var="user-url"><span class="fa fa-dashboard"></span> Dashboard</a></li>
-              <!--<li><a href="#"><span class="fa fa-user"></span> My Profile</a></li>-->
-              <!--<li><a href="#"><span class="fa fa-random"></span> Change Password</a></li>-->
-              <li><a href="/logout.html" var="default-url"><span class="fa fa-sign-out"></span> Sign Out</a></li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-      <!--/.nav-collapse -->
-    </div>
-  </div>
-
-  <div class="container content">
-
-    <div class="row" choice="page-header">
+	<div class="container">
+    <div class="row">
       <div class="col-lg-12">
-        <h1 class="page-header" var="page-header"></h1>
+        <div choice="alerts"><div var="alerts"></div></div>
       </div>
     </div>
 
-    <div class="row" choice="alerts">
-      <div class="col-md-12">
-        <div var="alerts"></div>
-      </div>
-    </div>
+		<div class="row">
+			<div class="col-12 col-sm-12">
+				<div id="login-box">
+					<div id="login-box-holder">
+						<div class="row">
+							<div class="col-12 col-sm-12">
+								<header id="login-header">
+									<div id="login-logo"><a href="/" var="home-url site-short-title"></a></div>
+								</header>
+								<div id="login-box-inner">
+                  <div var="content"></div>
+								</div>
+							</div>
+						</div>
+					</div>
 
-    <div var="content"></div>
-
-  </div>
-
-  <div class="container">
-    <div class="footer" var="_footer_">
-      <div class="pull-left">&copy; Tropotek 2018</div>
-      <div class="pull-right"><a href="/login.html" var="default-url">Client Access</a></div>
-    </div>
-  </div>
+					<div id="login-box-footer"></div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 
-<!-- jQuery -->
-<script src="./bower_components/jquery/dist/jquery.min.js"></script>
-<script src="./bower_components/jquery-ui/jquery-ui.min.js"></script>
-<!-- Bootstrap Core JavaScript -->
-<script src="./bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <!-- global scripts -->
+  <script data-jsl-priority="-999">
+    config.isBootstrap4 = true;
+  </script>
+	<script src="/html/theme-cube/components/jquery/dist/jquery.min.js"></script>
+	<script src="/html/theme-cube/components/bootstrap/dist/js/bootstrap.bundle.js"></script>
+	<script src="/html/theme-cube/components/nanoscroller/bin/javascripts/jquery.nanoscroller.min.js"></script>
+	<script src="/html/theme-cube/js/tk-cube.js"></script>
 
-<!-- sbadmin2 -->
-<script src="./bower_components/metisMenu/dist/metisMenu.min.js"></script>
-<script src="./dist/js/sb-admin-2.js"></script>
-
-<!-- Tk2 Lib Js -->
-<script src="/vendor/ttek/tk-form/js/dualListBox/jquery.dualListBox.js"></script>
-<script src="/vendor/ttek/tk-form/js/fileinput/jquery.tkFileInput.js"></script>
-<script src="/vendor/ttek/tk-table/js/jquery.tableOrderBy.js"></script>
-<script src="/vendor/ttek/tk-base/assets/js/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-<script src="/vendor/ttek/tk-base/assets/js/tinymce/tinymce.min.js"></script>
-<script src="/vendor/ttek/tk-base/assets/js/tinymce/jquery.tinymce.min.js"></script>
-<script src="/vendor/ttek/tk-base/assets/js/core.js"></script>
-<script src="/vendor/ttek/tk-base/assets/js/common.js"></script>
-
-<!-- App Js -->
-<script src="./js/public.js"></script>
 
 </body>
 </html>

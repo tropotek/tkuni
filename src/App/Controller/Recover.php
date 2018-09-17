@@ -24,8 +24,6 @@ class Recover extends \Uni\Controller\Recover
     {
         parent::init();
 
-        if (!$this->getConfig()->isBootsrap4()) return;
-
         $this->form->removeField('account');
 
         $f = $this->form->appendField(Field\InputGroup::create('account'))->setRequired()->setLabel(null)->setAttr('placeholder', 'Username');
