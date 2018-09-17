@@ -15,6 +15,17 @@ class NavRendererHandler implements Subscriber
 {
 
     /**
+     * @return string
+     */
+    public function getRoleType()
+    {
+        $t = 'public';
+        if ($this->getConfig()->getUser())
+            $t = $this->getConfig()->getUser()->getRoleType();
+        return $t;
+    }
+
+    /**
      * @param \Tk\Event\GetResponseEvent $event
      */
     public function onRequest(\Tk\Event\GetResponseEvent $event)
@@ -141,16 +152,5 @@ class NavRendererHandler implements Subscriber
     public function getConfig()
     {
         return \Uni\Config::getInstance();
-    }
-
-    /**
-     * @return string
-     */
-    public function getRoleType()
-    {
-        $t = 'public';
-        if ($this->getConfig()->getUser())
-            $t = $this->getConfig()->getUser()->getRoleType();
-        return $t;
     }
 }
