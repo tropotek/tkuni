@@ -59,7 +59,7 @@ class SubjectHandler implements Subscriber
         $institution = $user->getInstitution();
 
         // Enroll to any pending subjects
-        if ($institution && $user->getRole()->hasType(array(\Uni\Db\Role::TYPE_STUDENT, \Uni\Db\Role::TYPE_STAFF)) ) {
+        if ($institution && $user->getRole()->hasType(array(\Uni\Db\Role::TYPE_STUDENT, \Uni\Db\Role::TYPE_COORDINATOR)) ) {
             // Get any alias email addresses
             $ldapData = $user->getData()->get('ldap.data');
             $alias = array();

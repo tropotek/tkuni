@@ -53,7 +53,7 @@ class TestData extends \Bs\Console\TestData
                 $obj->name = $this->createName() . '.' . rand(1000, 10000000);
             } while(\Uni\Db\RoleMap::create()->findFiltered(array('name' => $obj->name))->count());
 
-            $obj->type = (rand(1, 10) <= 5) ? \Uni\Db\Role::TYPE_STAFF : \Uni\Db\Role::TYPE_STUDENT;
+            $obj->type = (rand(1, 10) <= 5) ? \Uni\Db\Role::TYPE_COORDINATOR : \Uni\Db\Role::TYPE_STUDENT;
             $obj->description = '***';
             $obj->active = (rand(1, 10) <= 9);
             $obj->save();
@@ -70,7 +70,7 @@ class TestData extends \Bs\Console\TestData
                 $obj->username = strtolower($this->createName()) . '.' . rand(1000, 10000000);
             } while(\Uni\Db\UserMap::create()->findByUsername($obj->username) != null);
             $obj->email = $this->createUniqueEmail();
-            $obj->roleId = (rand(1, 10) <= 5) ? \Uni\Db\Role::DEFAULT_TYPE_STAFF : \Uni\Db\Role::DEFAULT_TYPE_STUDENT;
+            $obj->roleId = (rand(1, 10) <= 5) ? \Uni\Db\Role::DEFAULT_TYPE_COORDINATOR : \Uni\Db\Role::DEFAULT_TYPE_STUDENT;
             $obj->notes = '***';
             $obj->save();
             $obj->setNewPassword('password');
@@ -91,7 +91,7 @@ class TestData extends \Bs\Console\TestData
             $obj->save();
 
             $list = \Uni\Db\UserMap::create()->findFiltered(array(
-                'type' => array(\Uni\Db\Role::TYPE_STAFF, \Uni\Db\Role::TYPE_STUDENT)
+                'type' => array(\Uni\Db\Role::TYPE_COORDINATOR, \Uni\Db\Role::TYPE_STUDENT)
             ));
             foreach ($list as $user) {
                 $obj->enrollUser($user);

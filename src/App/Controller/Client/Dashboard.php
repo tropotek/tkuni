@@ -41,7 +41,7 @@ class Dashboard extends \Uni\Controller\AdminIface
         $this->userTable->findCell('name')->setUrl(\Uni\Uri::createHomeUrl('/staffEdit.html'));
         $filter = array();
         $filter['institutionId'] = $this->getConfig()->getInstitutionId();
-        $filter['type'] = \Uni\Db\Role::TYPE_STAFF;
+        $filter['type'] = \Uni\Db\Role::TYPE_COORDINATOR;
         $this->userTable->setList($this->userTable->findList($filter));
 
     }

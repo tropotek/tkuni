@@ -58,7 +58,7 @@ class NavRendererHandler implements Subscriber
                 break;
             case \Uni\Db\Role::TYPE_CLIENT:
                 break;
-            case \Uni\Db\Role::TYPE_STAFF:
+            case \Uni\Db\Role::TYPE_COORDINATOR:
                 break;
             case \Uni\Db\Role::TYPE_STUDENT:
 
@@ -91,7 +91,7 @@ class NavRendererHandler implements Subscriber
                 $menu->append(Item::create('Settings', \Uni\Uri::createHomeUrl('/settings.html'), 'fa fa-cogs'));
                 break;
             case \Uni\Db\Role::TYPE_STUDENT:
-            case \Uni\Db\Role::TYPE_STAFF:
+            case \Uni\Db\Role::TYPE_COORDINATOR:
                 if(!$this->getConfig()->isSubjectUrl()) {
                     if ($user->getRole()->hasPermission(\Uni\Db\Permission::MANAGE_SUBJECT)) {
                         $menu->append(Item::create('Create Subject', \Uni\Uri::createHomeUrl('/subjectEdit.html'), 'fa fa-graduation-cap'));

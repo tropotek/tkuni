@@ -35,7 +35,7 @@
         }
     },
     "require":  {
-        "php": ">=5.6",
+        "php": ">=7.0",
         "ttek/tk-installers": "~2.0",
         "ttek/tk-framework": "~2.0",
         "ttek/tk-mail": "~2.0",
