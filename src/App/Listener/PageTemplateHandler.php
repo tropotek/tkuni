@@ -26,9 +26,9 @@ class PageTemplateHandler extends \Uni\Listener\PageTemplateHandler
             $page = $controller->getPage();
             if (!$page) return;
             $template = $page->getTemplate();
-            /** @var \Bs\Db\User $user */
+            /** @var \Uni\Db\User $user */
             $user = $controller->getUser();
-            //$uri = \Bs\Uri::create();
+            //$uri = \Uni\Uri::create();
             //if ($user && $uri->getRoleType(\Tk\ObjectUtil::getClassConstants($this->getConfig()->createRole(), 'TYPE')) != '') {
             if ($user) {
                 // About dialog
@@ -45,6 +45,11 @@ class PageTemplateHandler extends \Uni\Listener\PageTemplateHandler
                     $template->setChoice($perm);
                     $controller->getTemplate()->setChoice($perm);
                 }
+
+                //show user icon 'user-image'
+                $img = $user->getImageUrl();
+                if ($img)
+                    $template->setAttr('user-image', 'src', $img);
 
             }
 
