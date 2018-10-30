@@ -1,9 +1,6 @@
 <?php
 namespace App\Listener;
 
-use Tk\Event\Subscriber;
-use Tk\Kernel\KernelEvents;
-
 /**
  * This object helps cleanup the structure of the controller code
  *
