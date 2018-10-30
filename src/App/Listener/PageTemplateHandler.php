@@ -45,9 +45,9 @@ class PageTemplateHandler extends \Uni\Listener\PageTemplateHandler
 
                 //show user icon 'user-image'
                 $img = $user->getImageUrl();
-                if ($img)
+                if ($img) {
                     $template->setAttr('user-image', 'src', $img);
-
+                }
             }
 
             if ($this->getConfig()->getInstitution()) {
