@@ -55,6 +55,7 @@
         "ttek-plg/plg-ldap": "~2.0",
         "ttek-plg/mailog": "~1.0",
         "ttek/theme-cube": "~1.0",
+        "sensiolabs/ansi-to-html": "~1.0",
         "lasserafn/php-initial-avatar-generator": "dev-master"
     },
     "require-dev":  {
