@@ -20,10 +20,6 @@ if (!$routes) return;
 $routes->add('home', new \Tk\Routing\Route('/index.html', 'App\Controller\Index::doDefault'));
 $routes->add('home-base', new \Tk\Routing\Route('/', 'App\Controller\Index::doDefault'));
 
-
-//$routes->add('home', new \Tk\Routing\Route('/index.html', 'App\Controller\Index::doDefault'));
-//$routes->add('home-base', new \Tk\Routing\Route('/', 'App\Controller\Index::doDefault'));
-
 $routes->add('login', new \Tk\Routing\Route('/login.html', 'App\Controller\Login::doDefault'));
 $routes->add('institution-login', new \Tk\Routing\Route('/inst/{instHash}/login.html', 'App\Controller\Login::doInsLogin'));
 $routes->add('recover', new \Tk\Routing\Route('/recover.html', 'App\Controller\Recover::doDefault'));
@@ -33,6 +29,7 @@ $routes->add('recover', new \Tk\Routing\Route('/recover.html', 'App\Controller\R
 $routes->add('admin-dashboard', new \Tk\Routing\Route('/admin/index.html', 'App\Controller\Admin\Dashboard::doDefault'));
 $routes->add('admin-dashboard-base', new \Tk\Routing\Route('/admin/', 'App\Controller\Admin\Dashboard::doDefault'));
 $routes->add('admin-settings', new \Tk\Routing\Route('/admin/settings.html', 'App\Controller\Admin\Settings::doDefault'));
+
 
 
 // Client Pages
