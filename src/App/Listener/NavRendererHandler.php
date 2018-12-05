@@ -97,7 +97,7 @@ class NavRendererHandler implements Subscriber
                         $menu->append(Item::create('Create Subject', \Uni\Uri::createHomeUrl('/subjectEdit.html'), 'fa fa-graduation-cap'));
                     }
                     if ($user->getRole()->hasPermission(\Uni\Db\Permission::MANAGE_STAFF)) {
-                        $menu->append(Item::create('Staff', \Uni\Uri::createHomeUrl('/staffManager.html'), 'fa fa-user-md'));
+                        $menu->append(Item::create('Staff', \Uni\Uri::createHomeUrl('/staffUserManager.html'), 'fa fa-user-md'));
                     }
                 } else {
                     $subject = $this->getConfig()->getSubject();

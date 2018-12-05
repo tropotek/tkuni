@@ -44,7 +44,7 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
         $this->setPageTitle('');
 
         $this->userTable = \Uni\Table\User::create()->init();
-        $this->userTable->findCell('name')->setUrl(\Uni\Uri::createSubjectUrl('/studentEdit.html'));
+        $this->userTable->findCell('name')->setUrl(\Uni\Uri::createSubjectUrl('/studentUserEdit.html'));
         $this->userTable->removeCell('roleId');
         $this->userTable->appendCell(\Tk\Table\Cell\Date::create('lastLogin'), 'email');
         $filter = array();
