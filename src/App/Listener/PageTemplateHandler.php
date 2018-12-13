@@ -25,22 +25,22 @@ class PageTemplateHandler extends \Uni\Listener\PageTemplateHandler
             $template = $page->getTemplate();
             /** @var \Uni\Db\User $user */
             $user = $controller->getUser();
-            //$uri = \Uni\Uri::create();
-            //if ($user && $uri->getRoleType(\Tk\ObjectUtil::getClassConstants($this->getConfig()->createRole(), 'TYPE')) != '') {
             if ($user) {
-                // About dialog
-                $dialog = new \Bs\Ui\AboutDialog();
-                $template->appendTemplate($template->getBodyElement(), $dialog->show());
+                if (\Uni\Uri::create()->getRoleType(\Tk\ObjectUtil::getClassConstants($this->getConfig()->createRole(), 'TYPE')) != '') {
+                    // About dialog\Uni\Uri::create()
+                    $dialog = new \Bs\Ui\AboutDialog();
+                    $template->appendTemplate($template->getBodyElement(), $dialog->show());
 
-                // Logout dialog
-                $dialog = new \Bs\Ui\LogoutDialog();
-                $template->appendTemplate($template->getBodyElement(), $dialog->show());
+                    // Logout dialog
+                    $dialog = new \Bs\Ui\LogoutDialog();
+                    $template->appendTemplate($template->getBodyElement(), $dialog->show());
+                }
 
                 // Set permission choices
                 $perms = $user->getRole()->getPermissions();
                 foreach ($perms as $perm) {
-                    $template->setChoice($perm);
-                    $controller->getTemplate()->setChoice($perm);
+                    $template->show($perm);
+                    $controller->getTemplate()->show($perm);
                 }
 
                 //show user icon 'user-image'
