@@ -19,28 +19,11 @@ try {
     $config = \App\Config::getInstance();
     $app = $config->getConsoleApplication();
 
-    $log = null;
-    if ($config->get('event.dispatcher.log')) {
-        $log = $config->getLog();
-    }
-    $dispatcher = new \Tk\Sym\EventDispatcher($log);
-    $config->set('event.dispatcher', $dispatcher);
-    $config->setupDispatcher($dispatcher);
-    $app->setDispatcher($dispatcher);
-
-    // Setup Console Commands
-
+    // Setup Local Console Commands
     $app->add(new \App\Console\Cron());
-    $app->add(new \Bs\Console\Upgrade());
     if ($config->isDebug()) {
-        $app->add(new \Bs\Console\MakeModel());
-        $app->add(new \Bs\Console\MakeTable());
-        $app->add(new \Bs\Console\MakeForm());
-        $app->add(new \Bs\Console\Debug());
-        $app->add(new \Bs\Console\Mirror());
         $app->add(new \App\Console\Test());
     }
-
 
     $app->run($input, $output);
 } catch (Exception $e) {
