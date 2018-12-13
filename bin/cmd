@@ -22,7 +22,8 @@ try {
     // Setup Local Console Commands
     $app->add(new \App\Console\Cron());
     if ($config->isDebug()) {
-        $app->add(new \App\Console\Test());
+        $app->add(new \App\Console\TestData());
+        //$app->add(new \App\Console\Test());
     }
 
     $app->run($input, $output);
