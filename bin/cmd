@@ -32,6 +32,7 @@ try {
 
     $app->add(new \App\Console\Cron());
     $app->add(new \Bs\Console\Upgrade());
+    $app->add(new \Bs\Console\Maintenance());
     if ($config->isDebug()) {
         $app->add(new \Bs\Console\MakeModel());
         $app->add(new \Bs\Console\MakeTable());
