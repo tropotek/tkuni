@@ -48,6 +48,8 @@ class NavRendererHandler implements Subscriber
      */
     protected function initDropdownMenu($menu)
     {
+        if (!$this->getConfig()->getUser()) return;
+
         $menu->append(Item::create('Profile', \Uni\Uri::createHomeUrl('/profile.html'), 'fa fa-user'));
         $menu->append(Item::create('About', '#', 'fa fa-info-circle')
             ->setAttr('data-toggle', 'modal')->setAttr('data-target', '#aboutModal'));

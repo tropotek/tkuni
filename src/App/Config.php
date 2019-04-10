@@ -32,6 +32,17 @@ class Config extends \Uni\Config
         return $this->get('page.template.handler');
     }
 
+    /**
+     * @return \Bs\Listener\AuthHandler
+     */
+    public function getAuthHandler()
+    {
+        if (!$this->get('auth.handler')) {
+            $this->set('auth.handler', new \App\Listener\AuthHandler());
+        }
+        return $this->get('auth.handler');
+    }
+
 
 
 }
