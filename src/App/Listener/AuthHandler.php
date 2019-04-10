@@ -211,6 +211,12 @@ class AuthHandler extends \Bs\Listener\AuthHandler
             }
             $config->getSession()->set('lti.subjectId', $subject->getId());   // Limit the dashboard to one subject for LTI logins
             $config->getSession()->set('auth.password.access', false);
+
+            // Add user to the subject if not already enrolled as they must be enrolled as LMS says so.... ;-p
+            if (!$config->getSubjectMapper()->hasUser($subject->getId(), $user->getId())) {
+                $config->getSubjectMapper()->addUser($subject->getId(), $user->getId());
+            }
+
             $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::SUCCESS, $config->getUserIdentity($user)));
         }
 
