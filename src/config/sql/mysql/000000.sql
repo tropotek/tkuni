@@ -12,7 +12,7 @@
 
 INSERT INTO `institution` (`user_id`, `name`, `email`, `description`, `logo`, `active`, `hash`, `modified`, `created`)
 VALUES
-  (2, 'The University Of Melbourne', 'admin@unimelb.edu.au', 'This is a test institution for this app', '', 1, MD5('1'), NOW(), NOW())
+  (2, 'The University Of Melbourne', 'admin@unimelb.edu.au', 'The University Of Melbourne', '', 1, MD5('1'), NOW(), NOW())
 ;
 
 INSERT INTO `user` (`role_id`, `institution_id`, `username`, `password` ,`name`, `email`, `active`, `hash`, `modified`, `created`)
