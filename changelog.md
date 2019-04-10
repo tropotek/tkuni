@@ -1,6 +1,14 @@
 
 #CHANGELOG#
 
+Ver 1.0.4 [2019-04-10]:
+-------------------------------
+  - Added new LTI template for canvas
+  - fixed user manager URL
+  - Merge branch 'master' of github.com:tropotek/tk2uni
+  - Fixed form fields set issues with Loyout object
+
+
 Ver 1.0.2 [2018-09-04]:
 -------------------------------
   - Merge branch 'master' of github.com:tropotek/tk2uni

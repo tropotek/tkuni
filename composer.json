@@ -5,10 +5,10 @@
     "keywords":  [
         "tropotek"
     ],
-    "time": "2015-05-01",
+    "time": "2019-04-10",
     "license": "MIT",
-    "version": "master",
-    "minimum-stability": "dev",
+    "version": "1.0.4",
+    "minimum-stability": "stable",
     "authors":  [
          {
             "name": "Michael Mifsud",
