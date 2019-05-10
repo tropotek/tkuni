@@ -254,7 +254,7 @@ class AuthHandler extends \Bs\Listener\AuthHandler
         if (!$role || empty($role)) return;
 
         if (!$user || $user->isPublic()) {
-            if ($event->getRequest()->getUri()->getRelativePath() != '/login.html') {
+            if ($event->getRequest()->getTkUri()->getRelativePath() != '/login.html') {
                 \Tk\Uri::create('/login.html')->redirect();
             } else {
                 \Tk\Alert::addWarning('1001: You do not have access to the requested page.');
