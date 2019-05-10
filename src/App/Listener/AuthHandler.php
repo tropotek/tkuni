@@ -226,10 +226,10 @@ class AuthHandler extends \Bs\Listener\AuthHandler
 
 
     /**
-     * @param GetResponseEvent $event
+     * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
      * @throws \Exception
      */
-    public function onRequest(GetResponseEvent $event)
+    public function onRequest(\Symfony\Component\HttpKernel\Event\RequestEvent $event)
     {
         // if a user is in the session add them to the global config
         // Only the identity details should be in the auth session not the full user object, to save space and be secure.

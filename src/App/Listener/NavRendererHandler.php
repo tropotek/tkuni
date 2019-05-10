@@ -2,7 +2,7 @@
 namespace App\Listener;
 
 use Tk\Event\Subscriber;
-use Tk\Kernel\KernelEvents;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Tk\Ui\Menu\Item;
 use Bs\Ui\Menu;
 
@@ -26,9 +26,9 @@ class NavRendererHandler implements Subscriber
     }
 
     /**
-     * @param \Tk\Event\GetResponseEvent $event
+     * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
      */
-    public function onRequest(\Tk\Event\GetResponseEvent $event)
+    public function onRequest(\Symfony\Component\HttpKernel\Event\RequestEvent $event)
     {
         $config = $this->getConfig();
 
@@ -143,7 +143,7 @@ class NavRendererHandler implements Subscriber
     public static function getSubscribedEvents()
     {
         return array(
-            \Tk\Kernel\KernelEvents::REQUEST =>  array('onRequest', 0),
+            KernelEvents::REQUEST =>  array('onRequest', 0),
             \Tk\PageEvents::PAGE_SHOW =>  array('onShow', 0)
         );
     }

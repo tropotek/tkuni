@@ -2,11 +2,9 @@
 namespace App\Listener;
 
 use Tk\Event\Subscriber;
-use Tk\Kernel\KernelEvents;
-use Tk\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Tk\Event\AuthEvent;
 use Tk\Auth\AuthEvents;
-use Uni\Listener\MasqueradeHandler;
 
 
 /**
@@ -21,10 +19,10 @@ class SubjectHandler implements Subscriber
      * If we are in a subject URL then get the subject object and set it in the config
      * for global accessibility.
      *
-     * @param GetResponseEvent $event
+     * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
      * @throws \Exception
      */
-    public function onRequest(GetResponseEvent $event)
+    public function onRequest(\Symfony\Component\HttpKernel\Event\RequestEvent $event)
     {
         $config = \App\Config::getInstance();
         $request = $event->getRequest();
