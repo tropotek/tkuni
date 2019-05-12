@@ -1,7 +1,7 @@
 {
     "name": "ttek/tkuni",
     "type": "project",
-    "description": "A Tk Ver 2 base MVC framework project",
+    "description": "A base project for unimelb projects.",
     "keywords":  [
         "tropotek"
     ],
