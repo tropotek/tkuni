@@ -36,25 +36,11 @@
     },
     "require":  {
         "php": "^7.1.3",
-        "ttek/tk-uni": "dev-3beta as 3.0.x-dev",
+        "ttek/tk-uni": "~3.0",
         "ttek/theme-cube": "~1.0",
-
-        "ttek-plg/plg-lti": "dev-3beta as 3.0.x-dev",
-        "ttek-plg/plg-ldap": "dev-3beta as 3.0.x-dev",
-        "ttek-plg/mailog": "~1.0",
-
-        "ttek/tk-base": "dev-3beta as 3.0.x-dev",
-        "ttek/tk-auth": "dev-3beta as 3.0.x-dev",
-        "ttek/tk-database": "dev-3beta as 3.0.x-dev",
-        "ttek/tk-domtemplate": "dev-3beta as 3.0.x-dev",
-        "ttek/tk-form": "dev-3beta as 3.0.x-dev",
-        "ttek/tk-framework": "dev-3beta as 3.0.x-dev",
-        "ttek/tk-installers": "dev-3beta as 3.0.x-dev",
-        "ttek/tk-mail": "dev-3beta as 3.0.x-dev",
-        "ttek/tk-mvc": "dev-3beta as 3.0.x-dev",
-        "ttek/tk-plugin": "dev-3beta as 3.0.x-dev",
-        "ttek/tk-table": "dev-3beta as 3.0.x-dev",
-        "ttek/tk-ui": "dev-3beta as 3.0.x-dev"
+        "ttek-plg/plg-lti": "~3.0",
+        "ttek-plg/plg-ldap": "~3.0",
+        "ttek-plg/mailog": "~1.0"
     },
     "require-dev":  {
     }
