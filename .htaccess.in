@@ -7,6 +7,7 @@
 # `httpd.conf`), you should add this logic there.
 #
 # https://httpd.apache.org/docs/current/howto/htaccess.html.
+# https://github.com/h5bp/server-configs-apache/blob/master/dist/.htaccess
 
 
 # ######################################################################
@@ -72,19 +73,6 @@
 
 </IfModule>
 
-# ----------------------------------------------------------------------
-# | MVC                                                                |
-# ----------------------------------------------------------------------
-
-# Use the index.php as frontController for your site scripts.
-
- <IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ index.php [L]
- </IfModule>
-
 
 # ----------------------------------------------------------------------
 # | Forcing `https://`                                                 |
@@ -118,12 +106,50 @@
 # (!) NEVER USE BOTH RULES AT THE SAME TIME!
 
 # Option 1: rewrite www.example.com → example.com
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # (1)
+    # RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+    RewriteRule ^ %{ENV:PROTO}://%1%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Option 2: rewrite example.com → www.example.com
+#
+# Be aware that the following might not be a good idea if you use "real"
+# subdomains for certain parts of your website.
+
 # <IfModule mod_rewrite.c>
 #     RewriteEngine On
-#     RewriteCond %{HTTPS} !=on
-#     RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-#     RewriteRule ^ %{ENV:PROTO}://%1%{REQUEST_URI} [R=301,L]
+#     # (1)
+#     # RewriteCond %{HTTPS} !=on
+#     RewriteCond %{HTTP_HOST} !^www\. [NC]
+#     RewriteCond %{SERVER_ADDR} !=127.0.0.1
+#     RewriteCond %{SERVER_ADDR} !=::1
+#     RewriteRule ^ %{ENV:PROTO}://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 # </IfModule>
+
+# ----------------------------------------------------------------------
+# | MVC                                                                |
+# ----------------------------------------------------------------------
+
+# Use the index.php as frontController for your site scripts.
+
+ <IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Stuff to let through (ignore)
+    RewriteCond %{REQUEST_URI} "/data/" [OR]
+    RewriteCond %{REQUEST_URI} "/docs/"
+    RewriteRule (.*) $1 [L]
+
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+ </IfModule>
 
 
 
@@ -980,3 +1006,13 @@ FileETag None
 #     RewriteCond %{REQUEST_FILENAME} !-f
 #     RewriteRule ^(.+)\.(\d+)\.(bmp|css|cur|gif|ico|jpe?g|js|png|svgz?|webp|webmanifest)$ $1.$3 [L]
 # </IfModule>
+
+# Apache Server Configs v2.14.0 | MIT License
+# https://github.com/h5bp/server-configs-apache
+
+# (!) Using `.htaccess` files slows down Apache, therefore, if you have
+# access to the main server configuration file (which is usually called
+# `httpd.conf`), you should add this logic there.
+#
+# https://httpd.apache.org/docs/current/howto/htaccess.html.
+
