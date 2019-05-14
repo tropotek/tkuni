@@ -250,7 +250,7 @@ class AuthHandler extends \Bs\Listener\AuthHandler
         // ---------------- deprecated  ---------------------
         // The following is deprecated in preference of the validatePageAccess() method
 
-        $role = $event->getRequest()->getAttribute('role');
+        $role = $event->getRequest()->attributes->get('role');
         if (!$role || empty($role)) return;
 
         if (!$user || $user->isPublic()) {

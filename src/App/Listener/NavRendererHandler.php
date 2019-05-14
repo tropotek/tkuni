@@ -115,8 +115,6 @@ class NavRendererHandler implements Subscriber
     }
 
 
-
-
     /**
      * @param \Tk\Event\Event $event
      */

@@ -2,9 +2,9 @@
 namespace App\Listener;
 
 use Tk\Event\Subscriber;
-use Symfony\Component\HttpKernel\KernelEvents;
 use Tk\Event\AuthEvent;
 use Tk\Auth\AuthEvents;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 
 /**
@@ -37,7 +37,7 @@ class SubjectHandler implements Subscriber
         if ($config->getInstitution()) {
             \Tk\Log::info('- Institution: ' . $config->getInstitution()->getName() . ' [ID: ' . $config->getInstitution()->getId() . ']');
         }
-        if ($request->hasAttribute('subjectCode') && $config->getSubject()) {
+        if ($request->attributes->has('subjectCode') && $config->getSubject()) {
             \Tk\Log::info('- Subject: ' . $config->getSubject()->name . ' [ID: ' . $config->getSubject()->getId() . ']');
         }
 
