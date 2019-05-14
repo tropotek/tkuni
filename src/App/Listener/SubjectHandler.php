@@ -73,7 +73,6 @@ class SubjectHandler implements Subscriber
                 }
             }
         }
-
     }
 
 
