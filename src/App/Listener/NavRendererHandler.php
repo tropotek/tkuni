@@ -28,7 +28,7 @@ class NavRendererHandler implements Subscriber
     /**
      * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
      */
-    public function onRequest(\Symfony\Component\HttpKernel\Event\RequestEvent $event)
+    public function onRequest( $event)
     {
         $config = $this->getConfig();
 
