@@ -48,24 +48,18 @@ class NavRendererHandler implements Subscriber
      */
     protected function initDropdownMenu($menu)
     {
-        if (!$this->getConfig()->getUser()) return;
+        $user = $this->getConfig()->getUser();
+        if (!$user) return;
 
         $menu->append(Item::create('Profile', \Uni\Uri::createHomeUrl('/profile.html'), 'fa fa-user'));
         $menu->append(Item::create('About', '#', 'fa fa-info-circle')
             ->setAttr('data-toggle', 'modal')->setAttr('data-target', '#aboutModal'));
-        switch ($this->getRoleType()) {
-            case \Uni\Db\Role::TYPE_ADMIN:
-                $menu->prepend(Item::create('Site Preview', \Uni\Uri::create('/index.html'), 'fa fa-home'))->getLink()->setAttr('target', '_blank');
-                $menu->append(Item::create('Settings', \Uni\Uri::createHomeUrl('/settings.html'), 'fa fa-cogs'), 'Profile');
-                break;
-            case \Uni\Db\Role::TYPE_CLIENT:
-                break;
-            case \Uni\Db\Role::TYPE_COORDINATOR:
-                break;
-            case \Uni\Db\Role::TYPE_STUDENT:
 
-                break;
+        if ($user->hasPermission(\Bs\Db\Permission::TYPE_ADMIN)) {
+            $menu->prepend(Item::create('Site Preview', \Uni\Uri::create('/index.html'), 'fa fa-home'))->getLink()->setAttr('target', '_blank');
+            $menu->append(Item::create('Settings', \Uni\Uri::createHomeUrl('/settings.html'), 'fa fa-cogs'), 'Profile');
         }
+
         $menu->append(Item::create()->addCss('divider'));
         $menu->append(Item::create('Logout', '#', 'fa fa-sign-out')
             ->setAttr('data-toggle', 'modal')->setAttr('data-target', '#logoutModal'));
@@ -78,40 +72,39 @@ class NavRendererHandler implements Subscriber
     protected function initSideMenu($menu)
     {
         $user = $this->getConfig()->getUser();
+        if (!$user) return;
+
         $menu->append(Item::create('Dashboard', \Uni\Uri::createHomeUrl('/index.html'), 'fa fa-dashboard'));
-        switch ($this->getRoleType()) {
-            case \Uni\Db\Role::TYPE_ADMIN:
-                $menu->append(Item::create('Settings', \Uni\Uri::createHomeUrl('/settings.html'), 'fa fa-cogs'));
-                //$menu->append(Item::create('Institutions', \Uni\Uri::createHomeUrl('/institutionManager.html'), 'fa fa-university'));
-                if ($this->getConfig()->isDebug()) {
-                    $sub = $menu->append(Item::create('Development', '#', 'fa fa-bug'));
-                    $sub->append(Item::create('Events', \Uni\Uri::createHomeUrl('/dev/dispatcherEvents.html'), 'fa fa-empire'));
-                    $sub->append(Item::create('Forms', \Uni\Uri::createHomeUrl('/dev/forms.html'), 'fa fa-rebel'));
-                }
-                break;
-            case \Uni\Db\Role::TYPE_CLIENT:
-                $menu->append(Item::create('Settings', \Uni\Uri::createHomeUrl('/settings.html'), 'fa fa-cogs'));
-                break;
-            case \Uni\Db\Role::TYPE_STUDENT:
-            case \Uni\Db\Role::TYPE_COORDINATOR:
-                if(!$this->getConfig()->isSubjectUrl()) {
-                    if ($user->getRole()->hasPermission(\Uni\Db\Permission::MANAGE_SUBJECT)) {
-                        $menu->append(Item::create('Create Subject', \Uni\Uri::createHomeUrl('/subjectEdit.html'), 'fa fa-graduation-cap'));
-                    }
-                    if ($user->getRole()->hasPermission(\Uni\Db\Permission::MANAGE_STAFF)) {
-                        $menu->append(Item::create('Staff', \Uni\Uri::createHomeUrl('/staffUserManager.html'), 'fa fa-user-md'));
-                    }
-                } else {
-                    $subject = $this->getConfig()->getSubject();
-                    $sub = $menu->append(Item::create($subject->getName(), '#', 'fa fa-cog'));
-                    $sub->append(Item::create('Subject Dashboard', \Uni\Uri::createSubjectUrl('/index.html', $subject), 'fa fa-dashboard'));
-                    if ($user->isStaff()) {
-                        $sub->append(Item::create('Settings', \Uni\Uri::createSubjectUrl('/subjectEdit.html', $subject), 'fa fa-cogs'));
-                    }
-                }
-                break;
+        if ($user->hasPermission(\Uni\Db\Permission::TYPE_ADMIN)) {
+            $menu->append(Item::create('Settings', \Uni\Uri::createHomeUrl('/settings.html'), 'fa fa-cogs'));
+            //$menu->append(Item::create('Institutions', \Uni\Uri::createHomeUrl('/institutionManager.html'), 'fa fa-university'));
+            if ($this->getConfig()->isDebug()) {
+                $sub = $menu->append(Item::create('Development', '#', 'fa fa-bug'));
+                $sub->append(Item::create('Events', \Uni\Uri::createHomeUrl('/dev/dispatcherEvents.html'), 'fa fa-empire'));
+                $sub->append(Item::create('Forms', \Uni\Uri::createHomeUrl('/dev/forms.html'), 'fa fa-rebel'));
+            }
         }
-        //vd($menu->__toString());
+        if ($user->hasPermission(\Uni\Db\Permission::TYPE_CLIENT)) {
+            $menu->append(Item::create('Settings', \Uni\Uri::createHomeUrl('/settings.html'), 'fa fa-cogs'));
+        }
+        if ($user->hasPermission(array(\Uni\Db\Permission::TYPE_STUDENT, \Uni\Db\Permission::TYPE_COORDINATOR))) {
+            if(!$this->getConfig()->isSubjectUrl()) {
+                if ($user->getRole()->hasPermission(\Uni\Db\Permission::MANAGE_SUBJECT)) {
+                    $menu->append(Item::create('Create Subject', \Uni\Uri::createHomeUrl('/subjectEdit.html'), 'fa fa-graduation-cap'));
+                }
+                if ($user->getRole()->hasPermission(\Uni\Db\Permission::MANAGE_STAFF)) {
+                    $menu->append(Item::create('Staff', \Uni\Uri::createHomeUrl('/staffUserManager.html'), 'fa fa-user-md'));
+                }
+            } else {
+                $subject = $this->getConfig()->getSubject();
+                $sub = $menu->append(Item::create($subject->getName(), '#', 'fa fa-cog'));
+                $sub->append(Item::create('Subject Dashboard', \Uni\Uri::createSubjectUrl('/index.html', $subject), 'fa fa-dashboard'));
+                if ($user->isStaff()) {
+                    $sub->append(Item::create('Settings', \Uni\Uri::createSubjectUrl('/subjectEdit.html', $subject), 'fa fa-cogs'));
+                }
+            }
+        }
+
     }
 
 
