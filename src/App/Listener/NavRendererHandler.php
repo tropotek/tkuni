@@ -97,7 +97,7 @@ class NavRendererHandler implements Subscriber
                 }
             } else {
                 $subject = $this->getConfig()->getSubject();
-                $sub = $menu->append(Item::create($subject->getName(), '#', 'fa fa-cog'));
+                $sub = $menu->append(Item::create($subject->getCode(), '#', 'fa fa-cog'))->setAttr('title', $subject->getName());
                 $sub->append(Item::create('Subject Dashboard', \Uni\Uri::createSubjectUrl('/index.html', $subject), 'fa fa-dashboard'));
                 if ($user->isStaff()) {
                     $sub->append(Item::create('Settings', \Uni\Uri::createSubjectUrl('/subjectEdit.html', $subject), 'fa fa-cogs'));
