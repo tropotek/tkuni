@@ -1670,12 +1670,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tropotek/tk-base.git",
-                "reference": "e481e427a87e01de6b93b0b77aeaa20331a7f76b"
+                "reference": "7294db558f14bfc7524c6fee29c9f15f241cdfa3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tropotek/tk-base/zipball/e481e427a87e01de6b93b0b77aeaa20331a7f76b",
-                "reference": "e481e427a87e01de6b93b0b77aeaa20331a7f76b",
+                "url": "https://api.github.com/repos/tropotek/tk-base/zipball/7294db558f14bfc7524c6fee29c9f15f241cdfa3",
+                "reference": "7294db558f14bfc7524c6fee29c9f15f241cdfa3",
                 "shasum": ""
             },
             "require": {
@@ -1720,7 +1720,7 @@
                 "tkbase",
                 "tropotek"
             ],
-            "time": "2019-06-04T00:12:41+00:00"
+            "time": "2019-06-04T00:40:14+00:00"
         },
         {
             "name": "ttek/tk-database",
@@ -2217,12 +2217,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tropotek/tk-uni.git",
-                "reference": "1a9eb21639757fec777ddd931607750114dac761"
+                "reference": "8b811a6aacf7377a0100b16601b7d56acc626870"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tropotek/tk-uni/zipball/1a9eb21639757fec777ddd931607750114dac761",
-                "reference": "1a9eb21639757fec777ddd931607750114dac761",
+                "url": "https://api.github.com/repos/tropotek/tk-uni/zipball/8b811a6aacf7377a0100b16601b7d56acc626870",
+                "reference": "8b811a6aacf7377a0100b16601b7d56acc626870",
                 "shasum": ""
             },
             "require": {
@@ -2256,7 +2256,7 @@
                 "tropotek",
                 "uni"
             ],
-            "time": "2019-06-04T00:12:46+00:00"
+            "time": "2019-06-04T00:40:56+00:00"
         }
     ],
     "packages-dev": [],
