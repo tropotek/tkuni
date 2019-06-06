@@ -54,7 +54,7 @@ class Dashboard extends \Uni\Controller\AdminIface
     {
         $template = parent::show();
 
-        $template->appendTemplate('table', $this->userTable->getRenderer()->show());
+        $template->appendTemplate('table', $this->userTable->show());
 
         return $template;
     }
@@ -68,9 +68,7 @@ class Dashboard extends \Uni\Controller\AdminIface
     public function __makeTemplate()
     {
         $xhtml = <<<HTML
-<div>
-  <div class="tk-panel" data-panel-title="Staff List" data-panel-icon="fa fa-institution" var="table"></div>
-</div>
+<div class="tk-panel" data-panel-title="Staff List" data-panel-icon="fa fa-institution" var="table"></div>
 HTML;
 
         return \Dom\Loader::load($xhtml);
