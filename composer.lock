@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "5ce1cec1a26c5d2ccd259157f58a32b7facd545a"
+                "reference": "868353eb117c202ee1f3b214eef9717e3d871297"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/5ce1cec1a26c5d2ccd259157f58a32b7facd545a",
-                "reference": "5ce1cec1a26c5d2ccd259157f58a32b7facd545a",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/868353eb117c202ee1f3b214eef9717e3d871297",
+                "reference": "868353eb117c202ee1f3b214eef9717e3d871297",
                 "shasum": ""
             },
             "require": {
@@ -75,7 +75,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2019-06-06T09:22:35+00:00"
+            "time": "2019-06-09T22:25:39+00:00"
         },
         {
             "name": "imsglobal/lti",
@@ -914,6 +914,62 @@
             "time": "2019-06-05T13:28:50+00:00"
         },
         {
+            "name": "symfony/debug",
+            "version": "4.4.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/debug.git",
+                "reference": "8278839457fe9f0daae826a6e5ac33e6ae392a86"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/debug/zipball/8278839457fe9f0daae826a6e5ac33e6ae392a86",
+                "reference": "8278839457fe9f0daae826a6e5ac33e6ae392a86",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1.3",
+                "psr/log": "~1.0"
+            },
+            "conflict": {
+                "symfony/http-kernel": "<3.4"
+            },
+            "require-dev": {
+                "symfony/http-kernel": "^3.4|^4.0|^5.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Debug\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Debug Component",
+            "homepage": "https://symfony.com",
+            "time": "2019-05-30T16:10:19+00:00"
+        },
+        {
             "name": "symfony/event-dispatcher",
             "version": "4.2.x-dev",
             "source": {
@@ -1614,12 +1670,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tropotek/tk-base.git",
-                "reference": "03557ec72f89cd04cb79b8116126018d09ceba28"
+                "reference": "e287ce752a4c077aa0f02e86b1e9fc161e5b89ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tropotek/tk-base/zipball/03557ec72f89cd04cb79b8116126018d09ceba28",
-                "reference": "03557ec72f89cd04cb79b8116126018d09ceba28",
+                "url": "https://api.github.com/repos/tropotek/tk-base/zipball/e287ce752a4c077aa0f02e86b1e9fc161e5b89ca",
+                "reference": "e287ce752a4c077aa0f02e86b1e9fc161e5b89ca",
                 "shasum": ""
             },
             "require": {
@@ -1664,7 +1720,7 @@
                 "tkbase",
                 "tropotek"
             ],
-            "time": "2019-06-06T04:01:53+00:00"
+            "time": "2019-06-08T21:54:28+00:00"
         },
         {
             "name": "ttek/tk-database",
@@ -1719,12 +1775,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tropotek/tk-domtemplate.git",
-                "reference": "366fcf2a3ea85e3a472520abc118e09a86776b93"
+                "reference": "e595dbb518f75a8234522cc4092d110fef1d755b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tropotek/tk-domtemplate/zipball/366fcf2a3ea85e3a472520abc118e09a86776b93",
-                "reference": "366fcf2a3ea85e3a472520abc118e09a86776b93",
+                "url": "https://api.github.com/repos/tropotek/tk-domtemplate/zipball/e595dbb518f75a8234522cc4092d110fef1d755b",
+                "reference": "e595dbb518f75a8234522cc4092d110fef1d755b",
                 "shasum": ""
             },
             "require": {
@@ -1760,7 +1816,7 @@
                 "dom-template",
                 "tropotek"
             ],
-            "time": "2019-06-06T04:02:16+00:00"
+            "time": "2019-06-07T01:47:47+00:00"
         },
         {
             "name": "ttek/tk-form",
@@ -1768,12 +1824,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tropotek/tk-form.git",
-                "reference": "3f14b8fac59a2c30027b8f992abb6ce7c2fc8b68"
+                "reference": "b2c53d6a04329022e12b098b97bdac6547496a49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tropotek/tk-form/zipball/3f14b8fac59a2c30027b8f992abb6ce7c2fc8b68",
-                "reference": "3f14b8fac59a2c30027b8f992abb6ce7c2fc8b68",
+                "url": "https://api.github.com/repos/tropotek/tk-form/zipball/b2c53d6a04329022e12b098b97bdac6547496a49",
+                "reference": "b2c53d6a04329022e12b098b97bdac6547496a49",
                 "shasum": ""
             },
             "require": {
@@ -1806,7 +1862,7 @@
                 "form",
                 "tropotek"
             ],
-            "time": "2019-06-06T22:17:42+00:00"
+            "time": "2019-06-07T22:26:41+00:00"
         },
         {
             "name": "ttek/tk-framework",
@@ -2161,12 +2217,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tropotek/tk-uni.git",
-                "reference": "3cb4e6a3366ec32a4e0d31ae5d21c18e299d1fdd"
+                "reference": "0a58ce21ba08b9c6b097d0cb255a7c2d941691ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tropotek/tk-uni/zipball/3cb4e6a3366ec32a4e0d31ae5d21c18e299d1fdd",
-                "reference": "3cb4e6a3366ec32a4e0d31ae5d21c18e299d1fdd",
+                "url": "https://api.github.com/repos/tropotek/tk-uni/zipball/0a58ce21ba08b9c6b097d0cb255a7c2d941691ed",
+                "reference": "0a58ce21ba08b9c6b097d0cb255a7c2d941691ed",
                 "shasum": ""
             },
             "require": {
@@ -2200,7 +2256,7 @@
                 "tropotek",
                 "uni"
             ],
-            "time": "2019-06-06T04:01:58+00:00"
+            "time": "2019-06-08T21:54:19+00:00"
         }
     ],
     "packages-dev": [],
