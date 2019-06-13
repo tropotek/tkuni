@@ -80,6 +80,8 @@ class NavRendererHandler implements Subscriber
             //$menu->append(Item::create('Institutions', \Uni\Uri::createHomeUrl('/institutionManager.html'), 'fa fa-university'));
             if ($this->getConfig()->isDebug()) {
                 $sub = $menu->append(Item::create('Development', '#', 'fa fa-bug'));
+                // <a href="/admin/tailLog.html"><i class="fa fa-road"></i> Tail Log</a>
+                $sub->append(Item::create('Tail Log', \Uni\Uri::createHomeUrl('/tailLog.html'), 'fa fa-road'));
                 $sub->append(Item::create('Events', \Uni\Uri::createHomeUrl('/dev/dispatcherEvents.html'), 'fa fa-empire'));
                 $sub->append(Item::create('Forms', \Uni\Uri::createHomeUrl('/dev/forms.html'), 'fa fa-rebel'));
             }
