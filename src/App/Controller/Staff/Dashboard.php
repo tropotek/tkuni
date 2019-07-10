@@ -38,7 +38,7 @@ class Dashboard extends \Uni\Controller\AdminIface
     {
 
         $this->subjectTable = \Uni\Table\Subject::create()->init();
-        $this->userTable->removeAction('delete');
+        $this->subjectTable->removeAction('delete');
         $this->subjectTable->findCell('name')->setUrl(function ($cell, $obj) {
             /** @var \Tk\Table\Cell\iface $cell */
             $url = \Uni\Uri::createSubjectUrl('/index.html', $obj);
