@@ -10,9 +10,12 @@
 --  TEST DATA
 -- ----------------------------
 
-INSERT INTO `institution` (`user_id`, `name`, `email`, `description`, `logo`, `active`, `hash`, `modified`, `created`)
-VALUES
-  (2, 'The University Of Melbourne', 'admin@unimelb.edu.au', 'The University Of Melbourne', '', 1, MD5('1'), NOW(), NOW())
+# INSERT INTO `institution` (`user_id`, `name`, `email`, `description`, `logo`, `active`, `hash`, `modified`, `created`)
+# VALUES
+#   (2, 'The University Of Melbourne', 'admin@unimelb.edu.au', 'The University Of Melbourne', '', 1, MD5('1'), NOW(), NOW())
+# ;
+INSERT INTO institution (user_id, name, email, phone, domain, description, logo, feature, street, city, state, postcode, country, address, map_lat, map_lng, map_zoom, active, del, hash, modified, created) VALUES
+(2, 'The University Of Melbourne', 'admin@unimelb.edu.au', '', '', '<p>The University Of Melbourne</p>', '', '', '250 Princes Highway', 'Werribee', 'Victoria', '3030', 'Australia', '250 Princes Hwy, Werribee VIC 3030, Australia', -37.88916600, 144.69314774, 18.00, 1, 0, MD5('1'), NOW(), NOW())
 ;
 
 INSERT INTO `user` (`role_id`, `institution_id`, `username`, `password` ,`name`, `email`, `active`, `hash`, `modified`, `created`)
