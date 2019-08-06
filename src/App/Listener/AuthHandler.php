@@ -1,7 +1,7 @@
 <?php
 namespace App\Listener;
 
-use Tk\Event\GetResponseEvent;
+
 use Tk\Event\AuthEvent;
 use Tk\Auth\AuthEvents;
 
@@ -145,71 +145,89 @@ class AuthHandler extends \Bs\Listener\AuthHandler
             $config = \Uni\Config::getInstance();
             $ltiData = $adapter->get('ltiData');
 
-            $user = $config->getUserMapper()->findByUsername($adapter->get('username'), $adapter->getInstitution()->getId());
-            if (!$user)
-                $user = $config->getUserMapper()->findByEmail($userData['email'], $adapter->getInstitution()->getId());
 
-
-            if (!$user) {   // Error out if no user
-                $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::FAILURE_CREDENTIAL_INVALID,
-                    $userData['username'], 'Invalid username. Please contact your administrator to setup an account.'));
-                return;
-            }
-//            if (!$user) {   // Create the new user account
-//                // optional to check the pre-enrollment list before creation
-//                $isPreEnrolled = \Uni\Db\Subject::isPreEnrolled($adapter->getInstitution()->getId(), array($userData['email']) );
-//                if (!$isPreEnrolled) {  // Only create users accounts for enrolled students
-//                    return;
-//                }
-//                $user = $config->createUser();
-//                $user->roleId = \Uni\Db\Role::DEFAULT_TYPE_STUDENT;
-//                if ($userData['role'] == 'staff') {
-//                    $user->roleId = \Uni\Db\Role::DEFAULT_TYPE_STAFF;
-//                }
-//                $config->getUserMapper()->mapForm($userData, $user);
-//                $user->save();
-//                $adapter->setUser($user);
-//            }
-
-            vd($ltiData);
-
-            if ($user) {
-                $canvasEnrollmentState = $ltiData['custom_canvas_enrollment_state'];
-                $canvasUserId = $ltiData['custom_canvas_user_id'];
-                $username = $ltiData['custom_canvas_user_login_id'];
-                $email = $ltiData['lis_person_contact_email_primary'];
-                $name = $ltiData['lis_person_name_full'];
-                $firstName = $ltiData['lis_person_name_given'];
-                $lastName = $ltiData['lis_person_name_family'];
-                $imageUrl = $ltiData['user_image'];
-
-                //$user->username = $username;
-                if (!$user->email)
-                    $user->email = $email;
-                if (!$user->name)
-                    $user->name = $name;
-                if (!$user->image && $imageUrl)
-                    $user->image = $imageUrl;
-
-                $user->save();
-            }
 
             $subjectData = $adapter->get('subjectData');
             $subject = $config->getSubjectMapper()->find($subjectData['id']);
             if (!$subject) {
                 $subject = $config->getSubjectMapper()->findByCode($subjectData['code'], $adapter->getInstitution()->getId());
             }
+            $isNewSubject = false;
             if (!$subject) {
-                throw new \Tk\Exception('Subject ['.$subjectData['code'].'] not available, Please contact the subject coordinator.');
+                //throw new \Tk\Exception('Subject ['.$subjectData['code'].'] not available, Please contact the subject coordinator.');
 
                 // Create a new subject here if needed
-//                $subject = $config->createSubject();
-//                $config->getSubjectMapper()->mapForm($subjectData, $subject);
-//                $subject->save();
-//                $adapter->setSubject($subject);
-//                $config->getSubjectMapper()->addUser($subject->getId(), $user->getId());
+                $subject = $config->createSubject();
+                $config->getSubjectMapper()->mapForm($subjectData, $subject);
+                $subject->save();
+                $isNewSubject = true;
+                $adapter->set('subject', $subject);
             }
-            $config->getSession()->set('lti.subjectId', $subject->getId());   // Limit the dashboard to one subject for LTI logins
+
+            $user = $config->getUserMapper()->findByUsername($adapter->get('username'), $adapter->getInstitution()->getId());
+            if (!$user)
+                $user = $config->getUserMapper()->findByEmail($userData['email'], $adapter->getInstitution()->getId());
+
+
+//            if (!$user) {   // Error out if no user
+//                $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::FAILURE_CREDENTIAL_INVALID,
+//                    $userData['username'], 'Invalid username. Please contact your administrator to setup an account.'));
+//                return;
+//            }
+            if (!$user) {   // Create the new user account
+                // optional to check the pre-enrollment list before creation
+//                $isPreEnrolled = \Uni\Db\SubjectMap::create()->isPreEnrolled($adapter->getInstitution()->getId(), array($userData['email']) );
+//                if (!$isPreEnrolled) {  // Only create users accounts for enrolled students
+//                    $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::FAILURE_CREDENTIAL_INVALID,
+//                        $userData['username'], 'You are not enrolled. Please contact your administrator to setup your account.'));
+//                    return;
+//                }
+
+
+                $user = $config->createUser();
+                $user->roleId = \Uni\Db\Role::DEFAULT_TYPE_STUDENT;
+                if ($userData['role'] == 'staff') {
+                    $user->roleId = \Uni\Db\Role::DEFAULT_TYPE_STAFF;
+                }
+                $config->getUserMapper()->mapForm($userData, $user);
+                $user->save();
+
+//                if ($subject && $user) {
+//                    $config->getSubjectMapper()->addUser($subject->getId(), $user->getId());
+//                }
+                $adapter->set('user', $user);
+            }
+
+            vd($ltiData);
+
+            if ($user) {
+
+                // optional to check the pre-enrollment list before creation
+//                $isPreEnrolled = \Uni\Db\SubjectMap::create()->isPreEnrolled($adapter->getInstitution()->getId(), array($user->getEmail()) );
+//                if (!$isPreEnrolled) {  // Only create users accounts for enrolled students
+//                    $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::FAILURE_CREDENTIAL_INVALID,
+//                        $userData['username'], 'You are not enrolled. Please contact your administrator to setup your account.'));
+//                    return;
+//                }
+                if (!\Uni\Db\SubjectMap::create()->hasUser($subject->getId(), $user->getId())) {
+                    $config->getSubjectMapper()->addUser($subject->getId(), $user->getId());
+                }
+
+                if (!$user->email)
+                    $user->email = $userData['email'];
+                if (!$user->name)
+                    $user->name = $userData['name'];
+                if (!$user->image && !empty($userData['image']))
+                    $user->image = $userData['image'];
+
+                $user->save();
+            }
+
+
+
+            if ($subject)
+                $config->getSession()->set('lti.subjectId', $subject->getId());   // Limit the dashboard to one subject for LTI logins
+
             $config->getSession()->set('auth.password.access', false);
 
             // Add user to the subject if not already enrolled as they must be enrolled as LMS says so.... ;-p
