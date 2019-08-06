@@ -20,10 +20,14 @@ class AuthHandler extends \Bs\Listener\AuthHandler
      */
     public function onLoginProcess(\Tk\Event\AuthEvent $event)
     {
+        $config = \Uni\Config::getInstance();
+        if ($config->getMasqueradeHandler()->isMasquerading()) {
+            $config->getMasqueradeHandler()->masqueradeClear();
+        }
+
         if ($event->getAdapter() instanceof \Tk\Auth\Adapter\Ldap) {
             /** @var \Tk\Auth\Adapter\Ldap $adapter */
             $adapter = $event->getAdapter();
-            $config = \Uni\Config::getInstance();
 
             // Find user data from ldap connection
             $filter = substr($adapter->getBaseDn(), 0, strpos($adapter->getBaseDn(), ','));
@@ -142,7 +146,6 @@ class AuthHandler extends \Bs\Listener\AuthHandler
             /** @var \Lti\Auth\LtiAdapter $adapter */
             $adapter = $event->getAdapter();
             $userData = $adapter->get('userData');
-            $config = \Uni\Config::getInstance();
             $ltiData = $adapter->get('ltiData');
 
 
@@ -209,7 +212,7 @@ class AuthHandler extends \Bs\Listener\AuthHandler
 //                        $userData['username'], 'You are not enrolled. Please contact your administrator to setup your account.'));
 //                    return;
 //                }
-                if (!\Uni\Db\SubjectMap::create()->hasUser($subject->getId(), $user->getId())) {
+                if (!$config->getSubjectMapper()->hasUser($subject->getId(), $user->getId())) {
                     $config->getSubjectMapper()->addUser($subject->getId(), $user->getId());
                 }
 
