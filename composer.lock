@@ -1917,12 +1917,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tropotek/tk-base.git",
-                "reference": "576a76b7e7b81c3e8d77ec8e7bae748475760a78"
+                "reference": "a62bc772f14a6c17ea3c0569794697830c0ac159"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tropotek/tk-base/zipball/576a76b7e7b81c3e8d77ec8e7bae748475760a78",
-                "reference": "576a76b7e7b81c3e8d77ec8e7bae748475760a78",
+                "url": "https://api.github.com/repos/tropotek/tk-base/zipball/a62bc772f14a6c17ea3c0569794697830c0ac159",
+                "reference": "a62bc772f14a6c17ea3c0569794697830c0ac159",
                 "shasum": ""
             },
             "require": {
@@ -1967,7 +1967,7 @@
                 "tkbase",
                 "tropotek"
             ],
-            "time": "2019-12-05T03:26:22+00:00"
+            "time": "2019-12-09T23:02:14+00:00"
         },
         {
             "name": "ttek/tk-database",
@@ -2465,12 +2465,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tropotek/tk-uni.git",
-                "reference": "ed366d09a184366054c5147a1643ceed85375210"
+                "reference": "4c27db3a72b3ed540b30084adc3bf9fd58fd444b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tropotek/tk-uni/zipball/ed366d09a184366054c5147a1643ceed85375210",
-                "reference": "ed366d09a184366054c5147a1643ceed85375210",
+                "url": "https://api.github.com/repos/tropotek/tk-uni/zipball/4c27db3a72b3ed540b30084adc3bf9fd58fd444b",
+                "reference": "4c27db3a72b3ed540b30084adc3bf9fd58fd444b",
                 "shasum": ""
             },
             "require": {
@@ -2479,7 +2479,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.1.x-dev"
+                    "dev-master": "3.2.x-dev"
                 }
             },
             "autoload": {
@@ -2504,7 +2504,7 @@
                 "tropotek",
                 "uni"
             ],
-            "time": "2019-12-09T20:44:04+00:00"
+            "time": "2019-12-09T23:13:17+00:00"
         }
     ],
     "packages-dev": [],
