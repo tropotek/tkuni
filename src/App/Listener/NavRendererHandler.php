@@ -57,7 +57,14 @@ class NavRendererHandler implements Subscriber
 
         if ($user->hasPermission(\Bs\Db\Permission::TYPE_ADMIN)) {
             $menu->prepend(Item::create('Site Preview', \Uni\Uri::create('/index.html'), 'fa fa-home'))->getLink()->setAttr('target', '_blank');
+        }
+        if ($user->getRole()->hasPermission(\Uni\Db\Permission::MANAGE_SUBJECT)) {
             $menu->append(Item::create('Settings', \Uni\Uri::createHomeUrl('/settings.html'), 'fa fa-cogs'), 'Profile');
+//            $menu->append(Item::create('Create Course', \Uni\Uri::createHomeUrl('/courseEdit.html'), 'fa fa-institution'));
+//            $menu->append(Item::create('Create Subject', \Uni\Uri::createHomeUrl('/subjectEdit.html'), 'fa fa-graduation-cap'));
+        }
+        if ($user->getRole()->hasPermission(\Uni\Db\Permission::MANAGE_STAFF)) {
+            $menu->append(Item::create('Staff', \Uni\Uri::createHomeUrl('/staffUserManager.html'), 'fa fa-user-md'));
         }
 
         $menu->append(Item::create()->addCss('divider'));
@@ -73,12 +80,10 @@ class NavRendererHandler implements Subscriber
     {
         $user = $this->getConfig()->getUser();
         if (!$user) return;
-        if($this->getConfig()->isSubjectUrl()) {
-            $menu->append(Item::create('Dashboard', \Uni\Uri::createHomeUrl('/index.html'), 'fa fa-dashboard'));
-        }
-
-
-
+        // TODO: not sure this is needed.
+//        if($this->getConfig()->isSubjectUrl()) {
+//            $menu->append(Item::create('Dashboard', \Uni\Uri::createHomeUrl('/index.html'), 'fa fa-dashboard'));
+//        }
 
         if ($user->hasPermission(\Uni\Db\Permission::TYPE_ADMIN)) {
             $menu->append(Item::create('Settings', \Uni\Uri::createHomeUrl('/settings.html'), 'fa fa-cogs'));
@@ -96,20 +101,13 @@ class NavRendererHandler implements Subscriber
         }
         if ($user->hasPermission(array(\Uni\Db\Permission::TYPE_STUDENT, \Uni\Db\Permission::TYPE_COORDINATOR))) {
             if(!$this->getConfig()->isSubjectUrl()) {
-                // TODO: move these to the user dropdown menu
-//                if ($user->getRole()->hasPermission(\Uni\Db\Permission::MANAGE_SUBJECT)) {
-//                    $menu->append(Item::create('Create Subject', \Uni\Uri::createHomeUrl('/subjectEdit.html'), 'fa fa-graduation-cap'));
-//                }
-//                if ($user->getRole()->hasPermission(\Uni\Db\Permission::MANAGE_STAFF)) {
-//                    $menu->append(Item::create('Staff', \Uni\Uri::createHomeUrl('/staffUserManager.html'), 'fa fa-user-md'));
-//                }
                 $courseList = $this->getConfig()->getCourseMapper()->findFiltered(array(
                     'institutionId' => $this->getConfig()->getInstitutionId(),
                     'active' => true,
                     'userId' => $user->getId()
                 ));
                 foreach ($courseList as $i => $course) {
-                    $itm = $menu->append(Item::create($course->getCode()))->addCss('nav-header nav-header-first d-none d-lg-block tk-test');
+                    $itm = $menu->append(Item::create($course->getCode()))->setAttr('title', $course->getName())->addCss('nav-header nav-header-first d-none d-lg-block tk-test');
 
                     $itm->setOnShow(function (Item $el) use ($course) {
                         $template = $el->getTemplate();
@@ -127,7 +125,9 @@ class NavRendererHandler implements Subscriber
                 $sub = $menu->append(Item::create($subject->getCode(), '#', 'fa fa-graduation-cap'))->setAttr('title', $subject->getName());
                 $sub->append(Item::create('Subject Dashboard', \Uni\Uri::createSubjectUrl('/index.html', $subject), 'fa fa-dashboard'));
                 if ($user->isStaff()) {
-                    $sub->append(Item::create('Settings', \Uni\Uri::createSubjectUrl('/subjectEdit.html', $subject), 'fa fa-cogs'));
+                    if ($user->hasPermission(\Uni\Db\Permission::MANAGE_SUBJECT))
+                        $sub->append(Item::create('Settings', \Uni\Uri::createSubjectUrl('/subjectEdit.html', $subject), 'fa fa-cogs'));
+                    $sub->append(Item::create('Students', \Uni\Uri::createSubjectUrl('/studentUserManager.html'), 'fa fa-group'));
                 }
             }
         }
