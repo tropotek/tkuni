@@ -3,6 +3,7 @@ namespace App\Console;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Tk\Config;
 
 /**
  * Cron job to be run nightly
@@ -24,7 +25,10 @@ class Cron extends \Bs\Console\Iface
     protected function configure()
     {
         $this->setName('cron')
-            ->setDescription('The site cron script. crontab line: 0 4  * * *   {path-to-site}/bin/cmd cron > /dev/null 2>&1');
+            ->setDescription(
+                sprintf('Run the site cron script:     "*/10  *   *   *   *      php %s/bin/cmd cron > /dev/null 2>&1"',
+                    Config::getInstance()->getSrcPath())
+            );
     }
 
     /**
