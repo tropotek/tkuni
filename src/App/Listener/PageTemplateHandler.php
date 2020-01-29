@@ -24,7 +24,7 @@ class PageTemplateHandler extends \Uni\Listener\PageTemplateHandler
             if (!$page) return;
             $template = $page->getTemplate();
             /** @var \Uni\Db\User $user */
-            $user = $controller->getUser();
+            $user = $controller->getAuthUser();
 
             if ($user && \Uni\Uri::create()->getRoleType(\Tk\ObjectUtil::getClassConstants($this->getConfig()->createRole(), 'TYPE')) != '') {
                 // About dialog

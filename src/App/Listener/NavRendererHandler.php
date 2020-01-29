@@ -20,13 +20,14 @@ class NavRendererHandler implements Subscriber
     public function getRoleType()
     {
         $t = 'public';
-        if ($this->getConfig()->getUser())
-            $t = $this->getConfig()->getUser()->getRoleType();
+        if ($this->getConfig()->getAuthUser())
+            $t = $this->getConfig()->getAuthUser()->getRoleType();
         return $t;
     }
 
     /**
-     * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
+     * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+     * @throws \Exception
      */
     public function onRequest( $event)
     {
@@ -40,7 +41,6 @@ class NavRendererHandler implements Subscriber
 
         $this->initDropdownMenu($dropdownMenu);
         $this->initSideMenu($sideMenu);
-
     }
 
     /**
@@ -48,7 +48,7 @@ class NavRendererHandler implements Subscriber
      */
     protected function initDropdownMenu($menu)
     {
-        $user = $this->getConfig()->getUser();
+        $user = $this->getConfig()->getAuthUser();
         if (!$user) return;
 
         $menu->append(Item::create('Profile', \Uni\Uri::createHomeUrl('/profile.html'), 'fa fa-user'));
@@ -75,15 +75,14 @@ class NavRendererHandler implements Subscriber
 
     /**
      * @param Menu $menu
+     * @throws \Exception
      */
     protected function initSideMenu($menu)
     {
-        $user = $this->getConfig()->getUser();
+        $user = $this->getConfig()->getAuthUser();
         if (!$user) return;
 
-        if($this->getConfig()->isSubjectUrl()) {
-            $menu->append(Item::create('Dashboard', \Uni\Uri::createHomeUrl('/index.html'), 'fa fa-dashboard'));
-        }
+        $menu->append(Item::create('Dashboard', \Uni\Uri::createHomeUrl('/index.html'), 'fa fa-dashboard'));
 
         if ($user->hasPermission(\Uni\Db\Permission::TYPE_ADMIN)) {
             $menu->append(Item::create('Settings', \Uni\Uri::createHomeUrl('/settings.html'), 'fa fa-cogs'));
@@ -109,7 +108,7 @@ class NavRendererHandler implements Subscriber
                 foreach ($courseList as $i => $course) {
                     $itm = $menu->append(Item::create($course->getCode()))->setAttr('title', $course->getName())->addCss('nav-header nav-header-first d-none d-lg-block tk-test');
 
-                    $itm->setOnShow(function (Item $el) use ($course) {
+                    $itm->addOnShow(function (Item $el) use ($course) {
                         $template = $el->getTemplate();
                         $url = \Uni\Uri::createHomeUrl('/courseEdit.html')->set('courseId', $course->getId())->toString();
                         $template->appendHtml($el->getVar(), '<span class="float-right"><a title="Edit Course" href="'.$url.'"><i class="fa fa-edit"></i></a></span>');

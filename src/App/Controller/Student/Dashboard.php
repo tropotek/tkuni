@@ -45,7 +45,7 @@ class Dashboard extends \Uni\Controller\AdminIface
 
         $filter = array();
         $filter['institutionId'] = $this->getConfig()->getInstitutionId();
-        $filter['userId'] = $this->getUser()->getId();
+        $filter['userId'] = $this->getAuthUser()->getId();
         $this->subjectTable->setList($this->subjectTable->findList($filter));
 
 

@@ -27,8 +27,8 @@ class SubjectHandler implements Subscriber
         $config = \App\Config::getInstance();
         $request = $event->getRequest();
 
-        if ($config->getUser()) {
-            \Tk\Log::info('- User: ' . $config->getUser()->getName() . ' <' . $config->getUser()->getEmail() . '> [ID: ' . $config->getUser()->getId() . ']');
+        if ($config->getAuthUser()) {
+            \Tk\Log::info('- User: ' . $config->getAuthUser()->getName() . ' <' . $config->getAuthUser()->getEmail() . '> [ID: ' . $config->getAuthUser()->getId() . ']');
             if ($config->getMasqueradeHandler()->isMasquerading()) {
                 $msq = $config->getMasqueradeHandler()->getMasqueradingUser();
                 \Tk\Log::info('  └ Msq: ' . $msq->getName() . ' [ID: ' . $msq->getId() . ']');
