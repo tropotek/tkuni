@@ -80,10 +80,10 @@ class NavRendererHandler implements Subscriber
     {
         $user = $this->getConfig()->getUser();
         if (!$user) return;
-        // TODO: not sure this is needed.
-//        if($this->getConfig()->isSubjectUrl()) {
-//            $menu->append(Item::create('Dashboard', \Uni\Uri::createHomeUrl('/index.html'), 'fa fa-dashboard'));
-//        }
+
+        if($this->getConfig()->isSubjectUrl()) {
+            $menu->append(Item::create('Dashboard', \Uni\Uri::createHomeUrl('/index.html'), 'fa fa-dashboard'));
+        }
 
         if ($user->hasPermission(\Uni\Db\Permission::TYPE_ADMIN)) {
             $menu->append(Item::create('Settings', \Uni\Uri::createHomeUrl('/settings.html'), 'fa fa-cogs'));
