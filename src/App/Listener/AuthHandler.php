@@ -109,13 +109,13 @@ class AuthHandler extends \Bs\Listener\AuthHandler
 //                    }
 
                     if ($user && $user->active) {
-                        if (!$user->uid && !empty($ldapData[0]['auedupersonid'][0]))
-                            $user->uid = $ldapData[0]['auedupersonid'][0];
-                        if (!$user->name && !empty($ldapData[0]['displayname'][0]))
-                            $user->name = $ldapData[0]['displayname'][0];
+                        if (!$user->getUid() && !empty($ldapData[0]['auedupersonid'][0]))
+                            $user->setUid($ldapData[0]['auedupersonid'][0]);
+                        if (!$user->getName() && !empty($ldapData[0]['displayname'][0]))
+                            $user->setName($ldapData[0]['displayname'][0]);
                         // TODO: update this to if !$user->email later once all emails are changed over
                         if ($email)
-                            $user->email = $email;
+                            $user->setName($email);
                         $user->setNewPassword($adapter->get('password'));
                         $user->save();
 
