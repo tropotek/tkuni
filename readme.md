@@ -1,12 +1,12 @@
-# tk2uni :boom: 
+# tkuni  
 
-__Project:__ tk2uni  
+__Project:__ tkuni  
 __Published:__ 16 May 2016  
 __Web:__ <http://www.tropotek.com/>  
 __Authors:__ Michael Mifsud <http://www.tropotek.com/>  
 
-A base site using the Tk2 framework MVC, use this as a starting point for your 
-own site.
+A base site using the Tk framework, use this as a starting point for your 
+own education sites.
 
 ## Contents
 
@@ -18,14 +18,16 @@ own site.
 Start by getting the dependant libs:
 
 ~~~bash
-# git clone https://github.com/tropotek/tk2uni.git
-# cd tk2uni
+# git clone https://github.com/tropotek/tkuni.git
+# cd tkuni
 # composer install
 ~~~
 
-Then edit the /src/App/config/config.php file to your required settings.
+This should prompt you to answer a few questions and create the src/config/config.php and .htaccess files.
 
-Next check the /src/App/sql folder for any .sql files you need to install to your database
+If this fails you need to create your own .htaccess (copy the .htaccess.in) and config.php (copy the config.php.in)
+
+Also you will have to run the command bin/cmd migrate to install the DB.
 
 ## Introduction
 

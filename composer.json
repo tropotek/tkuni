@@ -1,7 +1,7 @@
 {
     "name": "ttek/tkuni",
     "type": "project",
-    "description": "A base project for unimelb projects.",
+    "description": "A base TK lib project for education institutions.",
     "keywords":  [
         "tropotek"
     ],
