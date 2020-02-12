@@ -1,47 +1,48 @@
 {
-    "name": "ttek/tkuni",
-    "type": "project",
-    "description": "A base TK lib project for education institutions.",
-    "keywords":  [
-        "tropotek"
-    ],
-    "time": "2019-04-09",
-    "license": "MIT",
-    "minimum-stability": "dev",
-    "authors":  [
-         {
-            "name": "Michael Mifsud",
-            "email": "info@tropotek.com.au",
-            "homepage": "http://www.tropotek.com/"
-        }
-    ],
-    "autoload":  {
-        "psr-0":  {
-            "": "src/"
-        }
-    },
-    "scripts":  {
-        "post-install-cmd":  [
-            "Tk\\Composer\\SetupEvent::postInstall"
-        ],
-        "post-update-cmd":  [
-            "Tk\\Composer\\SetupEvent::postUpdate"
-        ]
-    },
-    "extra":  {
-        "branch-alias":  {
-            "dev-master": "3.0.x-dev"
-        }
-    },
-    "require":  {
-        "php": "^7.1.3",
-        "ext-json": "*",
-        "ttek/tk-uni": "~3.0",
-        "ttek/theme-cube": "~1.0",
-        "ttek-plg/plg-lti": "~3.0",
-        "ttek-plg/plg-ldap": "~3.0",
-        "ttek-plg/mailog": "~1.0"
-    },
-    "require-dev":  {
+  "name": "ttek/tkuni",
+  "type": "project",
+  "description": "A base TK lib project for education institutions.",
+  "keywords": [
+    "tropotek"
+  ],
+  "time": "2019-04-09",
+  "license": "MIT",
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "Michael Mifsud",
+      "email": "info@tropotek.com.au",
+      "homepage": "http://www.tropotek.com/"
     }
+  ],
+  "autoload": {
+    "psr-0": {
+      "": "src/"
+    }
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "Tk\\Composer\\SetupEvent::postInstall"
+    ],
+    "post-update-cmd": [
+      "Tk\\Composer\\SetupEvent::postUpdate"
+    ]
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "3.0.x-dev"
+    }
+  },
+  "require": {
+    "php": "^7.1.3",
+    "ext-json": "*",
+    "ext-dom": "*",
+    "ttek/tk-uni": "~3.0",
+    "ttek/theme-cube": "~1.0",
+    "ttek-plg/plg-lti": "~3.0",
+    "ttek-plg/plg-ldap": "~3.0",
+    "ttek-plg/mailog": "~1.0"
+  },
+  "require-dev": {
+  }
 }
