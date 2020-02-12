@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller\Staff;
 
+use Bs\Db\UserIface;
 use Tk\Request;
 use Dom\Template;
 
@@ -39,8 +40,11 @@ class Dashboard extends \Uni\Controller\AdminIface
 
         $this->subjectTable = \Uni\Table\Subject::create()->init();
         $this->subjectTable->removeAction('delete');
-        $this->subjectTable->findCell('name')->setUrl(function ($cell, $obj) {
-            /** @var \Tk\Table\Cell\iface $cell */
+        $this->subjectTable->findCell('nameFirst')->addOnPropertyValue(function ($cell, $obj, $value) {
+            /** @var UserIface $obj */
+            return $obj->getName();
+        })->setUrl(function ($cell, $obj) {
+            /** @var \Tk\Table\Cell\Iface $cell */
             $url = \Uni\Uri::createSubjectUrl('/index.html', $obj);
             $cell->setUrlProperty('');
             return $url;
