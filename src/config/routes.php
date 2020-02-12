@@ -31,7 +31,6 @@ $routes->add('admin-dashboard-base', new \Tk\Routing\Route('/admin/', 'App\Contr
 $routes->add('admin-settings', new \Tk\Routing\Route('/admin/settings.html', 'App\Controller\Admin\Settings::doDefault'));
 
 
-
 // Client Pages
 $routes->add('client-dashboard', new \Tk\Routing\Route('/client/index.html', 'App\Controller\Client\Dashboard::doDefault'));
 $routes->add('client-dashboard-base', new \Tk\Routing\Route('/client/', 'App\Controller\Client\Dashboard::doDefault'));
@@ -47,9 +46,6 @@ $routes->add('staff-subject-dashboard', new \Tk\Routing\Route('/staff/{subjectCo
 $routes->add('student-dashboard', new \Tk\Routing\Route('/student/index.html', 'App\Controller\Student\Dashboard::doDefault'));
 $routes->add('student-dashboard-base', new \Tk\Routing\Route('/student/', 'App\Controller\Student\Dashboard::doDefault'));
 $routes->add('student-subject-dashboard', new \Tk\Routing\Route('/student/{subjectCode}/index.html', 'App\Controller\Student\SubjectDashboard::doDefault'));
-
-
-
 
 
 
