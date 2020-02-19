@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a41f631c8aff9635c09053423db653b4",
+    "content-hash": "5dca6e0ef63f1ec372d3404508897a19",
     "packages": [
         {
             "name": "guzzlehttp/psr7",
@@ -2415,16 +2415,16 @@
         },
         {
             "name": "ttek/tk-uni",
-            "version": "dev-master",
+            "version": "3.0.42",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tropotek/tk-uni.git",
-                "reference": "04eacea4478409de1024546084473ca61c76365c"
+                "reference": "74591e9c00567243a0c54e598966a37f4ef19cbc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tropotek/tk-uni/zipball/04eacea4478409de1024546084473ca61c76365c",
-                "reference": "04eacea4478409de1024546084473ca61c76365c",
+                "url": "https://api.github.com/repos/tropotek/tk-uni/zipball/74591e9c00567243a0c54e598966a37f4ef19cbc",
+                "reference": "74591e9c00567243a0c54e598966a37f4ef19cbc",
                 "shasum": ""
             },
             "require": {
@@ -2433,7 +2433,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2.x-dev"
+                    "dev-master": "3.0.x-dev"
                 }
             },
             "autoload": {
@@ -2458,7 +2458,7 @@
                 "tropotek",
                 "uni"
             ],
-            "time": "2020-02-17T23:16:40+00:00"
+            "time": "2019-08-09T00:00:00+00:00"
         },
         {
             "name": "wikimedia/less.php",
