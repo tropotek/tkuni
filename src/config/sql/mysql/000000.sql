@@ -20,8 +20,8 @@ INSERT INTO institution (user_id, name, email, phone, domain, description, logo,
 
 INSERT INTO `user` (`role_id`, `institution_id`, `username`, `password` ,`name_first`, `name_last`, `email`, `active`, `hash`, `modified`, `created`)
 VALUES
-  (1, NULL, 'admin', MD5(CONCAT('password', MD5('10admin'))), 'Administrator', '', 'admin@example.com', 1, MD5('10admin'), NOW(), NOW()),
-  (2, NULL, 'unimelb', MD5(CONCAT('password', MD5('20unimelb'))), 'The University Of Melbourne', '', 'fvas@unimelb.edu.au', 1, MD5('20unimelb'), NOW(), NOW()),
+  (1, 0, 'admin', MD5(CONCAT('password', MD5('10admin'))), 'Administrator', '', 'admin@example.com', 1, MD5('10admin'), NOW(), NOW()),
+  (2, 0, 'unimelb', MD5(CONCAT('password', MD5('20unimelb'))), 'The University Of Melbourne', '', 'fvas@unimelb.edu.au', 1, MD5('20unimelb'), NOW(), NOW()),
   (5, 1, 'staff', MD5(CONCAT('password', MD5('31staff'))), 'Staff', 'Unimelb', 'staff@unimelb.edu.au', 1, MD5('31staff'), NOW(), NOW()),
   (4, 1, 'student', MD5(CONCAT('password', MD5('41student'))), 'Student', 'Unimelb', 'student@unimelb.edu.au', 1, MD5('41student'), NOW(), NOW())
 ;
