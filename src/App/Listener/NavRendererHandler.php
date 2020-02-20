@@ -98,7 +98,7 @@ class NavRendererHandler implements Subscriber
         if ($user->hasPermission(\Uni\Db\Permission::TYPE_CLIENT)) {
             $menu->append(Item::create('Settings', \Uni\Uri::createHomeUrl('/settings.html'), 'fa fa-cogs'));
         }
-        if ($user->hasPermission(array(\Uni\Db\Permission::TYPE_STUDENT, \Uni\Db\Permission::TYPE_COORDINATOR))) {
+        if ($user->hasPermission(array(\Uni\Db\Permission::TYPE_STUDENT, \Uni\Db\Permission::IS_COORDINATOR))) {
             if(!$this->getConfig()->isSubjectUrl()) {
                 $courseList = $this->getConfig()->getCourseMapper()->findFiltered(array(
                     'institutionId' => $this->getConfig()->getInstitutionId(),

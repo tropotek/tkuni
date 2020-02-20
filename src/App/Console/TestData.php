@@ -45,23 +45,6 @@ class TestData extends \Bs\Console\TestData
         /** @var \Uni\Db\Institution $institution */
         $institution = $config->getInstitutionMapper()->find(1);
 
-        $db->exec('DELETE FROM `user_role` WHERE `description` = \'***\' ');
-        $db->exec('TRUNCATE `user_role_institution`');
-        for($i = 0; $i < 20; $i++) {
-            $obj = new \Uni\Db\Role();
-            do {
-                $obj->name = $this->createName() . '.' . rand(1000, 10000000);
-            } while(\Uni\Db\RoleMap::create()->findFiltered(array('name' => $obj->name))->count());
-
-            $obj->type = (rand(1, 10) <= 5) ? \Uni\Db\Role::TYPE_COORDINATOR : \Uni\Db\Role::TYPE_STUDENT;
-            $obj->description = '***';
-            $obj->active = (rand(1, 10) <= 9);
-            $obj->save();
-            if ((rand(1, 10) <= 5)) {
-                \Uni\Db\RoleMap::create()->addInstitution($obj->getId(), rand(1,2));
-            }
-        }
-
         $db->exec('DELETE FROM `user` WHERE `notes` = \'***\' ');
         for($i = 0; $i < 25; $i++) {
             $obj = new \Uni\Db\User();
@@ -70,7 +53,7 @@ class TestData extends \Bs\Console\TestData
                 $obj->username = strtolower($this->createName()) . '.' . rand(1000, 10000000);
             } while(\Uni\Db\UserMap::create()->findByUsername($obj->username) != null);
             $obj->email = $this->createUniqueEmail();
-            $obj->roleId = (rand(1, 10) <= 5) ? \Uni\Db\Role::DEFAULT_TYPE_COORDINATOR : \Uni\Db\Role::DEFAULT_TYPE_STUDENT;
+            $obj->setType((rand(1, 10) <= 5) ? \Uni\Db\User::TYPE_STAFF : \Uni\Db\User::TYPE_STUDENT);
             $obj->notes = '***';
             $obj->save();
             $obj->setNewPassword('password');
@@ -91,10 +74,10 @@ class TestData extends \Bs\Console\TestData
             $obj->save();
 
             $list = \Uni\Db\UserMap::create()->findFiltered(array(
-                'type' => array(\Uni\Db\Role::TYPE_COORDINATOR, \Uni\Db\Role::TYPE_STUDENT)
+                'type' => array(\Uni\Db\User::TYPE_STAFF, \Uni\Db\User::TYPE_STUDENT)
             ));
             foreach ($list as $user) {
-                $obj->enrollUser($user);
+                $obj->addUser($user);
             }
 
         }

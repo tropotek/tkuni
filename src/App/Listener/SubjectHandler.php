@@ -1,6 +1,7 @@
 <?php
 namespace App\Listener;
 
+use Tk\ConfigTrait;
 use Tk\Event\Subscriber;
 use Tk\Event\AuthEvent;
 use Tk\Auth\AuthEvents;
@@ -14,17 +15,18 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class SubjectHandler implements Subscriber
 {
+    use ConfigTrait;
 
     /**
      * If we are in a subject URL then get the subject object and set it in the config
      * for global accessibility.
      *
-     * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
+     * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
      * @throws \Exception
      */
     public function onRequest( $event)
     {
-        $config = \App\Config::getInstance();
+        $config = $this->getConfig();
         $request = $event->getRequest();
 
         if ($config->getAuthUser()) {
@@ -53,23 +55,28 @@ class SubjectHandler implements Subscriber
     {
         $result = $event->getResult();
         /* @var \Uni\Db\User $user */
-        $user = \Uni\Db\UserMap::create()->find($result->getIdentity());
+        $user = $this->getConfig()->getUserMapper()->find($result->getIdentity());
         $institution = $user->getInstitution();
 
         // Enroll to any pending subjects
-        if ($institution && $user->getRole()->hasType(array(\Uni\Db\Role::TYPE_STUDENT, \Uni\Db\Role::TYPE_COORDINATOR)) ) {
+        if ($institution && $user->hasType(array(\Uni\Db\User::TYPE_STUDENT, \Uni\Db\User::TYPE_STAFF)) ) {
             // Get any alias email addresses
             $ldapData = $user->getData()->get('ldap.data');
             $alias = array();
             if ($ldapData && !empty($ldapData['mailalternateaddress'][0])) {
                 $alias[] = $ldapData['mailalternateaddress'][0];
             }
-            $emailList = array_merge(array($user->email), $alias);
+            $emailList = array_merge(array($user->getEmail()), $alias);
             foreach ($emailList as $i => $email) {
-                $subjectList = \Uni\Db\SubjectMap::create()->findPendingPreEnrollments($institution->getId(), $email);
+                $subjectList = $this->getConfig()->getSubjectMapper()->findPendingPreEnrollments($institution->getId(), $email);
                 /* @var \Uni\Db\Subject $subject */
                 foreach ($subjectList as $subject) {
-                    \Uni\Db\SubjectMap::create()->addUser($subject->getId(), $user->getId());
+                    if ($user->isStaff()) {
+                        $this->getConfig()->getCourseMapper()->addUser($subject->getId(), $user->getId());
+                    } else if ($user->isStudent()) {
+                        $this->getConfig()->getSubjectMapper()->addUser($subject->getId(), $user->getId());
+                    }
+
                 }
             }
         }

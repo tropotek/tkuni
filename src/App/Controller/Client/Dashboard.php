@@ -41,7 +41,7 @@ class Dashboard extends \Uni\Controller\AdminIface
 
         $filter = array();
         $filter['institutionId'] = $this->getConfig()->getInstitutionId();
-        $filter['type'] = \Uni\Db\Role::TYPE_COORDINATOR;
+        $filter['type'] = \Uni\Db\User::TYPE_STAFF;
         $this->userTable->setList($this->userTable->findList($filter));
 
     }
