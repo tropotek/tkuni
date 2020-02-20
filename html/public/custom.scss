@@ -1,16 +1,26 @@
 
 
-
 .container {
   width: 70%;
   margin: 40px auto;
+}
 
-  .alert {
-    width: 50%;
-    margin: 10px auto;
+div.modal {
+  display: none;
+}
+
+.tk-alert-container {
+  position: absolute;
+  top: 100px;
+  right: 10px;
+  z-index: 9999;
+
+  button.close {
+    display: none;
   }
 
 }
+
 
 
 
