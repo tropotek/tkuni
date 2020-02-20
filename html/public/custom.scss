@@ -22,3 +22,23 @@ div.modal {
 
 }
 
+fieldset {
+  legend {
+    margin-top: 15px;
+    font-weight: 600 !important;
+  }
+}
+
+form {
+  .alert {
+    button {
+      display: none;
+    }
+    &.alert-danger {
+      color: #e70000;
+    }
+  }
+}
+.invalid-feedback {
+  color: #e70000;
+}
