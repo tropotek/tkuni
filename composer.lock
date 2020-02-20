@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "298dd2f3a6ab96fd535a86c5f3dcdf2a",
+    "content-hash": "6a440cd62b4720f4a13067037dd0a3d6",
     "packages": [
         {
             "name": "guzzlehttp/psr7",
@@ -2367,21 +2367,20 @@
         },
         {
             "name": "ttek/tk-uni",
-            "version": "dev-master",
+            "version": "3.2.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tropotek/tk-uni.git",
-                "reference": "a85230f2c0251990b85533ee0434b545b77631c3"
+                "reference": "3eafe0f25f0b1b775f220b64e9efce3027fbd8d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tropotek/tk-uni/zipball/a85230f2c0251990b85533ee0434b545b77631c3",
-                "reference": "a85230f2c0251990b85533ee0434b545b77631c3",
+                "url": "https://api.github.com/repos/tropotek/tk-uni/zipball/3eafe0f25f0b1b775f220b64e9efce3027fbd8d5",
+                "reference": "3eafe0f25f0b1b775f220b64e9efce3027fbd8d5",
                 "shasum": ""
             },
             "require": {
-                "ttek/tk-base": "~3.2",
-                "ttek/tk-mvc": "~3.2"
+                "ttek/tk-base": "~3.2.0"
             },
             "type": "library",
             "extra": {
@@ -2411,7 +2410,7 @@
                 "tropotek",
                 "uni"
             ],
-            "time": "2020-02-19T21:48:15+00:00"
+            "time": "2020-02-20T00:53:46+00:00"
         },
         {
             "name": "wikimedia/less.php",
