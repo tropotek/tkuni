@@ -6,6 +6,8 @@
 
 
 
+--  TODO: put this into a file that can be run at install time
+
 -- ----------------------------
 --  TEST DATA
 -- ----------------------------
