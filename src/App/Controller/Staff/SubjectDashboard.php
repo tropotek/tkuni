@@ -51,7 +51,7 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
         $filter = array();
         $filter['institutionId'] = $this->getConfig()->getInstitutionId();
         $filter['subjectId'] = $this->getConfig()->getSubjectId();
-        $filter['type'] = \Uni\Db\Role::TYPE_STUDENT;
+        $filter['type'] = \Uni\Db\User::TYPE_STUDENT;
         $this->userTable->setList($this->userTable->findList($filter, $this->userTable->getTool('name')));
 
     }

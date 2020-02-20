@@ -75,7 +75,7 @@ class AuthHandler extends \Bs\Listener\AuthHandler
 //
 //                            $userData = array(
 //                                'type' => 'ldap',
-//                                'roleId' => \Uni\Db\Role::getDefaultRoleId($role),
+//                                //'roleId' => \Uni\Db\Role::getDefaultRoleId($role),
 //                                'institutionId' => $config->getInstitutionId(),
 //                                'username' => $adapter->get('username'),
 //                                'role' => $role,
@@ -188,20 +188,14 @@ class AuthHandler extends \Bs\Listener\AuthHandler
 
 
                 $user = $config->createUser();
-                $user->roleId = \Uni\Db\Role::DEFAULT_TYPE_STUDENT;
+                $user->setType(\Uni\Db\User::TYPE_STUDENT);
                 if ($userData['role'] == 'staff') {
-                    $user->roleId = \Uni\Db\Role::DEFAULT_TYPE_STAFF;
+                    $user->setType(\Uni\Db\User::TYPE_STAFF);
                 }
                 $config->getUserMapper()->mapForm($userData, $user);
                 $user->save();
-
-//                if ($subject && $user) {
-//                    $config->getSubjectMapper()->addUser($subject->getId(), $user->getId());
-//                }
                 $adapter->set('user', $user);
             }
-
-            vd($ltiData);
 
             if ($user) {
 
@@ -216,17 +210,15 @@ class AuthHandler extends \Bs\Listener\AuthHandler
                     $config->getSubjectMapper()->addUser($subject->getId(), $user->getId());
                 }
 
-                if (!$user->email)
-                    $user->email = $userData['email'];
-                if (!$user->name)
-                    $user->name = $userData['name'];
-                if (!$user->image && !empty($userData['image']))
-                    $user->image = $userData['image'];
+                if (!$user->getEmail())
+                    $user->setEmail($userData['email']);
+                if (!$user->getName())
+                    $user->setName($userData['name']);
+                if (!$user->getImage() && !empty($userData['image']))
+                    $user->setImage($userData['image']);
 
                 $user->save();
             }
-
-
 
             if ($subject)
                 $config->getSession()->set('lti.subjectId', $subject->getId());   // Limit the dashboard to one subject for LTI logins
@@ -240,14 +232,10 @@ class AuthHandler extends \Bs\Listener\AuthHandler
 
             $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::SUCCESS, $config->getUserIdentity($user)));
         }
-
-
     }
 
-
-
     /**
-     * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
+     * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
      * @throws \Exception
      */
     public function onRequest( $event)
@@ -264,7 +252,7 @@ class AuthHandler extends \Bs\Listener\AuthHandler
             /** @var \Uni\Db\User $user */
             $user = $config->getUserMapper()->findByAuthIdentity($auth->getIdentity());
             if ($user && $user->isActive()) {
-                $config->setUser($user);            // We set the user here
+                $config->setAuthUser($user);            // We set the user here
             }
         }
 
@@ -274,7 +262,7 @@ class AuthHandler extends \Bs\Listener\AuthHandler
         $role = $event->getRequest()->attributes->get('role');
         if (!$role || empty($role)) return;
 
-        if (!$user || $user->isPublic()) {
+        if (!$user || $user->isGuest()) {
             if ($event->getRequest()->getTkUri()->getRelativePath() != '/login.html') {
                 \Tk\Uri::create('/login.html')->redirect();
             } else {
@@ -282,7 +270,7 @@ class AuthHandler extends \Bs\Listener\AuthHandler
                 $config->getUserHomeUrl($user)->redirect();
             }
         } else {
-            if (!$user->getRole()->hasType($role)) {
+            if (!$user->hasType($role)) {
                 \Tk\Alert::addWarning('1002: You do not have access to the requested page.');
                 $config->getUserHomeUrl($user)->redirect();
             }

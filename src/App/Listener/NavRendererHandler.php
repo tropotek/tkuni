@@ -21,7 +21,7 @@ class NavRendererHandler implements Subscriber
     {
         $t = 'public';
         if ($this->getConfig()->getAuthUser())
-            $t = $this->getConfig()->getAuthUser()->getRoleType();
+            $t = $this->getConfig()->getAuthUser()->getType();
         return $t;
     }
 
@@ -55,15 +55,15 @@ class NavRendererHandler implements Subscriber
         $menu->append(Item::create('About', '#', 'fa fa-info-circle')
             ->setAttr('data-toggle', 'modal')->setAttr('data-target', '#aboutModal'));
 
-        if ($user->hasPermission(\Bs\Db\Permission::TYPE_ADMIN)) {
+        if ($user->hasPermission(\Uni\Db\Permission::TYPE_ADMIN)) {
             $menu->prepend(Item::create('Site Preview', \Uni\Uri::create('/index.html'), 'fa fa-home'))->getLink()->setAttr('target', '_blank');
         }
-        if ($user->getRole()->hasPermission(\Uni\Db\Permission::MANAGE_SUBJECT)) {
+        if ($user->hasPermission(\Uni\Db\Permission::MANAGE_SUBJECT)) {
             $menu->append(Item::create('Settings', \Uni\Uri::createHomeUrl('/settings.html'), 'fa fa-cogs'), 'Profile');
 //            $menu->append(Item::create('Create Course', \Uni\Uri::createHomeUrl('/courseEdit.html'), 'fa fa-institution'));
 //            $menu->append(Item::create('Create Subject', \Uni\Uri::createHomeUrl('/subjectEdit.html'), 'fa fa-graduation-cap'));
         }
-        if ($user->getRole()->hasPermission(\Uni\Db\Permission::MANAGE_STAFF)) {
+        if ($user->hasPermission(\Uni\Db\Permission::MANAGE_STAFF)) {
             $menu->append(Item::create('Staff', \Uni\Uri::createHomeUrl('/staffUserManager.html'), 'fa fa-user-md'));
         }
 
