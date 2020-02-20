@@ -47,7 +47,6 @@ class AuthHandler extends \Bs\Listener\AuthHandler
                     }
 
 //                    if (!$user) { // Create a user record if none exists
-//
 //                        if (!$config->get('auth.ldap.auto.account')) {
 //                            $msg = sprintf('Please contact your site administrator to enable your user account. Please provide the following details' .
 //                                "\nusername: %s\nUID: %s\nEmail: %s", $adapter->get('username'), $uid, $email);
@@ -148,8 +147,6 @@ class AuthHandler extends \Bs\Listener\AuthHandler
             $userData = $adapter->get('userData');
             $ltiData = $adapter->get('ltiData');
 
-
-
             $subjectData = $adapter->get('subjectData');
             $subject = $config->getSubjectMapper()->find($subjectData['id']);
             if (!$subject) {
@@ -158,7 +155,6 @@ class AuthHandler extends \Bs\Listener\AuthHandler
             $isNewSubject = false;
             if (!$subject) {
                 //throw new \Tk\Exception('Subject ['.$subjectData['code'].'] not available, Please contact the subject coordinator.');
-
                 // Create a new subject here if needed
                 $subject = $config->createSubject();
                 $config->getSubjectMapper()->mapForm($subjectData, $subject);
@@ -170,7 +166,6 @@ class AuthHandler extends \Bs\Listener\AuthHandler
             $user = $config->getUserMapper()->findByUsername($adapter->get('username'), $adapter->getInstitution()->getId());
             if (!$user)
                 $user = $config->getUserMapper()->findByEmail($userData['email'], $adapter->getInstitution()->getId());
-
 
 //            if (!$user) {   // Error out if no user
 //                $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::FAILURE_CREDENTIAL_INVALID,
@@ -185,7 +180,6 @@ class AuthHandler extends \Bs\Listener\AuthHandler
 //                        $userData['username'], 'You are not enrolled. Please contact your administrator to setup your account.'));
 //                    return;
 //                }
-
 
                 $user = $config->createUser();
                 $user->setType(\Uni\Db\User::TYPE_STUDENT);
