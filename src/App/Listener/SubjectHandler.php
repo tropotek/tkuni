@@ -74,7 +74,11 @@ class SubjectHandler implements Subscriber
                     if ($user->isStaff()) {
                         $this->getConfig()->getCourseMapper()->addUser($subject->getId(), $user->getId());
                     } else if ($user->isStudent()) {
-                        $this->getConfig()->getSubjectMapper()->addUser($subject->getId(), $user->getId());
+                        //$this->getConfig()->getSubjectMapper()->addUser($subject->getId(), $user->getId());
+                        if ($user->isStudent())
+                            $this->getConfig()->getSubjectMapper()->addUser($subject->getId(), $user->getId());
+                        if ($user->isStaff())
+                            $this->getConfig()->getCourseMapper()->addUser($subject->getCourseId(), $user->getId());
                     }
 
                 }

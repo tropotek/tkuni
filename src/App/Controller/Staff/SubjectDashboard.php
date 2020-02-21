@@ -44,15 +44,15 @@ class SubjectDashboard extends \Uni\Controller\AdminIface
         $this->setPageTitle('');
 
         $this->userTable = \Uni\Table\User::create()->init();
-        $this->userTable->findCell('name')->setUrl(\Uni\Uri::createSubjectUrl('/studentUserEdit.html'));
-        $this->userTable->removeCell('roleId');
+        $this->userTable->findCell('nameFirst')->setUrl(\Uni\Uri::createSubjectUrl('/studentUserEdit.html'));
+        $this->userTable->removeCell('type');
         $this->userTable->appendCell(\Tk\Table\Cell\Date::create('lastLogin'), 'email');
         $this->userTable->removeAction('delete');
         $filter = array();
         $filter['institutionId'] = $this->getConfig()->getInstitutionId();
         $filter['subjectId'] = $this->getConfig()->getSubjectId();
         $filter['type'] = \Uni\Db\User::TYPE_STUDENT;
-        $this->userTable->setList($this->userTable->findList($filter, $this->userTable->getTool('name')));
+        $this->userTable->setList($this->userTable->findList($filter, $this->userTable->getTool('name_first')));
 
     }
 

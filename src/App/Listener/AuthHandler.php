@@ -201,7 +201,10 @@ class AuthHandler extends \Bs\Listener\AuthHandler
 //                    return;
 //                }
                 if (!$config->getSubjectMapper()->hasUser($subject->getId(), $user->getId())) {
-                    $config->getSubjectMapper()->addUser($subject->getId(), $user->getId());
+                    if ($user->isStudent())
+                        $config->getSubjectMapper()->addUser($subject->getId(), $user->getId());
+                    if ($user->isStaff())
+                        $config->getCourseMapper()->addUser($subject->getCourseId(), $user->getId());
                 }
 
                 if (!$user->getEmail())
@@ -221,7 +224,11 @@ class AuthHandler extends \Bs\Listener\AuthHandler
 
             // Add user to the subject if not already enrolled as they must be enrolled as LMS says so.... ;-p
             if (!$config->getSubjectMapper()->hasUser($subject->getId(), $user->getId())) {
-                $config->getSubjectMapper()->addUser($subject->getId(), $user->getId());
+                //$config->getSubjectMapper()->addUser($subject->getId(), $user->getId());
+                if ($user->isStudent())
+                    $config->getSubjectMapper()->addUser($subject->getId(), $user->getId());
+                if ($user->isStaff())
+                    $config->getCourseMapper()->addUser($subject->getCourseId(), $user->getId());
             }
 
             $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::SUCCESS, $config->getUserIdentity($user)));
