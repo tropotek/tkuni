@@ -40,7 +40,7 @@ class Dashboard extends \Uni\Controller\AdminIface
 
         $this->subjectTable = \Uni\Table\Subject::create()->init();
         $this->subjectTable->removeAction('delete');
-        $this->subjectTable->findCell('nameFirst')->addOnPropertyValue(function ($cell, $obj, $value) {
+        $this->subjectTable->findCell('name')->addOnPropertyValue(function ($cell, $obj, $value) {
             /** @var UserIface $obj */
             return $obj->getName();
         })->setUrl(function ($cell, $obj) {
