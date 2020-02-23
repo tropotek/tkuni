@@ -106,8 +106,9 @@ class NavRendererHandler implements Subscriber
                     'userId' => $user->getId()
                 ));
                 foreach ($courseList as $i => $course) {
-                    if ($user->hasPermission(\Uni\Db\Permission::IS_COORDINATOR)) {
-                        $itm = $menu->append(Item::create($course->getCode()))->setAttr('title', $course->getName())->addCss('nav-header nav-header-first d-none d-lg-block tk-test');
+
+                    $itm = $menu->append(Item::create($course->getCode()))->setAttr('title', $course->getName())->addCss('nav-header nav-header-first d-none d-lg-block tk-test');
+                    if ($user->hasPermission(\Uni\Db\Permission::MANAGE_SUBJECT)) {
                         $itm->addOnShow(function (Item $el) use ($course) {
                             $template = $el->getTemplate();
                             $url = \Uni\Uri::createHomeUrl('/courseEdit.html')->set('courseId', $course->getId())->toString();
