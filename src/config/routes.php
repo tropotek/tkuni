@@ -24,6 +24,7 @@ $routes->add('login', new \Tk\Routing\Route('/login.html', 'App\Controller\Login
 $routes->add('institution-login', new \Tk\Routing\Route('/inst/{instHash}/login.html', 'App\Controller\Login::doInsLogin'));
 $routes->add('recover', new \Tk\Routing\Route('/recover.html', 'App\Controller\Recover::doDefault'));
 
+$routes->add('install', \Tk\Routing\Route::create('/install.html', 'App\Controller\Install::doDefault'));
 
 // Admin Pages
 $routes->add('admin-dashboard', new \Tk\Routing\Route('/admin/index.html', 'App\Controller\Admin\Dashboard::doDefault'));
