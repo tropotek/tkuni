@@ -55,7 +55,7 @@ class NavRendererHandler implements Subscriber
         $menu->append(Item::create('About', '#', 'fa fa-info-circle')
             ->setAttr('data-toggle', 'modal')->setAttr('data-target', '#aboutModal'));
 
-        if ($user->hasPermission(\Uni\Db\Permission::TYPE_ADMIN)) {
+        if ($user->isAdmin()) {
             $menu->prepend(Item::create('Site Preview', \Uni\Uri::create('/index.html'), 'fa fa-home'))->getLink()->setAttr('target', '_blank');
         }
         if ($user->hasPermission(\Uni\Db\Permission::MANAGE_SUBJECT)) {
@@ -84,7 +84,7 @@ class NavRendererHandler implements Subscriber
 
         $menu->append(Item::create('Dashboard', \Uni\Uri::createHomeUrl('/index.html'), 'fa fa-dashboard'));
 
-        if ($user->hasPermission(\Uni\Db\Permission::TYPE_ADMIN)) {
+        if ($user->isAdmin()) {
             $menu->append(Item::create('Settings', \Uni\Uri::createHomeUrl('/settings.html'), 'fa fa-cogs'));
             //$menu->append(Item::create('Institutions', \Uni\Uri::createHomeUrl('/institutionManager.html'), 'fa fa-university'));
             if ($this->getConfig()->isDebug()) {
@@ -95,10 +95,10 @@ class NavRendererHandler implements Subscriber
                 $sub->append(Item::create('Forms', \Uni\Uri::createHomeUrl('/dev/forms.html'), 'fa fa-rebel'));
             }
         }
-        if ($user->hasPermission(\Uni\Db\Permission::TYPE_CLIENT)) {
+        if ($user->isClient()) {
             $menu->append(Item::create('Settings', \Uni\Uri::createHomeUrl('/settings.html'), 'fa fa-cogs'));
         }
-        if ($user->hasPermission(array(\Uni\Db\Permission::TYPE_STUDENT, \Uni\Db\Permission::IS_COORDINATOR))) {
+        if ($user->isStaff()) {
             if(!$this->getConfig()->isSubjectUrl()) {
                 $courseList = $this->getConfig()->getCourseMapper()->findFiltered(array(
                     'institutionId' => $this->getConfig()->getInstitutionId(),
@@ -106,13 +106,14 @@ class NavRendererHandler implements Subscriber
                     'userId' => $user->getId()
                 ));
                 foreach ($courseList as $i => $course) {
-                    $itm = $menu->append(Item::create($course->getCode()))->setAttr('title', $course->getName())->addCss('nav-header nav-header-first d-none d-lg-block tk-test');
-
-                    $itm->addOnShow(function (Item $el) use ($course) {
-                        $template = $el->getTemplate();
-                        $url = \Uni\Uri::createHomeUrl('/courseEdit.html')->set('courseId', $course->getId())->toString();
-                        $template->appendHtml($el->getVar(), '<span class="float-right"><a title="Edit Course" href="'.$url.'"><i class="fa fa-edit"></i></a></span>');
-                    });
+                    if ($user->hasPermission(\Uni\Db\Permission::IS_COORDINATOR)) {
+                        $itm = $menu->append(Item::create($course->getCode()))->setAttr('title', $course->getName())->addCss('nav-header nav-header-first d-none d-lg-block tk-test');
+                        $itm->addOnShow(function (Item $el) use ($course) {
+                            $template = $el->getTemplate();
+                            $url = \Uni\Uri::createHomeUrl('/courseEdit.html')->set('courseId', $course->getId())->toString();
+                            $template->appendHtml($el->getVar(), '<span class="float-right"><a title="Edit Course" href="' . $url . '"><i class="fa fa-edit"></i></a></span>');
+                        });
+                    }
                     $subjectList = $this->getConfig()->getSubjectMapper()->findFiltered(array('courseId' => $course->getId()));
                     foreach ($subjectList as $subject) {
                         $menu->append(Item::create($subject->getCode(), \Uni\Uri::createSubjectUrl('/index.html', $subject), 'fa fa-graduation-cap'));
@@ -126,7 +127,8 @@ class NavRendererHandler implements Subscriber
                 if ($user->isStaff()) {
                     if ($user->hasPermission(\Uni\Db\Permission::MANAGE_SUBJECT))
                         $sub->append(Item::create('Settings', \Uni\Uri::createSubjectUrl('/subjectEdit.html', $subject), 'fa fa-cogs'));
-                    $sub->append(Item::create('Students', \Uni\Uri::createSubjectUrl('/studentUserManager.html'), 'fa fa-group'));
+                    if ($user->hasPermission(\Uni\Db\Permission::MANAGE_STUDENT))
+                        $sub->append(Item::create('Students', \Uni\Uri::createSubjectUrl('/studentUserManager.html'), 'fa fa-group'));
                 }
             }
         }
