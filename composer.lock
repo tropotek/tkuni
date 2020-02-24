@@ -4,8 +4,59 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cf57c884a55b6118fa05d6ba7e97577f",
+    "content-hash": "ca873fb7fdd52df2ea3734bbcb4b23b1",
     "packages": [
+        {
+            "name": "fproject/php-jwt",
+            "version": "4.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fproject/php-jwt.git",
+                "reference": "91047b202bbe7d966e8fce67ab16ebca8bdcb6b7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fproject/php-jwt/zipball/91047b202bbe7d966e8fce67ab16ebca8bdcb6b7",
+                "reference": "91047b202bbe7d966e8fce67ab16ebca8bdcb6b7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.8.36"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Firebase\\JWT\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Neuman Vong",
+                    "email": "neuman+pear@twilio.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Anant Narayanan",
+                    "email": "anant@php.net",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Bui Sy Nguyen",
+                    "email": "nguyenbs@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Support several key types including JWK.",
+            "homepage": "https://github.com/fproject/php-jwt",
+            "time": "2018-04-02T10:36:30+00:00"
+        },
         {
             "name": "guzzlehttp/psr7",
             "version": "1.x-dev",
@@ -78,45 +129,40 @@
             "time": "2020-02-12T23:13:46+00:00"
         },
         {
-            "name": "imsglobal/lti",
-            "version": "3.0.2",
+            "name": "imsglobal/lti-1p3-tool",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/IMSGlobal/LTI-Tool-Provider-Library-PHP.git",
-                "reference": "06b12f70c2803ee08da116bcda2951eefd411ac9"
+                "url": "https://github.com/IMSGlobal/lti-1-3-php-library.git",
+                "reference": "b668742a7c3a986cd2116022aa7db33a2c208a2d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/IMSGlobal/LTI-Tool-Provider-Library-PHP/zipball/06b12f70c2803ee08da116bcda2951eefd411ac9",
-                "reference": "06b12f70c2803ee08da116bcda2951eefd411ac9",
+                "url": "https://api.github.com/repos/IMSGlobal/lti-1-3-php-library/zipball/b668742a7c3a986cd2116022aa7db33a2c208a2d",
+                "reference": "b668742a7c3a986cd2116022aa7db33a2c208a2d",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.6.0"
+                "fproject/php-jwt": "^4.0",
+                "phpseclib/phpseclib": "^2.0"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "IMSGlobal\\LTI\\": "src/"
+                    "IMSGlobal\\LTI\\": "src/lti"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
             "authors": [
                 {
-                    "name": "Stephen Vickers",
-                    "email": "svickers@imsglobal.org"
+                    "name": "Martin Lenord",
+                    "email": "ims.m@rtin.dev"
                 }
             ],
-            "description": "LTI Tool Provider Library",
-            "homepage": "https://www.imsglobal.org/lti",
-            "keywords": [
-                "LTI"
-            ],
-            "abandoned": true,
-            "time": "2016-09-18T04:22:22+00:00"
+            "support": {
+                "source": "https://github.com/IMSGlobal/lti-1-3-php-library/tree/master",
+                "issues": "https://github.com/IMSGlobal/lti-1-3-php-library/issues"
+            },
+            "time": "2020-02-07T16:57:46+00:00"
         },
         {
             "name": "intervention/image",
@@ -468,6 +514,98 @@
             ],
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
             "time": "2019-12-10T11:17:38+00:00"
+        },
+        {
+            "name": "phpseclib/phpseclib",
+            "version": "2.0.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpseclib/phpseclib.git",
+                "reference": "91eaf8a3104f014815a4d3af45d32c91283e3892"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/91eaf8a3104f014815a4d3af45d32c91283e3892",
+                "reference": "91eaf8a3104f014815a4d3af45d32c91283e3892",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phing/phing": "~2.7",
+                "phpunit/phpunit": "^4.8.35|^5.7|^6.0",
+                "sami/sami": "~2.0",
+                "squizlabs/php_codesniffer": "~2.0"
+            },
+            "suggest": {
+                "ext-gmp": "Install the GMP (GNU Multiple Precision) extension in order to speed up arbitrary precision integer arithmetic operations.",
+                "ext-libsodium": "SSH2/SFTP can make use of some algorithms provided by the libsodium-php extension.",
+                "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
+                "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "phpseclib/bootstrap.php"
+                ],
+                "psr-4": {
+                    "phpseclib\\": "phpseclib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jim Wigginton",
+                    "email": "terrafrost@php.net",
+                    "role": "Lead Developer"
+                },
+                {
+                    "name": "Patrick Monnerat",
+                    "email": "pm@datasphere.ch",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Andreas Fischer",
+                    "email": "bantu@phpbb.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Hans-Jürgen Petrich",
+                    "email": "petrich@tronic-media.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Graham Campbell",
+                    "email": "graham@alt-three.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP Secure Communications Library - Pure-PHP implementations of RSA, AES, SSH2, SFTP, X.509 etc.",
+            "homepage": "http://phpseclib.sourceforge.net",
+            "keywords": [
+                "BigInteger",
+                "aes",
+                "asn.1",
+                "asn1",
+                "blowfish",
+                "crypto",
+                "cryptography",
+                "encryption",
+                "rsa",
+                "security",
+                "sftp",
+                "signature",
+                "signing",
+                "ssh",
+                "twofish",
+                "x.509",
+                "x509"
+            ],
+            "time": "2020-02-22T23:43:33+00:00"
         },
         {
             "name": "psr/cache",
@@ -1690,16 +1828,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tropotek/plg-lti.git",
-                "reference": "8f764ce34ee72f29198e5890ef12c669ed4241f6"
+                "reference": "5861cc6d6ad2b6c17e802abb37294e79e2e0f07f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tropotek/plg-lti/zipball/8f764ce34ee72f29198e5890ef12c669ed4241f6",
-                "reference": "8f764ce34ee72f29198e5890ef12c669ed4241f6",
+                "url": "https://api.github.com/repos/tropotek/plg-lti/zipball/5861cc6d6ad2b6c17e802abb37294e79e2e0f07f",
+                "reference": "5861cc6d6ad2b6c17e802abb37294e79e2e0f07f",
                 "shasum": ""
             },
             "require": {
-                "imsglobal/lti": "~3.0"
+                "imsglobal/lti-1p3-tool": "dev-master"
             },
             "type": "ttek-plugin",
             "extra": {
@@ -1729,7 +1867,7 @@
                 "plugin",
                 "tropotek"
             ],
-            "time": "2020-02-20T19:27:12+00:00"
+            "time": "2020-02-24T19:43:36+00:00"
         },
         {
             "name": "ttek/theme-cube",
