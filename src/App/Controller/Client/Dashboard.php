@@ -42,7 +42,10 @@ class Dashboard extends \Uni\Controller\AdminIface
         $filter = array();
         $filter['institutionId'] = $this->getConfig()->getInstitutionId();
         $filter['type'] = \Uni\Db\User::TYPE_STAFF;
-        $this->userTable->setList($this->userTable->findList($filter));
+        //$this->userTable->setList($this->userTable->findList($filter));
+        //$this->userTable->resetSessionTool();
+        //$this->userTable->setList($this->userTable->findList($filter, $this->userTable->getTool('IF(ISNULL(last_login),1,0), last_login DESC')));
+        $this->userTable->setList($this->userTable->findList($filter, $this->userTable->getTool('IF(ISNULL(last_login),1,0), last_login DESC')));
 
     }
 
