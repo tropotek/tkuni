@@ -2,6 +2,7 @@
 namespace App\Listener;
 
 
+use Bs\Db\User;
 use Tk\Event\AuthEvent;
 use Tk\Auth\AuthEvents;
 
@@ -184,6 +185,7 @@ class AuthHandler extends \Bs\Listener\AuthHandler
                 $user = $config->createUser();
                 $config->getUserMapper()->mapForm($userData, $user);
                 $user->save();
+                $user->addPermission(\uni\Db\Permission::getPermissionList($user->getType()));
                 $adapter->set('user', $user);
             }
 
