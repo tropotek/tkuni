@@ -242,9 +242,6 @@ class AuthHandler extends \Bs\Listener\AuthHandler
         $config = \Uni\Config::getInstance();
         $auth = $config->getAuth();
         $user = null;                       // public user
-        // TODO: We seem to loos the user session when a link from an email arrives?????
-        // TODO: Currently the user would have to re-login every time they click a link from an email
-
         if ($auth->getIdentity()) {         // Check if user is logged in
             /** @var \Uni\Db\User $user */
             $user = $config->getUserMapper()->findByAuthIdentity($auth->getIdentity());
