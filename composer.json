@@ -47,7 +47,8 @@
     "ttek-plg/plg-ldap": "~3.2.0",
     "ttek-plg/mailog": "~1.0.0",
     "ext-json": "*",
-    "ext-dom": "*"
+    "ext-dom": "*",
+    "ext-openssl": "*"
   },
   "require-dev": {
   }

@@ -144,14 +144,14 @@ class AuthHandler extends \Bs\Listener\AuthHandler
         if ($event->getAdapter() instanceof \Lti\Auth\LtiAdapter) {
             /** @var \Lti\Auth\LtiAdapter $adapter */
             $adapter = $event->getAdapter();
-            $userData = $adapter->get('userData');
-            $ltiData = $adapter->get('ltiData');
 
+            $userData = $adapter->get('userData');
             $subjectData = $adapter->get('subjectData');
-            $subject = $config->getSubjectMapper()->find($subjectData['id']);
-            if (!$subject) {
-                $subject = $config->getSubjectMapper()->findByCode($subjectData['code'], $adapter->getInstitution()->getId());
-            }
+
+            $subject = $config->getSubjectMapper()->findByCode($subjectData['code'], $adapter->getInstitution()->getId());
+            if (!empty($subjectData['id']))
+                $subject = $config->getSubjectMapper()->find($subjectData['id']);
+
             $isNewSubject = false;
             if (!$subject) {
                 //throw new \Tk\Exception('Subject ['.$subjectData['code'].'] not available, Please contact the subject coordinator.');
@@ -182,10 +182,6 @@ class AuthHandler extends \Bs\Listener\AuthHandler
 //                }
 
                 $user = $config->createUser();
-                $user->setType(\Uni\Db\User::TYPE_STUDENT);
-                if ($userData['role'] == 'staff') {
-                    $user->setType(\Uni\Db\User::TYPE_STAFF);
-                }
                 $config->getUserMapper()->mapForm($userData, $user);
                 $user->save();
                 $adapter->set('user', $user);
@@ -203,7 +199,7 @@ class AuthHandler extends \Bs\Listener\AuthHandler
                 if (!$config->getSubjectMapper()->hasUser($subject->getId(), $user->getId())) {
                     if ($user->isStudent())
                         $config->getSubjectMapper()->addUser($subject->getId(), $user->getId());
-                    if ($user->isStaff())
+                    if ($user->isStaff() && $subject->getCourseId())
                         $config->getCourseMapper()->addUser($subject->getCourseId(), $user->getId());
                 }
 
