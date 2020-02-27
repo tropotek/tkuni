@@ -224,7 +224,7 @@ class AuthHandler extends \Bs\Listener\AuthHandler
                             $config->getCourseMapper()->addUser($subject->getCourseId(), $user->getId());
                     }
                     // (optional) to check the pre-enrollment, if not available fail authentication
-//                    $isPreEnrolled = \Uni\Db\SubjectMap::create()->isPreEnrolled($adapter->getInstitution()->getId(), array($user->getEmail()) );
+//                    $isPreEnrolled = $config->getSubjectMapper()->isPreEnrolled($adapter->getInstitution()->getId(), array($user->getEmail()) );
 //                    if (!$isPreEnrolled) {  // Only create users accounts for enrolled students
 //                        $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::FAILURE_CREDENTIAL_INVALID,
 //                            $userData['username'], 'You are not enrolled. Please contact your administrator to setup your account.'));
