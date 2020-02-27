@@ -48,7 +48,8 @@
     "ttek-plg/mailog": "~1.0.0",
     "ext-json": "*",
     "ext-dom": "*",
-    "ext-openssl": "*"
+    "ext-openssl": "*",
+    "ext-pdo": "*"
   },
   "require-dev": {
   }

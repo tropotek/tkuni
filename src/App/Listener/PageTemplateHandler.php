@@ -2,6 +2,7 @@
 namespace App\Listener;
 
 use Tk\ConfigTrait;
+use Tk\Util\IpThrottle;
 use Uni\Db\User;
 
 /**
