@@ -39,6 +39,29 @@ class Dashboard extends \Uni\Controller\AdminIface
 
         $this->userTable = \Uni\Table\User::create()->setEditUrl(\Uni\Uri::createHomeUrl('/staffUserEdit.html'))->init();
 
+
+        $this->userTable->removeCell('id');
+        $this->userTable->removeCell('created');
+        $this->userTable->removeFilter('keywords');
+        $this->userTable->removeAction('delete');
+        $this->userTable->removeAction('csv');
+
+        $this->userTable->appendCell(new \Tk\Table\Cell\Text('role'), 'uid')
+            ->addOnPropertyValue(function (\Tk\Table\Cell\Iface $cell, $obj, $value) {
+                /** @var $obj \Uni\Db\User */
+                $value ='';
+                if ($obj->isCoordinator()) {
+                    $value .= 'Coordinator, ';
+                }
+                if ($obj->isMentor()) {
+                    $value .= 'Mentor, ';
+                }
+                if (!$value) {
+                    $value = 'Staff';
+                }
+                return trim($value, ', ');
+            });
+
         $filter = array();
         $filter['institutionId'] = $this->getConfig()->getInstitutionId();
         $filter['type'] = \Uni\Db\User::TYPE_STAFF;
