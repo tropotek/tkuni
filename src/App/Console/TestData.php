@@ -4,6 +4,7 @@ namespace App\Console;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Uni\Db\Permission;
+use Uni\Db\User;
 
 /**
  * @author Michael Mifsud <info@tropotek.com>
@@ -48,14 +49,14 @@ class TestData extends \Bs\Console\TestData
 
         $db->exec('DELETE FROM `user` WHERE `notes` = \'***\' ');
         for($i = 0; $i < 25; $i++) {
-            $user = new \Uni\Db\User();
-            $user->name = $this->createName();
+            $user = $config->createUser();
+            $user->setName($this->createName());
             do {
-                $user->username = strtolower($this->createName()) . '.' . rand(1000, 10000000);
-            } while(\Uni\Db\UserMap::create()->findByUsername($user->username) != null);
-            $user->email = $this->createUniqueEmail();
+                $user->setUsername(strtolower($this->createName()) . '.' . rand(1000, 10000000));
+            } while($config->getUserMapper()->findByUsername($user->getUsername()) != null);
+            $user->setEmail($this->createUniqueEmail());
             $user->setType((rand(1, 10) <= 5) ? \Uni\Db\User::TYPE_STAFF : \Uni\Db\User::TYPE_STUDENT);
-            $user->notes = '***';
+            $user->setNotes('***');
             $user->save();
             $user->setNewPassword('password');
             $user->save();
@@ -64,6 +65,9 @@ class TestData extends \Bs\Console\TestData
             if ($user->isStaff() && (rand(1, 10) <= 3)) {
                 $user->addPermission(Permission::IS_COORDINATOR);
             }
+            if ($user->isStaff() && (rand(1, 10) <= 2)) {
+                $user->addPermission(Permission::IS_MENTOR);
+            }
         }
 
 
@@ -71,23 +75,27 @@ class TestData extends \Bs\Console\TestData
         $db->exec('TRUNCATE `subject`');
         $db->exec('TRUNCATE `subject_has_user`');
         $db->exec('TRUNCATE `course_has_user`');
-        $db->exec('TRUNCATE `user_mentor`');
 
         for ($i = 0; $i < 4; $i++) {
             $year = 2016 + $i;
-            $course = new \Uni\Db\Course();
+            $course = $config->createCourse();
             $course->setInstitutionId($institution->getId());
+            /** @var User $coordinator */
             $coordinator = $config->getUserMapper()->findFiltered(array(
                 'type' => array(\Uni\Db\User::TYPE_STAFF),
                 'permission' => Permission::IS_COORDINATOR
             ), \Tk\Db\Tool::create('RAND()', 1))->current();
-            if ($coordinator) $course->setCoordinatorId($coordinator->getId());
+            if ($coordinator) {
+                $course->setCoordinatorId($coordinator->getId());
+            }
             $course->setName('Test Course #'.$i);
             $course->setCode('TEST10001');
             $course->setEmail($institution->getEmail());
             $course->save();
-            $course->addUser($coordinator);
-            $list = \Uni\Db\UserMap::create()->findFiltered(array(
+            if ($coordinator) {
+                $course->addUser($coordinator);
+            }
+            $list = $config->getUserMapper()->findFiltered(array(
                 'type' => array(\Uni\Db\User::TYPE_STAFF)
             ));
             foreach ($list as $user) {
@@ -96,7 +104,7 @@ class TestData extends \Bs\Console\TestData
 
             for ($i = 0; $i < 4; $i++) {
                 $year = 2018 + $i;
-                $subject = new \Uni\Db\Subject();
+                $subject = $config->createSubject();
                 $subject->setCourseId($course->getId());
                 $subject->setInstitutionId($institution->getId());
                 $subject->setName($course->getName() . ' ' . $year);
@@ -106,7 +114,7 @@ class TestData extends \Bs\Console\TestData
                 $subject->setDateEnd(\Tk\Date::ceil()->setDate($year, 12, 31));
                 $subject->save();
 
-                $list = \Uni\Db\UserMap::create()->findFiltered(array(
+                $list = $config->getUserMapper()->findFiltered(array(
                     'type' => array(\Uni\Db\User::TYPE_STUDENT)
                 ));
                 foreach ($list as $user) {
@@ -117,7 +125,19 @@ class TestData extends \Bs\Console\TestData
 
         }
 
-
+        $db->exec('TRUNCATE `user_mentor`');
+        $mentorList = $config->getUserMapper()->findFiltered(array(
+                'type' => array(\Uni\Db\User::TYPE_STAFF),
+                'permission' => Permission::IS_MENTOR
+            ), \Tk\Db\Tool::create('RAND()', 1));
+        foreach ($mentorList as $mentor) {
+            $studentList = $config->getUserMapper()->findFiltered(array(
+                'type' => array(\Uni\Db\User::TYPE_STUDENT)
+            ), \Tk\Db\Tool::create('RAND()', 8));
+            foreach ($studentList as $student) {
+                $config->getUserMapper()->
+            }
+        }
     }
 
 
