@@ -3,6 +3,7 @@ namespace App\Console;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Uni\Db\Permission;
 
 /**
  * @author Michael Mifsud <info@tropotek.com>
@@ -47,37 +48,71 @@ class TestData extends \Bs\Console\TestData
 
         $db->exec('DELETE FROM `user` WHERE `notes` = \'***\' ');
         for($i = 0; $i < 25; $i++) {
-            $obj = new \Uni\Db\User();
-            $obj->name = $this->createName();
+            $user = new \Uni\Db\User();
+            $user->name = $this->createName();
             do {
-                $obj->username = strtolower($this->createName()) . '.' . rand(1000, 10000000);
-            } while(\Uni\Db\UserMap::create()->findByUsername($obj->username) != null);
-            $obj->email = $this->createUniqueEmail();
-            $obj->setType((rand(1, 10) <= 5) ? \Uni\Db\User::TYPE_STAFF : \Uni\Db\User::TYPE_STUDENT);
-            $obj->notes = '***';
-            $obj->save();
-            $obj->setNewPassword('password');
-            $obj->save();
+                $user->username = strtolower($this->createName()) . '.' . rand(1000, 10000000);
+            } while(\Uni\Db\UserMap::create()->findByUsername($user->username) != null);
+            $user->email = $this->createUniqueEmail();
+            $user->setType((rand(1, 10) <= 5) ? \Uni\Db\User::TYPE_STAFF : \Uni\Db\User::TYPE_STUDENT);
+            $user->notes = '***';
+            $user->save();
+            $user->setNewPassword('password');
+            $user->save();
+
+            $user->addPermission(\Uni\Db\Permission::getPermissionList($user->getType()));
+            if ($user->isStaff() && (rand(1, 10) <= 3)) {
+                $user->addPermission(Permission::IS_COORDINATOR);
+            }
         }
 
 
+        $db->exec('TRUNCATE `course`');
         $db->exec('TRUNCATE `subject`');
+        $db->exec('TRUNCATE `subject_has_user`');
+        $db->exec('TRUNCATE `course_has_user`');
+        $db->exec('TRUNCATE `user_mentor`');
+
         for ($i = 0; $i < 4; $i++) {
             $year = 2016 + $i;
-            $obj = new \Uni\Db\Subject();
-            $obj->institutionId = $institution->getId();
-            $obj->name = 'PRJ ' . $year;
-            $obj->code = 'PRJ_' . $year;
-            $obj->email = $institution->email;
-            $obj->dateStart = \Tk\Date::floor()->setDate($year, 1, 1);
-            $obj->dateEnd = \Tk\Date::ceil()->setDate($year, 12, 31);
-            $obj->save();
-
+            $course = new \Uni\Db\Course();
+            $course->setInstitutionId($institution->getId());
+            $coordinator = $config->getUserMapper()->findFiltered(array(
+                'type' => array(\Uni\Db\User::TYPE_STAFF),
+                'permission' => Permission::IS_COORDINATOR
+            ), \Tk\Db\Tool::create('RAND()', 1))->current();
+            if ($coordinator) $course->setCoordinatorId($coordinator->getId());
+            $course->setName('Test Course #'.$i);
+            $course->setCode('TEST10001');
+            $course->setEmail($institution->getEmail());
+            $course->save();
+            $course->addUser($coordinator);
             $list = \Uni\Db\UserMap::create()->findFiltered(array(
-                'type' => array(\Uni\Db\User::TYPE_STAFF, \Uni\Db\User::TYPE_STUDENT)
+                'type' => array(\Uni\Db\User::TYPE_STAFF)
             ));
             foreach ($list as $user) {
-                $obj->addUser($user);
+                $course->addUser($user);
+            }
+
+            for ($i = 0; $i < 4; $i++) {
+                $year = 2018 + $i;
+                $subject = new \Uni\Db\Subject();
+                $subject->setCourseId($course->getId());
+                $subject->setInstitutionId($institution->getId());
+                $subject->setName($course->getName() . ' ' . $year);
+                $subject->setCode($course->getCode() . '_' . $year);
+                $subject->setEmail($course->getCoordinator()->getEmail());
+                $subject->setDateStart(\Tk\Date::floor()->setDate($year, 1, 1));
+                $subject->setDateEnd(\Tk\Date::ceil()->setDate($year, 12, 31));
+                $subject->save();
+
+                $list = \Uni\Db\UserMap::create()->findFiltered(array(
+                    'type' => array(\Uni\Db\User::TYPE_STUDENT)
+                ));
+                foreach ($list as $user) {
+                    $subject->addUser($user);
+                }
+
             }
 
         }
