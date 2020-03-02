@@ -38,7 +38,6 @@ class TestData extends \Bs\Console\TestData
         $config = \App\Config::getInstance();
         $db = $this->getConfig()->getDb();
 
-
         if (!$config->isDebug()) {
             $this->writeError('Error: Only run this command in a debug environment.');
             return;
@@ -135,7 +134,7 @@ class TestData extends \Bs\Console\TestData
                 'type' => array(\Uni\Db\User::TYPE_STUDENT)
             ), \Tk\Db\Tool::create('RAND()', 8));
             foreach ($studentList as $student) {
-                $config->getUserMapper()->
+                $config->getUserMapper()->addMentor($mentor->getId(), $student->getId());
             }
         }
     }
