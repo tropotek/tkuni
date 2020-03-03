@@ -106,7 +106,7 @@ class NavRendererHandler implements Subscriber
             if(!$this->getConfig()->isSubjectUrl()) {
 
                 if ($user->isMentor()) {
-                    $menu->append(Item::create('Mentor Dashboard', \Uni\Uri::createHomeUrl('/mentor/index.html'), 'fa fa-user-md'))
+                    $menu->append(Item::create('Mentor Dashboard', \Uni\Uri::createHomeUrl('/mentor/index.html'), 'fa fa-users'))
                         ->setAttr('title', 'Mentor Dashboard');
                 }
 

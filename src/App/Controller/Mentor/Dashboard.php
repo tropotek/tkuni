@@ -52,7 +52,7 @@ class Dashboard extends AdminIface
         $this->userTable = User::create()->setEditUrl(Uri::createHomeUrl('/mentor/studentView.html'))->init();
         $this->userTable->removeAction('delete');
 
-        $btn = $this->userTable->appendAction(\Tk\Table\Action\Link::createLink('Add Student', '#', 'fa fa-user'));
+        $btn = $this->userTable->appendAction(\Tk\Table\Action\Link::createLink('Add Student', '#', 'fa fa-user-plus'));
         $btn->setAttr('data-target','#' . $this->userSelect->getId());
         $btn->setAttr('data-toggle','modal');
 
@@ -126,7 +126,7 @@ class Dashboard extends AdminIface
         $xhtml = <<<HTML
 <div class="">
 
-  <div class="tk-panel" data-panel-title="My Students" data-panel-icon="fa fa-user-md" var="panel"></div>
+  <div class="tk-panel" data-panel-title="My Students" data-panel-icon="fa fa-users" var="panel"></div>
 
 </div>
 HTML;
