@@ -56,6 +56,9 @@ class Dashboard extends \Uni\Controller\AdminIface
                 if ($obj->isMentor()) {
                     $value .= 'Mentor, ';
                 }
+                if ($obj->isLecturer()) {
+                    $value .= 'Lecturer, ';
+                }
                 if (!$value) {
                     $value = 'Staff';
                 }
