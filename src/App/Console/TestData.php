@@ -49,7 +49,8 @@ class TestData extends \Bs\Console\TestData
         $db->exec('DELETE FROM `user` WHERE `notes` = \'***\' ');
         for($i = 0; $i < 25; $i++) {
             $user = $config->createUser();
-            $user->setName($this->createName());
+            $user->setInstitutionId($institution->getId());
+            $user->setName($this->createFullName());
             do {
                 $user->setUsername(strtolower($this->createName()) . '.' . rand(1000, 10000000));
             } while($config->getUserMapper()->findByUsername($user->getUsername()) != null);
@@ -60,11 +61,14 @@ class TestData extends \Bs\Console\TestData
             $user->setNewPassword('password');
             $user->save();
 
-            $user->addPermission(\Uni\Db\Permission::getPermissionList($user->getType()));
-            if ($user->isStaff() && (rand(1, 10) <= 3)) {
+            $user->addPermission(\Uni\Db\Permission::getDefaultPermissionList($user->getType()));
+            if ($user->isStaff() && (rand(1, 10) <= 5)) {
                 $user->addPermission(Permission::IS_COORDINATOR);
             }
-            if ($user->isStaff() && (rand(1, 10) <= 2)) {
+            if ($user->isStaff() && (rand(1, 10) <= 8)) {
+                $user->addPermission(Permission::IS_LECTURER);
+            }
+            if ($user->isStaff() && (rand(1, 10) <= 4)) {
                 $user->addPermission(Permission::IS_MENTOR);
             }
         }
@@ -101,12 +105,12 @@ class TestData extends \Bs\Console\TestData
                 $course->addUser($user);
             }
 
-            for ($i = 0; $i < 4; $i++) {
-                $year = 2018 + $i;
+            for ($j = 0; $j < 4; $j++) {
+                $year = 2018 + $j;
                 $subject = $config->createSubject();
                 $subject->setCourseId($course->getId());
                 $subject->setInstitutionId($institution->getId());
-                $subject->setName($course->getName() . ' ' . $year);
+                $subject->setName($course->getName() . ' - ' . $year);
                 $subject->setCode($course->getCode() . '_' . $year);
                 $subject->setEmail($course->getCoordinator()->getEmail());
                 $subject->setDateStart(\Tk\Date::floor()->setDate($year, 1, 1));
@@ -126,11 +130,13 @@ class TestData extends \Bs\Console\TestData
 
         $db->exec('TRUNCATE `user_mentor`');
         $mentorList = $config->getUserMapper()->findFiltered(array(
-                'type' => array(\Uni\Db\User::TYPE_STAFF),
-                'permission' => Permission::IS_MENTOR
-            ), \Tk\Db\Tool::create('RAND()', 1));
+            'institutionId' => $institution->getId(),
+            'type' => array(\Uni\Db\User::TYPE_STAFF),
+            'permission' => Permission::IS_MENTOR
+        ), \Tk\Db\Tool::create('RAND()'));
         foreach ($mentorList as $mentor) {
             $studentList = $config->getUserMapper()->findFiltered(array(
+                'institutionId' => $institution->getId(),
                 'type' => array(\Uni\Db\User::TYPE_STUDENT)
             ), \Tk\Db\Tool::create('RAND()', 8));
             foreach ($studentList as $student) {

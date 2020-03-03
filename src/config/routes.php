@@ -36,11 +36,16 @@ $routes->add('admin-settings', new \Tk\Routing\Route('/admin/settings.html', 'Ap
 $routes->add('client-dashboard', new \Tk\Routing\Route('/client/index.html', 'App\Controller\Client\Dashboard::doDefault'));
 $routes->add('client-dashboard-base', new \Tk\Routing\Route('/client/', 'App\Controller\Client\Dashboard::doDefault'));
 
+// Mentor Pages
+$routes->add('mentor-dashboard', new \Tk\Routing\Route('/staff/mentor/index.html', 'App\Controller\Mentor\Dashboard::doDefault'));
+$routes->add('mentor-dashboard-base', new \Tk\Routing\Route('/staff/mentor/', 'App\Controller\Mentor\Dashboard::doDefault'));
+$routes->add('mentor-student-view', new \Tk\Routing\Route('/staff/mentor/studentView.html', 'App\Controller\Mentor\StudentView::doDefault'));
 
 // Staff Pages
 $routes->add('staff-dashboard', new \Tk\Routing\Route('/staff/index.html', 'App\Controller\Staff\Dashboard::doDefault'));
 $routes->add('staff-dashboard-base', new \Tk\Routing\Route('/staff/', 'App\Controller\Staff\Dashboard::doDefault'));
 $routes->add('staff-subject-dashboard', new \Tk\Routing\Route('/staff/{subjectCode}/index.html', 'App\Controller\Staff\SubjectDashboard::doDefault'));
+
 
 
 // Student Pages

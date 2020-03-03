@@ -97,6 +97,7 @@ class AuthHandler extends \Bs\Listener\AuthHandler
 //                                }
 //                            } else {
 //                                $user->save();
+//                                $user->addPermission(\Uni\Db\Permission::getDefaultPermissionList($user->getType()));
 //                                // Save the last ldap data for reference
 //                                $user->getData()->set('ldap.data', json_encode($ldapData, \JSON_PRETTY_PRINT));
 //                                $user->getData()->save();
@@ -109,7 +110,7 @@ class AuthHandler extends \Bs\Listener\AuthHandler
 //                        }
 //                    }
 
-                    if ($user && $user->active) {
+                    if ($user && $user->isActive()) {
                         if (!$user->getUid() && !empty($ldapData[0]['auedupersonid'][0]))
                             $user->setUid($ldapData[0]['auedupersonid'][0]);
                         if (!$user->getName() && !empty($ldapData[0]['displayname'][0]))
@@ -160,7 +161,7 @@ class AuthHandler extends \Bs\Listener\AuthHandler
                 $user = $config->createUser();
                 $config->getUserMapper()->mapForm($userData, $user);
                 $user->save();
-                $user->addPermission(\Uni\Db\Permission::getPermissionList($user->getType()));
+                $user->addPermission(\Uni\Db\Permission::getDefaultPermissionList($user->getType()));
                 $adapter->set('user', $user);
             }
             if ($user) {
