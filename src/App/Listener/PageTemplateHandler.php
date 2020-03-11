@@ -57,10 +57,13 @@ class PageTemplateHandler extends \Uni\Listener\PageTemplateHandler
                 $template->appendTemplate($template->getBodyElement(), $dialog->show());
 
                 // Set permission choices
-                foreach (User::getUserTypeList() as $perm) {
+                $perms = $user->getPermissions();
+                foreach ($perms as $perm) {
                     $template->setVisible($perm);
                     $controller->getTemplate()->setVisible($perm);
                 }
+                $template->setVisible($user->getType());
+                $controller->getTemplate()->setVisible($user->getType());
 
                 //show user icon 'user-image'
                 $img = $user->getImageUrl();

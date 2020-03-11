@@ -30,18 +30,20 @@ class AuthHandler extends \Bs\Listener\AuthHandler
         if ($event->getAdapter() instanceof \Tk\Auth\Adapter\Ldap) {
             /** @var \Tk\Auth\Adapter\Ldap $adapter */
             $adapter = $event->getAdapter();
-
+            $config = \App\Config::getInstance();
             // Find user data from ldap connection
             $filter = substr($adapter->getBaseDn(), 0, strpos($adapter->getBaseDn(), ','));
             if ($filter) {
                 $ldapData = $adapter->ldapSearch($filter);
                 if ($ldapData) {
-                    $email = trim($ldapData[0]['mail'][0]);   // Email format = firstname.lastname@unimelb
-                    $uid = trim($ldapData[0]['auedupersonid'][0]);
+                    $email = '';
+                    if (!empty($ldapData[0]['mail'][0])) $email = trim($ldapData[0]['mail'][0]);   // Email format = firstname.lastname@unimelb
+                    $uid = '';
+                    if (!empty($ldapData[0]['auedupersonid'][0])) $uid = trim($ldapData[0]['auedupersonid'][0]);
+                    $username = $adapter->get('username');
 
                     /* @var \Uni\Db\User $user */
                     $user = $config->getUserMapper()->findByUsername($adapter->get('username'), $config->getInstitutionId());
-
                     if (!$user) {   // Error out if no user
                         $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::FAILURE_CREDENTIAL_INVALID,
                                 $adapter->get('username'), 'Invalid username. Please contact your administrator to setup an account.'));
@@ -55,12 +57,12 @@ class AuthHandler extends \Bs\Listener\AuthHandler
 //                            $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::FAILURE_CREDENTIAL_INVALID, $adapter->get('username'), $msg));
 //                        }
 //
-//                        $role = 'student';
+//                        $type = 'student';
 //                        if (preg_match('/(staff|student)/', strtolower($ldapData[0]['auedupersontype'][0]), $reg)) {
-//                            if ($reg[1] == 'staff') $role = 'staff';
+//                            if ($reg[1] == 'staff') $type = 'staff';
 //                        }
 //
-//                        if ($role == 'student') {
+//                        if ($type == 'student') {
 //                            // To check if a user is pre-enrolled get an array of uid and emails for a user
 //                            $isPreEnrolled = $config->getSubjectMapper()->isPreEnrolled($config->getInstitutionId(),
 //                                array_merge($ldapData[0]['mail'], $ldapData[0]['mailalternateaddress']),
@@ -75,11 +77,10 @@ class AuthHandler extends \Bs\Listener\AuthHandler
 //                            }
 //
 //                            $userData = array(
-//                                'type' => 'ldap',
-//                                //'roleId' => \Uni\Db\Role::getDefaultRoleId($role),
+//                                'authType' => 'ldap',
 //                                'institutionId' => $config->getInstitutionId(),
 //                                'username' => $adapter->get('username'),
-//                                'role' => $role,
+//                                'type' => $type,
 //                                'active' => true,
 //                                'email' => $email,
 //                                'name' => $ldapData[0]['displayname'][0],
@@ -95,12 +96,6 @@ class AuthHandler extends \Bs\Listener\AuthHandler
 //                                } catch (\Exception $e) {
 //                                    \Tk\Log::info($e->__toString());
 //                                }
-//                            } else {
-//                                $user->save();
-//                                $user->addPermission(\Uni\Db\Permission::getDefaultPermissionList($user->getType()));
-//                                // Save the last ldap data for reference
-//                                $user->getData()->set('ldap.data', json_encode($ldapData, \JSON_PRETTY_PRINT));
-//                                $user->getData()->save();
 //                            }
 //                        } else {
 //                            $msg = sprintf('Staff members can contact the site administrator to request access');
@@ -120,6 +115,7 @@ class AuthHandler extends \Bs\Listener\AuthHandler
                             $user->setName($email);
                         $user->setNewPassword($adapter->get('password'));
                         $user->save();
+                        $user->addPermission(\Uni\Db\Permission::getDefaultPermissionList($user->getType()));
 
                         if (method_exists($user, 'getData')) {
                             $data = $user->getData();
@@ -130,7 +126,7 @@ class AuthHandler extends \Bs\Listener\AuthHandler
                         }
 
                         $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::SUCCESS, $config->getUserIdentity($user)));
-                        $config->getSession()->set('auth.password.access', false);
+                        //$config->getSession()->set('auth.password.access', false);
                     }
                 }
             }
@@ -165,7 +161,6 @@ class AuthHandler extends \Bs\Listener\AuthHandler
                 $adapter->set('user', $user);
             }
             if ($user) {
-
                 if (!$user->getEmail())
                     $user->setEmail($userData['email']);
                 if (!$user->getName())
@@ -268,8 +263,8 @@ class AuthHandler extends \Bs\Listener\AuthHandler
         // ---------------- deprecated  ---------------------
         // The following is deprecated in preference of the validatePageAccess() method
 
-        $role = $event->getRequest()->attributes->get('role');
-        if (!$role || empty($role)) return;
+        $type = $event->getRequest()->attributes->get('role');
+        if (!$type || empty($type)) return;
 
         if (!$user || $user->isGuest()) {
             if ($event->getRequest()->getTkUri()->getRelativePath() != '/login.html') {
@@ -279,7 +274,7 @@ class AuthHandler extends \Bs\Listener\AuthHandler
                 $config->getUserHomeUrl($user)->redirect();
             }
         } else {
-            if (!$user->hasType($role)) {
+            if (!$user->hasType($type)) {
                 \Tk\Alert::addWarning('1002: You do not have access to the requested page.');
                 $config->getUserHomeUrl($user)->redirect();
             }
