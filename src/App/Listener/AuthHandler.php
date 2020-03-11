@@ -161,7 +161,6 @@ class AuthHandler extends \Bs\Listener\AuthHandler
                 $adapter->set('user', $user);
             }
             if ($user) {
-
                 if (!$user->getEmail())
                     $user->setEmail($userData['email']);
                 if (!$user->getName())
