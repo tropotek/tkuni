@@ -72,6 +72,21 @@ class Dashboard extends AdminIface
             return $obj->getName();
         });
 
+        $this->userTable->appendCell(\Tk\Table\Cell\Text::create('subjects'))->setOrderProperty('')
+            ->addOnCellHtml(function (\Tk\Table\Cell\Iface $cell, $obj, $html) {
+                /** @var $obj \Uni\Db\User */
+                $subjectList = $obj->getConfig()->getSubjectMapper()->findFiltered(array(
+                    'studentId' => $obj->getId(),
+                    'institutionId' => $obj->getInstitutionId()
+                ), \Tk\Db\Tool::create('dateStart DESC'));
+                $html = '';
+                foreach ($subjectList as $subject) {
+                    $html .= sprintf('<small>%s</small><br/>', htmlspecialchars($subject->getName()));
+                }
+                $html = '<span>'. preg_replace('/<br\\s*?\\/?>\\s*$/', '', $html) . '</span>';
+                return $html;
+            });
+
         $filter = array();
         $filter['mentorId'] = $this->getAuthUser()->getId();
         $filter['active'] = true;
