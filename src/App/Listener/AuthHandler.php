@@ -140,7 +140,7 @@ class AuthHandler extends \Bs\Listener\AuthHandler
             $adapter = $event->getAdapter();
             $userData = $adapter->get('userData');
             $subjectData = $adapter->get('subjectData');
-            $ltiData = $adapter->getLaunch()->get_launch_data();
+            $ltiData = $adapter->getLaunchData();
 
             // Setup/Find User and log them in
             $user = $config->getUserMapper()->findByUsername($adapter->get('username'), $adapter->getInstitution()->getId());
