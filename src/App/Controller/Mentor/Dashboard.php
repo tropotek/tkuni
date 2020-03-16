@@ -36,6 +36,10 @@ class Dashboard extends AdminIface
     {
         $this->setPageTitle('Mentor Dashboard');
         $this->getConfig()->unsetSubject();
+        if (!$this->getAuthUser()->isLearner()) {
+            $this->getCrumbs()->setVisible(false);
+            $this->getActionPanel()->setVisible(false);
+        }
 
     }
 
