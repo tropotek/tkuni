@@ -39,7 +39,6 @@ class Dashboard extends \Uni\Controller\AdminIface
 
         $this->userTable = \Uni\Table\User::create()->setEditUrl(\Uni\Uri::createHomeUrl('/staffUserEdit.html'))->init();
 
-
         $this->userTable->removeCell('id');
         $this->userTable->removeCell('created');
         //$this->userTable->removeFilter('keywords');
