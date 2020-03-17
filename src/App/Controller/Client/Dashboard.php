@@ -42,7 +42,7 @@ class Dashboard extends \Uni\Controller\AdminIface
 
         $this->userTable->removeCell('id');
         $this->userTable->removeCell('created');
-        $this->userTable->removeFilter('keywords');
+        //$this->userTable->removeFilter('keywords');
         $this->userTable->removeAction('delete');
         $this->userTable->removeAction('csv');
 

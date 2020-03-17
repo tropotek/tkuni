@@ -146,7 +146,7 @@ class AuthHandler extends \Bs\Listener\AuthHandler
             $user = $config->getUserMapper()->findByUsername($adapter->get('username'), $adapter->getInstitution()->getId());
             if (!$user)
                 $user = $config->getUserMapper()->findByEmail($userData['email'], $adapter->getInstitution()->getId());
-//            // Error out if no user
+            // Error out if no user
 //            if (!$user) {
 //                $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::FAILURE_CREDENTIAL_INVALID,
 //                    $userData['username'], 'Invalid username. Please contact your administrator to setup an account.'));
@@ -160,81 +160,85 @@ class AuthHandler extends \Bs\Listener\AuthHandler
                 $user->addPermission(\Uni\Db\Permission::getDefaultPermissionList($user->getType()));
                 $adapter->set('user', $user);
             }
-            if ($user) {
-                if (!$user->getEmail())
-                    $user->setEmail($userData['email']);
-                if (!$user->getName())
-                    $user->setName($userData['name']);
-                if (!$user->getImage() && !empty($userData['image']))
-                    $user->setImage($userData['image']);
+            // Update user details from login
+            if (!$user->getEmail())
+                $user->setEmail($userData['email']);
+            if (!$user->getName())
+                $user->setName($userData['name']);
+            if (!$user->getImage() && !empty($userData['image']))
+                $user->setImage($userData['image']);
 
-                // Setup/Find Subject/Course
-                $subject = $config->getSubjectMapper()->findFiltered(
-                    array('code' => $subjectData['subjectCode'], 'institutionId' => $adapter->getInstitution()->getId())
-                )->current();
-                if (!empty($subjectData['subjectId'])) {
-                    $s = $config->getSubjectMapper()->find($subjectData['subjectId']);
-                    if ($s) $subject = $s;
-                }
-
-                if (!$subject) {
-                    if ($user->isStaff()) {
-                        $course = $config->getCourseMapper()->findFiltered(
-                            array('code' => $subjectData['courseCode'], 'institutionId' => $adapter->getInstitution()->getId())
-                        )->current();
-                        if (!$course) {
-                            // Create a new Course and Subject here if needed
-                            $course = $config->createCourse();
-                            $course->setInstitutionId($adapter->getInstitution()->getId());
-                            $course->setName($subjectData['name']);
-                            $course->setEmail($subjectData['email']);
-                            $course->setCode($subjectData['courseCode']);
-                            if ($user->hasPermission(Permission::IS_COORDINATOR))
-                                $course->setCoordinatorId($user->getId());
-                            $course->save();
-                            $subjectData['isNewCourse'] = true;
-                        }
-
-                        // Subject
-                        $subject = $config->createSubject();
-                        $config->getSubjectMapper()->mapForm($subjectData, $subject);
-                        if ($course)
-                            $subject->setCourseId($course->getId());
-                        $subject->save();
-                        $subjectData['isNewSubject'] = true;
-                        $adapter->set('subject', $subject);
-                    } else {
-                        throw new \Tk\Exception('Subject ['.$subjectData['subjectCode'].'] not available, Please contact the subject coordinator.');
-                    }
-                }
-
-                if ($subject) {
-                    $config->getSession()->set('lti.subjectId', $subject->getId());   // Limit the dashboard to one subject for LTI logins
-                    $event->setRedirect(\Uni\Uri::createSubjectUrl('/index.html', $subject, $user));
-
-                    // Add user to the subject if not already enrolled
-                    if (!$config->getSubjectMapper()->hasUser($subject->getId(), $user->getId())) {
-                        if ($user->isStudent())
-                            $config->getSubjectMapper()->addUser($subject->getId(), $user->getId());
-                        if ($user->isStaff())
-                            $config->getCourseMapper()->addUser($subject->getCourseId(), $user->getId());
-                    }
-                    // (optional) to check the pre-enrollment, if not available fail authentication
-//                    $isPreEnrolled = $config->getSubjectMapper()->isPreEnrolled($adapter->getInstitution()->getId(), array($user->getEmail()) );
-//                    if (!$isPreEnrolled) {  // Only create users accounts for enrolled students
-//                        $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::FAILURE_CREDENTIAL_INVALID,
-//                            $userData['username'], 'You are not enrolled. Please contact your administrator to setup your account.'));
-//                        return;
-//                    }
-                }
-
-                $user->save();
-                if ($ltiData && method_exists($user, 'getData')) {
-                    $data = $user->getData();
-                    $data->set('lti.last.login', json_encode($ltiData));
-                    $data->save();
-                }
+            // Find Subject
+            $subject = $config->getSubjectMapper()->findFiltered(
+                array('code' => $subjectData['subjectCode'], 'institutionId' => $adapter->getInstitution()->getId())
+            )->current();
+            if (!empty($subjectData['subjectId'])) {
+                $s = $config->getSubjectMapper()->find($subjectData['subjectId']);
+                if ($s) $subject = $s;
             }
+
+            // Create a new subject
+            if (!$subject) {
+                if (!$user->isStaff()) {        // Only auto create subject for staff users
+                    $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::FAILURE_CREDENTIAL_INVALID,
+                        $userData['username'], 'Subject [' . $subjectData['subjectCode'] . '] not available, Please contact the subject coordinator.'));
+                    return;
+                }
+
+                // Find/Create course
+                $course = $config->getCourseMapper()->findFiltered(
+                    array('code' => $subjectData['courseCode'], 'institutionId' => $adapter->getInstitution()->getId())
+                )->current();
+                if (!$course) {
+                    // Create a new Course and Subject here if needed
+                    $course = $config->createCourse();
+                    $course->setInstitutionId($adapter->getInstitution()->getId());
+                    $course->setName($subjectData['name']);
+                    $course->setEmail($subjectData['email']);
+                    $course->setCode($subjectData['courseCode']);
+                    if ($user->hasPermission(Permission::IS_COORDINATOR))
+                        $course->setCoordinatorId($user->getId());
+                    $course->save();
+                    $subjectData['isNewCourse'] = true;
+                }
+
+                // Subject
+                $subject = $config->createSubject();
+                $config->getSubjectMapper()->mapForm($subjectData, $subject);
+                if ($course)
+                    $subject->setCourseId($course->getId());
+                $subject->save();
+                $subjectData['isNewSubject'] = true;
+                $adapter->set('subject', $subject);
+            }
+
+
+            $config->getSession()->set('lti.subjectId', $subject->getId());   // Limit the dashboard to one subject for LTI logins
+            $event->setRedirect(\Uni\Uri::createSubjectUrl('/index.html', $subject, $user));
+
+            // (optional) to check the pre-enrollment, if not available fail authentication
+//            $isPreEnrolled = $config->getSubjectMapper()->isPreEnrolled($adapter->getInstitution()->getId(), array($user->getEmail()) );
+//            if (!$isPreEnrolled) {  // Only create users accounts for enrolled students
+//                $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::FAILURE_CREDENTIAL_INVALID,
+//                    $userData['username'], 'You are not enrolled. Please contact your administrator to setup your account.'));
+//                return;
+//            }
+
+            // Add user to the subject if not already enrolled
+            if (!$config->getSubjectMapper()->hasUser($subject->getId(), $user->getId())) {
+                if ($user->isStudent())
+                    $config->getSubjectMapper()->addUser($subject->getId(), $user->getId());
+                if ($user->isStaff())
+                    $config->getCourseMapper()->addUser($subject->getCourseId(), $user->getId());
+            }
+
+            $user->save();
+            if ($ltiData && method_exists($user, 'getData')) {
+                $data = $user->getData();
+                $data->set('lti.last.login', json_encode($ltiData));
+                $data->save();
+            }
+
 
             $config->getSession()->set('auth.password.access', false);
             $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::SUCCESS, $config->getUserIdentity($user)));
