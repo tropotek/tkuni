@@ -100,6 +100,7 @@ class NavRendererHandler implements Subscriber
         }
         if ($user->isClient()) {
             $menu->append(Item::create('Settings', \Uni\Uri::createHomeUrl('/settings.html'), 'fa fa-cogs'));
+            $menu->append(Item::create('Staff', \Uni\Uri::createHomeUrl('/staffUserManager.html'), 'fa fa-users'));
         }
         if ($user->isStaff()) {
 
@@ -110,7 +111,7 @@ class NavRendererHandler implements Subscriber
                         ->setAttr('title', 'Mentor Dashboard');
                 }
 
-                if ($this->getAuthUser()->isCoordinator() || $this->getAuthUser()->isLecturer()) {
+                if ($user->isCoordinator() || $user->isLecturer()) {
                     $courseList = $this->getConfig()->getCourseMapper()->findFiltered(array(
                         'institutionId' => $this->getConfig()->getInstitutionId(),
                         'active' => true,
