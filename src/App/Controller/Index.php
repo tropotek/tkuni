@@ -28,7 +28,7 @@ class Index extends \Uni\Controller\Index
 
         $actionsCell = new \Tk\Table\Cell\Actions();
         $actionsCell->addButton(\Tk\Table\Cell\ActionButton::create('Login', \Tk\Uri::create(), 'fa  fa-sign-in', 'button-small soft')->setAttr('title', 'Institution Login'))
-            ->setOnShow(function ($cell, $obj, $button) {
+            ->addOnShow(function ($cell, $obj, $button) {
                 /* @var $obj \Uni\Db\Institution */
                 /* @var $button \Tk\Table\Cell\ActionButton */
                 $button->setUrl($obj->getLoginUrl());
@@ -36,7 +36,7 @@ class Index extends \Uni\Controller\Index
 
         $this->table->appendCell($actionsCell);
         $this->table->appendCell(new \Tk\Table\Cell\Text('name'))->setUrl(\Tk\Uri::create('/institutionEdit.html'))
-            ->setOnPropertyValue(function ($cell, $obj, $value) {
+            ->addOnPropertyValue(function ($cell, $obj, $value) {
                 /* @var $obj \Uni\Db\Institution */
                 /* @var $cell \Tk\Table\Cell\Text */
                 $cell->setUrl($obj->getLoginUrl());
@@ -62,6 +62,9 @@ class Index extends \Uni\Controller\Index
 
         $template->appendTemplate('table', $this->table->getRenderer()->show());
 
+        if ($this->getConfig()->getInstitutionMapper()->findActive()->count() > 1) {
+            $template->setVisible("multiInstitutions");
+        }
 
         return $template;
     }
@@ -80,7 +83,7 @@ class Index extends \Uni\Controller\Index
     <div class="full-width">
       <nav class="desktop-nav" role="tablist">
         <a href="#welcome" role="tab">Welcome</a>
-        <a href="#institutions" role="tab">Institutions</a>
+        <a href="#institutions" role="tab" choice="multiInstitutions">Institutions</a>
         <a href="#contact" role="tab">Contact</a>
       </nav>
     </div>
@@ -112,7 +115,7 @@ class Index extends \Uni\Controller\Index
       <p class="center"><a class="button-hero" href="https://app.lms.unimelb.edu.au/">Access The LMS</a></p>
     </div>
 
-    <div class="tab" id="institutions" role="tabpanel">
+    <div class="tab" id="institutions" role="tabpanel" choice="multiInstitutions">
       <section var="table"></section>
     </div>
 
