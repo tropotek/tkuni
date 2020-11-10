@@ -83,8 +83,10 @@ class AuthHandler extends \Bs\Listener\AuthHandler
 //                                'type' => $type,
 //                                'active' => true,
 //                                'email' => $email,
-//                                'name' => $ldapData[0]['displayname'][0],
-//                                'uid' => $ldapData[0]['auedupersonid'][0],
+//                                'title' => $ldapData[0]['auedupersonsalutation'][0],
+//                                'nameFirst' => $ldapData[0]['givenname'][0],
+//                                'nameLast' => $ldapData[0]['sn'][0],
+//                                'uid' => $uid,
 //                                'ldapData' => $ldapData
 //                            );
 //                            $user = $config->createUser();
@@ -108,11 +110,15 @@ class AuthHandler extends \Bs\Listener\AuthHandler
                     if ($user && $user->isActive()) {
                         if (!$user->getUid() && !empty($ldapData[0]['auedupersonid'][0]))
                             $user->setUid($ldapData[0]['auedupersonid'][0]);
-                        if (!$user->getName() && !empty($ldapData[0]['displayname'][0]))
-                            $user->setName($ldapData[0]['displayname'][0]);
-                        // TODO: update this to if !$user->email later once all emails are changed over
-                        if ($email)
-                            $user->setName($email);
+                        if (!$user->getTitle() && !empty($ldapData[0]['auedupersonsalutation'][0]))
+                            $user->setTitle($ldapData[0]['auedupersonsalutation'][0]);
+                        if (!$user->getNameFirst() && !empty($ldapData[0]['givenname'][0]))
+                            $user->setNameFirst($ldapData[0]['givenname'][0]);
+                        if (!$user->getNameLast() && !empty($ldapData[0]['sn'][0]))
+                            $user->setNameLast($ldapData[0]['sn'][0]);
+                        if (!$user->getEmail())
+                            $user->setEmail($email);
+
                         $user->setNewPassword($adapter->get('password'));
                         $user->save();
                         $user->addPermission(\Uni\Db\Permission::getDefaultPermissionList($user->getType()));
@@ -163,8 +169,11 @@ class AuthHandler extends \Bs\Listener\AuthHandler
             // Update user details from login
             if (!$user->getEmail())
                 $user->setEmail($userData['email']);
+
+            // TODO: add title nameFirst, nameLast???
             if (!$user->getName())
                 $user->setName($userData['name']);
+
             if (!$user->getImage() && !empty($userData['image']))
                 $user->setImage($userData['image']);
 

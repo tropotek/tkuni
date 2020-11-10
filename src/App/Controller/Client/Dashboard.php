@@ -13,6 +13,11 @@ class Dashboard extends \Uni\Controller\AdminIface
 {
 
     /**
+     * @var \Uni\Table\User
+     */
+    protected $userTable = null;
+
+    /**
      * Iface constructor.
      * @throws \Exception
      */
@@ -22,11 +27,6 @@ class Dashboard extends \Uni\Controller\AdminIface
         //$this->getCrumbs()->setVisible(false);
         $this->getActionPanel()->setVisible(false);
     }
-
-    /**
-     * @var \Uni\Table\User
-     */
-    protected $userTable = null;
 
 
     /**
