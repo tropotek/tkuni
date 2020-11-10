@@ -11,51 +11,54 @@
  * );
  */
 
+use Tk\Routing\Route;
+
 $config = \App\Config::getInstance();
 $routes = $config->getRouteCollection();
 if (!$routes) return;
 
 
 // Default Home catchall
-$routes->add('home', new \Tk\Routing\Route('/index.html', 'App\Controller\Index::doDefault'));
-$routes->add('home-base', new \Tk\Routing\Route('/', 'App\Controller\Index::doDefault'));
+$routes->add('home', new Route('/index.html', 'App\Controller\Index::doDefault'));
+$routes->add('home-base', new Route('/', 'App\Controller\Index::doDefault'));
 
-$routes->add('login', new \Tk\Routing\Route('/login.html', 'App\Controller\Login::doDefault'));
-$routes->add('institution-login', new \Tk\Routing\Route('/inst/{instHash}/login.html', 'App\Controller\Login::doInsLogin'));
-$routes->add('recover', new \Tk\Routing\Route('/recover.html', 'App\Controller\Recover::doDefault'));
+$routes->add('login', Route::create('/login.html', 'App\Controller\Login::doInsLogin'));
+$routes->add('institution-login', Route::create('/inst/{instHash}/login.html', 'App\Controller\Login::doInsLogin'));
+$routes->add('admin-login', Route::create('/xlogin.html', 'App\Controller\Login::doDefault'));
 
-$routes->add('install', \Tk\Routing\Route::create('/install.html', 'App\Controller\Install::doDefault'));
+$routes->add('recover', new Route('/recover.html', 'App\Controller\Recover::doDefault'));
+$routes->add('install', Route::create('/install.html', 'App\Controller\Install::doDefault'));
 
 // Admin Pages
-$routes->add('admin-dashboard', new \Tk\Routing\Route('/admin/index.html', 'App\Controller\Admin\Dashboard::doDefault'));
-$routes->add('admin-dashboard-base', new \Tk\Routing\Route('/admin/', 'App\Controller\Admin\Dashboard::doDefault'));
-$routes->add('admin-settings', new \Tk\Routing\Route('/admin/settings.html', 'App\Controller\Admin\Settings::doDefault'));
+$routes->add('admin-dashboard', new Route('/admin/index.html', 'App\Controller\Admin\Dashboard::doDefault'));
+$routes->add('admin-dashboard-base', new Route('/admin/', 'App\Controller\Admin\Dashboard::doDefault'));
+$routes->add('admin-settings', new Route('/admin/settings.html', 'App\Controller\Admin\Settings::doDefault'));
 
 
 // Client Pages
-$routes->add('client-dashboard', new \Tk\Routing\Route('/client/index.html', 'App\Controller\Client\Dashboard::doDefault'));
-$routes->add('client-dashboard-base', new \Tk\Routing\Route('/client/', 'App\Controller\Client\Dashboard::doDefault'));
+$routes->add('client-dashboard', new Route('/client/index.html', 'App\Controller\Client\Dashboard::doDefault'));
+$routes->add('client-dashboard-base', new Route('/client/', 'App\Controller\Client\Dashboard::doDefault'));
 
 // Mentor Pages
-$routes->add('mentor-dashboard', new \Tk\Routing\Route('/staff/mentor/index.html', 'App\Controller\Mentor\Dashboard::doDefault'));
-$routes->add('mentor-dashboard-base', new \Tk\Routing\Route('/staff/mentor/', 'App\Controller\Mentor\Dashboard::doDefault'));
-$routes->add('mentor-student-view', new \Tk\Routing\Route('/staff/mentor/studentView.html', 'App\Controller\Mentor\StudentView::doDefault'));
+$routes->add('mentor-dashboard', new Route('/staff/mentor/index.html', 'App\Controller\Mentor\Dashboard::doDefault'));
+$routes->add('mentor-dashboard-base', new Route('/staff/mentor/', 'App\Controller\Mentor\Dashboard::doDefault'));
+$routes->add('mentor-student-view', new Route('/staff/mentor/studentView.html', 'App\Controller\Mentor\StudentView::doDefault'));
 
 // Staff Pages
-$routes->add('staff-dashboard', new \Tk\Routing\Route('/staff/index.html', 'App\Controller\Staff\Dashboard::doDefault'));
-$routes->add('staff-dashboard-base', new \Tk\Routing\Route('/staff/', 'App\Controller\Staff\Dashboard::doDefault'));
-$routes->add('staff-subject-dashboard', new \Tk\Routing\Route('/staff/{subjectCode}/index.html', 'App\Controller\Staff\SubjectDashboard::doDefault'));
+$routes->add('staff-dashboard', new Route('/staff/index.html', 'App\Controller\Staff\Dashboard::doDefault'));
+$routes->add('staff-dashboard-base', new Route('/staff/', 'App\Controller\Staff\Dashboard::doDefault'));
+$routes->add('staff-subject-dashboard', new Route('/staff/{subjectCode}/index.html', 'App\Controller\Staff\SubjectDashboard::doDefault'));
 
 
 
 // Student Pages
-$routes->add('student-dashboard', new \Tk\Routing\Route('/student/index.html', 'App\Controller\Student\Dashboard::doDefault'));
-$routes->add('student-dashboard-base', new \Tk\Routing\Route('/student/', 'App\Controller\Student\Dashboard::doDefault'));
-$routes->add('student-subject-dashboard', new \Tk\Routing\Route('/student/{subjectCode}/index.html', 'App\Controller\Student\SubjectDashboard::doDefault'));
+$routes->add('student-dashboard', new Route('/student/index.html', 'App\Controller\Student\Dashboard::doDefault'));
+$routes->add('student-dashboard-base', new Route('/student/', 'App\Controller\Student\Dashboard::doDefault'));
+$routes->add('student-subject-dashboard', new Route('/student/{subjectCode}/index.html', 'App\Controller\Student\SubjectDashboard::doDefault'));
 
 
 
 // Dev
-$routes->add('admin-dev-forms', new \Tk\Routing\Route('/admin/dev/forms.html', 'App\Controller\Dev\Forms::doDefault'));
+$routes->add('admin-dev-forms', new Route('/admin/dev/forms.html', 'App\Controller\Dev\Forms::doDefault'));
 
 
