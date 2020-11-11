@@ -124,6 +124,8 @@ class AuthHandler extends \Bs\Listener\AuthHandler
 
                         $user->setNewPassword($adapter->get('password'));
                         $user->save();
+
+                        // TODO: be sure to update this if you have App\Db\Permission
                         $user->addPermission(\Uni\Db\Permission::getDefaultPermissionList($user->getType()));
 
                         if (method_exists($user, 'getData')) {
@@ -135,7 +137,7 @@ class AuthHandler extends \Bs\Listener\AuthHandler
                         }
 
                         $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::SUCCESS, $config->getUserIdentity($user)));
-                        //$config->getSession()->set('auth.password.access', false);
+                        $config->getSession()->set('auth.password.access', false);
                     }
                 }
             }
