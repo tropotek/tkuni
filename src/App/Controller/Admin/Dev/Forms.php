@@ -1,5 +1,5 @@
 <?php
-namespace App\Controller\Dev;
+namespace App\Controller\Dev\Admin;
 
 use Tk\Form\Event;
 use Tk\Form\Field;

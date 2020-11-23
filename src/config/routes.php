@@ -59,6 +59,6 @@ $routes->add('student-subject-dashboard', new Route('/student/{subjectCode}/inde
 
 
 // Dev
-$routes->add('admin-dev-forms', new Route('/admin/dev/forms.html', 'App\Controller\Dev\Forms::doDefault'));
+$routes->add('admin-dev-forms', new Route('/admin/dev/forms.html', 'App\Controller\Admin\Dev\Forms::doDefault'));
 
 
