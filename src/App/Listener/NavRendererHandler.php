@@ -67,7 +67,7 @@ class NavRendererHandler implements Subscriber
 //            $menu->append(Item::create('Create Subject', \Uni\Uri::createHomeUrl('/subjectEdit.html'), 'fa fa-graduation-cap'));
         }
         if ($user->hasPermission(\Uni\Db\Permission::MANAGE_STAFF)) {
-            $menu->append(Item::create('Staff', \Uni\Uri::createHomeUrl('/staffUserManager.html'), 'fa fa-user-md'));
+            $menu->append(Item::create('Staff', \Uni\Uri::createHomeUrl('/staffUserManager.html'), 'fa fa-user-md'), 'Settings');
         }
 
         $menu->append(Item::create()->addCss('divider'));
