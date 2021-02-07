@@ -33,8 +33,6 @@ $config['template.public']      = $config['system.theme.public'] . '/public.html
 
 $config['template.login']       = $config['system.theme.admin']  . '/login.html';
 
-//$config['url.auth.home']            = '/';
-//$config['url.auth.login']           = '/';
 
 /*
  * Set the error page template
@@ -47,6 +45,23 @@ $config['template.error']           = $config['system.template.path']   . '/them
 $config['template.maintenance']     = $config['system.template.path']   . '/theme-cube/maintenance.html';
 
 
+/*
+ * Enable logging of triggered events
+ * Default: false
+ */
+//$config['event.dispatcher.log'] = true;
+
+//$config['google.map.apikey'] = '';
+//$config['google.recaptcha.publicKey'] = '';
+//$config['google.recaptcha.privateKey'] = '';
 
 
 
+/* **********************************************
+ *  Common URL for the base controllers
+ * **********************************************/
+//$config['url.auth.home'] = '/index.html';
+//$config['url.auth.login'] = '/login.html';
+//$config['url.auth.logout'] = '/logout.html';
+//$config['url.auth.register'] = '/register.html';
+//$config['url.auth.recover'] = '/recover.html';
