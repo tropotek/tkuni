@@ -66,47 +66,51 @@ class AuthHandler extends \Bs\Listener\AuthHandler
                         }
 
                         if ($type == 'student') {
+//                            $msg = sprintf('Student accounts do not have acccess. Please contact the site administrator to request access');
+//                            $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::FAILURE_CREDENTIAL_INVALID,
+//                                $adapter->get('username'), $msg));
+//                            return;
+
                             // To check if a user is pre-enrolled get an array of uid and emails for a user
                             $isPreEnrolled = $config->getSubjectMapper()->isPreEnrolled($config->getInstitutionId(),
                                 array_merge($ldapData[0]['mail'], $ldapData[0]['mailalternateaddress']),
                                 $ldapData[0]['auedupersonid'][0]
                             );
-
                             if (!$isPreEnrolled) {      // Only create users accounts for enrolled students
                                 $msg = sprintf('We cannot find any enrolled subjects. Please contact your coordinator.' .
                                     "\nusername: %s\nUID: %s\nEmail: %s", $adapter->get('username'), $uid, $email);
                                 $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::FAILURE_CREDENTIAL_INVALID, $adapter->get('username'), $msg));
                                 return;
                             }
-
-                            $userData = array(
-                                'authType' => 'ldap',
-                                'institutionId' => $config->getInstitutionId(),
-                                'username' => $adapter->get('username'),
-                                'type' => $type,
-                                'active' => true,
-                                'email' => $email,
-                                'title' => ucwords(strtolower($ldapData[0]['auedupersonsalutation'][0])),
-                                'nameFirst' => $ldapData[0]['givenname'][0],
-                                'nameLast' => $ldapData[0]['sn'][0],
-                                'uid' => $uid,
-                                'ldapData' => $ldapData
-                            );
-                            $user = $config->createUser();
-                            $config->getUserMapper()->mapForm($userData, $user);
-                            $error = $user->validate();
-                            if (count($error)) {
-                                try {
-                                    $user->setNewPassword($adapter->get('password'));
-                                } catch (\Exception $e) {
-                                    \Tk\Log::info($e->__toString());
-                                }
-                            }
                         } else {
-                            $msg = sprintf('Staff members can contact the site administrator to request access');
-                            $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::FAILURE_CREDENTIAL_INVALID,
-                                $adapter->get('username'), $msg));
-                            return;
+//                            $msg = sprintf('Please contact the site administrator to request access');
+//                            $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::FAILURE_CREDENTIAL_INVALID,
+//                                $adapter->get('username'), $msg));
+//                            return;
+                        }
+
+                        $userData = array(
+                            'authType' => 'ldap',
+                            'institutionId' => $config->getInstitutionId(),
+                            'username' => $adapter->get('username'),
+                            'type' => $type,
+                            'active' => true,
+                            'email' => $email,
+                            'title' => ucwords(strtolower($ldapData[0]['auedupersonsalutation'][0])),
+                            'nameFirst' => $ldapData[0]['givenname'][0],
+                            'nameLast' => $ldapData[0]['sn'][0],
+                            'uid' => $uid,
+                            'ldapData' => $ldapData
+                        );
+                        $user = $config->createUser();
+                        $config->getUserMapper()->mapForm($userData, $user);
+                        $error = $user->validate();
+                        if (count($error)) {
+                            try {
+                                $user->setNewPassword($adapter->get('password'));
+                            } catch (\Exception $e) {
+                                \Tk\Log::info($e->__toString());
+                            }
                         }
                     }
 
@@ -163,6 +167,7 @@ class AuthHandler extends \Bs\Listener\AuthHandler
 //                    $userData['username'], 'Invalid username. Please contact your administrator to setup an account.'));
 //                return;
 //            }
+
             // Create the new user account
             if (!$user) {
                 $user = $config->createUser();
