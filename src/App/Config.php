@@ -12,9 +12,8 @@ class Config extends \Uni\Config
 
 
     /**
-     * @param \Tk\Event\Dispatcher $dispatcher
-     * @throws \Tk\Db\Exception
-     * @throws \Tk\Exception
+     * @param \Tk\EventDispatcher\EventDispatcher $dispatcher
+     * @throws \Exception
      */
     public function setupDispatcher($dispatcher)
     {
