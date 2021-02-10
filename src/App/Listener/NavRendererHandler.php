@@ -61,7 +61,7 @@ class NavRendererHandler implements Subscriber
             $menu->prepend(Item::create('Site Preview', \Uni\Uri::create('/index.html'), 'fa fa-home'))->getLink()
                 ->setAttr('target', '_blank');
         }
-        if ($user->hasPermission(\Uni\Db\Permission::MANAGE_SUBJECT)) {
+        if ($user->hasPermission(\Uni\Db\Permission::MANAGE_SITE)) {
             $menu->append(Item::create('Settings', \Uni\Uri::createHomeUrl('/settings.html'), 'fa fa-cogs'), 'Profile');
 //            $menu->append(Item::create('Create Course', \Uni\Uri::createHomeUrl('/courseEdit.html'), 'fa fa-institution'));
 //            $menu->append(Item::create('Create Subject', \Uni\Uri::createHomeUrl('/subjectEdit.html'), 'fa fa-graduation-cap'));
@@ -118,7 +118,6 @@ class NavRendererHandler implements Subscriber
                         'userId' => $user->getId()
                     ));
                     foreach ($courseList as $i => $course) {
-
                         $itm = $menu->append(Item::create($course->getCode()))->setAttr('title', $course->getName())
                             ->addCss('nav-header nav-header-first d-none d-lg-block tk-test');
                         if ($user->hasPermission(\Uni\Db\Permission::MANAGE_SUBJECT)) {
@@ -141,8 +140,10 @@ class NavRendererHandler implements Subscriber
                 $subject = $this->getConfig()->getSubject();
                 $sub = $menu->append(Item::create($subject->getCode(), '#', 'fa fa-graduation-cap'))->setAttr('title', $subject->getName());
                 $sub->append(Item::create('Subject Dashboard', \Uni\Uri::createSubjectUrl('/index.html', $subject), 'fa fa-dashboard'));
-                if ($user->isStaff() && $user->hasPermission(\Uni\Db\Permission::MANAGE_SUBJECT)) {
+                if ($user->isStaff() && $user->hasPermission(\Uni\Db\Permission::MANAGE_SITE)) {
                     $sub->append(Item::create('Settings', \Uni\Uri::createSubjectUrl('/subjectEdit.html', $subject), 'fa fa-cogs'));
+                }
+                if ($user->isStaff() && $user->hasPermission(\Uni\Db\Permission::MANAGE_SUBJECT)) {
                     $sub->append(Item::create('Students', \Uni\Uri::createSubjectUrl('/studentUserManager.html'), 'fa fa-group'));
                 }
             }
