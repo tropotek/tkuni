@@ -17,7 +17,7 @@ UPDATE `user` SET `password` = MD5(CONCAT('password', `hash`));
 UPDATE `institution` SET `domain` = '';
 
 -- Disable the LDAP plugin for institutions
-DELETE FROM `plugin_zone` WHERE `plugin_name` LIKE 'plg-ldap' AND `zone_name` LIKE 'institution';
+DELETE FROM `_plugin_zone` WHERE `plugin_name` LIKE 'plg-ldap' AND `zone_name` LIKE 'institution';
 
 -- Do this so we keep the same key all the time
 
