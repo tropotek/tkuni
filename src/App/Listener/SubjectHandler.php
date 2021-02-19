@@ -18,34 +18,6 @@ class SubjectHandler implements Subscriber
     use ConfigTrait;
 
     /**
-     * If we are in a subject URL then get the subject object and set it in the config
-     * for global accessibility.
-     *
-     * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
-     * @throws \Exception
-     */
-    public function onRequest( $event)
-    {
-        $config = $this->getConfig();
-        $request = $event->getRequest();
-
-        if ($config->getAuthUser()) {
-            \Tk\Log::info('- User: ' . $config->getAuthUser()->getName() . ' <' . $config->getAuthUser()->getEmail() . '> [ID: ' . $config->getAuthUser()->getId() . ']');
-            if ($config->getMasqueradeHandler()->isMasquerading()) {
-                $msq = $config->getMasqueradeHandler()->getMasqueradingUser();
-                \Tk\Log::info('  └ Msq: ' . $msq->getName() . ' [ID: ' . $msq->getId() . ']');
-            }
-        }
-        if ($config->getInstitution()) {
-            \Tk\Log::info('- Institution: ' . $config->getInstitution()->getName() . ' [ID: ' . $config->getInstitution()->getId() . ']');
-        }
-        if ($request->attributes->has('subjectCode') && $config->getSubject()) {
-            \Tk\Log::info('- Subject: ' . $config->getSubject()->name . ' [ID: ' . $config->getSubject()->getId() . ']');
-        }
-
-    }
-
-    /**
      * Ensure this is run after App\Listener\CrumbsHandler::onFinishRequest()
      *
      * @param AuthEvent $event
@@ -95,8 +67,7 @@ class SubjectHandler implements Subscriber
     public static function getSubscribedEvents()
     {
         return array(
-            AuthEvents::LOGIN_SUCCESS => 'onLoginSuccess',
-            KernelEvents::REQUEST => array('onRequest', -1)
+            AuthEvents::LOGIN_SUCCESS => 'onLoginSuccess'
         );
     }
 }
