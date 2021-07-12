@@ -79,6 +79,60 @@ class AuthHandler extends \Bs\Listener\AuthHandler
                             if (!$isPreEnrolled) {      // Only create users accounts for enrolled students
                                 $msg = sprintf('We cannot find any enrolled subjects. Please contact your coordinator.' .
                                     "\nusername: %s\nUID: %s\nEmail: %s", $adapter->get('username'), $uid, $email);
+
+//                                $alt = sprintf("Your details have been sent to the system administrator for attention.\n<br/>We will email you at `%s` once you have been manually enrolled.", $email);
+//                                \Tk\Alert::addInfo($alt);
+
+                                $courseName = 'n/A';
+                                $course = $config->getCourse();
+                                if ($course) {
+                                    $courseName = $course->getName();
+                                }
+                                $subjectName = 'N/A';
+                                $subject = $config->getSubject();
+                                if ($subject) {
+                                    $subjectName = $subject->getName();
+                                }
+                                $content = <<<HTML
+<div>
+  <p>
+    Hi Admin,
+  </p>
+  <p>
+    This is the Skills Tracking system. We have a student who cannot be automatically enrolled and cannot login.
+  </p>
+  <p>
+    Please manually enroll the student using the following details:
+  </p>
+<div><pre>-----------------------------------------------------------------------------------
+Institution:  {$config->getInstitution()->getName()} [{$config->getInstitutionId()}]
+Course:       $courseName
+Subject:      $subjectName
+Student UID:  $uid
+Email:        $email
+
+CSV:          $uid,$email,{$adapter->get('username')}
+-----------------------------------------------------------------------------------</pre></div>
+
+<p>
+Thank you,<br/>
+<br/>
+Skills Tracker System
+</p>
+
+</div>
+HTML;
+                                $message = $config->createMessage();
+                                $message->setSubject('Skills Tracker: Student Manual Enrollment Notification...');
+                                $message->setFrom($email);
+                                $message->addTo($config->get('system.email.developer'));
+                                $message->set('content', $content);
+                                $message->addHeader('X-LDAP-student-type', $type);
+                                $message->addHeader('X-LDAP-student-uid', $uid);
+                                $message->addHeader('X-LDAP-student-uname', $username);
+                                $config->getEmailGateway()->send($message);
+
+
                                 $event->setResult(new \Tk\Auth\Result(\Tk\Auth\Result::FAILURE_CREDENTIAL_INVALID, $adapter->get('username'), $msg));
                                 return;
                             }
@@ -132,6 +186,11 @@ class AuthHandler extends \Bs\Listener\AuthHandler
                         // TODO: be sure to update this if you have App\Db\Permission
                         $user->addPermission($this->getConfig()->getPermission()->getDefaultUserPermissions($user->getType()));
                         //$user->addPermission(\Uni\Db\Permission::getDefaultPermissionList($user->getType()));
+
+                        // Note: Only students seem to have this data...
+//                        if (!empty($ldapData[0]['auedupersonlibrarybarcodenumber'][0])) {
+//                            $user->getData()->set('barcode', $ldapData[0]['auedupersonlibrarybarcodenumber'][0]);
+//                        }
 
                         if (method_exists($user, 'getData')) {
                             $data = $user->getData();

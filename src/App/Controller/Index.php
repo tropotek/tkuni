@@ -85,6 +85,7 @@ class Index extends \Uni\Controller\Index
         <a href="#welcome" role="tab">Welcome</a>
         <a href="#institutions" role="tab" choice="multiInstitutions">Institutions</a>
         <a href="#contact" role="tab">Contact</a>
+        <a href="/login.html" var="institution-login" role="tab" choice1="login">Login</a>
       </nav>
     </div>
 
