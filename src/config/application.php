@@ -14,8 +14,6 @@ $config = \App\Config::getInstance();
  * Default app config values
  **************************************/
 
-
-
 /*
  * Template folders for pages
  */
@@ -32,7 +30,6 @@ $config['template.student']     = $config['system.theme.admin']  . '/admin.html'
 $config['template.public']      = $config['system.theme.public'] . '/public.html';
 
 $config['template.login']       = $config['system.theme.admin']  . '/login.html';
-
 
 /*
  * Set the error page template
