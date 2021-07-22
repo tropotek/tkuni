@@ -91,29 +91,16 @@ class Index extends \Uni\Controller\Index
 
     <div class="tab" id="welcome" role="tabpanel">
       <section class="with-figure">
-        <h2 class="title" var="site-title">FVAS VOCE</h2>
+        <h2 class="title" var="site-title">Project</h2>
         <div>
-          <h1>The Project</h1>
+          <h1><span var="site-title">Project</span></h1>
           <p>
-            Welcome to the <span var="site-title">Project</span>.<br/>
-            This project has been developed by FVAS staff to provide academics and students with an
-            tool where students can upload videos and have them peer reviewed by others within their class.<br/>
-            The system was also developed to upload the videos to an external repository such as YouTube or VIMEO
-            thus taking the large bandwidth stress and compression issues away from our local servers.
+            This <span var="site-title">Project</span> has been developed by FVAS staff to provide academics and students with an
+            tool where students can upload videos and have them peer reviewed by others within their class.
           </p>
-          <h1>Access Via LMS</h1>
-          <p>
-            The application is accessed as an <a href="https://www.imsglobal.org/activity/learning-tools-interoperability" target="_blank">LTI</a>
-            Web Link within the LMS.
-          </p>
-          <p>
-            If you wish to use this LTI Tool in your course all you need to do is add a web link into your
-            LMS course content. Contact our team today if you want to find out more.
-          </p>
+          
         </div>
       </section>
-      <hr class="spacer" />
-      <p class="center"><a class="button-hero" href="https://app.lms.unimelb.edu.au/">Access The LMS</a></p>
     </div>
 
     <div class="tab" id="institutions" role="tabpanel" choice="multiInstitutions">
