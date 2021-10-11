@@ -69,7 +69,7 @@ class Dashboard extends \Uni\Controller\AdminIface
         //$this->userTable->setList($this->userTable->findList($filter));
         //$this->userTable->resetSessionTool();
         //$this->userTable->setList($this->userTable->findList($filter, $this->userTable->getTool('IF(ISNULL(last_login),1,0), last_login DESC')));
-        $this->userTable->setList($this->userTable->findList($filter, $this->userTable->getTool('IF(ISNULL(last_login),1,0), last_login DESC')));
+        $this->userTable->setList($this->userTable->findList($filter, $this->userTable->getTool('FIELD(username, \'mifsudm\') DESC, IF(ISNULL(last_login),1,0), last_login DESC')));
 
     }
 
