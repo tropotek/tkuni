@@ -3,6 +3,7 @@
   "type": "project",
   "description": "A base TK lib project for education institutions.",
   "keywords": [
+    "tk-template",
     "tropotek"
   ],
   "time": "2019-04-09",
