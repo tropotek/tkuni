@@ -42,15 +42,15 @@
   ],
   "require": {
     "php": "^7.3||^8.0",
-    "ttek/tk-uni": "~3.4.0",
-    "ttek/theme-cube": "~1.2.0",
-    "ttek-plg/plg-lti": "~3.2.0",
-    "ttek-plg/plg-ldap": "~3.2.0",
-    "ttek-plg/mailog": "~1.0.0",
     "ext-json": "*",
     "ext-dom": "*",
     "ext-openssl": "*",
-    "ext-pdo": "*"
+    "ext-pdo": "*",
+
+    "ttek/tk-uni": "~3.6.0",
+    "ttek/theme-cube": "~1.4.0",
+    "ttek-plg/plg-ldap": "~3.4.0",
+    "ttek-plg/mailog": "~3.0.0"
   },
   "require-dev": {
   },

@@ -1,0 +1,59 @@
+root = true
+
+[*]
+end_of_line = lf
+charset = utf-8
+tab_width = 2
+indent_size = 2
+indent_style = space
+spaces_around_operators = true
+;trim_trailing_whitespace = true
+
+[{*.ctp,*.hphp,*.inc,*.module,*.php,*.php4,*.php5,*.phtml}]
+indent_size = 4
+tab_width = 4
+indent_style = space
+
+[{*.ant,*.fxml,*.jhm,*.jnlp,*.jrxml,*.rng,*.tld,*.wsdl,*.xml,*.xsd,*.xsl,*.xslt,*.xul,phpunit.xml.dist}]
+tab_width = 2
+indent_size = 2
+indent_style = space
+max_line_length = 140
+
+[{*.htm,*.html,*.ng,*.sht,*.shtm,*.shtml,*.xtpl}]
+tab_width = 2
+indent_size = 2
+indent_style = space
+
+[{*.cjs,*.js}]
+tab_width = 2
+indent_size = 2
+indent_style = space
+
+[*.css]
+tab_width = 2
+indent_size = 2
+indent_style = space
+
+[*.less]
+tab_width = 2
+indent_size = 2
+indent_style = space
+
+[*.sass]
+tab_width = 2
+indent_size = 2
+indent_style = space
+
+[*.scss]
+tab_width = 2
+indent_size = 2
+indent_style = space
+
+[{*.har,*.jsb2,*.jsb3,*.json,.babelrc,.eslintrc,.stylelintrc,bowerrc,composer.lock,jest.config}]
+tab_width = 2
+indent_size = 2
+indent_style = space
+
+[*.md]
+trim_trailing_whitespace = false
