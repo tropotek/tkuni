@@ -13,6 +13,13 @@ $config['db.name'] = 'table';
 $config['db.user'] = 'username';
 $config['db.pass'] = 'password';
 
+/*
+ * DB secret API key
+ * Use this  key for the mirror command in a dev environment.
+ * Keep this key secret. Access to the sites DB can be gained with it.
+ */
+//$config['db.skey'] = '{Add secret key here}';
+
 //$config['google.map.apikey'] = '';
 //$config['google.recaptcha.publicKey'] = '';
 //$config['google.recaptcha.privateKey'] = '';
@@ -58,15 +65,9 @@ $config['db.pass'] = 'password';
 //$config['system.debug.email'] = 'user@example.com';
 
 
-if ($config->isDebug()) {
-//Used for the Mirror command
-    $config['live.db'] = array(
-        'type' => 'mysql',
-        'host' => 'localhost',
-        'name' => 'live_site',
-        'user' => 'username',
-        'pass' => ''
-    );
-    $config['live.data.path'] = 'user@example.edu.au:/home/user/public_html/data';
-}
-
+// Used for the Mirror command.
+//if ($config->isDebug()) {
+    // Used for the Mirror command
+    //$config['mirror.db']   = 'https://localhost/util/mirrorDb';
+    //$config['mirror.data'] = 'https://localhost/util/mirrorData';
+//}
