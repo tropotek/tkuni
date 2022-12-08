@@ -57,6 +57,11 @@ class Login extends \Uni\Controller\Login
 <div class="tk-login-panel tk-login">
 
   <div var="form"></div>
+  <div class="external row" choice="inst">
+    <a href="/microsoftLogin.html" class="btn btn-lg btn-default col-12" choice="microsoft">Microsoft</a>
+<!--    <a href="/googleLogin.html" class="btn btn-lg btn-warning col-12" choice="google">Google</a>-->
+<!--    <a href="/githubLogin.html" class="btn btn-lg btn-default col-12" choice="github">Github</a>-->
+  </div>
   
 
 </div>

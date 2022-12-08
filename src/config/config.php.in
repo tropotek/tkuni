@@ -13,6 +13,10 @@ $config['db.name'] = 'table';
 $config['db.user'] = 'username';
 $config['db.pass'] = 'password';
 
+//$config['google.map.apikey'] = '';
+//$config['google.recaptcha.publicKey'] = '';
+//$config['google.recaptcha.privateKey'] = '';
+
 /*
  * DB secret API key
  * Use this  key for the mirror command in a dev environment.
@@ -20,9 +24,22 @@ $config['db.pass'] = 'password';
  */
 //$config['db.skey'] = '{Add secret key here}';
 
-//$config['google.map.apikey'] = '';
-//$config['google.recaptcha.publicKey'] = '';
-//$config['google.recaptcha.privateKey'] = '';
+
+// Microsoft SSO settings
+// Azure: https://portal.azure.com/
+$config['auth.microsoft.enabled'] = false;
+// tenant ID or `common` for multi-tenant
+$config['auth.microsoft.tenantid'] = 'common';
+$config['auth.microsoft.clientid'] = '';
+$config['auth.microsoft.logout'] = 'https://login.microsoftonline.com/common/wsfederation?wa=wsignout1.0';
+$config['auth.microsoft.scope'] = 'openid%20offline_access%20profile%20user.read';
+// method = 'certificate' or 'secret'
+$config['auth.microsoft.oauth.method'] = 'secret';
+$config['auth.microsoft.oauth.secret'] = '';
+// on Windows, the certificate paths should be in the form c:/path/to/cert.crt
+//$config['auth.microsoft.oauth.certfile'] = '/path/to/certificate.crt';
+//$config['auth.microsoft.oauth.keyfile'] = '/path/to/privatekey.pem';
+
 
 /*
  * The email address of the system developer
